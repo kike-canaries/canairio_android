@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.intentfilter.androidpermissions.PermissionManager;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.exceptions.BleScanException;
 import com.polidea.rxandroidble2.scan.ScanFilter;
@@ -33,6 +35,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+
+import static java.util.Collections.singleton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,8 +82,23 @@ public class MainActivity extends AppCompatActivity {
 //        TextView tv = (TextView) findViewById(R.id.tv_empty_list);
 //        tv.setText(stringFromJNI());
 
+        PermissionManager permissionManager = PermissionManager.getInstance(this);
+        permissionManager.checkPermissions(singleton(Manifest.permission.ACCESS_COARSE_LOCATION), new PermissionManager.PermissionRequestListener() {
+            @Override
+            public void onPermissionGranted() {
+                Toast.makeText(MainActivity.this, "Permissions Granted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                Toast.makeText(MainActivity.this, "Permissions Denied", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         rxBleClient = AppData.getRxBleClient(this);
         configureResultList();
+
+
 
     }
 
