@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.polidea.rxandroidble2.RxBleClient;
+import com.polidea.rxandroidble2.scan.ScanSettings;
+
+import io.reactivex.disposables.Disposable;
+
 public class MainActivity extends AppCompatActivity {
 
     // Used to load the 'native-lib' library on application startup.
@@ -17,10 +22,30 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
+    private RxBleClient bleDevice;
+
+
+    Disposable scanSubscription = bleDevice.scanBleDevices(
+            new ScanSettings.Builder()
+                    // .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY) // change if needed
+                    // .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES) // change if needed
+                    .build()
+            // add filters if needed
+    )
+            .subscribe(
+                    scanResult -> {
+                        // Process scan result here.
+                    },
+                    throwable -> {
+                        // Handle an error here.
+                    }
+            );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -36,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
+
+        bleDevice = AppData.getRxBleClient(this);
+
+
+// When done, just dispose.
+        scanSubscription.dispose();
     }
 
     @Override

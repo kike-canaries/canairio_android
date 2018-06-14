@@ -1,0 +1,27 @@
+package hpsaturn.pollutionreporter;
+
+import android.app.Application;
+import android.content.Context;
+
+import com.polidea.rxandroidble2.RxBleClient;
+import com.polidea.rxandroidble2.internal.RxBleLog;
+
+/**
+ * Created by Antonio Vanegas @hpsaturn on 6/13/18.
+ */
+public class AppData extends Application{
+
+    private RxBleClient rxBleClient;
+
+    public static RxBleClient getRxBleClient(Context context) {
+        AppData application = (AppData) context.getApplicationContext();
+        return application.rxBleClient;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        rxBleClient = RxBleClient.create(this);
+        RxBleClient.setLogLevel(RxBleLog.VERBOSE);
+    }
+}
