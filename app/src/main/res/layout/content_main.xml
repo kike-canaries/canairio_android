@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
-        android:id="@+id/sample_text"
+        android:id="@+id/tv_empty_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
@@ -17,5 +17,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/scan_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"/>
 
 </android.support.constraint.ConstraintLayout>
