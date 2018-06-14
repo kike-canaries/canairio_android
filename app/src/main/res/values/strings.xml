@@ -4,4 +4,5 @@
     <string name="action_scan">Scan..</string>
     <string name="stop_scan">Stopping Scanning..</string>
     <string name="start_scan">Start Scanning..</string>
+    <string name="ble_not_supported">Bluetooth Low Energy not Supported!</string>
 </resources>
