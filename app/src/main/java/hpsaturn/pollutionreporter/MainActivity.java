@@ -21,24 +21,32 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.intentfilter.androidpermissions.PermissionManager;
+import com.jakewharton.rx.ReplayingShare;
 import com.polidea.rxandroidble2.RxBleClient;
+import com.polidea.rxandroidble2.RxBleConnection;
+import com.polidea.rxandroidble2.RxBleDevice;
 import com.polidea.rxandroidble2.exceptions.BleScanException;
 import com.polidea.rxandroidble2.scan.ScanFilter;
 import com.polidea.rxandroidble2.scan.ScanResult;
 import com.polidea.rxandroidble2.scan.ScanSettings;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
+import static com.trello.rxlifecycle2.android.ActivityEvent.PAUSE;
 import static java.util.Collections.singleton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends RxAppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -54,8 +62,13 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    private UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
+    private UUID characteristicUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
 
+    private PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
+    private Observable<RxBleConnection> connectionObservable;
     private RxBleClient rxBleClient;
+    private RxBleDevice bleDevice;
     private Disposable scanDisposable;
     private ScanResultsAdapter resultsAdapter;
 
@@ -81,25 +94,9 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
 //        TextView tv = (TextView) findViewById(R.id.tv_empty_list);
 //        tv.setText(stringFromJNI());
-
-        PermissionManager permissionManager = PermissionManager.getInstance(this);
-        permissionManager.checkPermissions(singleton(Manifest.permission.ACCESS_COARSE_LOCATION), new PermissionManager.PermissionRequestListener() {
-            @Override
-            public void onPermissionGranted() {
-                Toast.makeText(MainActivity.this, "Permissions Granted", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPermissionDenied() {
-                Toast.makeText(MainActivity.this, "Permissions Denied", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        checkForPermissions();
         rxBleClient = AppData.getRxBleClient(this);
         configureResultList();
-
-
-
     }
 
     private void configureResultList() {
@@ -122,11 +119,57 @@ public class MainActivity extends AppCompatActivity {
 
     private void onAdapterItemClick(ScanResult scanResults) {
         final String macAddress = scanResults.getBleDevice().getMacAddress();
-//        final Intent intent = new Intent(this, DeviceActivity.class);
-//        intent.putExtra(DeviceActivity.EXTRA_MAC_ADDRESS, macAddress);
-//        startActivity(intent);
         Log.i(TAG,"onAdapterItemClick: "+macAddress);
+        bleDevice = rxBleClient.getBleDevice(macAddress);
+        connectionObservable = prepareConnectionObservable();
+
+        if (isConnected()) {
+            triggerDisconnect();
+        } else {
+            connectionObservable
+                    .flatMapSingle(RxBleConnection::discoverServices)
+                    .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(disposable -> Log.d(TAG,"doOnSubscribe"))
+                    .subscribe(
+                            characteristic -> {
+//                                updateUI(characteristic);
+                                Log.i(getClass().getSimpleName(), "Hey, connection has been established!");
+                            },
+                            this::onConnectionFailure,
+                            this::onConnectionFinished
+                    );
+        }
     }
+
+    private Observable<RxBleConnection> prepareConnectionObservable() {
+        return bleDevice
+                .establishConnection(false)
+                .takeUntil(disconnectTriggerSubject)
+                .compose(bindUntilEvent(PAUSE))
+                .compose(ReplayingShare.instance());
+    }
+
+    private boolean isConnected() {
+        return bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
+    }
+
+    private void triggerDisconnect() {
+        disconnectTriggerSubject.onNext(true);
+    }
+
+    private void onConnectionFailure(Throwable throwable) {
+        Log.d(TAG,"onConnectionFailure");
+        //noinspection ConstantConditions
+//        Snackbar.make(findViewById(R.id.main), "Connection error: " + throwable, Snackbar.LENGTH_SHORT).show();
+//        updateUI(null);
+    }
+
+    private void onConnectionFinished() {
+        Log.d(TAG,"onConnectionFinished");
+//        updateUI(null);
+    }
+
 
     private void onScanFailure(Throwable throwable) {
         if (throwable instanceof BleScanException) {
@@ -139,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
         resultsAdapter.clearScanResults();
         updateButtonUIState();
     }
-
 
     private void handleBleScanException(BleScanException bleScanException) {
         final String text;
@@ -251,6 +293,8 @@ public class MainActivity extends AppCompatActivity {
                             .build(),
                     new ScanFilter.Builder()
 //                            .setDeviceAddress("B4:99:4C:34:DC:8B")
+//                            .setServiceUuid(new ParcelUuid(serviceId))
+                            .setDeviceName("ESP32_HPMA115S0")
                             // add custom filters if needed
                             .build()
             )
@@ -264,6 +308,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateButtonUIState() {
         tvEmptyMsg.setText(isScanning() ? R.string.stop_scan : R.string.start_scan);
+    }
+
+    private void checkForPermissions() {
+        PermissionManager permissionManager = PermissionManager.getInstance(this);
+        permissionManager.checkPermissions(singleton(Manifest.permission.ACCESS_COARSE_LOCATION), new PermissionManager.PermissionRequestListener() {
+            @Override
+            public void onPermissionGranted() {
+//                Toast.makeText(MainActivity.this, "Permissions Granted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+//                Toast.makeText(MainActivity.this, "Permissions Denied", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void checkBluetoohtBle(){
