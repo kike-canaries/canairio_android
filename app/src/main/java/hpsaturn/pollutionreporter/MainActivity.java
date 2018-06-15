@@ -188,7 +188,7 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void onNotificationReceived(byte[] bytes) {
-        Log.i(TAG,"onNotificationReceived: "+HexString.bytesToHex(bytes));
+        Log.i(TAG,"onNotificationReceived: "+new String(bytes));
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Change: " + HexString.bytesToHex(bytes), Snackbar.LENGTH_SHORT).show();
     }
