@@ -7,17 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.TextView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.intentfilter.androidpermissions.PermissionManager;
@@ -135,10 +134,22 @@ public class MainActivity extends RxAppCompatActivity {
                             characteristic -> {
 //                                updateUI(characteristic);
                                 Log.i(getClass().getSimpleName(), "Hey, connection has been established!");
+                                setupNotification();
                             },
                             this::onConnectionFailure,
                             this::onConnectionFinished
                     );
+        }
+    }
+
+    private void setupNotification() {
+        if (isConnected()) {
+            connectionObservable
+                    .flatMap(rxBleConnection -> rxBleConnection.setupNotification(characteristicUuid))
+                    .doOnNext(notificationObservable -> runOnUiThread(this::notificationHasBeenSetUp))
+                    .flatMap(notificationObservable -> notificationObservable)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onNotificationReceived, this::onNotificationSetupFailure);
         }
     }
 
@@ -159,15 +170,32 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void onConnectionFailure(Throwable throwable) {
-        Log.d(TAG,"onConnectionFailure");
+        Log.e(TAG,"onConnectionFailure");
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Connection error: " + throwable, Snackbar.LENGTH_SHORT).show();
 //        updateUI(null);
     }
 
     private void onConnectionFinished() {
-        Log.d(TAG,"onConnectionFinished");
+        Log.w(TAG,"onConnectionFinished");
 //        updateUI(null);
+    }
+
+    private void notificationHasBeenSetUp() {
+        Log.i(TAG,"notificationHasBeenSetUp");
+        //noinspection ConstantConditions
+//        Snackbar.make(findViewById(R.id.main), "Notifications has been set up", Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void onNotificationReceived(byte[] bytes) {
+        Log.i(TAG,"onNotificationReceived: "+HexString.bytesToHex(bytes));
+        //noinspection ConstantConditions
+//        Snackbar.make(findViewById(R.id.main), "Change: " + HexString.bytesToHex(bytes), Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void onNotificationSetupFailure(Throwable throwable) {
+        //noinspection ConstantConditions
+//        Snackbar.make(findViewById(R.id.main), "Notifications error: " + throwable, Snackbar.LENGTH_SHORT).show();
     }
 
 
