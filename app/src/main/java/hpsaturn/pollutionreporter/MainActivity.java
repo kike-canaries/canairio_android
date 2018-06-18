@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,10 +16,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.intentfilter.androidpermissions.PermissionManager;
 import com.jakewharton.rx.ReplayingShare;
 import com.polidea.rxandroidble2.RxBleClient;
@@ -30,8 +34,13 @@ import com.polidea.rxandroidble2.scan.ScanResult;
 import com.polidea.rxandroidble2.scan.ScanSettings;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -61,6 +70,9 @@ public class MainActivity extends RxAppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    @BindView(R.id.lc_measures)
+    LineChart chart;
+
     private UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
     private UUID characteristicUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
 
@@ -71,6 +83,10 @@ public class MainActivity extends RxAppCompatActivity {
     private Disposable scanDisposable;
     private ScanResultsAdapter resultsAdapter;
 
+    List<Entry> entries = new ArrayList<Entry>();
+
+    private Handler mHandler = new Handler();
+    private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,20 +98,25 @@ public class MainActivity extends RxAppCompatActivity {
 
         checkBluetoohtBle();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action",
+                Snackbar.LENGTH_LONG
+        ).setAction("Action", null).show());
 
-        // Example of a call to a native method
-//        TextView tv = (TextView) findViewById(R.id.tv_empty_list);
-//        tv.setText(stringFromJNI());
         checkForPermissions();
         rxBleClient = AppData.getRxBleClient(this);
         configureResultList();
+
+        loadTestData();
+
+        LineDataSet dataSet = new LineDataSet(entries, "Label");
+        dataSet.setColor(R.color.colorPrimary);
+        dataSet.setValueTextColor(R.color.colorPrimaryDark);
+
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.invalidate(); // refresh
+
+        mHandler.post(mDataRunnable);
     }
 
     private void configureResultList() {
@@ -118,7 +139,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     private void onAdapterItemClick(ScanResult scanResults) {
         final String macAddress = scanResults.getBleDevice().getMacAddress();
-        Log.i(TAG,"onAdapterItemClick: "+macAddress);
+        Log.i(TAG, "onAdapterItemClick: " + macAddress);
         bleDevice = rxBleClient.getBleDevice(macAddress);
         connectionObservable = prepareConnectionObservable();
 
@@ -129,7 +150,7 @@ public class MainActivity extends RxAppCompatActivity {
                     .flatMapSingle(RxBleConnection::discoverServices)
                     .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> Log.d(TAG,"doOnSubscribe"))
+                    .doOnSubscribe(disposable -> Log.d(TAG, "doOnSubscribe"))
                     .subscribe(
                             characteristic -> {
 //                                updateUI(characteristic);
@@ -170,25 +191,25 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void onConnectionFailure(Throwable throwable) {
-        Log.e(TAG,"onConnectionFailure");
+        Log.e(TAG, "onConnectionFailure");
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Connection error: " + throwable, Snackbar.LENGTH_SHORT).show();
 //        updateUI(null);
     }
 
     private void onConnectionFinished() {
-        Log.w(TAG,"onConnectionFinished");
+        Log.w(TAG, "onConnectionFinished");
 //        updateUI(null);
     }
 
     private void notificationHasBeenSetUp() {
-        Log.i(TAG,"notificationHasBeenSetUp");
+        Log.i(TAG, "notificationHasBeenSetUp");
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Notifications has been set up", Snackbar.LENGTH_SHORT).show();
     }
 
     private void onNotificationReceived(byte[] bytes) {
-        Log.i(TAG,"onNotificationReceived: "+HexString.bytesToHex(bytes));
+        Log.i(TAG, "onNotificationReceived: " + HexString.bytesToHex(bytes));
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Change: " + HexString.bytesToHex(bytes), Snackbar.LENGTH_SHORT).show();
     }
@@ -197,7 +218,6 @@ public class MainActivity extends RxAppCompatActivity {
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Notifications error: " + throwable, Snackbar.LENGTH_SHORT).show();
     }
-
 
     private void onScanFailure(Throwable throwable) {
         if (throwable instanceof BleScanException) {
@@ -275,7 +295,6 @@ public class MainActivity extends RxAppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -290,7 +309,7 @@ public class MainActivity extends RxAppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.action_settings:
 
@@ -353,7 +372,7 @@ public class MainActivity extends RxAppCompatActivity {
         });
     }
 
-    private void checkBluetoohtBle(){
+    private void checkBluetoohtBle() {
         // Use this check to determine whether BLE is supported on the device. Then
         // you can selectively disable BLE-related features.
 
@@ -363,11 +382,38 @@ public class MainActivity extends RxAppCompatActivity {
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
             finish();
-        }
-        else if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+        } else if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
         }
+    }
+
+    private void loadTestData(){
+        Random rand = new Random();
+        int  n = rand.nextInt(50) + 1;
+        entries.add(new Entry(i++,n));
+        Log.d(TAG,"size: "+entries.size());
+    }
+
+    private Runnable mDataRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Log.d(TAG,"load more data..");
+            loadTestData();
+            LineDataSet dataSet = new LineDataSet(entries, "Label");
+            dataSet.setColor(R.color.colorPrimary);
+            dataSet.setValueTextColor(R.color.colorPrimaryDark);
+            LineData lineData = new LineData(dataSet);
+            chart.setData(lineData);
+            chart.invalidate();
+            mHandler.postDelayed(mDataRunnable,2000);
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        mHandler.removeCallbacks(mDataRunnable);
+        super.onDestroy();
     }
 
     /**
