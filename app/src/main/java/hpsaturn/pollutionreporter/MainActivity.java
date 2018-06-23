@@ -23,6 +23,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.gson.Gson;
 import com.intentfilter.androidpermissions.PermissionManager;
 import com.jakewharton.rx.ReplayingShare;
 import com.polidea.rxandroidble2.RxBleClient;
@@ -46,6 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.models.SensorData;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -109,7 +111,9 @@ public class MainActivity extends RxAppCompatActivity {
         rxBleClient = AppData.getRxBleClient(this);
         configureResultList();
 
-        loadTestData();
+//        loadTestData();
+
+        entries.add(new Entry(0,0));
 
         LineDataSet dataSet = new LineDataSet(entries, "Label");
         dataSet.setColor(R.color.colorPrimary);
@@ -119,7 +123,9 @@ public class MainActivity extends RxAppCompatActivity {
         chart.setData(lineData);
         chart.invalidate(); // refresh
 
-        mHandler.post(mDataRunnable);
+        actionScan();
+
+//        mHandler.post(mDataRunnable);
     }
 
     private void configureResultList() {
@@ -212,7 +218,10 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void onNotificationReceived(byte[] bytes) {
-        Log.i(TAG,"onNotificationReceived: "+ new String(bytes));
+        String strdata = new String(bytes);
+        Log.i(TAG,"onNotificationReceived: "+ strdata);
+        SensorData data = new Gson().fromJson(strdata,SensorData.class);
+        addData(data.P25);
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Change: " + HexString.bytesToHex(bytes), Snackbar.LENGTH_SHORT).show();
     }
@@ -315,14 +324,11 @@ public class MainActivity extends RxAppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.action_settings:
-
                 break;
 
             case R.id.action_scan:
-                actionScan();
                 break;
         }
-
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -394,7 +400,7 @@ public class MainActivity extends RxAppCompatActivity {
     private void loadTestData(){
         Random rand = new Random();
         int  n = rand.nextInt(50) + 1;
-        entries.add(new Entry(i++,n));
+        addData(n);
         Log.d(TAG,"size: "+entries.size());
     }
 
@@ -403,15 +409,19 @@ public class MainActivity extends RxAppCompatActivity {
         public void run() {
             Log.d(TAG,"load more data..");
             loadTestData();
-            LineDataSet dataSet = new LineDataSet(entries, "Label");
-            dataSet.setColor(R.color.colorPrimary);
-            dataSet.setValueTextColor(R.color.colorPrimaryDark);
-            LineData lineData = new LineData(dataSet);
-            chart.setData(lineData);
-            chart.invalidate();
             mHandler.postDelayed(mDataRunnable,2000);
         }
     };
+
+    private void addData(float value){
+        entries.add(new Entry(i++,value));
+        LineDataSet dataSet = new LineDataSet(entries, "Label");
+        dataSet.setColor(R.color.colorPrimary);
+        dataSet.setValueTextColor(R.color.colorPrimaryDark);
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.invalidate();
+    }
 
     @Override
     protected void onDestroy() {
