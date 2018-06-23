@@ -98,7 +98,9 @@ public class MainActivity extends RxAppCompatActivity {
 
         checkBluetoohtBle();
 
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action",
+        fab.setOnClickListener(view -> Snackbar.make(
+                view,
+                "Replace with your own action",
                 Snackbar.LENGTH_LONG
         ).setAction("Action", null).show());
 
