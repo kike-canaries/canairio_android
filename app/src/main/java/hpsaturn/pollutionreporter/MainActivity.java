@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -113,16 +115,7 @@ public class MainActivity extends RxAppCompatActivity {
 
 //        loadTestData();
 
-        entries.add(new Entry(0,0));
-
-        LineDataSet dataSet = new LineDataSet(entries, "Label");
-        dataSet.setColor(R.color.colorPrimary);
-        dataSet.setValueTextColor(R.color.colorPrimaryDark);
-
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate(); // refresh
-
+        addData(0);
         actionScan();
 
 //        mHandler.post(mDataRunnable);
@@ -415,11 +408,15 @@ public class MainActivity extends RxAppCompatActivity {
 
     private void addData(float value){
         entries.add(new Entry(i++,value));
-        LineDataSet dataSet = new LineDataSet(entries, "Label");
+        LineDataSet dataSet = new LineDataSet(entries,getString(R.string.label_pm25));
+
         dataSet.setColor(R.color.colorPrimary);
+        dataSet.setHighlightEnabled(true);
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
+        Description description = chart.getDescription();
+        description.setText(getString(R.string.app_name));
         chart.invalidate();
     }
 
