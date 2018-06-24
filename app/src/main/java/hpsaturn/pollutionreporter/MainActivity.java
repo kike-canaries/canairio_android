@@ -91,6 +91,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     private Handler mHandler = new Handler();
     private int i;
+    private LineDataSet dataSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +114,18 @@ public class MainActivity extends RxAppCompatActivity {
         rxBleClient = AppData.getRxBleClient(this);
         configureResultList();
 
-//        loadTestData();
+        Description description = chart.getDescription();
+        description.setText(getString(R.string.app_name));
+        dataSet = new LineDataSet(entries,getString(R.string.label_pm25));
+        dataSet.setColor(R.color.colorPrimary);
+        dataSet.setHighlightEnabled(true);
+        dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
         addData(0);
+
         actionScan();
 
+//        loadTestData();
 //        mHandler.post(mDataRunnable);
     }
 
@@ -407,16 +415,9 @@ public class MainActivity extends RxAppCompatActivity {
     };
 
     private void addData(float value){
-        entries.add(new Entry(i++,value));
-        LineDataSet dataSet = new LineDataSet(entries,getString(R.string.label_pm25));
-
-        dataSet.setColor(R.color.colorPrimary);
-        dataSet.setHighlightEnabled(true);
-        dataSet.setValueTextColor(R.color.colorPrimaryDark);
+        dataSet.addEntry(new Entry(i++,value));
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
-        Description description = chart.getDescription();
-        description.setText(getString(R.string.app_name));
         chart.invalidate();
     }
 
