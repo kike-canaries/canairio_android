@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -26,6 +25,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.gson.Gson;
+import com.hpsaturn.tools.Logger;
 import com.intentfilter.androidpermissions.PermissionManager;
 import com.jakewharton.rx.ReplayingShare;
 import com.polidea.rxandroidble2.RxBleClient;
@@ -149,7 +149,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     private void onAdapterItemClick(ScanResult scanResults) {
         final String macAddress = scanResults.getBleDevice().getMacAddress();
-        Log.i(TAG, "onAdapterItemClick: " + macAddress);
+        Logger.i(TAG, "onAdapterItemClick: " + macAddress);
         bleDevice = rxBleClient.getBleDevice(macAddress);
         connectionObservable = prepareConnectionObservable();
 
@@ -160,11 +160,11 @@ public class MainActivity extends RxAppCompatActivity {
                     .flatMapSingle(RxBleConnection::discoverServices)
                     .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> Log.d(TAG, "doOnSubscribe"))
+                    .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
                     .subscribe(
                             characteristic -> {
 //                                updateUI(characteristic);
-                                Log.i(getClass().getSimpleName(), "Hey, connection has been established!");
+                                Logger.i(getClass().getSimpleName(), "Hey, connection has been established!");
                                 setupNotification();
                             },
                             this::onConnectionFailure,
@@ -201,26 +201,26 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void onConnectionFailure(Throwable throwable) {
-        Log.e(TAG, "onConnectionFailure");
+        Logger.e(TAG, "onConnectionFailure");
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Connection error: " + throwable, Snackbar.LENGTH_SHORT).show();
 //        updateUI(null);
     }
 
     private void onConnectionFinished() {
-        Log.w(TAG, "onConnectionFinished");
+        Logger.w(TAG, "onConnectionFinished");
 //        updateUI(null);
     }
 
     private void notificationHasBeenSetUp() {
-        Log.i(TAG, "notificationHasBeenSetUp");
+        Logger.i(TAG, "notificationHasBeenSetUp");
         //noinspection ConstantConditions
 //        Snackbar.make(findViewById(R.id.main), "Notifications has been set up", Snackbar.LENGTH_SHORT).show();
     }
 
     private void onNotificationReceived(byte[] bytes) {
         String strdata = new String(bytes);
-        Log.i(TAG,"onNotificationReceived: "+ strdata);
+        Logger.i(TAG,"onNotificationReceived: "+ strdata);
         SensorData data = new Gson().fromJson(strdata,SensorData.class);
         addData(data.P25);
         //noinspection ConstantConditions
@@ -288,7 +288,7 @@ public class MainActivity extends RxAppCompatActivity {
                 text = "Unable to start scanning";
                 break;
         }
-        Log.w("EXCEPTION", text, bleScanException);
+        Logger.w(TAG,"EXCEPTION: "+text+" "+bleScanException.getMessage());
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
@@ -402,13 +402,13 @@ public class MainActivity extends RxAppCompatActivity {
         Random rand = new Random();
         int  n = rand.nextInt(50) + 1;
         addData(n);
-        Log.d(TAG,"size: "+entries.size());
+        Logger.d(TAG,"size: "+entries.size());
     }
 
     private Runnable mDataRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG,"load more data..");
+            Logger.d(TAG,"load more data..");
             loadTestData();
             mHandler.postDelayed(mDataRunnable,2000);
         }
