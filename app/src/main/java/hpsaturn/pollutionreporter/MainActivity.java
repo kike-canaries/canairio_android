@@ -164,7 +164,7 @@ public class MainActivity extends RxAppCompatActivity {
                     .subscribe(
                             characteristic -> {
 //                                updateUI(characteristic);
-                                Logger.i(getClass().getSimpleName(), "Hey, connection has been established!");
+                                Logger.i(TAG, "connection has been established.");
                                 setupNotification();
                             },
                             this::onConnectionFailure,
@@ -197,25 +197,20 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void triggerDisconnect() {
+        Logger.i(TAG,"triggerDisconnect..");
         disconnectTriggerSubject.onNext(true);
     }
 
     private void onConnectionFailure(Throwable throwable) {
         Logger.e(TAG, "onConnectionFailure");
-        //noinspection ConstantConditions
-//        Snackbar.make(findViewById(R.id.main), "Connection error: " + throwable, Snackbar.LENGTH_SHORT).show();
-//        updateUI(null);
     }
 
     private void onConnectionFinished() {
         Logger.w(TAG, "onConnectionFinished");
-//        updateUI(null);
     }
 
     private void notificationHasBeenSetUp() {
         Logger.i(TAG, "notificationHasBeenSetUp");
-        //noinspection ConstantConditions
-//        Snackbar.make(findViewById(R.id.main), "Notifications has been set up", Snackbar.LENGTH_SHORT).show();
     }
 
     private void onNotificationReceived(byte[] bytes) {
@@ -223,16 +218,15 @@ public class MainActivity extends RxAppCompatActivity {
         Logger.i(TAG,"onNotificationReceived: "+ strdata);
         SensorData data = new Gson().fromJson(strdata,SensorData.class);
         addData(data.P25);
-        //noinspection ConstantConditions
-//        Snackbar.make(findViewById(R.id.main), "Change: " + HexString.bytesToHex(bytes), Snackbar.LENGTH_SHORT).show();
     }
 
     private void onNotificationSetupFailure(Throwable throwable) {
-        //noinspection ConstantConditions
-//        Snackbar.make(findViewById(R.id.main), "Notifications error: " + throwable, Snackbar.LENGTH_SHORT).show();
+        Logger.e(TAG,"onNotificationSetupFailure");
+        setupNotification();
     }
 
     private void onScanFailure(Throwable throwable) {
+        Logger.e(TAG,"onScanFailure");
         if (throwable instanceof BleScanException) {
             handleBleScanException((BleScanException) throwable);
         }
@@ -414,7 +408,7 @@ public class MainActivity extends RxAppCompatActivity {
         }
     };
 
-    private void addData(float value){
+    private void addData(int value){
         dataSet.addEntry(new Entry(i++,value));
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);

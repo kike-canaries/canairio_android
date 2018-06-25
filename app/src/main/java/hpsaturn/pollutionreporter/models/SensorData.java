@@ -6,8 +6,8 @@ package hpsaturn.pollutionreporter.models;
 
 public class SensorData {
 
-    public float P10;
+    public int P10;
 
-    public float P25;
+    public int P25;
 
 }
