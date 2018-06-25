@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,12 +16,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -42,8 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -77,6 +76,10 @@ public class MainActivity extends RxAppCompatActivity {
     @BindView(R.id.lc_measures)
     LineChart chart;
 
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
+
+
     private UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
     private UUID characteristicUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
 
@@ -107,11 +110,16 @@ public class MainActivity extends RxAppCompatActivity {
 
     }
 
-    private void setupUI(){
-        fab.setOnClickListener(view -> Snackbar.make(view,"Replace with your own action",
-                Snackbar.LENGTH_LONG
-        ).setAction("Action", null).show());
 
+    private View.OnClickListener onFabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
+    private void setupUI(){
+        fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
         rxBleClient = AppData.getRxBleClient(this);
         configureResultList();
@@ -124,6 +132,10 @@ public class MainActivity extends RxAppCompatActivity {
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
         addData(0);
+    }
+
+    private void showSnackMessage(String msg){
+        Snackbar.make(coordinatorLayout,msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     private void configureResultList() {
@@ -200,6 +212,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     private void onConnectionFailure(Throwable throwable) {
         Logger.e(TAG, "onConnectionFailure");
+        showSnackMessage(getString(R.string.msg_device_disconnected));
     }
 
     private void onConnectionFinished() {
@@ -319,6 +332,7 @@ public class MainActivity extends RxAppCompatActivity {
                 break;
 
             case R.id.action_scan:
+                isScanning();
                 break;
         }
 

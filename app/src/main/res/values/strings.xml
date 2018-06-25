@@ -6,4 +6,5 @@
     <string name="start_scan">Start Scanning..</string>
     <string name="ble_not_supported">Bluetooth Low Energy not Supported!</string>
     <string name="label_pm25">PM2.5</string>
+    <string name="msg_device_disconnected">Device disconnected</string>
 </resources>
