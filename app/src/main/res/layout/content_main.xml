@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_main_activity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
-    android:background="@color/bg_main_activity"
     tools:showIn="@layout/activity_main">
 
     <RelativeLayout
@@ -17,7 +17,7 @@
             android:id="@+id/tv_empty_list"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:gravity="center_horizontal|center_vertical"/>
+            android:gravity="center_horizontal|center_vertical" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/scan_results"
@@ -28,10 +28,10 @@
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lc_measures"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/scan_results"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="330dp"
+            android:layout_below="@+id/scan_results"
+            android:layout_marginTop="5dp" />
 
     </RelativeLayout>
 

@@ -101,12 +101,14 @@ public class MainActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
         checkBluetoohtBle();
+        setupUI();
+        actionScan();
 
-        fab.setOnClickListener(view -> Snackbar.make(
-                view,
-                "Replace with your own action",
+    }
+
+    private void setupUI(){
+        fab.setOnClickListener(view -> Snackbar.make(view,"Replace with your own action",
                 Snackbar.LENGTH_LONG
         ).setAction("Action", null).show());
 
@@ -122,11 +124,6 @@ public class MainActivity extends RxAppCompatActivity {
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
         addData(0);
-
-        actionScan();
-
-//        loadTestData();
-//        mHandler.post(mDataRunnable);
     }
 
     private void configureResultList() {
@@ -365,27 +362,19 @@ public class MainActivity extends RxAppCompatActivity {
         PermissionManager permissionManager = PermissionManager.getInstance(this);
         permissionManager.checkPermissions(singleton(Manifest.permission.ACCESS_COARSE_LOCATION), new PermissionManager.PermissionRequestListener() {
             @Override
-            public void onPermissionGranted() {
-//                Toast.makeText(MainActivity.this, "Permissions Granted", Toast.LENGTH_SHORT).show();
-            }
+            public void onPermissionGranted() { }
 
             @Override
-            public void onPermissionDenied() {
-//                Toast.makeText(MainActivity.this, "Permissions Denied", Toast.LENGTH_SHORT).show();
-            }
+            public void onPermissionDenied() { }
         });
     }
 
     private void checkBluetoohtBle() {
-        // Use this check to determine whether BLE is supported on the device. Then
-        // you can selectively disable BLE-related features.
-
-        // Initializes Bluetooth adapter.
+        // Use this check to determine whether BLE is supported on the device.
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
-            finish();
         } else if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
