@@ -11,6 +11,9 @@ import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -61,20 +64,12 @@ public class MainActivity extends RxAppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    @BindView(R.id.scan_results)
-    RecyclerView recyclerView;
-
-    @BindView(R.id.tv_empty_list)
-    TextView tvEmptyMsg;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
-    @BindView(R.id.lc_measures)
-    LineChart chart;
 
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
@@ -85,16 +80,10 @@ public class MainActivity extends RxAppCompatActivity {
 
     private PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
     private Observable<RxBleConnection> connectionObservable;
-    private RxBleClient rxBleClient;
     private RxBleDevice bleDevice;
     private Disposable scanDisposable;
     private ScanResultsAdapter resultsAdapter;
 
-    List<Entry> entries = new ArrayList<Entry>();
-
-    private Handler mHandler = new Handler();
-    private int i;
-    private LineDataSet dataSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +95,6 @@ public class MainActivity extends RxAppCompatActivity {
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
         setupUI();
-        actionScan();
 
     }
 
@@ -119,66 +107,44 @@ public class MainActivity extends RxAppCompatActivity {
     private void setupUI(){
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
-        rxBleClient = AppData.getRxBleClient(this);
-        configureResultList();
 
-        Description description = chart.getDescription();
-        description.setText(getString(R.string.app_name));
-        dataSet = new LineDataSet(entries,getString(R.string.label_pm25));
-        dataSet.setColor(R.color.colorPrimary);
-        dataSet.setHighlightEnabled(true);
-        dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
-        addData(0);
     }
 
     private void showSnackMessage(String msg){
         Snackbar.make(coordinatorLayout,msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
-    private void configureResultList() {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(null);
-        LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(recyclerLayoutManager);
-        resultsAdapter = new ScanResultsAdapter();
-        recyclerView.setAdapter(resultsAdapter);
-        resultsAdapter.setOnAdapterItemClickListener(view -> {
-            final int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
-            final ScanResult itemAtPosition = resultsAdapter.getItemAtPosition(childAdapterPosition);
-            onAdapterItemClick(itemAtPosition);
-        });
-    }
 
     private boolean isScanning() {
         return scanDisposable != null;
     }
-
-    private void onAdapterItemClick(ScanResult scanResults) {
-        final String macAddress = scanResults.getBleDevice().getMacAddress();
-        Logger.i(TAG, "onAdapterItemClick: " + macAddress);
-        bleDevice = rxBleClient.getBleDevice(macAddress);
-        connectionObservable = prepareConnectionObservable();
-
-        if (isConnected()) {
-            triggerDisconnect();
-        } else {
-            connectionObservable
-                    .flatMapSingle(RxBleConnection::discoverServices)
-                    .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
-                    .subscribe(
-                            characteristic -> {
-//                                updateUI(characteristic);
-                                Logger.i(TAG, "connection has been established.");
-                                setupNotification();
-                            },
-                            this::onConnectionFailure,
-                            this::onConnectionFinished
-                    );
-        }
-    }
+//
+//    private void onAdapterItemClick(ScanResult scanResults) {
+//        final String macAddress = scanResults.getBleDevice().getMacAddress();
+//        Logger.i(TAG, "onAdapterItemClick: " + macAddress);
+//        bleDevice = rxBleClient.getBleDevice(macAddress);
+//        connectionObservable = prepareConnectionObservable();
+//
+//        if (isConnected()) {
+//            triggerDisconnect();
+//        } else {
+//            connectionObservable
+//                    .flatMapSingle(RxBleConnection::discoverServices)
+//                    .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
+//                    .subscribe(
+//                            characteristic -> {
+////                                updateUI(characteristic);
+//                                Logger.i(TAG, "connection has been established.");
+//                                setupNotification();
+//                            },
+//                            this::onConnectionFailure,
+//                            this::onConnectionFinished
+//                    );
+//        }
+//    }
 
     private void setupNotification() {
         if (isConnected()) {
@@ -225,7 +191,7 @@ public class MainActivity extends RxAppCompatActivity {
         String strdata = new String(bytes);
         Logger.i(TAG,"onNotificationReceived: "+ strdata);
         SensorData data = new Gson().fromJson(strdata,SensorData.class);
-        addData(data.P25);
+//        addData(data.P25); Todo: toFragment
     }
 
     private void onNotificationSetupFailure(Throwable throwable) {
@@ -243,7 +209,6 @@ public class MainActivity extends RxAppCompatActivity {
     private void dispose() {
         scanDisposable = null;
         resultsAdapter.clearScanResults();
-        updateButtonUIState();
     }
 
     private void handleBleScanException(BleScanException bleScanException) {
@@ -342,34 +307,6 @@ public class MainActivity extends RxAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void actionScan() {
-        if (isScanning()) {
-            scanDisposable.dispose();
-        } else {
-            scanDisposable = rxBleClient.scanBleDevices(
-                    new ScanSettings.Builder()
-                            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                            .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                            .build(),
-                    new ScanFilter.Builder()
-//                            .setDeviceAddress("B4:99:4C:34:DC:8B")
-//                            .setServiceUuid(new ParcelUuid(serviceId))
-                            .setDeviceName("ESP32_HPMA115S0")
-                            // add custom filters if needed
-                            .build()
-            )
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doFinally(this::dispose)
-                    .subscribe(resultsAdapter::addScanResult, this::onScanFailure);
-        }
-
-        updateButtonUIState();
-    }
-
-    private void updateButtonUIState() {
-        tvEmptyMsg.setText(isScanning() ? R.string.stop_scan : R.string.start_scan);
-    }
-
     private void checkForPermissions() {
         PermissionManager permissionManager = PermissionManager.getInstance(this);
         permissionManager.checkPermissions(singleton(Manifest.permission.ACCESS_COARSE_LOCATION), new PermissionManager.PermissionRequestListener() {
@@ -393,34 +330,110 @@ public class MainActivity extends RxAppCompatActivity {
         }
     }
 
-    private void loadTestData(){
-        Random rand = new Random();
-        int  n = rand.nextInt(50) + 1;
-        addData(n);
-        Logger.d(TAG,"size: "+entries.size());
-    }
 
-    private Runnable mDataRunnable = new Runnable() {
-        @Override
-        public void run() {
-            Logger.d(TAG,"load more data..");
-            loadTestData();
-            mHandler.postDelayed(mDataRunnable,2000);
+    public void showFragment(Fragment fragment, String fragmentTag, boolean toStack) {
+
+        try {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_default, fragment, fragmentTag);
+            if (toStack) ft.addToBackStack(fragmentTag);
+            ft.commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    };
 
-    private void addData(int value){
-        dataSet.addEntry(new Entry(i++,value));
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate();
     }
 
-    @Override
-    protected void onDestroy() {
-        mHandler.removeCallbacks(mDataRunnable);
-        super.onDestroy();
+    public void showFragment(Fragment fragment, String fragmentTag, boolean toStack, int content) {
+
+        try {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(content, fragment, fragmentTag);
+            if (toStack) ft.addToBackStack(fragmentTag);
+            ft.commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
+    public void showFragmentFull(Fragment fragment, String fragmentTag, boolean toStack) {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_default, fragment, fragmentTag);
+        if (toStack) ft.addToBackStack(fragmentTag);
+        ft.commitAllowingStateLoss();
+
+    }
+
+    public void showDialog(Fragment fragment, String fragmentTag){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(fragment, fragmentTag);
+        ft.show(fragment);
+        ft.commitAllowingStateLoss();
+    }
+
+    public void popBackStackSecure(String TAG) {
+        try {
+            Logger.d(TAG, "popBackStackSecure to: " + TAG);
+            getSupportFragmentManager().popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void popBackLastFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
+            Logger.d(TAG, "onBackPressed popBackStack for:" + getLastFragmentName());
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
+
+    public void removeFragment(Fragment fragment) {
+        try {
+            Logger.w(TAG, "removing fragment: " + fragment.getClass().getSimpleName());
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.remove(fragment).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getLastFragmentName() {
+        try {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) return "";
+            FragmentManager fm = getSupportFragmentManager();
+            return fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public boolean isFragmentInStack(String tag) {
+        try {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) return false;
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment match = fm.findFragmentByTag(tag);
+            if (match!=null)return true;
+            else return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void showSnackLong(String msg) {
+        Snackbar.make(this.getCurrentFocus(), msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
+    public void showSnackLong(int msg) {
+        Snackbar.make(this.getCurrentFocus(), msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
+
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
