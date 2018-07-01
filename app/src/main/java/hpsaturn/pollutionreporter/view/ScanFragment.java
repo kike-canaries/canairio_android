@@ -73,6 +73,7 @@ public class ScanFragment extends Fragment {
         if (isScanning()) {
             scanDisposable.dispose();
         } else {
+            scanning.setText(R.string.bt_device_scanning);
             scanDisposable = rxBleClient.scanBleDevices(
                     new ScanSettings.Builder()
                             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
@@ -87,7 +88,6 @@ public class ScanFragment extends Fragment {
                     .doFinally(this::dispose)
                     .subscribe(this::onScanAdd, this::onScanFailure);
 
-            updateUIState();
         }
 
     }
@@ -98,7 +98,10 @@ public class ScanFragment extends Fragment {
     }
 
     private void updateUIState() {
-        if (resultsAdapter.getItemCount() == 0) scanning.setVisibility(View.VISIBLE);
+        if (resultsAdapter.getItemCount() == 0){
+            scanning.setText(R.string.bt_device_scan);
+            scanning.setVisibility(View.VISIBLE);
+        }
         else scanning.setVisibility(View.INVISIBLE);
     }
 

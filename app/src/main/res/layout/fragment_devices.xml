@@ -11,7 +11,7 @@
         android:layout_margin="3dp"
         android:gravity="center"
         android:visibility="invisible"
-        android:text="@string/bt_device_scanning" />
+        android:text="@string/bt_device_scan" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_devices"
