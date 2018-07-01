@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
+import com.iamhabib.easy_preference.EasyPreference;
 import com.jakewharton.rx.ReplayingShare;
 import com.polidea.rxandroidble2.RxBleConnection;
 import com.polidea.rxandroidble2.RxBleDevice;
@@ -48,6 +49,7 @@ public class MainActivity extends BaseActivity {
     private Disposable scanDisposable;
     private ScanResultsAdapter resultsAdapter;
     private BleScanningFragment scanFragment;
+    private EasyPreference.Builder prefBuilder;
 
 
     @Override
@@ -56,6 +58,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        prefBuilder = AppData.getPrefBuilder(this);
 
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
@@ -71,6 +74,7 @@ public class MainActivity extends BaseActivity {
 
     private void setupUI(){
         fab.setOnClickListener(onFabClickListener);
+        if(!prefBuilder.getBoolean(Keys.DEVICE_PAIR,false))fab.setVisibility(View.INVISIBLE);
         checkForPermissions();
         showScanFragment();
     }
