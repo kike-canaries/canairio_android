@@ -110,11 +110,9 @@ public class MainActivity extends RxAppCompatActivity {
 
     }
 
-
     private View.OnClickListener onFabClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
         }
     };
 
