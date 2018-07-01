@@ -12,4 +12,5 @@
     <string name="ble_device_address">RSSI: -67 [AB:CD:03:AE:E8:62</string>
     <string name="bt_device_scanning">Scanning…</string>
     <string name="bt_device_scan">Scan</string>
+    <string name="action_unpair">Unpair…</string>
 </resources>

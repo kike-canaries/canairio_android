@@ -23,7 +23,7 @@ import static java.util.Collections.singleton;
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/1/18.
  */
-public class BaseActivity extends RxAppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
 
     public static String TAG = BaseActivity.class.getSimpleName();
 
@@ -177,17 +177,16 @@ public class BaseActivity extends RxAppCompatActivity {
             case R.id.action_settings:
                 break;
 
-            case R.id.action_scan:
+            case R.id.action_unpair:
+                actionUnPair();
                 break;
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    abstract void actionUnPair();
+
 
     /**
      * A native method that is implemented by the 'native-lib' native library,

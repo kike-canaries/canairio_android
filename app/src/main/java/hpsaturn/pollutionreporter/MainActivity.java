@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,8 @@ import com.jakewharton.rx.ReplayingShare;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.RxBleConnection;
 import com.polidea.rxandroidble2.RxBleDevice;
+
+import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 
 import java.util.UUID;
 
@@ -79,6 +82,7 @@ public class MainActivity extends BaseActivity {
 
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
+        fab.setVisibility(View.INVISIBLE); // TODO: I need work on it
         checkForPermissions();
         if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
             fab.setVisibility(View.INVISIBLE);
@@ -193,4 +197,11 @@ public class MainActivity extends BaseActivity {
         setupNotification();
     }
 
+    @Override
+    void actionUnPair() {
+        triggerDisconnect();
+        prefBuilder.clearAll();
+        removeFragment(chartFragment);
+        showScanFragment();
+    }
 }
