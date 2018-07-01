@@ -18,7 +18,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
+public class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,7 +33,7 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
         }
     }
 
-    interface OnAdapterItemClickListener {
+    public interface OnAdapterItemClickListener {
 
         void onAdapterViewClick(View view);
     }
@@ -52,7 +52,7 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
         }
     };
 
-    void addScanResult(ScanResult bleScanResult) {
+    public void addScanResult(ScanResult bleScanResult) {
         // Not the best way to ensure distinct devices, just for sake on the demo.
 
         for (int i = 0; i < data.size(); i++) {
@@ -69,12 +69,12 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
         notifyDataSetChanged();
     }
 
-    void clearScanResults() {
+    public void clearScanResults() {
         data.clear();
         notifyDataSetChanged();
     }
 
-    ScanResult getItemAtPosition(int childAdapterPosition) {
+    public ScanResult getItemAtPosition(int childAdapterPosition) {
         return data.get(childAdapterPosition);
     }
 
@@ -98,7 +98,7 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
         return new ViewHolder(itemView);
     }
 
-    void setOnAdapterItemClickListener(OnAdapterItemClickListener onAdapterItemClickListener) {
+    public void setOnAdapterItemClickListener(OnAdapterItemClickListener onAdapterItemClickListener) {
         this.onAdapterItemClickListener = onAdapterItemClickListener;
     }
 }
