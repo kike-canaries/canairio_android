@@ -19,7 +19,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.models.SensorData;
-import hpsaturn.pollutionreporter.view.BleScanningFragment;
+import hpsaturn.pollutionreporter.view.ScanFragment;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity {
     private RxBleDevice bleDevice;
     private Disposable scanDisposable;
     private ScanResultsAdapter resultsAdapter;
-    private BleScanningFragment scanFragment;
+    private ScanFragment scanFragment;
     private EasyPreference.Builder prefBuilder;
 
 
@@ -80,8 +80,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void showScanFragment() {
-        if(scanFragment == null) scanFragment = BleScanningFragment.newInstance();
-        if(!scanFragment.isVisible())showFragment(scanFragment,BleScanningFragment.TAG,false);
+        if(scanFragment == null) scanFragment = ScanFragment.newInstance();
+        if(!scanFragment.isVisible())showFragment(scanFragment, ScanFragment.TAG,false);
     }
 
     private void showSnackMessage(String msg){

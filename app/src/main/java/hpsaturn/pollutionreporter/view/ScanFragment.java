@@ -32,9 +32,9 @@ import io.reactivex.disposables.Disposable;
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
  */
-public class BleScanningFragment extends Fragment {
+public class ScanFragment extends Fragment {
 
-    public static String TAG = BleScanningFragment.class.getSimpleName();
+    public static String TAG = ScanFragment.class.getSimpleName();
 
     @BindView(R.id.rv_devices)
     RecyclerView recyclerView;
@@ -47,8 +47,8 @@ public class BleScanningFragment extends Fragment {
     private ScanResultsAdapter resultsAdapter;
 
 
-    public static BleScanningFragment newInstance() {
-        BleScanningFragment fragment = new BleScanningFragment();
+    public static ScanFragment newInstance() {
+        ScanFragment fragment = new ScanFragment();
         return fragment;
     }
 
@@ -77,7 +77,7 @@ public class BleScanningFragment extends Fragment {
                             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                             .build(),
                     new ScanFilter.Builder()
-                            .setDeviceName("ESP32_HPMA115S0")
+                            .setDeviceName(getString(R.string.ble_device_name))
                             // add custom filters if needed
                             .build()
             )
@@ -97,11 +97,9 @@ public class BleScanningFragment extends Fragment {
         recyclerView.setLayoutManager(recyclerLayoutManager);
         resultsAdapter = new ScanResultsAdapter();
         recyclerView.setAdapter(resultsAdapter);
-        resultsAdapter.setOnAdapterItemClickListener(view -> {
-            final int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
-            final ScanResult itemAtPosition = resultsAdapter.getItemAtPosition(childAdapterPosition);
-            onAdapterItemClick(itemAtPosition);
-        });
+        resultsAdapter.setOnAdapterItemClickListener((view, position) -> onAdapterItemClick(
+                resultsAdapter.getItemAtPosition(position))
+        );
     }
 
 
@@ -124,6 +122,7 @@ public class BleScanningFragment extends Fragment {
     }
 
     private void dispose() {
+        Logger.i(TAG,"dispose");
         scanDisposable = null;
         resultsAdapter.clearScanResults();
     }
@@ -132,10 +131,7 @@ public class BleScanningFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        if (isScanning()) {
-            scanDisposable.dispose();
-        }
+        if (isScanning()) scanDisposable.dispose();
     }
 
     private void handleBleScanException(BleScanException bleScanException) {
