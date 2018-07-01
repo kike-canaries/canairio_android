@@ -2,10 +2,12 @@
 
 **W A R N I N G :** Project in development
 
-Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor. 
+Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor.
+
 ---
 <a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.png"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.png" align="right" width="220" ></a>
 <a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/scan.png"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/scan.png" align="right" width="220" ></a>
+---
 
 ## TODO
 
