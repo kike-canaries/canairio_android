@@ -90,8 +90,8 @@ public class ScanFragment extends Fragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .doFinally(this::dispose)
                     .subscribe(this::onScanAdd, this::onScanFailure);
-
         }
+        updateUIState();
 
     }
 

@@ -200,7 +200,7 @@ public class MainActivity extends BaseActivity {
     @Override
     void actionUnPair() {
         triggerDisconnect();
-        prefBuilder.clearAll();
+        prefBuilder.clearAll().save();
         removeFragment(chartFragment);
         showScanFragment();
     }
