@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.polidea.rxandroidble2.RxBleDevice;
@@ -18,14 +19,16 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
+public class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(android.R.id.text1)
+        @BindView(R.id.tv_device_name)
         TextView line1;
-        @BindView(android.R.id.text2)
+        @BindView(R.id.tv_device_address)
         TextView line2;
+        @BindView(R.id.bt_device_connect)
+        Button connect;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -33,9 +36,8 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
         }
     }
 
-    interface OnAdapterItemClickListener {
-
-        void onAdapterViewClick(View view);
+    public interface OnAdapterItemClickListener {
+        void onAdapterViewClick(View view,int position);
     }
 
     private static final Comparator<ScanResult> SORTING_COMPARATOR = (lhs, rhs) ->
@@ -47,12 +49,12 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
         public void onClick(View v) {
 
             if (onAdapterItemClickListener != null) {
-                onAdapterItemClickListener.onAdapterViewClick(v);
+                onAdapterItemClickListener.onAdapterViewClick(v, (Integer) v.getTag());
             }
         }
     };
 
-    void addScanResult(ScanResult bleScanResult) {
+    public void addScanResult(ScanResult bleScanResult) {
         // Not the best way to ensure distinct devices, just for sake on the demo.
 
         for (int i = 0; i < data.size(); i++) {
@@ -69,12 +71,12 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
         notifyDataSetChanged();
     }
 
-    void clearScanResults() {
+    public void clearScanResults() {
         data.clear();
         notifyDataSetChanged();
     }
 
-    ScanResult getItemAtPosition(int childAdapterPosition) {
+    public ScanResult getItemAtPosition(int childAdapterPosition) {
         return data.get(childAdapterPosition);
     }
 
@@ -87,18 +89,19 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ScanResult rxBleScanResult = data.get(position);
         final RxBleDevice bleDevice = rxBleScanResult.getBleDevice();
-        holder.line1.setText(String.format(Locale.getDefault(), "%s (%s)", bleDevice.getMacAddress(), bleDevice.getName()));
-        holder.line2.setText(String.format(Locale.getDefault(), "RSSI: %d", rxBleScanResult.getRssi()));
+        holder.line1.setText(String.format(Locale.getDefault(), "%s", bleDevice.getName()));
+        holder.line2.setText(String.format(Locale.getDefault(), "RSSI: %d [%s]", rxBleScanResult.getRssi(),bleDevice.getMacAddress()));
+        holder.connect.setTag(position);
+        holder.connect.setOnClickListener(onClickListener);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.two_line_list_item, parent, false);
-        itemView.setOnClickListener(onClickListener);
+        final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_device, parent, false);
         return new ViewHolder(itemView);
     }
 
-    void setOnAdapterItemClickListener(OnAdapterItemClickListener onAdapterItemClickListener) {
+    public void setOnAdapterItemClickListener(OnAdapterItemClickListener onAdapterItemClickListener) {
         this.onAdapterItemClickListener = onAdapterItemClickListener;
     }
 }

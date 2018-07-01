@@ -8,8 +8,8 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_scan"
+        android:id="@+id/action_unpair"
         android:orderInCategory="200"
-        android:title="@string/action_scan"
+        android:title="@string/action_unpair"
         app:showAsAction="never" />
 </menu>

@@ -4,9 +4,7 @@
 extern "C" JNIEXPORT jstring
 
 JNICALL
-Java_hpsaturn_pollutionreporter_MainActivity_stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */) {
+Java_hpsaturn_pollutionreporter_BaseActivity_stringFromJNI(JNIEnv *env, jobject /* this */) {
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
