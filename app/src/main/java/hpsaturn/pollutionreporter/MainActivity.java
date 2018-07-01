@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.jakewharton.rx.ReplayingShare;
+import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.RxBleConnection;
 import com.polidea.rxandroidble2.RxBleDevice;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -50,6 +52,8 @@ public class MainActivity extends BaseActivity {
     private ScanResultsAdapter resultsAdapter;
     private ScanFragment scanFragment;
     private EasyPreference.Builder prefBuilder;
+    private ChartFragment chartFragment;
+    private RxBleClient rxBleClient;
 
 
     @Override
@@ -63,6 +67,7 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
         setupUI();
+        deviceConnect();
 
     }
 
@@ -72,47 +77,66 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-    private void setupUI(){
+    private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
-        if(!prefBuilder.getBoolean(Keys.DEVICE_PAIR,false))fab.setVisibility(View.INVISIBLE);
         checkForPermissions();
-        showScanFragment();
+        if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
+            fab.setVisibility(View.INVISIBLE);
+            showScanFragment();
+        }
+    }
+
+    private void showChartFragment() {
+        if (chartFragment == null) chartFragment = ChartFragment.newInstance();
+        if (!chartFragment.isVisible()) showFragment(chartFragment, ChartFragment.TAG, false);
     }
 
     private void showScanFragment() {
-        if(scanFragment == null) scanFragment = ScanFragment.newInstance();
-        if(!scanFragment.isVisible())showFragment(scanFragment, ScanFragment.TAG,false);
+        if (scanFragment == null) scanFragment = ScanFragment.newInstance();
+        if (!scanFragment.isVisible()) showFragment(scanFragment, ScanFragment.TAG, false);
     }
 
-    private void showSnackMessage(String msg){
-        Snackbar.make(coordinatorLayout,msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    public void removeScanFragment(){
+        if (scanFragment != null)removeFragment(scanFragment);
+    }
+
+    private void showSnackMessage(String msg) {
+        Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
+    public void deviceConnect() {
+        if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
+            String macAddress = prefBuilder.getString(Keys.DEVICE_ADDRESS,"");
+            Logger.i(TAG, "deviceConnect to " + macAddress);
+            rxBleClient = AppData.getRxBleClient(this);
+            bleDevice = rxBleClient.getBleDevice(macAddress);
+            connectionObservable = prepareConnectionObservable();
+
+            if (isConnected()) {
+                triggerDisconnect();
+            } else {
+                connectionObservable
+                        .flatMapSingle(RxBleConnection::discoverServices)
+                        .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
+                        .subscribe(
+                                characteristic -> {
+//                                updateUI(characteristic);
+                                    Logger.i(TAG, "connection has been established.");
+                                    setupNotification();
+                                    showChartFragment();
+                                },
+                                this::onConnectionFailure,
+                                this::onConnectionFinished
+                        );
+            }
+        }
     }
 
 //
 //    private void onAdapterItemClick(ScanResult scanResults) {
-//        final String macAddress = scanResults.getBleDevice().getMacAddress();
-//        Logger.i(TAG, "onAdapterItemClick: " + macAddress);
-//        bleDevice = rxBleClient.getBleDevice(macAddress);
-//        connectionObservable = prepareConnectionObservable();
-//
-//        if (isConnected()) {
-//            triggerDisconnect();
-//        } else {
-//            connectionObservable
-//                    .flatMapSingle(RxBleConnection::discoverServices)
-//                    .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
-//                    .subscribe(
-//                            characteristic -> {
-////                                updateUI(characteristic);
-//                                Logger.i(TAG, "connection has been established.");
-//                                setupNotification();
-//                            },
-//                            this::onConnectionFailure,
-//                            this::onConnectionFinished
-//                    );
-//        }
+
 //    }
 
     private void setupNotification() {
@@ -139,13 +163,14 @@ public class MainActivity extends BaseActivity {
     }
 
     private void triggerDisconnect() {
-        Logger.i(TAG,"triggerDisconnect..");
+        Logger.i(TAG, "triggerDisconnect..");
         disconnectTriggerSubject.onNext(true);
     }
 
     private void onConnectionFailure(Throwable throwable) {
         Logger.e(TAG, "onConnectionFailure");
         showSnackMessage(getString(R.string.msg_device_disconnected));
+        deviceConnect();
     }
 
     private void onConnectionFinished() {
@@ -158,13 +183,13 @@ public class MainActivity extends BaseActivity {
 
     private void onNotificationReceived(byte[] bytes) {
         String strdata = new String(bytes);
-        Logger.i(TAG,"onNotificationReceived: "+ strdata);
-        SensorData data = new Gson().fromJson(strdata,SensorData.class);
-//        addData(data.P25); Todo: toFragment
+        Logger.i(TAG, "onNotificationReceived: " + strdata);
+        SensorData data = new Gson().fromJson(strdata, SensorData.class);
+        if(chartFragment!=null) chartFragment.addData(data.P25);
     }
 
     private void onNotificationSetupFailure(Throwable throwable) {
-        Logger.e(TAG,"onNotificationSetupFailure");
+        Logger.e(TAG, "onNotificationSetupFailure");
         setupNotification();
     }
 

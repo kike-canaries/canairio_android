@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
+import com.iamhabib.easy_preference.EasyPreference;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.exceptions.BleScanException;
 import com.polidea.rxandroidble2.scan.ScanFilter;
@@ -24,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.AppData;
+import hpsaturn.pollutionreporter.Keys;
+import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.ScanResultsAdapter;
 import hpsaturn.pollutionreporter.R;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -98,11 +101,10 @@ public class ScanFragment extends Fragment {
     }
 
     private void updateUIState() {
-        if (resultsAdapter.getItemCount() == 0){
+        if (resultsAdapter.getItemCount() == 0) {
             scanning.setText(R.string.bt_device_scan);
             scanning.setVisibility(View.VISIBLE);
-        }
-        else scanning.setVisibility(View.INVISIBLE);
+        } else scanning.setVisibility(View.INVISIBLE);
     }
 
     private void configureResultList() {
@@ -112,16 +114,20 @@ public class ScanFragment extends Fragment {
         recyclerView.setLayoutManager(recyclerLayoutManager);
         resultsAdapter = new ScanResultsAdapter();
         recyclerView.setAdapter(resultsAdapter);
-        resultsAdapter.setOnAdapterItemClickListener((view, position) -> onAdapterItemClick(
+        resultsAdapter.setOnAdapterItemClickListener((view, position) -> onDeviceConnectClick(
                 resultsAdapter.getItemAtPosition(position))
         );
     }
 
-    private void onAdapterItemClick(ScanResult scanResults) {
-        final String macAddress = scanResults.getBleDevice().getMacAddress();
-        Logger.i(TAG, "onAdapterItemClick: " + macAddress);
-//        bleDevice = rxBleClient.getBleDevice(macAddress);
-//        connectionObservable = prepareConnectionObservable();
+    private void onDeviceConnectClick(ScanResult scanResults) {
+        String macAddress = scanResults.getBleDevice().getMacAddress();
+        String deviceName = scanResults.getBleDevice().getName();
+        Logger.i(TAG, "onDeviceConnectClick: "+deviceName+ " " + macAddress);
+        EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
+        prefBuilder.addString(Keys.DEVICE_ADDRESS, macAddress).save();
+        prefBuilder.addBoolean(Keys.DEVICE_PAIR, true).save();
+        getMain().deviceConnect();
+        getMain().removeScanFragment();
     }
 
     private boolean isScanning() {
@@ -201,6 +207,10 @@ public class ScanFragment extends Fragment {
 
     private long secondsTill(Date retryDateSuggestion) {
         return TimeUnit.MILLISECONDS.toSeconds(retryDateSuggestion.getTime() - System.currentTimeMillis());
+    }
+
+    private MainActivity getMain() {
+        return ((MainActivity) getActivity());
     }
 
 }

@@ -9,36 +9,10 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/content_default"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <FrameLayout
-            android:id="@+id/content_default"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <!--<TextView-->
-            <!--android:id="@+id/tv_empty_list"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:gravity="center_horizontal|center_vertical" />-->
-
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/scan_results"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:background="@color/colorPrimaryDark"-->
-            <!--android:scrollbars="vertical" />-->
-
-        <!--<com.github.mikephil.charting.charts.LineChart-->
-            <!--android:id="@+id/lc_measures"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="330dp"-->
-            <!--android:layout_below="@+id/scan_results"-->
-            <!--android:layout_marginTop="5dp" />-->
-
-    </RelativeLayout>
-
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp" />
 
 </android.support.v4.widget.NestedScrollView>

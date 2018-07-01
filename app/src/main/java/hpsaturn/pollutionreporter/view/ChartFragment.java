@@ -66,7 +66,7 @@ public class ChartFragment extends Fragment{
         Logger.d(TAG,"size: "+entries.size());
     }
 
-    private void addData(int value){
+    public void addData(int value){
         dataSet.addEntry(new Entry(i++,value));
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
