@@ -4,14 +4,15 @@
 
 Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor. 
 <a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.png"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.png" align="right" height="426" width="240" ></a>
+<a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.png"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/scan.png" align="right" height="426" width="240" ></a>
 
 ## TODO
 
 - [X] BLE scanning and connecting 
+- [X] BLE auto connect and reconnect
 - [X] Receive data via BLE notification
 - [X] Basic chart for PM 2.5 data
 - [ ] BLE persist connection on background service
-- [ ] BLE auto connect
 - [ ] MQTT subscription and publishing
 - [ ] Google Maps pollution data
 
