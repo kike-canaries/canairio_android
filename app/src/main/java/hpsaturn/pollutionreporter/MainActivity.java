@@ -7,51 +7,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.intentfilter.androidpermissions.PermissionManager;
 import com.jakewharton.rx.ReplayingShare;
-import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.RxBleConnection;
 import com.polidea.rxandroidble2.RxBleDevice;
-import com.polidea.rxandroidble2.exceptions.BleScanException;
-import com.polidea.rxandroidble2.scan.ScanFilter;
-import com.polidea.rxandroidble2.scan.ScanResult;
-import com.polidea.rxandroidble2.scan.ScanSettings;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.view.BleScanningFragment;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -83,6 +64,7 @@ public class MainActivity extends RxAppCompatActivity {
     private RxBleDevice bleDevice;
     private Disposable scanDisposable;
     private ScanResultsAdapter resultsAdapter;
+    private BleScanningFragment scanFragment;
 
 
     @Override
@@ -107,18 +89,18 @@ public class MainActivity extends RxAppCompatActivity {
     private void setupUI(){
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
+        showScanFragment();
+    }
 
-
+    private void showScanFragment() {
+        if(scanFragment == null) scanFragment = BleScanningFragment.newInstance();
+        if(!scanFragment.isVisible())showFragment(scanFragment,BleScanningFragment.TAG,false);
     }
 
     private void showSnackMessage(String msg){
         Snackbar.make(coordinatorLayout,msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
-
-    private boolean isScanning() {
-        return scanDisposable != null;
-    }
 //
 //    private void onAdapterItemClick(ScanResult scanResults) {
 //        final String macAddress = scanResults.getBleDevice().getMacAddress();
@@ -199,82 +181,6 @@ public class MainActivity extends RxAppCompatActivity {
         setupNotification();
     }
 
-    private void onScanFailure(Throwable throwable) {
-        Logger.e(TAG,"onScanFailure");
-        if (throwable instanceof BleScanException) {
-            handleBleScanException((BleScanException) throwable);
-        }
-    }
-
-    private void dispose() {
-        scanDisposable = null;
-        resultsAdapter.clearScanResults();
-    }
-
-    private void handleBleScanException(BleScanException bleScanException) {
-        final String text;
-
-        switch (bleScanException.getReason()) {
-            case BleScanException.BLUETOOTH_NOT_AVAILABLE:
-                text = "Bluetooth is not available";
-                break;
-            case BleScanException.BLUETOOTH_DISABLED:
-                text = "Enable bluetooth and try again";
-                break;
-            case BleScanException.LOCATION_PERMISSION_MISSING:
-                text = "On Android 6.0 location permission is required. Implement Runtime Permissions";
-                break;
-            case BleScanException.LOCATION_SERVICES_DISABLED:
-                text = "Location services needs to be enabled on Android 6.0";
-                break;
-            case BleScanException.SCAN_FAILED_ALREADY_STARTED:
-                text = "Scan with the same filters is already started";
-                break;
-            case BleScanException.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                text = "Failed to register application for bluetooth scan";
-                break;
-            case BleScanException.SCAN_FAILED_FEATURE_UNSUPPORTED:
-                text = "Scan with specified parameters is not supported";
-                break;
-            case BleScanException.SCAN_FAILED_INTERNAL_ERROR:
-                text = "Scan failed due to internal error";
-                break;
-            case BleScanException.SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES:
-                text = "Scan cannot start due to limited hardware resources";
-                break;
-            case BleScanException.UNDOCUMENTED_SCAN_THROTTLE:
-                text = String.format(
-                        Locale.getDefault(),
-                        "Android 7+ does not allow more scans. Try in %d seconds",
-                        secondsTill(bleScanException.getRetryDateSuggestion())
-                );
-                break;
-            case BleScanException.UNKNOWN_ERROR_CODE:
-            case BleScanException.BLUETOOTH_CANNOT_START:
-            default:
-                text = "Unable to start scanning";
-                break;
-        }
-        Logger.w(TAG,"EXCEPTION: "+text+" "+bleScanException.getMessage());
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
-    private long secondsTill(Date retryDateSuggestion) {
-        return TimeUnit.MILLISECONDS.toSeconds(retryDateSuggestion.getTime() - System.currentTimeMillis());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if (isScanning()) {
-            /*
-             * Stop scanning in onPause callback. You can use rxlifecycle for convenience. Examples are provided later.
-             */
-            scanDisposable.dispose();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -295,7 +201,6 @@ public class MainActivity extends RxAppCompatActivity {
                 break;
 
             case R.id.action_scan:
-                isScanning();
                 break;
         }
 

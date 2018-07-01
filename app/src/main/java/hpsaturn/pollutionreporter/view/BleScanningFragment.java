@@ -59,6 +59,10 @@ public class BleScanningFragment extends Fragment {
         ButterKnife.bind(this,view);
 
         rxBleClient = AppData.getRxBleClient(getActivity());
+        Logger.i(TAG,"onCreateView: configureResultList..");
+        configureResultList();
+        Logger.i(TAG,"onCreateView: actionScan..");
+        actionScan();
 
         return view;
     }
@@ -130,9 +134,6 @@ public class BleScanningFragment extends Fragment {
         super.onPause();
 
         if (isScanning()) {
-            /*
-             * Stop scanning in onPause callback. You can use rxlifecycle for convenience. Examples are provided later.
-             */
             scanDisposable.dispose();
         }
     }
