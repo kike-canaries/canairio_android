@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
@@ -39,8 +39,8 @@ public class ScanFragment extends Fragment {
     @BindView(R.id.rv_devices)
     RecyclerView recyclerView;
 
-    @BindView(R.id.tv_devices_empty_list)
-    TextView tvEmptyMsg;
+    @BindView(R.id.bt_device_scanning)
+    Button scanning;
 
     private Disposable scanDisposable;
     private RxBleClient rxBleClient;
@@ -55,13 +55,15 @@ public class ScanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_devices,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_devices, container, false);
+        ButterKnife.bind(this, view);
 
         rxBleClient = AppData.getRxBleClient(getActivity());
-        Logger.i(TAG,"onCreateView: configureResultList..");
+        Logger.i(TAG, "onCreateView: configureResultList..");
         configureResultList();
-        Logger.i(TAG,"onCreateView: actionScan..");
+        Logger.i(TAG, "onCreateView: actionScan..");
+
+        scanning.setOnClickListener(view1 -> actionScan());
         actionScan();
 
         return view;
@@ -83,12 +85,22 @@ public class ScanFragment extends Fragment {
             )
                     .observeOn(AndroidSchedulers.mainThread())
                     .doFinally(this::dispose)
-                    .subscribe(resultsAdapter::addScanResult, this::onScanFailure);
+                    .subscribe(this::onScanAdd, this::onScanFailure);
+
+            updateUIState();
         }
 
-//        updateButtonUIState();
     }
 
+    private void onScanAdd(ScanResult scanResult) {
+        resultsAdapter.addScanResult(scanResult);
+        updateUIState();
+    }
+
+    private void updateUIState() {
+        if (resultsAdapter.getItemCount() == 0) scanning.setVisibility(View.VISIBLE);
+        else scanning.setVisibility(View.INVISIBLE);
+    }
 
     private void configureResultList() {
         recyclerView.setHasFixedSize(true);
@@ -102,7 +114,6 @@ public class ScanFragment extends Fragment {
         );
     }
 
-
     private void onAdapterItemClick(ScanResult scanResults) {
         final String macAddress = scanResults.getBleDevice().getMacAddress();
         Logger.i(TAG, "onAdapterItemClick: " + macAddress);
@@ -115,16 +126,18 @@ public class ScanFragment extends Fragment {
     }
 
     private void onScanFailure(Throwable throwable) {
-        Logger.e(TAG,"onScanFailure");
+        Logger.e(TAG, "onScanFailure");
         if (throwable instanceof BleScanException) {
             handleBleScanException((BleScanException) throwable);
+            updateUIState();
         }
     }
 
     private void dispose() {
-        Logger.i(TAG,"dispose");
+        Logger.i(TAG, "dispose");
         scanDisposable = null;
         resultsAdapter.clearScanResults();
+        updateUIState();
     }
 
 
@@ -132,6 +145,7 @@ public class ScanFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (isScanning()) scanDisposable.dispose();
+        updateUIState();
     }
 
     private void handleBleScanException(BleScanException bleScanException) {
@@ -178,8 +192,8 @@ public class ScanFragment extends Fragment {
                 text = "Unable to start scanning";
                 break;
         }
-        Logger.w(TAG,"EXCEPTION: "+text+" "+bleScanException.getMessage());
-        UITools.showToast(getActivity(),text);
+        Logger.w(TAG, "EXCEPTION: " + text + " " + bleScanException.getMessage());
+        UITools.showToast(getActivity(), text);
     }
 
     private long secondsTill(Date retryDateSuggestion) {

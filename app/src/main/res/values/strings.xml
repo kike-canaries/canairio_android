@@ -10,4 +10,5 @@
     <string name="msg_devices_empty_list">Not devices found!</string>
     <string name="ble_device_name">ESP32_HPMA115S0</string>
     <string name="ble_device_address">RSSI: -67 [AB:CD:03:AE:E8:62</string>
+    <string name="bt_device_scanning">SCAN</string>
 </resources>

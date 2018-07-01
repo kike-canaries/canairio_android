@@ -4,13 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_devices_empty_list"
+    <Button
+        android:id="@+id/bt_device_scanning"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
+        android:layout_margin="3dp"
         android:gravity="center"
         android:visibility="invisible"
-        android:text="@string/msg_devices_empty_list" />
+        android:text="@string/bt_device_scanning" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_devices"
