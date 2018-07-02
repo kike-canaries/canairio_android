@@ -13,7 +13,6 @@ public class ServiceBLE extends Service {
 
     private static final String TAG = ServiceBLE.class.getSimpleName();
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
