@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements BLEHandler.OnBLEConnec
 
     @Override
     protected void onDestroy() {
-        bleHandler.triggerDisconnect();
+        if(bleHandler!=null)bleHandler.triggerDisconnect();
         super.onDestroy();
     }
 }
