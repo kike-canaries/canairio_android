@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,11 +15,15 @@ import com.polidea.rxandroidble2.RxBleClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.bleservice.ServiceBLE;
+import hpsaturn.pollutionreporter.bleservice.ServiceInterface;
+import hpsaturn.pollutionreporter.bleservice.ServiceManager;
+import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 
-public class MainActivity extends BaseActivity implements BLEHandler.OnBLEConnectionListener{
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -34,8 +39,7 @@ public class MainActivity extends BaseActivity implements BLEHandler.OnBLEConnec
     private ScanFragment scanFragment;
     private EasyPreference.Builder prefBuilder;
     private ChartFragment chartFragment;
-    private RxBleClient rxBleClient;
-    private BLEHandler bleHandler;
+    private ServiceManager serviceManager;
 
 
     @Override
@@ -49,15 +53,44 @@ public class MainActivity extends BaseActivity implements BLEHandler.OnBLEConnec
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
         setupUI();
-        deviceConnect();
+        serviceManager = new ServiceManager(this,serviceListener);
+        startBleService();
 
     }
 
-    private View.OnClickListener onFabClickListener = new View.OnClickListener() {
+
+    private ServiceInterface serviceListener = new ServiceInterface() {
         @Override
-        public void onClick(View view) {
+        public void onServiceStatus(String status) {
+
+            if(status.equals(ServiceManager.STATUS_BLE_START)){
+                showChartFragment();
+            }
+            else if(status.equals(ServiceManager.STATUS_BLE_FAILURE)){
+                showSnackMessage(getString(R.string.msg_device_disconnected));
+            }
+        }
+
+        @Override
+        public void onServiceStart() {
+
+        }
+
+        @Override
+        public void onServiceStop() {
+
+        }
+
+        @Override
+        public void onServiceData(byte[] bytes) {
+            String strdata = new String(bytes);
+            Logger.i(TAG, "data: " + strdata);
+            SensorData data = new Gson().fromJson(strdata, SensorData.class);
+            if(chartFragment!=null) chartFragment.addData(data.P25);
         }
     };
+
+    private View.OnClickListener onFabClickListener = view -> { };
 
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
@@ -83,6 +116,13 @@ public class MainActivity extends BaseActivity implements BLEHandler.OnBLEConnec
         if (scanFragment != null)removeFragment(scanFragment);
     }
 
+
+    private void startBleService() {
+        Intent newIntent = new Intent(this, ServiceBLE.class);
+        startService(newIntent);
+        ServiceScheduler.startScheduleService(this, Config.DEFAULT_INTERVAL);
+    }
+
     private void showSnackMessage(String msg) {
         Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
@@ -90,58 +130,16 @@ public class MainActivity extends BaseActivity implements BLEHandler.OnBLEConnec
     public void deviceConnect() {
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
             showSnackMessage(getString(R.string.msg_device_connecting));
-            String macAddress = prefBuilder.getString(Keys.DEVICE_ADDRESS,"");
-            Logger.i(TAG, "deviceConnect to " + macAddress);
-            bleHandler = new BLEHandler(this,macAddress,this);
-            bleHandler.connect();
+            serviceManager.start();
         }
     }
 
     @Override
-    public void onConnectionSuccess() {
-        showChartFragment();
-    }
-
-    @Override
-    public void onConectionFailure() {
-        showSnackMessage(getString(R.string.msg_device_disconnected));
-        deviceConnect();
-    }
-
-    @Override
-    public void onConnectionFinished() {
-
-    }
-
-    @Override
-    public void onNotificationSetup() {
-
-    }
-
-    @Override
-    public void onNotificationSetupFailure() {
-        bleHandler.setupNotification();
-    }
-
-    @Override
-    public void onNotificationReceived(byte[] bytes) {
-        String strdata = new String(bytes);
-        Logger.i(TAG, "data: " + strdata);
-        SensorData data = new Gson().fromJson(strdata, SensorData.class);
-        if(chartFragment!=null) chartFragment.addData(data.P25);
-    }
-
-    @Override
     void actionUnPair() {
-        bleHandler.triggerDisconnect();
+        serviceManager.stop();
         prefBuilder.clearAll().save();
         removeFragment(chartFragment);
         showScanFragment();
     }
 
-    @Override
-    protected void onDestroy() {
-        if(bleHandler!=null)bleHandler.triggerDisconnect();
-        super.onDestroy();
-    }
 }
