@@ -28,20 +28,18 @@ public class ServiceBLE extends Service {
         super.onCreate();
         Logger.i(TAG,"[BLE] Creating Service container..");
         prefBuilder = AppData.getPrefBuilder(this);
-        isDevicePaired = prefBuilder.getBoolean(Keys.DEVICE_PAIR, false);
         serviceManager = new ServiceManager(this,managerListener);
-
     }
 
     private void startConnection(){
-        if (isDevicePaired&&bleHandler==null) {
+        if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
             Logger.i(TAG,"[BLE] starting BLE connection..");
             String macAddress = prefBuilder.getString(Keys.DEVICE_ADDRESS,"");
             Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
             bleHandler = new BLEHandler(this,macAddress,bleListener);
             bleHandler.connect();
         }
-        else if(!isDevicePaired)Logger.w(TAG,"[BLE] not BLE connection (not MAC register)");
+        else Logger.w(TAG,"[BLE] not BLE connection (not MAC register)");
     }
 
     @Override
@@ -68,7 +66,6 @@ public class ServiceBLE extends Service {
         public void onServiceStop() {
             Logger.w(TAG,"[BLE] request service stop..");
             if(bleHandler!=null)bleHandler.triggerDisconnect();
-            bleHandler = null;
         }
 
         @Override
@@ -102,7 +99,7 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onNotificationSetupFailure() {
-            if(bleHandler!=null)bleHandler.setupNotification();
+            bleHandler.setupNotification();
         }
 
         @Override
