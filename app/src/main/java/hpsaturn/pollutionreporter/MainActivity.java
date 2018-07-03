@@ -47,6 +47,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startBleService();
+
         ButterKnife.bind(this);
         prefBuilder = AppData.getPrefBuilder(this);
 
@@ -54,7 +56,7 @@ public class MainActivity extends BaseActivity {
         checkBluetoohtBle();
         setupUI();
         serviceManager = new ServiceManager(this,serviceListener);
-        startBleService();
+        deviceConnect();
 
     }
 
@@ -73,7 +75,6 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onServiceStart() {
-
         }
 
         @Override
@@ -136,10 +137,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     void actionUnPair() {
+        Logger.i(TAG,"[BLE] unpaired..");
         serviceManager.stop();
         prefBuilder.clearAll().save();
         removeFragment(chartFragment);
         showScanFragment();
     }
 
+    @Override
+    protected void onDestroy() {
+        serviceManager.stop();
+        serviceManager.unregister();
+        super.onDestroy();
+    }
 }
