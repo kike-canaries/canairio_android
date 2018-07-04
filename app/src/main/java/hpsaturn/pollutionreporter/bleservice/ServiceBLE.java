@@ -158,6 +158,8 @@ public class ServiceBLE extends Service {
         }
     }
 
+    // TODO: unify the next methods to prefBuilder schema or database schema
+
     public void setData( ArrayList<SensorData> items) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
