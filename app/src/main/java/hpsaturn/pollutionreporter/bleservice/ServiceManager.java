@@ -18,6 +18,8 @@ public class ServiceManager {
     private String action_stop;
     private String action_push;
     private String action_status;
+    private String action_sensor_record;
+    private String action_sensor_record_stop;
 
     private static String KEY_SERVICE_DATA = "KEY_SERVICE_DATA";
     private static String KEY_SERVICE_STATUS = "KEY_SERVICE_STATUS";
@@ -38,10 +40,15 @@ public class ServiceManager {
         action_push    = "ACTION_SERVICE_PUSH";
         action_status  = "ACTION_SERVICE_STATUS";
 
+        action_sensor_record       = "ACTION_SENSOR_RECORD";
+        action_sensor_record_stop  = "ACTION_SENSOR_RECORD_STOP";
+
         intentFilter.addAction(action_start);
         intentFilter.addAction(action_stop);
         intentFilter.addAction(action_push);
         intentFilter.addAction(action_status);
+        intentFilter.addAction(action_sensor_record);
+        intentFilter.addAction(action_sensor_record_stop);
 
         ctx.registerReceiver(mReceiver,intentFilter);
     }
@@ -65,6 +72,16 @@ public class ServiceManager {
     public void status(String status){
         Intent intent = new Intent(action_status);
         intent.putExtra(KEY_SERVICE_STATUS,status);
+        ctx.sendBroadcast(intent);
+    }
+
+    public void sensorRecord() {
+        Intent intent = new Intent(action_sensor_record);
+        ctx.sendBroadcast(intent);
+    }
+
+    public void sensorRecordStop() {
+        Intent intent = new Intent(action_sensor_record_stop);
         ctx.sendBroadcast(intent);
     }
 
@@ -97,8 +114,17 @@ public class ServiceManager {
                 byte[] bytes = intent.getExtras().getByteArray(KEY_SERVICE_DATA);
                 listener.onServiceData(bytes);
 
+            } else if(action.equals(action_sensor_record)) {
+
+                listener.onSensorRecord();
+
+            } else if(action.equals(action_sensor_record_stop)) {
+
+                listener.onSensorRecordStop();
+
             }
 
         }
     };
+
 }

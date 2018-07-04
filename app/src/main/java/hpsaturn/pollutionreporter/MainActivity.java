@@ -11,7 +11,6 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
-import com.polidea.rxandroidble2.RxBleClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,22 +83,51 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onServiceData(byte[] bytes) {
+            refreshUI();
             String strdata = new String(bytes);
             Logger.i(TAG, "data: " + strdata);
             SensorData data = new Gson().fromJson(strdata, SensorData.class);
             if(chartFragment!=null) chartFragment.addData(data.P25);
         }
+
+        @Override
+        public void onSensorRecord() {
+
+        }
+
+        @Override
+        public void onSensorRecordStop() {
+
+        }
     };
 
-    private View.OnClickListener onFabClickListener = view -> { };
+    private View.OnClickListener onFabClickListener = view -> {
+        if(prefBuilder.getBoolean(Keys.SENSOR_RECORD,false)){
+            fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_18dp));
+            prefBuilder.addBoolean(Keys.SENSOR_RECORD,false).save();
+            serviceManager.sensorRecordStop();
+        }else {
+            fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_18dp));
+            prefBuilder.addBoolean(Keys.SENSOR_RECORD,true).save();
+            serviceManager.sensorRecord();
+        }
+    };
 
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
-        fab.setVisibility(View.INVISIBLE); // TODO: I need work on it
         checkForPermissions();
         if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
             fab.setVisibility(View.INVISIBLE);
             showScanFragment();
+        }
+    }
+
+    private void refreshUI(){
+        fab.setVisibility(View.VISIBLE);
+        if(prefBuilder.getBoolean(Keys.SENSOR_RECORD,false)){
+            fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_18dp));
+        }else{
+            fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_18dp));
         }
     }
 

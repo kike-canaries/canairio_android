@@ -13,4 +13,7 @@ public interface ServiceInterface {
 
     void onServiceData(byte[] bytes);
 
+    void onSensorRecord();
+
+    void onSensorRecordStop();
 }

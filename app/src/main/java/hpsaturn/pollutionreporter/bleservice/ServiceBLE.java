@@ -20,7 +20,7 @@ public class ServiceBLE extends Service {
     private static final String TAG = ServiceBLE.class.getSimpleName();
     private EasyPreference.Builder prefBuilder;
     private BLEHandler bleHandler;
-    private boolean isDevicePaired;
+    private boolean isRecording;
     private ServiceManager serviceManager;
 
     @Override
@@ -28,24 +28,34 @@ public class ServiceBLE extends Service {
         super.onCreate();
         Logger.i(TAG,"[BLE] Creating Service container..");
         prefBuilder = AppData.getPrefBuilder(this);
+        isRecording=prefBuilder.getBoolean(Keys.SENSOR_RECORD,false);
         serviceManager = new ServiceManager(this,managerListener);
     }
 
     private void startConnection(){
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
-            Logger.i(TAG,"[BLE] starting BLE connection..");
-            String macAddress = prefBuilder.getString(Keys.DEVICE_ADDRESS,"");
-            Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
-            bleHandler = new BLEHandler(this,macAddress,bleListener);
-            bleHandler.connect();
+            if(bleHandler==null) {
+                connect();
+            }
+            else if(bleHandler.isConnected())Logger.i(TAG,"[BLE] already connected!");
+            else connect();
         }
         else Logger.w(TAG,"[BLE] not BLE connection (not MAC register)");
+    }
+
+    private void connect(){
+        Logger.i(TAG, "[BLE] starting BLE connection..");
+        String macAddress = prefBuilder.getString(Keys.DEVICE_ADDRESS, "");
+        Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
+        bleHandler = new BLEHandler(this, macAddress, bleListener);
+        bleHandler.connect();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.d(TAG,"[BLE] onStartCommand");
         serviceManager.status(ServiceManager.STATUS_SERVICE_OK);
+        if(isRecording)startConnection();
         return START_STICKY;
     }
 
@@ -65,12 +75,23 @@ public class ServiceBLE extends Service {
         @Override
         public void onServiceStop() {
             Logger.w(TAG,"[BLE] request service stop..");
-            if(bleHandler!=null)bleHandler.triggerDisconnect();
+            if(bleHandler!=null&&!isRecording)bleHandler.triggerDisconnect();
+            else if (isRecording) Logger.w(TAG,"[BLE] isRecording override stop BLE service");
         }
 
         @Override
         public void onServiceData(byte[] bytes) {
 
+        }
+
+        @Override
+        public void onSensorRecord() {
+           isRecording=true;
+        }
+
+        @Override
+        public void onSensorRecordStop() {
+            isRecording=false;
         }
     };
 
@@ -84,6 +105,7 @@ public class ServiceBLE extends Service {
         @Override
         public void onConectionFailure() {
            serviceManager.status(ServiceManager.STATUS_BLE_FAILURE);
+           Logger.w(TAG,"[BLE] retry connection on failure..");
            startConnection(); // R E T R Y
         }
 
@@ -104,6 +126,8 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
+            if(isRecording)Logger.i(TAG,"[BLE] recording..");
+            Logger.d(TAG,"[BLE] pushing data..");
             serviceManager.pushData(bytes);
         }
     };
