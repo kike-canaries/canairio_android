@@ -1,6 +1,8 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +13,21 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hpsaturn.tools.Logger;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.Keys;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
@@ -54,9 +62,17 @@ public class ChartFragment extends Fragment{
         dataSet.setHighlightEnabled(true);
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
-        addData(0);
-
+        loadData();
         return view;
+    }
+
+    private void loadData() {
+        ArrayList<SensorData> data = getData();
+        if(data.size()==0) addData(0);
+        else{
+            Iterator<SensorData> it = data.iterator();
+            while (it.hasNext())addData(it.next().P25);
+        }
     }
 
     private void loadTestData(){
@@ -71,6 +87,17 @@ public class ChartFragment extends Fragment{
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
         chart.invalidate();
+    }
+
+    private ArrayList<SensorData> getData() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String ringJson = preferences.getString(Keys.SENSOR_DATA, "");
+        if (ringJson.equals("")) return new ArrayList<>();
+        else {
+            Type listType = new TypeToken<ArrayList<SensorData>>() {
+            }.getType();
+            return new Gson().fromJson(ringJson, listType);
+        }
     }
 
     @Override

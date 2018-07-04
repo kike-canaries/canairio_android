@@ -2,14 +2,22 @@ package hpsaturn.pollutionreporter.bleservice;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.BLEHandler;
 import hpsaturn.pollutionreporter.Keys;
+import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 11/17/17.
@@ -22,6 +30,8 @@ public class ServiceBLE extends Service {
     private BLEHandler bleHandler;
     private boolean isRecording;
     private ServiceManager serviceManager;
+
+    private ArrayList<SensorData> buffer = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -126,11 +136,45 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            if(isRecording)Logger.i(TAG,"[BLE] recording..");
+            if(isRecording)record(bytes);
             Logger.d(TAG,"[BLE] pushing data..");
             serviceManager.pushData(bytes);
         }
     };
+
+    private void record(byte[] bytes){
+        String strdata = new String(bytes);
+        Logger.i(TAG, "[BLE] data to record: " + strdata);
+        SensorData item = new Gson().fromJson(strdata, SensorData.class);
+        buffer.add(item);
+        if(buffer.size()>10){
+            Logger.i(TAG, "[BLE] saving buffer..");
+            ArrayList<SensorData> data = getData();
+            data.addAll(buffer);
+            Logger.i(TAG, "[BLE] data size: "+data.size());
+            setData(data);
+            buffer.clear();
+            Logger.i(TAG, "[BLE] saving buffer done.");
+        }
+    }
+
+    public void setData( ArrayList<SensorData> items) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
+        editor.commit();
+    }
+
+    public ArrayList<SensorData> getData() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String ringJson = preferences.getString(Keys.SENSOR_DATA, "");
+        if (ringJson.equals("")) return new ArrayList<>();
+        else {
+            Type listType = new TypeToken<ArrayList<SensorData>>() {
+            }.getType();
+            return new Gson().fromJson(ringJson, listType);
+        }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
