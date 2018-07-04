@@ -105,7 +105,7 @@ public class ChartFragment extends Fragment{
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
-        editor.commit();
+        editor.apply();
     }
 
     @Override

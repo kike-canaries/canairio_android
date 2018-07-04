@@ -33,6 +33,10 @@ public class ServiceBLE extends Service {
 
     private ArrayList<SensorData> buffer = new ArrayList<>();
 
+    private final int RETRY_POLICY   = 3;
+    private int retry_connect        = 0;
+    private int retry_notify_setup   = 0;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -70,6 +74,10 @@ public class ServiceBLE extends Service {
     }
 
 
+    /*********************************************************************
+     * S E R V I C E  I N T E R F A C E
+     *********************************************************************/
+
     private ServiceInterface managerListener = new ServiceInterface() {
         @Override
         public void onServiceStatus(String status) {
@@ -106,17 +114,24 @@ public class ServiceBLE extends Service {
     };
 
 
+    /*********************************************************************
+     * B L U E T O O T H   I N T E R F A C E
+     *********************************************************************/
+
     private BLEHandler.OnBLEConnectionListener bleListener = new BLEHandler.OnBLEConnectionListener() {
         @Override
         public void onConnectionSuccess() {
             serviceManager.status(ServiceManager.STATUS_BLE_START);
+            retry_connect=0;
         }
 
         @Override
         public void onConectionFailure() {
            serviceManager.status(ServiceManager.STATUS_BLE_FAILURE);
-           Logger.w(TAG,"[BLE] retry connection on failure..");
-           startConnection(); // R E T R Y
+           if(retry_connect++<RETRY_POLICY) {
+               Logger.w(TAG,"[BLE] retry connection on failure.."+retry_connect);
+               startConnection();
+           }
         }
 
         @Override
@@ -131,7 +146,10 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onNotificationSetupFailure() {
-            bleHandler.setupNotification();
+            if(retry_notify_setup++<RETRY_POLICY) {
+                Logger.w(TAG,"[BLE] retry notify setup.."+retry_notify_setup);
+                bleHandler.setupNotification();
+            }
         }
 
         @Override
@@ -139,8 +157,10 @@ public class ServiceBLE extends Service {
             if(isRecording)record(bytes);
             Logger.d(TAG,"[BLE] pushing data..");
             serviceManager.pushData(bytes);
+            retry_notify_setup=0;
         }
     };
+
 
     private void record(byte[] bytes){
         String strdata = new String(bytes);
@@ -164,7 +184,7 @@ public class ServiceBLE extends Service {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
-        editor.commit();
+        editor.apply();
     }
 
     public ArrayList<SensorData> getData() {
