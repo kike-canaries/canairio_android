@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
                 showChartFragment();
             }
             else if(status.equals(ServiceManager.STATUS_BLE_FAILURE)){
-                showSnackMessage(getString(R.string.msg_device_disconnected));
+                showSnackMessage(getString(R.string.msg_device_reconnecting));
             }
         }
 
