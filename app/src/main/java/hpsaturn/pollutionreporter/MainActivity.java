@@ -120,6 +120,7 @@ public class MainActivity extends BaseActivity {
             fab.setVisibility(View.INVISIBLE);
             showScanFragment();
         }
+        showChartFragment();
     }
 
     private void refreshUI(){
