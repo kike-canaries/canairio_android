@@ -67,6 +67,7 @@ public class ChartFragment extends Fragment{
     }
 
     private void loadData() {
+        Logger.i(TAG,"[CHART] loading recorded data..");
         ArrayList<SensorData> data = getData();
         if(data.size()==0) addData(0);
         else{
@@ -100,8 +101,23 @@ public class ChartFragment extends Fragment{
         }
     }
 
+    public void setData( ArrayList<SensorData> items) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
+        editor.commit();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    public void clearData() {
+        Logger.w(TAG,"[CHART] clear recorded data and chart..");
+        entries.clear();
+        dataSet.clear();
+        chart.clear();
+        setData(new ArrayList<>());
     }
 }

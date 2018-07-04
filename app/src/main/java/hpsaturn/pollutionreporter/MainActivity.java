@@ -103,15 +103,23 @@ public class MainActivity extends BaseActivity {
 
     private View.OnClickListener onFabClickListener = view -> {
         if(prefBuilder.getBoolean(Keys.SENSOR_RECORD,false)){
-            fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_18dp));
-            prefBuilder.addBoolean(Keys.SENSOR_RECORD,false).save();
-            serviceManager.sensorRecordStop();
+            stopRecord();
         }else {
-            fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_18dp));
-            prefBuilder.addBoolean(Keys.SENSOR_RECORD,true).save();
-            serviceManager.sensorRecord();
+            startRecord();
         }
     };
+
+    private void stopRecord(){
+        fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_24dp));
+        prefBuilder.addBoolean(Keys.SENSOR_RECORD,false).save();
+        serviceManager.sensorRecordStop();
+    }
+
+    private void startRecord(){
+        fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_24dp));
+        prefBuilder.addBoolean(Keys.SENSOR_RECORD,true).save();
+        serviceManager.sensorRecord();
+    }
 
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
@@ -128,9 +136,9 @@ public class MainActivity extends BaseActivity {
     private void refreshUI(){
         fab.setVisibility(View.VISIBLE);
         if(prefBuilder.getBoolean(Keys.SENSOR_RECORD,false)){
-            fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_18dp));
+            fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_24dp));
         }else{
-            fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_18dp));
+            fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_24dp));
         }
     }
 
@@ -169,9 +177,12 @@ public class MainActivity extends BaseActivity {
     @Override
     void actionUnPair() {
         Logger.i(TAG,"[BLE] unpaired..");
+        stopRecord();
         serviceManager.stop();
         prefBuilder.clearAll().save();
+        if(chartFragment!=null)chartFragment.clearData();
         removeFragment(chartFragment);
+        fab.setVisibility(View.INVISIBLE);
         showScanFragment();
     }
 
