@@ -15,7 +15,9 @@ Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canari
 - [X] BLE auto connect and reconnect
 - [X] Receive data via BLE notification
 - [X] Basic chart for PM 2.5 data
-- [ ] BLE persist connection on background service
+- [X] BLE persist connection on background service
+- [X] Recoding data in the phone
+- [ ] List recorded tracks
 - [ ] MQTT subscription and publishing
 - [ ] Google Maps pollution data
 

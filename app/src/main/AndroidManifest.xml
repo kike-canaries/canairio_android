@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".AppData"
@@ -30,12 +31,12 @@
             android:enabled="true"
             android:exported="true" />
 
-        <receiver android:name="bleservice.ServiceScheduler">
+        <receiver android:name=".bleservice.ServiceScheduler">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="bleservice.ServiceReceiver" />
+        <receiver android:name=".bleservice.ServiceReceiver" />
 
     </application>
 
