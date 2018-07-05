@@ -68,10 +68,10 @@ public class ChartFragment extends Fragment{
     }
 
     private void loadData() {
-        Logger.i(TAG,"[CHART] loading recorded data..");
         ArrayList<SensorData> data = Storage.getData(getActivity());
         if(data.size()==0) addData(0);
         else{
+            Logger.i(TAG,"[CHART] loading recorded data..");
             Iterator<SensorData> it = data.iterator();
             while (it.hasNext())addData(it.next().P25);
         }
