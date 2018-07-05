@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter;
+package hpsaturn.pollutionreporter.common;
 
 import android.content.Context;
 
@@ -10,6 +10,7 @@ import com.polidea.rxandroidble2.RxBleDevice;
 
 import java.util.UUID;
 
+import hpsaturn.pollutionreporter.AppData;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -21,7 +22,7 @@ import io.reactivex.subjects.PublishSubject;
 
 public class BLEHandler {
 
-    public static String TAG = BLEHandler.class.getSimpleName();
+    private static String TAG = BLEHandler.class.getSimpleName();
 
     private Context ctx;
     private OnBLEConnectionListener listener;

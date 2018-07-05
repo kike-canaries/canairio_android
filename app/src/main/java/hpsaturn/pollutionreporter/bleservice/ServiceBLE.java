@@ -15,8 +15,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import hpsaturn.pollutionreporter.AppData;
-import hpsaturn.pollutionreporter.BLEHandler;
-import hpsaturn.pollutionreporter.Keys;
+import hpsaturn.pollutionreporter.common.BLEHandler;
+import hpsaturn.pollutionreporter.common.Keys;
+import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
@@ -161,7 +162,6 @@ public class ServiceBLE extends Service {
         }
     };
 
-
     private void record(byte[] bytes){
         String strdata = new String(bytes);
         Logger.i(TAG, "[BLE] data to record: " + strdata);
@@ -169,32 +169,12 @@ public class ServiceBLE extends Service {
         buffer.add(item);
         if(buffer.size()>10){
             Logger.i(TAG, "[BLE] saving buffer..");
-            ArrayList<SensorData> data = getData();
+            ArrayList<SensorData> data = Storage.getData(this);
             data.addAll(buffer);
             Logger.i(TAG, "[BLE] data size: "+data.size());
-            setData(data);
+            Storage.setData(this,data);
             buffer.clear();
             Logger.i(TAG, "[BLE] saving buffer done.");
-        }
-    }
-
-    // TODO: unify the next methods to prefBuilder schema or database schema
-
-    public void setData( ArrayList<SensorData> items) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
-        editor.apply();
-    }
-
-    public ArrayList<SensorData> getData() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String ringJson = preferences.getString(Keys.SENSOR_DATA, "");
-        if (ringJson.equals("")) return new ArrayList<>();
-        else {
-            Type listType = new TypeToken<ArrayList<SensorData>>() {
-            }.getType();
-            return new Gson().fromJson(ringJson, listType);
         }
     }
 
@@ -202,6 +182,5 @@ public class ServiceBLE extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 
 }

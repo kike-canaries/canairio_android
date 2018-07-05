@@ -18,6 +18,7 @@ import hpsaturn.pollutionreporter.bleservice.ServiceBLE;
 import hpsaturn.pollutionreporter.bleservice.ServiceInterface;
 import hpsaturn.pollutionreporter.bleservice.ServiceManager;
 import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
+import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
