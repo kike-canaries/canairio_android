@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter;
+package hpsaturn.pollutionreporter.common;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/1/18.

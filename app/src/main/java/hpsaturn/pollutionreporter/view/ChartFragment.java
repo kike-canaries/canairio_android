@@ -25,8 +25,9 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import hpsaturn.pollutionreporter.Keys;
+import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
@@ -67,10 +68,10 @@ public class ChartFragment extends Fragment{
     }
 
     private void loadData() {
-        Logger.i(TAG,"[CHART] loading recorded data..");
-        ArrayList<SensorData> data = getData();
+        ArrayList<SensorData> data = Storage.getData(getActivity());
         if(data.size()==0) addData(0);
         else{
+            Logger.i(TAG,"[CHART] loading recorded data..");
             Iterator<SensorData> it = data.iterator();
             while (it.hasNext())addData(it.next().P25);
         }
@@ -90,24 +91,6 @@ public class ChartFragment extends Fragment{
         chart.invalidate();
     }
 
-    private ArrayList<SensorData> getData() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String ringJson = preferences.getString(Keys.SENSOR_DATA, "");
-        if (ringJson.equals("")) return new ArrayList<>();
-        else {
-            Type listType = new TypeToken<ArrayList<SensorData>>() {
-            }.getType();
-            return new Gson().fromJson(ringJson, listType);
-        }
-    }
-
-    public void setData( ArrayList<SensorData> items) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
-        editor.commit();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -118,6 +101,6 @@ public class ChartFragment extends Fragment{
         entries.clear();
         dataSet.clear();
         chart.clear();
-        setData(new ArrayList<>());
+        Storage.setData(getActivity(),new ArrayList<>());
     }
 }

@@ -3,7 +3,26 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
+    <color name="colorStop">#660866</color>
+    <color name="colorRecord">#fb0a26</color>
     <color name="bg_main_activity">#38adf0a5</color>
+
+
+    <!-- GENERIC COLORS -->
+    <color name="red">#f00</color>
+    <color name="blue">#0080ff</color>
+    <color name="green">#f0f0</color>
+    <color name="yellow">#ffffff00</color>
+    <color name="grey">#ffa0a0a0</color>
+    <color name="grey_dark">#797373</color>
+    <color name="black">#ff000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="orange">#ffa500</color>
+    <color name="brown">#584949</color>
+    <color name="purple">#950ad7</color>
+    <color name="cyan">#00b1ff</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="transwhite">#AAFFFFFF</color>
+
 
 </resources>

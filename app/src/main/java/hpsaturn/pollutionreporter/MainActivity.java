@@ -18,6 +18,7 @@ import hpsaturn.pollutionreporter.bleservice.ServiceBLE;
 import hpsaturn.pollutionreporter.bleservice.ServiceInterface;
 import hpsaturn.pollutionreporter.bleservice.ServiceManager;
 import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
+import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
@@ -56,7 +57,6 @@ public class MainActivity extends BaseActivity {
         setupUI();
         serviceManager = new ServiceManager(this,serviceListener);
         deviceConnect();
-
     }
 
 
@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
                 showChartFragment();
             }
             else if(status.equals(ServiceManager.STATUS_BLE_FAILURE)){
-                showSnackMessage(getString(R.string.msg_device_disconnected));
+                showSnackMessage(R.string.msg_device_reconnecting);
             }
         }
 
@@ -110,14 +110,16 @@ public class MainActivity extends BaseActivity {
     };
 
     private void stopRecord(){
-        fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_24dp));
+        showSnackMessageSlow(R.string.msg_record_stop);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD,false).save();
+        refreshUI();
         serviceManager.sensorRecordStop();
     }
 
     private void startRecord(){
-        fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_24dp));
+        showSnackMessageSlow(R.string.msg_record);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD,true).save();
+        refreshUI();
         serviceManager.sensorRecord();
     }
 
@@ -136,8 +138,10 @@ public class MainActivity extends BaseActivity {
     private void refreshUI(){
         fab.setVisibility(View.VISIBLE);
         if(prefBuilder.getBoolean(Keys.SENSOR_RECORD,false)){
+            fab.setBackgroundTintList(getColorStateList(R.color.color_state_record_stop));
             fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_24dp));
         }else{
+            fab.setBackgroundTintList(getColorStateList(R.color.color_state_record));
             fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_24dp));
         }
     }
@@ -156,6 +160,13 @@ public class MainActivity extends BaseActivity {
         if (scanFragment != null)removeFragment(scanFragment);
     }
 
+    private void showSnackMessage(int id) {
+        Snackbar.make(coordinatorLayout, getString(id), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
+    private void showSnackMessageSlow(int id) {
+        Snackbar.make(coordinatorLayout, getString(id), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+    }
 
     private void startBleService() {
         Intent newIntent = new Intent(this, ServiceBLE.class);
@@ -163,13 +174,9 @@ public class MainActivity extends BaseActivity {
         ServiceScheduler.startScheduleService(this, Config.DEFAULT_INTERVAL);
     }
 
-    private void showSnackMessage(String msg) {
-        Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-    }
-
     public void deviceConnect() {
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
-            showSnackMessage(getString(R.string.msg_device_connecting));
+            showSnackMessage(R.string.msg_device_connecting);
             serviceManager.start();
         }
     }

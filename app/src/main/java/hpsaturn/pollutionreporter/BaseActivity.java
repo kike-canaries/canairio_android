@@ -146,14 +146,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
-    public void showSnackLong(String msg) {
-        Snackbar.make(this.getCurrentFocus(), msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-    }
-
-    public void showSnackLong(int msg) {
-        Snackbar.make(this.getCurrentFocus(), msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-    }
-
     /***********************************************
      * MENU OPTIONS
      ***********************************************/
