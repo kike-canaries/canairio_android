@@ -34,7 +34,7 @@ public class ServiceBLE extends Service {
 
     private ArrayList<SensorData> buffer = new ArrayList<>();
 
-    private final int RETRY_POLICY   = 3;
+    private final int RETRY_POLICY   = 5;
     private int retry_connect        = 0;
     private int retry_notify_setup   = 0;
 
