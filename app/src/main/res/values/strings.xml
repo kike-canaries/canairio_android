@@ -17,4 +17,5 @@
     <string name="msg_device_connecting">Connecting…</string>
     <string name="msg_record_stop">Stop recording…</string>
     <string name="msg_record">Start recording…</string>
+    <string name="bt_map">Map</string>
 </resources>

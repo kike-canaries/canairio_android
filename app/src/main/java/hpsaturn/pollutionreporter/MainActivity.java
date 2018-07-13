@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
@@ -21,6 +23,7 @@ import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.view.ChartFragment;
+import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 
 public class MainActivity extends BaseActivity {
@@ -33,6 +36,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    @BindView(R.id.bt_map)
+    Button btMap;
+
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
@@ -40,6 +46,7 @@ public class MainActivity extends BaseActivity {
     private EasyPreference.Builder prefBuilder;
     private ChartFragment chartFragment;
     private ServiceManager serviceManager;
+    private Fragment mapFragment;
 
 
     @Override
@@ -124,6 +131,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupUI() {
+        btMap.setOnClickListener(view -> {
+            showMapFragment();
+        });
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
         if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
@@ -154,6 +164,11 @@ public class MainActivity extends BaseActivity {
     private void showScanFragment() {
         if (scanFragment == null) scanFragment = ScanFragment.newInstance();
         if (!scanFragment.isVisible()) showFragment(scanFragment, ScanFragment.TAG, false);
+    }
+
+    private void showMapFragment() {
+        if (mapFragment == null) mapFragment = MapFragment.newInstance();
+        if (!mapFragment.isVisible()) showFragment(mapFragment, MapFragment.TAG, false);
     }
 
     public void removeScanFragment(){

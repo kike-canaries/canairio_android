@@ -45,4 +45,21 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_record_white_24dp" />
 
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="70dp">
+
+        <Button
+            android:id="@+id/bt_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/bt_map" />
+    </RelativeLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>
