@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
 
+import hpsaturn.pollutionreporter.R;
+
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/13/18.
  */
@@ -23,9 +25,12 @@ public class MapFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        MapView mMapView = new MapView(getActivity(), 256);
+
+        View view = inflater.inflate(R.layout.fragment_osmap,container,false);
+        MapView mMapView = view.findViewById(R.id.mapview);
         mMapView.setTileSource(TileSourceFactory.MAPNIK);
-        return mMapView;
+
+        return view;
     }
 
 }
