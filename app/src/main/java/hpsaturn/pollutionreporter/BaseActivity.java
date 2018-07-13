@@ -18,6 +18,9 @@ import com.hpsaturn.tools.Logger;
 import com.intentfilter.androidpermissions.PermissionManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import static java.util.Collections.singleton;
 
 /**
@@ -30,12 +33,22 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     public void checkForPermissions() {
         PermissionManager permissionManager = PermissionManager.getInstance(this);
-        permissionManager.checkPermissions(singleton(Manifest.permission.ACCESS_COARSE_LOCATION), new PermissionManager.PermissionRequestListener() {
+        ArrayList<String> permissions = new ArrayList<>();
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        permissions.add(Manifest.permission.INTERNET);
+        permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
+        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_WIFI_STATE);
+        permissionManager.checkPermissions(permissions, new PermissionManager.PermissionRequestListener() {
             @Override
-            public void onPermissionGranted() { }
+            public void onPermissionGranted() {
+            }
 
             @Override
-            public void onPermissionDenied() { }
+            public void onPermissionDenied() {
+            }
         });
     }
 
@@ -87,7 +100,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     }
 
-    public void showDialog(Fragment fragment, String fragmentTag){
+    public void showDialog(Fragment fragment, String fragmentTag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(fragment, fragmentTag);
         ft.show(fragment);
@@ -138,7 +151,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             if (getSupportFragmentManager().getBackStackEntryCount() == 0) return false;
             FragmentManager fm = getSupportFragmentManager();
             Fragment match = fm.findFragmentByTag(tag);
-            if (match!=null)return true;
+            if (match != null) return true;
             else return false;
         } catch (Exception e) {
             e.printStackTrace();
