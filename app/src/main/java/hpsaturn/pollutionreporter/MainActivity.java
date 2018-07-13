@@ -168,7 +168,7 @@ public class MainActivity extends BaseActivity {
 
     private void showMapFragment() {
         if (mapFragment == null) mapFragment = MapFragment.newInstance();
-        if (!mapFragment.isVisible()) showFragment(mapFragment, MapFragment.TAG, false);
+        if (!mapFragment.isVisible()) showFragment(mapFragment, MapFragment.TAG, true);
     }
 
     public void removeScanFragment(){

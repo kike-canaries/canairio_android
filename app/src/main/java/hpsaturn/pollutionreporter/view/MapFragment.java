@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
 
 /**
@@ -23,6 +24,7 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         MapView mMapView = new MapView(getActivity(), 256);
+        mMapView.setTileSource(TileSourceFactory.MAPNIK);
         return mMapView;
     }
 
