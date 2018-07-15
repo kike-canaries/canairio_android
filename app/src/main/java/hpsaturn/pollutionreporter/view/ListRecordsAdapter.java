@@ -12,76 +12,76 @@ import java.util.Collections;
 import java.util.List;
 
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.PlayerItem;
+import hpsaturn.pollutionreporter.models.RecordItem;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
  */
 
-public class ListPlayersAdapter extends RecyclerView.Adapter<PlayerViewHolder> implements ItemTouchHelperAdapter {
+public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> implements ItemTouchHelperAdapter {
 
     private AdapterView.OnItemClickListener mOnItemClickListener;
     private Context ctx;
-    private ArrayList<PlayerItem>mPlayers=new ArrayList<>();
+    private ArrayList<RecordItem> mRecords =new ArrayList<>();
 
     @Override
-    public PlayerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
-        View rowView = inflater.inflate(R.layout.item_player_list, parent, false);
+        View rowView = inflater.inflate(R.layout.item_record, parent, false);
         this.ctx=parent.getContext();
-        return new PlayerViewHolder(rowView,this);
+        return new RecordViewHolder(rowView,this);
     }
 
     @Override
-    public void onBindViewHolder(PlayerViewHolder holder, int position) {
+    public void onBindViewHolder(RecordViewHolder holder, int position) {
 
-        final PlayerItem player = mPlayers.get(position);
+        final RecordItem recordItem = mRecords.get(position);
 
-        holder.player_name.setText(player.getName());
-        holder.player_email.setText(player.getEmail());
-        holder.player_phone.setText(player.getPhone());
+        holder.record_name.setText(recordItem.getName());
+        holder.record_date.setText(recordItem.getDate());
+        holder.record_location.setText(recordItem.getLocation());
 
     }
 
     @Override
     public int getItemCount() {
-        return mPlayers.size();
+        return mRecords.size();
     }
 
-    public void updateData (ArrayList<PlayerItem>players){
-        this.mPlayers=players;
+    public void updateData (ArrayList<RecordItem>records){
+        this.mRecords =records;
         notifyDataSetChanged();
     }
 
-    public void addItem(int position, PlayerItem player) {
-        if (position > mPlayers.size()) return;
-        mPlayers.add(position, player);
+    public void addItem(int position, RecordItem record) {
+        if (position > mRecords.size()) return;
+        mRecords.add(position, record);
         notifyItemInserted(position);
     }
 
     public void removeItem(int position) {
-        if (position >= mPlayers.size()) return;
-        mPlayers.remove(position);
+        if (position >= mRecords.size()) return;
+        mRecords.remove(position);
         notifyItemRemoved(position);
     }
 
 
-    public void updateItem(int position, PlayerItem player) {
-        if (position > mPlayers.size()) return;
-        mPlayers.set(position, player);
+    public void updateItem(int position, RecordItem record) {
+        if (position > mRecords.size()) return;
+        mRecords.set(position, record);
         notifyItemChanged(position);
     }
 
-    public PlayerItem getItem(int position) {
-        return mPlayers.get(position);
+    public RecordItem getItem(int position) {
+        return mRecords.get(position);
     }
 
     public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
-    public void onItemHolderClick(PlayerViewHolder itemHolder) {
+    public void onItemHolderClick(RecordViewHolder itemHolder) {
 
         if (mOnItemClickListener != null) {
             mOnItemClickListener.onItemClick(null, itemHolder.itemView,
@@ -94,11 +94,11 @@ public class ListPlayersAdapter extends RecyclerView.Adapter<PlayerViewHolder> i
     public void onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(mPlayers, i, i + 1);
+                Collections.swap(mRecords, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(mPlayers, i, i - 1);
+                Collections.swap(mRecords, i, i - 1);
             }
         }
         notifyItemMoved(fromPosition, toPosition);
@@ -106,7 +106,7 @@ public class ListPlayersAdapter extends RecyclerView.Adapter<PlayerViewHolder> i
 
     @Override
     public void onItemDismiss(int position) {
-        mPlayers.remove(position);
+        mRecords.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -115,8 +115,8 @@ public class ListPlayersAdapter extends RecyclerView.Adapter<PlayerViewHolder> i
 
     }
 
-    public List<PlayerItem> getPlayers() {
-        return mPlayers;
+    public List<RecordItem> getRecords() {
+        return mRecords;
     }
 
 }
