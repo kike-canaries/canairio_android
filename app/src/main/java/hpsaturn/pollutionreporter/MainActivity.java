@@ -24,6 +24,7 @@ import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.MapFragment;
+import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 
 public class MainActivity extends BaseActivity {
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity {
     private ChartFragment chartFragment;
     private ServiceManager serviceManager;
     private Fragment mapFragment;
+    private RecordsFragment recordsFragment;
 
 
     @Override
@@ -132,7 +134,8 @@ public class MainActivity extends BaseActivity {
 
     private void setupUI() {
         btMap.setOnClickListener(view -> {
-            showMapFragment();
+//            showMapFragment();
+            showRecordsFragment();
         });
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
@@ -169,6 +172,11 @@ public class MainActivity extends BaseActivity {
     private void showMapFragment() {
         if (mapFragment == null) mapFragment = MapFragment.newInstance();
         if (!mapFragment.isVisible()) showFragment(mapFragment, MapFragment.TAG, true);
+    }
+
+    private void showRecordsFragment() {
+        if (recordsFragment == null) recordsFragment = RecordsFragment.newInstance();
+        if (!recordsFragment.isVisible()) showFragment(recordsFragment, RecordsFragment.TAG, true);
     }
 
     public void removeScanFragment(){

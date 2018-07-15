@@ -57,6 +57,8 @@ public class RecordsFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mRecordsList);
 
+        getTestData();
+
         return view;
 
     }
@@ -159,5 +161,18 @@ public class RecordsFragment extends Fragment {
     private MainActivity getMain() {
         return ((MainActivity) getActivity());
     }
+
+
+    private void getTestData() {
+
+        addRecord(new RecordItem("Edna","edna@gmail.com","3002693426"));
+        addRecord(new RecordItem("Antonio","antonio.vanegas@gmail.com","3014710632"));
+        addRecord(new RecordItem("Silvia","svanegas@gmail.com","300123456"));
+        addRecord(new RecordItem("Consuelo","consue@gmail.com","300892312"));
+        addRecord(new RecordItem("Santiago","svp@gmail.com","302302452"));
+        addRecord(new RecordItem("Felipe","felipe@gmail.com","302111111"));
+
+    }
+
 
 }
