@@ -18,4 +18,5 @@
     <string name="msg_record_stop">Stop recording…</string>
     <string name="msg_record">Start recording…</string>
     <string name="bt_map">Map</string>
+    <string name="msg_players_empty_list">No reports for now</string>
 </resources>
