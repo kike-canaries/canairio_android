@@ -1,6 +1,9 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,8 +60,35 @@ public class ChartFragment extends Fragment{
         dataSet.setHighlightEnabled(true);
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
-        loadData();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        new addDataTask().execute();
+    }
+
+    public void addData(int value){
+        dataSet.addEntry(new Entry(i++,value));
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.invalidate();
+    }
+
+    private class addDataTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            loadData();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            chart.invalidate();
+            super.onPostExecute(aVoid);
+        }
     }
 
     private void loadData() {
@@ -67,7 +97,11 @@ public class ChartFragment extends Fragment{
         else{
             Logger.i(TAG,"[CHART] loading recorded data..");
             Iterator<SensorData> it = data.iterator();
-            while (it.hasNext())addData(it.next().P25);
+            while (it.hasNext()){
+                dataSet.addEntry(new Entry(i++,it.next().P25));
+            }
+            LineData lineData = new LineData(dataSet);
+            chart.setData(lineData);
         }
     }
 
@@ -78,13 +112,6 @@ public class ChartFragment extends Fragment{
         Logger.d(TAG,"size: "+entries.size());
     }
 
-    public void addData(int value){
-        dataSet.addEntry(new Entry(i++,value));
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -92,6 +119,7 @@ public class ChartFragment extends Fragment{
 
     public void clearData() {
         Logger.w(TAG,"[CHART] clear recorded data and chart..");
+        i=0;
         entries.clear();
         dataSet.clear();
         chart.clear();
