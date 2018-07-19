@@ -148,10 +148,10 @@ public class ServiceBLE extends Service {
         @Override
         public void onNotificationSetupFailure() {
             Logger.e(TAG,"[BLE] onNotificationSetupFailure");
-//            if(retry_notify_setup++<RETRY_POLICY) {
-//                Logger.w(TAG,"[BLE] retry notify setup.."+retry_notify_setup);
-//                bleHandler.setupNotification();
-//            }
+            if(retry_notify_setup++<RETRY_POLICY) {
+                Logger.w(TAG,"[BLE] retry notify setup.."+retry_notify_setup);
+                bleHandler.setupNotification();
+            }
         }
 
         @Override
