@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.hpsaturn.tools.Logger;
+
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/2/18.
  */
@@ -34,23 +36,29 @@ public class ServiceManager {
         this.ctx = ctx;
         this.listener = listener;
 
-        IntentFilter intentFilter = new IntentFilter();
-        action_start   = "ACTION_SERVICE_START";
-        action_stop    = "ACTION_SERVICE_STOP";
-        action_push    = "ACTION_SERVICE_PUSH";
-        action_status  = "ACTION_SERVICE_STATUS";
+        try {
+            IntentFilter intentFilter = new IntentFilter();
+            action_start   = "ACTION_SERVICE_START";
+            action_stop    = "ACTION_SERVICE_STOP";
+            action_push    = "ACTION_SERVICE_PUSH";
+            action_status  = "ACTION_SERVICE_STATUS";
 
-        action_sensor_record       = "ACTION_SENSOR_RECORD";
-        action_sensor_record_stop  = "ACTION_SENSOR_RECORD_STOP";
+            action_sensor_record       = "ACTION_SENSOR_RECORD";
+            action_sensor_record_stop  = "ACTION_SENSOR_RECORD_STOP";
 
-        intentFilter.addAction(action_start);
-        intentFilter.addAction(action_stop);
-        intentFilter.addAction(action_push);
-        intentFilter.addAction(action_status);
-        intentFilter.addAction(action_sensor_record);
-        intentFilter.addAction(action_sensor_record_stop);
+            intentFilter.addAction(action_start);
+            intentFilter.addAction(action_stop);
+            intentFilter.addAction(action_push);
+            intentFilter.addAction(action_status);
+            intentFilter.addAction(action_sensor_record);
+            intentFilter.addAction(action_sensor_record_stop);
 
-        ctx.registerReceiver(mReceiver,intentFilter);
+            ctx.registerReceiver(mReceiver,intentFilter);
+
+        } catch (Exception e) {
+            Logger.w(TAG,e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void start(){

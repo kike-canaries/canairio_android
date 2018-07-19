@@ -184,4 +184,9 @@ public class ServiceBLE extends Service {
         return null;
     }
 
+    @Override
+    public void onDestroy() {
+        serviceManager.unregister();
+        super.onDestroy();
+    }
 }
