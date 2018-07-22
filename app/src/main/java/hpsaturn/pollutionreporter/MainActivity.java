@@ -1,7 +1,9 @@
 package hpsaturn.pollutionreporter;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,9 +38,6 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-
-    @BindView(R.id.bt_map)
-    Button btMap;
 
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
@@ -133,10 +132,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupUI() {
-        btMap.setOnClickListener(view -> {
-//            showMapFragment();
-            showRecordsFragment();
-        });
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
         if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
