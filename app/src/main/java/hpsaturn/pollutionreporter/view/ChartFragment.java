@@ -66,7 +66,12 @@ public class ChartFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        new addDataTask().execute();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadData();
+            }
+        });
     }
 
     public void addData(int value){
@@ -74,21 +79,6 @@ public class ChartFragment extends Fragment{
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
         chart.invalidate();
-    }
-
-    private class addDataTask extends AsyncTask<Void,Void,Void>{
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            loadData();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            chart.invalidate();
-            super.onPostExecute(aVoid);
-        }
     }
 
     private void loadData() {
@@ -102,6 +92,7 @@ public class ChartFragment extends Fragment{
             }
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
+            chart.invalidate();
         }
     }
 
