@@ -1,6 +1,5 @@
 package hpsaturn.pollutionreporter.view;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -66,12 +65,7 @@ public class ChartFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loadData();
-            }
-        });
+        getActivity().runOnUiThread(() -> loadData());
     }
 
     public void addData(int value){
