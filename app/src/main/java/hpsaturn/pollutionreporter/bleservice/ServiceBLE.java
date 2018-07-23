@@ -2,16 +2,12 @@ package hpsaturn.pollutionreporter.bleservice;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import hpsaturn.pollutionreporter.AppData;
