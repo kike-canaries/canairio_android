@@ -125,6 +125,7 @@ public class ScanFragment extends Fragment {
         EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
         prefBuilder.addString(Keys.DEVICE_ADDRESS, macAddress).save();
         prefBuilder.addBoolean(Keys.DEVICE_PAIR, true).save();
+        getMain().setupAppFragments();
         getMain().deviceConnect();
         getMain().removeScanFragment();
     }

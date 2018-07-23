@@ -5,22 +5,20 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/bt_device_scanning"
+    <TextView
+        android:id="@+id/tv_records_empty_list"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="3dp"
+        android:layout_height="@dimen/app_chart_height"
         android:gravity="center"
-        android:visibility="invisible"
-        android:text="@string/bt_device_scan" />
+        android:text="@string/msg_records_empty_list" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_devices"
+        android:id="@+id/rv_records"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/app_chart_height"
         android:layout_marginBottom="5dp"
         android:gravity="center"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 
 </RelativeLayout>

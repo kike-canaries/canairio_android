@@ -18,6 +18,9 @@ import com.hpsaturn.tools.Logger;
 import com.intentfilter.androidpermissions.PermissionManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import static java.util.Collections.singleton;
 
 /**
@@ -30,12 +33,22 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     public void checkForPermissions() {
         PermissionManager permissionManager = PermissionManager.getInstance(this);
-        permissionManager.checkPermissions(singleton(Manifest.permission.ACCESS_COARSE_LOCATION), new PermissionManager.PermissionRequestListener() {
+        ArrayList<String> permissions = new ArrayList<>();
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        permissions.add(Manifest.permission.INTERNET);
+        permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
+        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_WIFI_STATE);
+        permissionManager.checkPermissions(permissions, new PermissionManager.PermissionRequestListener() {
             @Override
-            public void onPermissionGranted() { }
+            public void onPermissionGranted() {
+            }
 
             @Override
-            public void onPermissionDenied() { }
+            public void onPermissionDenied() {
+            }
         });
     }
 
@@ -51,9 +64,42 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
+    public void showFragment(Fragment fragment){
+        if(fragment!=null) {
+            try {
+                Logger.d(TAG,"showFragment: "+fragment.getTag());
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.show(fragment).commitAllowingStateLoss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-    public void showFragment(Fragment fragment, String fragmentTag, boolean toStack) {
+    public void hideFragment(Fragment fragment){
+        if(fragment!=null) {
+            try {
+                Logger.d(TAG,"hideFragment: "+fragment.getTag());
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.hide(fragment).commitAllowingStateLoss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public void addFragment(Fragment fragment, String fragmentTag, boolean toStack) {
+        try {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.content_default, fragment, fragmentTag);
+            if (toStack) ft.addToBackStack(fragmentTag);
+            ft.commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void replaceFragment(Fragment fragment, String fragmentTag, boolean toStack) {
         try {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_default, fragment, fragmentTag);
@@ -65,7 +111,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     }
 
-    public void showFragment(Fragment fragment, String fragmentTag, boolean toStack, int content) {
+    public void replaceFragment(Fragment fragment, String fragmentTag, boolean toStack, int content) {
 
         try {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -87,7 +133,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     }
 
-    public void showDialog(Fragment fragment, String fragmentTag){
+    public void showDialog(Fragment fragment, String fragmentTag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(fragment, fragmentTag);
         ft.show(fragment);
@@ -112,13 +158,15 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
 
     public void removeFragment(Fragment fragment) {
-        try {
-            Logger.w(TAG, "removing fragment: " + fragment.getClass().getSimpleName());
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.remove(fragment).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(fragment!=null) {
+            try {
+                Logger.w(TAG, "removing fragment: " + fragment.getClass().getSimpleName());
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.remove(fragment).commitAllowingStateLoss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -138,7 +186,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             if (getSupportFragmentManager().getBackStackEntryCount() == 0) return false;
             FragmentManager fm = getSupportFragmentManager();
             Fragment match = fm.findFragmentByTag(tag);
-            if (match!=null)return true;
+            if (match != null) return true;
             else return false;
         } catch (Exception e) {
             e.printStackTrace();
