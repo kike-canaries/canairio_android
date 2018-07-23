@@ -165,12 +165,9 @@ public class RecordsFragment extends Fragment {
 
     private void getTestData() {
 
-        addRecord(new RecordItem("Edna","edna@gmail.com","3002693426"));
-        addRecord(new RecordItem("Antonio","antonio.vanegas@gmail.com","3014710632"));
-        addRecord(new RecordItem("Silvia","svanegas@gmail.com","300123456"));
-        addRecord(new RecordItem("Consuelo","consue@gmail.com","300892312"));
-        addRecord(new RecordItem("Santiago","svp@gmail.com","302302452"));
-        addRecord(new RecordItem("Felipe","felipe@gmail.com","302111111"));
+        addRecord(new RecordItem("record_2018-06-24","2018.06.24","Teusaquillo"));
+        addRecord(new RecordItem("record_2018-07-14","2018.07.14","Chapinero"));
+        addRecord(new RecordItem("record_2018-07-24","2018.07.24","Caracas"));
 
     }
 

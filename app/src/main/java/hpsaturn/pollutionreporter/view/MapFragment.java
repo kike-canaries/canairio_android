@@ -48,10 +48,11 @@ public class MapFragment extends Fragment {
         mapView.setBuiltInZoomControls(true);
         //setContentView(mapView); //displaying the MapView
 
-        mapView.getController().setZoom(15); //set initial zoom-level, depends on your need
+        mapView.getController().setZoom(19); //set initial zoom-level, depends on your need
         //mapView.getController().setCenter(ONCATIVO);
         //mapView.setUseDataConnection(false); //keeps the mapView from loading online tiles using network connection.
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+        mapView.setDrawingCacheEnabled(true);
 
         MyLocationNewOverlay oMapLocationOverlay = new MyLocationNewOverlay(getActivity(), mapView);
         mapView.getOverlays().add(oMapLocationOverlay);
@@ -63,18 +64,18 @@ public class MapFragment extends Fragment {
         compassOverlay.enableCompass();
         mapView.getOverlays().add(compassOverlay);
 
-        mapView.setMapListener(new MapListener() {
-            @Override
-            public boolean onScroll(ScrollEvent event) {
-                Logger.d(TAG,"onScroll");
-                return false;
-            }
-
-            @Override
-            public boolean onZoom(ZoomEvent event) {
-                Logger.d(TAG,"onZoom");
-                return false;
-            }
-        });
+//        mapView.setMapListener(new MapListener() {
+//            @Override
+//            public boolean onScroll(ScrollEvent event) {
+//                Logger.d(TAG,"onScroll");
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onZoom(ZoomEvent event) {
+//                Logger.d(TAG,"onZoom");
+//                return false;
+//            }
+//        });
     }
 }

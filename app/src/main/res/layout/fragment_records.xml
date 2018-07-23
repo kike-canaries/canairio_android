@@ -2,19 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_records_empty_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/app_chart_height"
         android:gravity="center"
         android:text="@string/msg_records_empty_list" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_records"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/app_chart_height"
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:visibility="gone" />

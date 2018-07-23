@@ -8,6 +8,8 @@
     <color name="bg_main_activity">#38adf0a5</color>
 
 
+    <color name="grayIconTint">#727272</color>
+
     <!-- GENERIC COLORS -->
     <color name="red">#f00</color>
     <color name="blue">#0080ff</color>

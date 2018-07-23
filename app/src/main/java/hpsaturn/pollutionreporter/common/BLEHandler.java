@@ -68,20 +68,24 @@ public class BLEHandler {
         if (isConnected()) {
             triggerDisconnect();
         } else {
-            connectionObservable
-                    .flatMapSingle(RxBleConnection::discoverServices)
-                    .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
-                    .subscribe(
-                            characteristic -> {
-                                Logger.i(TAG, "Connection has been established.");
-                                setupNotification();
-                                listener.onConnectionSuccess();
-                            },
-                            this::onConnectionFailure,
-                            this::onConnectionFinished
-                    );
+            try {
+                connectionObservable
+                        .flatMapSingle(RxBleConnection::discoverServices)
+                        .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
+                        .subscribe(
+                                characteristic -> {
+                                    Logger.i(TAG, "Connection has been established.");
+                                    setupNotification();
+                                    listener.onConnectionSuccess();
+                                },
+                                this::onConnectionFailure,
+                                this::onConnectionFinished
+                        );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

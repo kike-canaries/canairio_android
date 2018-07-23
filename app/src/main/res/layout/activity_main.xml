@@ -50,6 +50,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="60dp" />
+        android:layout_marginBottom="2dp" />
 
 </android.support.design.widget.CoordinatorLayout>
