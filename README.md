@@ -17,10 +17,11 @@ Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canari
 - [X] Basic chart for PM 2.5 data
 - [X] BLE persist connection on background service
 - [X] Recoding data in the phone
-- [ ] List recorded tracks
+- [X] List recorded tracks fragment
+- [X] Open Street map fragment
 - [ ] MQTT subscription and publishing
-- [ ] Google Maps pollution data
-
+- [ ] Connect list records to record track
+- [ ] Connect Open Street Maps to pollution data
 
 ## Dependencies
 
