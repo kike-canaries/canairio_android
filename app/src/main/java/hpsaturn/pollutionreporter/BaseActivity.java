@@ -158,13 +158,15 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
 
     public void removeFragment(Fragment fragment) {
-        try {
-            Logger.w(TAG, "removing fragment: " + fragment.getClass().getSimpleName());
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.remove(fragment).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(fragment!=null) {
+            try {
+                Logger.w(TAG, "removing fragment: " + fragment.getClass().getSimpleName());
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.remove(fragment).commitAllowingStateLoss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -156,16 +156,21 @@ public class MainActivity extends BaseActivity implements
             addScanFragment();
             showFragment(scanFragment);
         } else {
-            addRecordsFragment();
-            addMapFragment();
-            addChartFragment();
-            showFragment(chartFragment);
-            setupFragmentPicker();
+            setupAppFragments();
         }
+    }
+
+    public void setupAppFragments(){
+        addRecordsFragment();
+        addMapFragment();
+        addChartFragment();
+        showFragment(chartFragment);
+        setupFragmentPicker();
     }
 
     private void setupFragmentPicker() {
         List<FragmentPickerInfo> fragmentPickerInfos = FragmentPickerData.get().getForecasts();
+        fragmentPicker.setVisibility(View.VISIBLE);
         fragmentPicker.setSlideOnFling(true);
         fragmentPicker.setAdapter(new FragmentPickerAdapter(fragmentPickerInfos));
         fragmentPicker.addOnItemChangedListener(this);
@@ -239,7 +244,10 @@ public class MainActivity extends BaseActivity implements
         prefBuilder.clearAll().save();
         if (chartFragment != null) chartFragment.clearData();
         removeFragment(chartFragment);
+        removeFragment(mapFragment);
+        removeFragment(recordsFragment);
         fab.setVisibility(View.INVISIBLE);
+        fragmentPicker.setVisibility(View.INVISIBLE);
         addScanFragment();
     }
 
