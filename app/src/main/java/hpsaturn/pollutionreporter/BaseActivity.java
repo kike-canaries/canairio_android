@@ -64,9 +64,42 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
+    public void showFragment(Fragment fragment){
+        if(fragment!=null) {
+            try {
+                Logger.d(TAG,"showFragment: "+fragment.getTag());
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.show(fragment).commitAllowingStateLoss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-    public void showFragment(Fragment fragment, String fragmentTag, boolean toStack) {
+    public void hideFragment(Fragment fragment){
+        if(fragment!=null) {
+            try {
+                Logger.d(TAG,"hideFragment: "+fragment.getTag());
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.hide(fragment).commitAllowingStateLoss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public void addFragment(Fragment fragment, String fragmentTag, boolean toStack) {
+        try {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.content_default, fragment, fragmentTag);
+            if (toStack) ft.addToBackStack(fragmentTag);
+            ft.commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void replaceFragment(Fragment fragment, String fragmentTag, boolean toStack) {
         try {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_default, fragment, fragmentTag);
@@ -78,7 +111,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     }
 
-    public void showFragment(Fragment fragment, String fragmentTag, boolean toStack, int content) {
+    public void replaceFragment(Fragment fragment, String fragmentTag, boolean toStack, int content) {
 
         try {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
