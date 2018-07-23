@@ -28,6 +28,7 @@ android {
         buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         buildConfigField "String", "GitBranch", "\"${getGitBranch()}\""
         buildConfigField "boolean", "isLoggerEnable", project.debugging
+        buildConfigField "boolean", "withoutDevice", project.withoutDevice
         buildConfigField "String", "EnvTarget", project.env
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

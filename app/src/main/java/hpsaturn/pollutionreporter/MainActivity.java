@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.hpsaturn.tools.BuildConfig;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
@@ -63,6 +64,7 @@ public class MainActivity extends BaseActivity implements
     private ServiceManager serviceManager;
     private Fragment mapFragment;
     private RecordsFragment recordsFragment;
+    private boolean withoutDevice = BuildConfig.withoutDevice;
 
 
     @Override
@@ -151,7 +153,7 @@ public class MainActivity extends BaseActivity implements
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
-        if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
+        if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)&&!withoutDevice) {
             fab.setVisibility(View.INVISIBLE);
             addScanFragment();
             showFragment(scanFragment);

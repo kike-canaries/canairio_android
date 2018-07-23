@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.bleservice;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
