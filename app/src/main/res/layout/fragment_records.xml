@@ -5,20 +5,34 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_records_empty_list"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_chart_height"
-        android:gravity="center"
-        android:text="@string/msg_records_empty_list" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_separator"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_records"
+        <TextView
+            android:id="@+id/tv_records_empty_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/msg_records_empty_list" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_records"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_separator"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_chart_height"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
-        android:visibility="gone" />
-
+        android:layout_height="@dimen/app_picker_card_height"
+        android:layout_alignParentBottom="true">
+    </RelativeLayout>
 
 </RelativeLayout>

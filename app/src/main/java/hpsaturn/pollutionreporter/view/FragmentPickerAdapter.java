@@ -47,11 +47,9 @@ public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        int iconTint = ContextCompat.getColor(holder.itemView.getContext(), R.color.grayIconTint);
         FragmentPickerInfo fragmentPickerInfo = data.get(position);
         Glide.with(holder.itemView.getContext())
                 .load(fragmentPickerInfo.getIcon())
-                .listener(new TintOnLoad(holder.imageView, iconTint))
                 .into(holder.imageView);
         holder.textView.setText(fragmentPickerInfo.getName());
     }
@@ -70,7 +68,6 @@ public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAd
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.fragment_image);
             textView = (TextView) itemView.findViewById(R.id.fragment_name);
-
             itemView.findViewById(R.id.container).setOnClickListener(this);
         }
 
@@ -84,7 +81,6 @@ public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAd
                         @Override
                         public void run() {
                             textView.setVisibility(View.VISIBLE);
-                            imageView.setColorFilter(Color.BLACK);
                         }
                     })
                     .scaleY(scale).setDuration(200)
@@ -92,7 +88,6 @@ public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAd
         }
 
         public void hideText() {
-            imageView.setColorFilter(ContextCompat.getColor(imageView.getContext(), R.color.grayIconTint));
             textView.setVisibility(View.INVISIBLE);
             imageView.animate().scaleX(1f).scaleY(1f)
                     .setDuration(200)
@@ -122,7 +117,6 @@ public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAd
 
         @Override
         public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-            imageView.setColorFilter(tintColor);
             return false;
         }
     }
