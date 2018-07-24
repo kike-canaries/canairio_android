@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.iamhabib:easy-preference:1.0.1'
     implementation 'net.steamcrafted:materialiconlib:1.1.5'
 
-    implementation 'org.osmdroid:osmdroid-android:4.3'
+    implementation 'org.osmdroid:osmdroid-android:5.0.1'
     implementation 'org.slf4j:slf4j-android:1.7.12'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
 
