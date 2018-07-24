@@ -77,12 +77,7 @@ public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAd
             imageView.setPivotX(imageView.getWidth() * 0.5f);
             imageView.setPivotY(0);
             imageView.animate().scaleX(scale)
-                    .withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            textView.setVisibility(View.VISIBLE);
-                        }
-                    })
+                    .withEndAction(() -> textView.setVisibility(View.VISIBLE))
                     .scaleY(scale).setDuration(200)
                     .start();
         }
