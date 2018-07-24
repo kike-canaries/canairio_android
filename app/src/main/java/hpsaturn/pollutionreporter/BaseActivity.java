@@ -52,6 +52,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         });
     }
 
+    abstract void onPermissionGranted();
+
     public void checkBluetoohtBle() {
         // Use this check to determine whether BLE is supported on the device.
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);

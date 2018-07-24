@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity implements
     private EasyPreference.Builder prefBuilder;
     private ChartFragment chartFragment;
     private ServiceManager serviceManager;
-    private Fragment mapFragment;
+    private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
     private boolean withoutDevice = BuildConfig.withoutDevice;
 
@@ -236,6 +236,11 @@ public class MainActivity extends BaseActivity implements
             showSnackMessage(R.string.msg_device_connecting);
             serviceManager.start();
         }
+    }
+
+    @Override
+    void onPermissionGranted() {
+       if(mapFragment!=null)mapFragment.enableMyLocation();
     }
 
     @Override
