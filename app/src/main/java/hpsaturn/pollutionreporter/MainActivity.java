@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -29,12 +28,12 @@ import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.view.ChartFragment;
-import hpsaturn.pollutionreporter.view.FragmentPickerInfo;
 import hpsaturn.pollutionreporter.view.FragmentPickerAdapter;
+import hpsaturn.pollutionreporter.view.FragmentPickerData;
+import hpsaturn.pollutionreporter.view.FragmentPickerInfo;
 import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
-import hpsaturn.pollutionreporter.view.FragmentPickerData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -255,7 +254,8 @@ public class MainActivity extends BaseActivity implements
         removeFragment(recordsFragment);
         fab.setVisibility(View.INVISIBLE);
         fragmentPicker.setVisibility(View.INVISIBLE);
-        addScanFragment();
+        if(scanFragment==null)addScanFragment();
+        else if (scanFragment.isAdded())showFragment(scanFragment);
     }
 
     @Override
