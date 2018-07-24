@@ -8,8 +8,8 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
-    android:background="@android:color/darker_gray"
-    card_view:cardBackgroundColor="@android:color/darker_gray"
+    android:background="@color/colorPrimaryDark"
+    card_view:cardBackgroundColor="@color/colorPrimaryDark"
     android:elevation="15dp"
     android:padding="2dp"
     card_view:cardCornerRadius="6dp">
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/colorPrimaryDark"
             android:scaleType="center"
             app:materialIcon="bluetooth"
             app:materialIconColor="@android:color/black"
@@ -69,10 +69,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:background="@color/colorPrimary"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:text="Connect" />
-
 
     </RelativeLayout>
 

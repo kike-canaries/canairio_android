@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/app_picker_card_width"
     android:layout_height="@dimen/app_picker_card_height"
+    android:background="@color/colorPrimary"
     android:layout_gravity="center"
     android:layout_margin="2dp">
 
@@ -12,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="4dp"
-        android:background="?android:selectableItemBackground"
+        android:background="@drawable/selectable_picker_background"
         android:clickable="true">
 
         <TextView
@@ -27,7 +28,7 @@
             android:textSize="11sp"
             android:textStyle="bold"
             android:visibility="invisible"
-            tools:text="Washington" />
+            tools:text="Chart" />
 
         <ImageView
             android:id="@+id/fragment_image"
