@@ -33,3 +33,7 @@ Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canari
 git clone https://github.com/kike-canaries/android-hpma115s0.git
 cd android-hpma115s0.git && ./gradlew assembleDebug
 ```
+
+## Credits
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/prosymbols" title="Prosymbols">Prosymbols</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
