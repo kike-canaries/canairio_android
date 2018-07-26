@@ -6,6 +6,8 @@ package hpsaturn.pollutionreporter.models;
 
 public class SensorData {
 
+    public Long timestamp;
+
     public int P10;
 
     public int P25;

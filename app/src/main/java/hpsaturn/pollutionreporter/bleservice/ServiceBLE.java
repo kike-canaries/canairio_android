@@ -39,6 +39,7 @@ public class ServiceBLE extends Service {
     private final int RETRY_POLICY = 5;
     private int retry_connect = 0;
     private int retry_notify_setup = 0;
+    private Long referenceTimestamp = 0L;
 
     @Override
     public void onCreate() {
@@ -54,7 +55,7 @@ public class ServiceBLE extends Service {
         if (Build.VERSION.SDK_INT >= 26) {
             String CHANNEL_ID = "preporter";
             String CHANNEL_NAME = "PollutionReporter";
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle("")
@@ -181,16 +182,25 @@ public class ServiceBLE extends Service {
         String strdata = new String(bytes);
         Logger.i(TAG, "[BLE] data to record: " + strdata);
         SensorData item = new Gson().fromJson(strdata, SensorData.class);
-        buffer.add(item);
-        if (buffer.size() > 10) {
-            Logger.i(TAG, "[BLE] saving buffer..");
+
+        if (referenceTimestamp == 0L) {
             ArrayList<SensorData> data = Storage.getData(this);
-            data.addAll(buffer);
-            Logger.i(TAG, "[BLE] data size: " + data.size());
-            Storage.setData(this, data);
-            buffer.clear();
-            Logger.i(TAG, "[BLE] saving buffer done.");
+            if (data.isEmpty()) {
+                referenceTimestamp = System.currentTimeMillis() / 1000;
+            } else {
+                referenceTimestamp = data.get(0).timestamp;
+            }
         }
+
+        Logger.i(TAG, "[BLE] saving buffer..");
+        ArrayList<SensorData> data = Storage.getData(this);
+        Long currentTime = System.currentTimeMillis() / 1000;
+        item.timestamp = currentTime - referenceTimestamp;
+        data.add(item);
+        Logger.i(TAG, "[BLE] data size: " + data.size());
+        Storage.setData(this, data);
+        Logger.i(TAG, "[BLE] saving buffer done.");
+
     }
 
     @Override
