@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.hpsaturn.tools.Logger;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class ChartFragment extends Fragment{
     private List<Entry> entries = new ArrayList<Entry>();
     private LineDataSet dataSet;
     private int i;
+    private long referenceTimestamp;
 
 
     public static  ChartFragment newInstance(){
@@ -52,8 +54,13 @@ public class ChartFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_chart,container,false);
         ButterKnife.bind(this,view);
 
-        Description description = chart.getDescription();
-        description.setText(getString(R.string.app_name));
+        chart.setDescription(getString(R.string.app_name));
+
+        referenceTimestamp = System.currentTimeMillis()/1000;
+        AxisValueFormatter xAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setValueFormatter(xAxisFormatter);
+
         dataSet = new LineDataSet(entries,getString(R.string.label_pm25));
         dataSet.setColor(R.color.colorPrimary);
         dataSet.setHighlightEnabled(true);
@@ -65,11 +72,13 @@ public class ChartFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().runOnUiThread(() -> loadData());
+//        getActivity().runOnUiThread(() -> loadData());
     }
 
     public void addData(int value){
-        dataSet.addEntry(new Entry(i++,value));
+        Long currentTime = System.currentTimeMillis()/1000;
+        Long time = currentTime-referenceTimestamp;
+        dataSet.addEntry(new Entry(time,value));
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
         chart.invalidate();
