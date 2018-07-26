@@ -105,7 +105,8 @@ public class ChartFragment extends Fragment {
             Iterator<SensorData> it = data.iterator();
             while (it.hasNext()) {
                 SensorData value = it.next();
-                dataSet.addEntry(new Entry(value.timestamp, value.P25));
+                Long time = value.timestamp - referenceTimestamp;
+                dataSet.addEntry(new Entry(time, value.P25));
             }
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);

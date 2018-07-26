@@ -182,25 +182,13 @@ public class ServiceBLE extends Service {
         String strdata = new String(bytes);
         Logger.i(TAG, "[BLE] data to record: " + strdata);
         SensorData item = new Gson().fromJson(strdata, SensorData.class);
-
-        if (referenceTimestamp == 0L) {
-            ArrayList<SensorData> data = Storage.getData(this);
-            if (data.isEmpty()) {
-                referenceTimestamp = System.currentTimeMillis() / 1000;
-            } else {
-                referenceTimestamp = data.get(0).timestamp;
-            }
-        }
-
         Logger.i(TAG, "[BLE] saving buffer..");
         ArrayList<SensorData> data = Storage.getData(this);
-        Long currentTime = System.currentTimeMillis() / 1000;
-        item.timestamp = currentTime - referenceTimestamp;
+        item.timestamp = System.currentTimeMillis() / 1000;
         data.add(item);
         Logger.i(TAG, "[BLE] data size: " + data.size());
         Storage.setData(this, data);
         Logger.i(TAG, "[BLE] saving buffer done.");
-
     }
 
     @Override
