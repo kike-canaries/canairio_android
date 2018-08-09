@@ -74,7 +74,7 @@ public class ChartFragment extends Fragment {
     }
 
     private void calculateReferenceTime(){
-        ArrayList<SensorData> data = Storage.getData(getActivity());
+        ArrayList<SensorData> data = Storage.getSensorData(getActivity());
         if (data.isEmpty()) {
             referenceTimestamp = System.currentTimeMillis() / 1000;
         } else {
@@ -98,7 +98,7 @@ public class ChartFragment extends Fragment {
 
     private void loadData() {
         loadingData = true;
-        ArrayList<SensorData> data = Storage.getData(getActivity());
+        ArrayList<SensorData> data = Storage.getSensorData(getActivity());
         if (data.isEmpty()) addData(0);
         else {
             Logger.i(TAG, "[CHART] loading recorded data..");
@@ -138,7 +138,7 @@ public class ChartFragment extends Fragment {
         entries.clear();
         dataSet.clear();
         chart.clear();
-        Storage.setData(getActivity(), new ArrayList<>());
+        Storage.setSensorData(getActivity(), new ArrayList<>());
         calculateReferenceTime();
     }
 }

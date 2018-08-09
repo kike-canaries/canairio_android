@@ -39,7 +39,6 @@ public class ServiceBLE extends Service {
     private final int RETRY_POLICY = 5;
     private int retry_connect = 0;
     private int retry_notify_setup = 0;
-    private Long referenceTimestamp = 0L;
 
     @Override
     public void onCreate() {
@@ -126,6 +125,12 @@ public class ServiceBLE extends Service {
         @Override
         public void onSensorRecordStop() {
             isRecording = false;
+            saveTrack();
+        }
+
+        @Override
+        public void onTracksUpdated() {
+
         }
     };
 
@@ -180,15 +185,21 @@ public class ServiceBLE extends Service {
 
     private void record(byte[] bytes) {
         String strdata = new String(bytes);
-        Logger.i(TAG, "[BLE] data to record: " + strdata);
+        Logger.d(TAG, "[BLE] saving data track: " + strdata);
         SensorData item = new Gson().fromJson(strdata, SensorData.class);
-        Logger.i(TAG, "[BLE] saving buffer..");
-        ArrayList<SensorData> data = Storage.getData(this);
+        ArrayList<SensorData> data = Storage.getSensorData(this);
         item.timestamp = System.currentTimeMillis() / 1000;
         data.add(item);
-        Logger.i(TAG, "[BLE] data size: " + data.size());
-        Storage.setData(this, data);
-        Logger.i(TAG, "[BLE] saving buffer done.");
+        Logger.d(TAG, "[BLE] data size: " + data.size());
+        Storage.setSensorData(this, data);
+        Logger.d(TAG, "[BLE] saving data track done.");
+    }
+
+    private void saveTrack(){
+        Logger.i(TAG, "[BLE] saving record track..");
+        Storage.saveLastTrack(this);
+        serviceManager.tracksUpdated();
+        Logger.i(TAG, "[BLE] record track done.");
     }
 
     @Override

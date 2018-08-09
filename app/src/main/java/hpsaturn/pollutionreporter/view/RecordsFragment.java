@@ -2,6 +2,8 @@ package hpsaturn.pollutionreporter.view;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +17,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.RecordItem;
+import hpsaturn.pollutionreporter.common.Storage;
+import hpsaturn.pollutionreporter.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
@@ -57,20 +62,29 @@ public class RecordsFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mRecordsList);
 
-        getTestData();
-
         return view;
 
     }
 
-    public void addRecord(RecordItem recordItem){
-        mRecordsAdapter.addItem(0, recordItem);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void loadData(){
+        ArrayList<SensorTrack> tracks = Storage.getTracks(getActivity());
+        mRecordsAdapter.updateData(tracks);
+        updateUI();
+    }
+
+    public void addRecord(SensorTrack sensorTrack){
+        mRecordsAdapter.addItem(0, sensorTrack);
         mRecordsList.scrollToPosition(0);
 //        Storage.addRecord(getActivity(), recordItem);
         updateUI();
     }
 
-    public void updateRecord(RecordItem oldRecord, RecordItem newRecord, int position) {
+    public void updateRecord(SensorTrack oldRecord, SensorTrack newRecord, int position) {
         mRecordsAdapter.updateItem(position, newRecord);
 //        Storage.updateRecord(getActivity(), oldRecord, newRecord);
 //        if(Storage.isGameStart(getActivity())){
@@ -103,7 +117,7 @@ public class RecordsFragment extends Fragment {
         }
     };
 
-    public List<RecordItem> getRecords() {
+    public List<SensorTrack> getRecords() {
         return mRecordsAdapter.getRecords();
     }
 
@@ -112,6 +126,11 @@ public class RecordsFragment extends Fragment {
 //        mRecordsAdapter.updateData(Storage.getRecords(getActivity()));
     }
 
+    @Override
+    public void onResume() {
+        loadData();
+        super.onResume();
+    }
 
     public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
@@ -165,9 +184,9 @@ public class RecordsFragment extends Fragment {
 
     private void getTestData() {
 
-        addRecord(new RecordItem("record_2018-06-24","2018.06.24","Teusaquillo"));
-        addRecord(new RecordItem("record_2018-07-14","2018.07.14","Chapinero"));
-        addRecord(new RecordItem("record_2018-07-24","2018.07.24","Caracas"));
+        addRecord(new SensorTrack("record_2018-06-24","2018.06.24","Teusaquillo"));
+        addRecord(new SensorTrack("record_2018-07-14","2018.07.14","Chapinero"));
+        addRecord(new SensorTrack("record_2018-07-24","2018.07.24","Caracas"));
 
     }
 

@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.RecordItem;
+import hpsaturn.pollutionreporter.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
@@ -22,7 +22,7 @@ public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> i
 
     private AdapterView.OnItemClickListener mOnItemClickListener;
     private Context ctx;
-    private ArrayList<RecordItem> mRecords =new ArrayList<>();
+    private ArrayList<SensorTrack> mRecords =new ArrayList<>();
 
     @Override
     public RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,11 +36,11 @@ public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> i
     @Override
     public void onBindViewHolder(RecordViewHolder holder, int position) {
 
-        final RecordItem recordItem = mRecords.get(position);
+        final SensorTrack sensorTrack = mRecords.get(position);
 
-        holder.record_name.setText(recordItem.getName());
-        holder.record_date.setText(recordItem.getDate());
-        holder.record_location.setText(recordItem.getLocation());
+        holder.record_name.setText(sensorTrack.getName());
+        holder.record_date.setText(sensorTrack.getDate());
+        holder.record_location.setText(sensorTrack.getLocation());
 
     }
 
@@ -49,12 +49,12 @@ public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> i
         return mRecords.size();
     }
 
-    public void updateData (ArrayList<RecordItem>records){
+    public void updateData (ArrayList<SensorTrack>records){
         this.mRecords =records;
         notifyDataSetChanged();
     }
 
-    public void addItem(int position, RecordItem record) {
+    public void addItem(int position, SensorTrack record) {
         if (position > mRecords.size()) return;
         mRecords.add(position, record);
         notifyItemInserted(position);
@@ -67,13 +67,13 @@ public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> i
     }
 
 
-    public void updateItem(int position, RecordItem record) {
+    public void updateItem(int position, SensorTrack record) {
         if (position > mRecords.size()) return;
         mRecords.set(position, record);
         notifyItemChanged(position);
     }
 
-    public RecordItem getItem(int position) {
+    public SensorTrack getItem(int position) {
         return mRecords.get(position);
     }
 
@@ -115,7 +115,7 @@ public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> i
 
     }
 
-    public List<RecordItem> getRecords() {
+    public List<SensorTrack> getRecords() {
         return mRecords;
     }
 
