@@ -93,6 +93,7 @@ public class MainActivity extends BaseActivity implements
             if (status.equals(ServiceManager.STATUS_BLE_START)) {
                 fragmentPicker.scrollToPosition(1);
                 showFragment(chartFragment);
+                fab.setVisibility(View.VISIBLE);
             } else if (status.equals(ServiceManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
             }
@@ -124,6 +125,11 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onSensorRecordStop() {
 
+        }
+
+        @Override
+        public void onTracksUpdated() {
+            if(recordsFragment!=null)recordsFragment.loadData();
         }
     };
 
@@ -162,11 +168,13 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void setupAppFragments(){
+        Logger.i(TAG, "setupAppFragments");
         addRecordsFragment();
         addMapFragment();
         addChartFragment();
         showFragment(chartFragment);
         setupFragmentPicker();
+        fab.setVisibility(View.VISIBLE);
     }
 
     private void setupFragmentPicker() {
