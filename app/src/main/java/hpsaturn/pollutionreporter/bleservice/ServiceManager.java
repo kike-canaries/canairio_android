@@ -22,6 +22,7 @@ public class ServiceManager {
     private String action_status;
     private String action_sensor_record;
     private String action_sensor_record_stop;
+    private String action_tracks_updated;
 
     private static String KEY_SERVICE_DATA = "KEY_SERVICE_DATA";
     private static String KEY_SERVICE_STATUS = "KEY_SERVICE_STATUS";
@@ -45,6 +46,7 @@ public class ServiceManager {
 
             action_sensor_record       = "ACTION_SENSOR_RECORD";
             action_sensor_record_stop  = "ACTION_SENSOR_RECORD_STOP";
+            action_tracks_updated      = "ACTION_TRACKS_UPDATED";
 
             intentFilter.addAction(action_start);
             intentFilter.addAction(action_stop);
@@ -52,6 +54,7 @@ public class ServiceManager {
             intentFilter.addAction(action_status);
             intentFilter.addAction(action_sensor_record);
             intentFilter.addAction(action_sensor_record_stop);
+            intentFilter.addAction(action_tracks_updated);
 
             ctx.registerReceiver(mReceiver,intentFilter);
 
@@ -93,6 +96,11 @@ public class ServiceManager {
         ctx.sendBroadcast(intent);
     }
 
+    public void tracksUpdated() {
+        Intent intent = new Intent(action_tracks_updated);
+        ctx.sendBroadcast(intent);
+    }
+
     public void unregister() {
         ctx.unregisterReceiver(mReceiver);
     }
@@ -129,6 +137,10 @@ public class ServiceManager {
             } else if(action.equals(action_sensor_record_stop)) {
 
                 listener.onSensorRecordStop();
+
+            } else if(action.equals(action_tracks_updated)) {
+
+                listener.onTracksUpdated();
 
             }
 
