@@ -58,7 +58,7 @@ public class Storage {
         ArrayList<SensorTrack> tracks = getTracks(ctx);
         SensorTrack track = new SensorTrack();
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd.kkmmss", Locale.ENGLISH);
         String formattedDate = df.format(c);
         track.setName(formattedDate);
         track.data = data;
@@ -69,6 +69,10 @@ public class Storage {
         editor.apply();
         // CLEAR sensor data
         setSensorData(ctx,new ArrayList<>());
+    }
+
+    public static void removeTrack(Context ctx, String id){
+
     }
 
 }

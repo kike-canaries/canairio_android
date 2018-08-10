@@ -78,19 +78,15 @@ public class RecordsFragment extends Fragment {
     }
 
     public void addRecord(SensorTrack sensorTrack){
+        // TODO: is necessary?
         mRecordsAdapter.addItem(0, sensorTrack);
         mRecordsList.scrollToPosition(0);
-//        Storage.addRecord(getActivity(), recordItem);
         updateUI();
     }
 
     public void updateRecord(SensorTrack oldRecord, SensorTrack newRecord, int position) {
+        // TODO: is necessary?
         mRecordsAdapter.updateItem(position, newRecord);
-//        Storage.updateRecord(getActivity(), oldRecord, newRecord);
-//        if(Storage.isGameStart(getActivity())){
-//            Storage.updateSendData(getActivity(),oldRecord,newRecord);
-//            getMain().getSendMessageFragment().notifyUpdateRecord();
-//        }
         updateUI();
     }
 
@@ -142,25 +138,19 @@ public class RecordsFragment extends Fragment {
 
         @Override
         public boolean isLongPressDragEnabled() {
-//            if(Storage.isGameStart(getActivity()))return false;
-//            else return true;
             return true;
         }
 
         @Override
         public boolean isItemViewSwipeEnabled() {
-//            if(Storage.isGameStart(getActivity()))return false;
-//            else return true;
             return true;
         }
 
         @Override
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-
             int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
             int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
             return makeMovementFlags(dragFlags, swipeFlags);
-
         }
 
         @Override
@@ -182,13 +172,13 @@ public class RecordsFragment extends Fragment {
     }
 
 
-    private void getTestData() {
-
-        addRecord(new SensorTrack("record_2018-06-24","2018.06.24","Teusaquillo"));
-        addRecord(new SensorTrack("record_2018-07-14","2018.07.14","Chapinero"));
-        addRecord(new SensorTrack("record_2018-07-24","2018.07.24","Caracas"));
-
-    }
+//    private void getTestData() {
+//
+//        addRecord(new SensorTrack("record_2018-06-24","2018.06.24","Teusaquillo"));
+//        addRecord(new SensorTrack("record_2018-07-14","2018.07.14","Chapinero"));
+//        addRecord(new SensorTrack("record_2018-07-24","2018.07.24","Caracas"));
+//
+//    }
 
 
 }
