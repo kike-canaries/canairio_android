@@ -42,7 +42,7 @@
             android:lines="1"
             android:text="hpsaturn@gmail.com"
             android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_record_date"

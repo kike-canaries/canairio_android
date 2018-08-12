@@ -14,13 +14,18 @@ import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.common.BLEHandler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 11/17/17.
@@ -197,9 +202,22 @@ public class ServiceBLE extends Service {
 
     private void saveTrack(){
         Logger.i(TAG, "[BLE] saving record track..");
-        Storage.saveLastTrack(this);
+        Storage.saveTrack(this,getLastTrack());
+        Storage.setSensorData(this,new ArrayList<>()); // clear sensor data
         serviceManager.tracksUpdated();
         Logger.i(TAG, "[BLE] record track done.");
+    }
+
+    private SensorTrack getLastTrack(){
+        ArrayList<SensorData> data = Storage.getSensorData(this);
+        SensorTrack track = new SensorTrack();
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd.kkmmss", Locale.ENGLISH);
+        String formattedDate = df.format(c);
+        track.setName(formattedDate);
+        track.date = "points: "+data.size();
+        track.data = data;
+        return track;
     }
 
     @Override

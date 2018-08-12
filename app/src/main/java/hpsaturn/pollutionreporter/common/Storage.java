@@ -8,14 +8,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Iterator;
 
-import hpsaturn.pollutionreporter.models.SensorTrack;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/4/18.
@@ -53,26 +50,27 @@ public class Storage {
         }
     }
 
-    public static void saveLastTrack(Context ctx){
-        ArrayList<SensorData> data = getSensorData(ctx);
+    public static void saveTrack(Context ctx, SensorTrack track){
         ArrayList<SensorTrack> tracks = getTracks(ctx);
-        SensorTrack track = new SensorTrack();
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd.kkmmss", Locale.ENGLISH);
-        String formattedDate = df.format(c);
-        track.setName(formattedDate);
-        track.data = data;
         tracks.add(track);
+        saveTracks(ctx,tracks);
+    }
+
+    public static void removeTrack(Context ctx, String id){
+        ArrayList<SensorTrack> tracks = getTracks(ctx);
+        Iterator<SensorTrack> it = tracks.iterator();
+        while(it.hasNext()){
+            SensorTrack track = it.next();
+            if(track.name.equals(id))it.remove();
+        }
+        saveTracks(ctx,tracks);
+    }
+    
+    private static void saveTracks(Context ctx,ArrayList<SensorTrack>tracks){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Keys.SENSOR_TRACKS, new Gson().toJson(tracks));
         editor.apply();
-        // CLEAR sensor data
-        setSensorData(ctx,new ArrayList<>());
-    }
-
-    public static void removeTrack(Context ctx, String id){
-
     }
 
 }
