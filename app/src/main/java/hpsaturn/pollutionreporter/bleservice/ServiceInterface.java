@@ -16,4 +16,6 @@ public interface ServiceInterface {
     void onSensorRecord();
 
     void onSensorRecordStop();
+
+    void onTracksUpdated();
 }

@@ -22,9 +22,9 @@ public class RecordViewHolder extends RecyclerView.ViewHolder implements View.On
         super(itemView);
         itemView.setOnClickListener(this);
         this.mAdapter=adapter;
-        record_name = (TextView) itemView.findViewById(R.id.tv_record_name);
-        record_date = (TextView) itemView.findViewById(R.id.tv_record_date);
-        record_location = (TextView) itemView.findViewById(R.id.tv_record_location);
+        record_name = itemView.findViewById(R.id.tv_record_name);
+        record_date = itemView.findViewById(R.id.tv_record_date);
+        record_location = itemView.findViewById(R.id.tv_record_location);
     }
 
     @Override

@@ -9,4 +9,5 @@ public class Keys {
     public static final String DEVICE_ADDRESS = "KEY_DEVICE_ADDRESS";
     public static final String SENSOR_RECORD = "SENSOR_RECORD";
     public static final String SENSOR_DATA = "SENSOR_DATA";
+    public static final String SENSOR_TRACKS = "SENSOR_TRACKS";
 }

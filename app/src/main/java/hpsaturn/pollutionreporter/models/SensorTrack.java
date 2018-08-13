@@ -1,18 +1,21 @@
 package hpsaturn.pollutionreporter.models;
 
+import java.util.ArrayList;
+
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
  */
-public class RecordItem {
+public class SensorTrack {
 
     public String date;
     public String location;
     public String name;
+    public ArrayList<SensorData> data;
 
-    public RecordItem() {
+    public SensorTrack() {
     }
 
-    public RecordItem(String name, String date, String location) {
+    public SensorTrack(String name, String date, String location) {
         this.name = name;
         this.date = date;
         this.location = location;

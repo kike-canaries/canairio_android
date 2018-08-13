@@ -2,11 +2,12 @@ package hpsaturn.pollutionreporter.view;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +15,21 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
+import com.hpsaturn.tools.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.RecordItem;
+import hpsaturn.pollutionreporter.common.Storage;
+import hpsaturn.pollutionreporter.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
  */
 public class RecordsFragment extends Fragment {
 
-    private static final boolean DEBUG = Config.DEBUG;
     public static String TAG = RecordsFragment.class.getSimpleName();
 
     private RecyclerView mRecordsList;
@@ -57,26 +59,31 @@ public class RecordsFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mRecordsList);
 
-        getTestData();
-
         return view;
 
     }
 
-    public void addRecord(RecordItem recordItem){
-        mRecordsAdapter.addItem(0, recordItem);
-        mRecordsList.scrollToPosition(0);
-//        Storage.addRecord(getActivity(), recordItem);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void loadData(){
+        ArrayList<SensorTrack> tracks = Storage.getTracks(getActivity());
+        mRecordsAdapter.updateData(tracks);
         updateUI();
     }
 
-    public void updateRecord(RecordItem oldRecord, RecordItem newRecord, int position) {
+    public void addRecord(SensorTrack sensorTrack){
+        // TODO: is necessary?
+        mRecordsAdapter.addItem(0, sensorTrack);
+        mRecordsList.scrollToPosition(0);
+        updateUI();
+    }
+
+    public void updateRecord(SensorTrack oldRecord, SensorTrack newRecord, int position) {
+        // TODO: is necessary?
         mRecordsAdapter.updateItem(position, newRecord);
-//        Storage.updateRecord(getActivity(), oldRecord, newRecord);
-//        if(Storage.isGameStart(getActivity())){
-//            Storage.updateSendData(getActivity(),oldRecord,newRecord);
-//            getMain().getSendMessageFragment().notifyUpdateRecord();
-//        }
         updateUI();
     }
 
@@ -98,12 +105,12 @@ public class RecordsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            if(DEBUG) Log.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
+            Logger.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
 //            getMain().showAddDialog(mRecordsAdapter.getItem(position),position);
         }
     };
 
-    public List<RecordItem> getRecords() {
+    public List<SensorTrack> getRecords() {
         return mRecordsAdapter.getRecords();
     }
 
@@ -112,6 +119,11 @@ public class RecordsFragment extends Fragment {
 //        mRecordsAdapter.updateData(Storage.getRecords(getActivity()));
     }
 
+    @Override
+    public void onResume() {
+        loadData();
+        super.onResume();
+    }
 
     public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
@@ -123,37 +135,33 @@ public class RecordsFragment extends Fragment {
 
         @Override
         public boolean isLongPressDragEnabled() {
-//            if(Storage.isGameStart(getActivity()))return false;
-//            else return true;
             return true;
         }
 
         @Override
         public boolean isItemViewSwipeEnabled() {
-//            if(Storage.isGameStart(getActivity()))return false;
-//            else return true;
             return true;
         }
 
         @Override
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-
             int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
             int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
             return makeMovementFlags(dragFlags, swipeFlags);
-
         }
 
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
             mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-            if (DEBUG) Log.d(TAG, "ItemTouchHelperCallback: onMove");
+            Logger.d(TAG, "ItemTouchHelperCallback: onMove");
             return true;
         }
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
+            String recordId = mRecordsAdapter.getItem(viewHolder.getAdapterPosition()).name;
+            Logger.i(TAG, "removing record: "+recordId);
+            Storage.removeTrack(getActivity(),recordId);
         }
 
     }
@@ -163,13 +171,13 @@ public class RecordsFragment extends Fragment {
     }
 
 
-    private void getTestData() {
-
-        addRecord(new RecordItem("record_2018-06-24","2018.06.24","Teusaquillo"));
-        addRecord(new RecordItem("record_2018-07-14","2018.07.14","Chapinero"));
-        addRecord(new RecordItem("record_2018-07-24","2018.07.24","Caracas"));
-
-    }
+//    private void getTestData() {
+//
+//        addRecord(new SensorTrack("record_2018-06-24","2018.06.24","Teusaquillo"));
+//        addRecord(new SensorTrack("record_2018-07-14","2018.07.14","Chapinero"));
+//        addRecord(new SensorTrack("record_2018-07-24","2018.07.24","Caracas"));
+//
+//    }
 
 
 }
