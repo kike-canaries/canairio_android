@@ -65,7 +65,7 @@ public class Storage {
         }
         saveTracks(ctx,tracks);
     }
-    
+
     private static void saveTracks(Context ctx,ArrayList<SensorTrack>tracks){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = preferences.edit();

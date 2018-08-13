@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
+import com.hpsaturn.tools.Logger;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
@@ -32,7 +30,6 @@ import hpsaturn.pollutionreporter.models.SensorTrack;
  */
 public class RecordsFragment extends Fragment {
 
-    private static final boolean DEBUG = Config.DEBUG;
     public static String TAG = RecordsFragment.class.getSimpleName();
 
     private RecyclerView mRecordsList;
@@ -108,7 +105,7 @@ public class RecordsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            if(DEBUG) Log.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
+            Logger.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
 //            getMain().showAddDialog(mRecordsAdapter.getItem(position),position);
         }
     };
@@ -156,13 +153,15 @@ public class RecordsFragment extends Fragment {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
             mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-            if (DEBUG) Log.d(TAG, "ItemTouchHelperCallback: onMove");
+            Logger.d(TAG, "ItemTouchHelperCallback: onMove");
             return true;
         }
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
+            String recordId = mRecordsAdapter.getItem(viewHolder.getAdapterPosition()).name;
+            Logger.i(TAG, "removing record: "+recordId);
+            Storage.removeTrack(getActivity(),recordId);
         }
 
     }

@@ -190,14 +190,14 @@ public class ServiceBLE extends Service {
 
     private void record(byte[] bytes) {
         String strdata = new String(bytes);
-        Logger.d(TAG, "[BLE] saving data track: " + strdata);
+        Logger.d(TAG, "[BLE] saving sensor data: " + strdata);
         SensorData item = new Gson().fromJson(strdata, SensorData.class);
         ArrayList<SensorData> data = Storage.getSensorData(this);
         item.timestamp = System.currentTimeMillis() / 1000;
         data.add(item);
         Logger.d(TAG, "[BLE] data size: " + data.size());
         Storage.setSensorData(this, data);
-        Logger.d(TAG, "[BLE] saving data track done.");
+        Logger.d(TAG, "[BLE] saving sensor data done.");
     }
 
     private void saveTrack(){
