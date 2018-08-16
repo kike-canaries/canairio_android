@@ -1,12 +1,15 @@
 package hpsaturn.pollutionreporter;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -192,11 +195,11 @@ public class MainActivity extends BaseActivity implements
     private void refreshUI() {
         fab.setVisibility(View.VISIBLE);
         if (prefBuilder.getBoolean(Keys.SENSOR_RECORD, false)) {
-            fab.setBackgroundTintList(getColorStateList(R.color.color_state_record_stop));
-            fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_24dp));
+            fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record_stop));
+            fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_stop_white_24dp));
         } else {
-            fab.setBackgroundTintList(getColorStateList(R.color.color_state_record));
-            fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_24dp));
+            fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
+            fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_record_white_24dp));
         }
     }
 
