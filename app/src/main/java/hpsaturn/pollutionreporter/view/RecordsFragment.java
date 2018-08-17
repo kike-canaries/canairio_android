@@ -169,6 +169,7 @@ public class RecordsFragment extends Fragment {
             Storage.removeTrack(getActivity(),recordId);
             mRecordsAdapter.removeItem(position);
             mRecordsAdapter.notifyDataSetChanged();
+            updateUI();
         }
 
     }
