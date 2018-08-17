@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
@@ -43,9 +44,19 @@ public class ChartFragment extends Fragment {
     private long referenceTimestamp;
     private boolean loadingData = true;
 
+    public static final String KEY_RECORD_ID = "key_record_id";
+    private String recordId;
 
     public static ChartFragment newInstance() {
         ChartFragment fragment = new ChartFragment();
+        return fragment;
+    }
+
+    public static ChartFragment newInstance(String recordId) {
+        ChartFragment fragment = new ChartFragment();
+        Bundle args = new Bundle();
+        args.putString(KEY_RECORD_ID,recordId);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -63,6 +74,11 @@ public class ChartFragment extends Fragment {
         dataSet.setColor(R.color.colorPrimary);
         dataSet.setHighlightEnabled(true);
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
+
+        Bundle args = getArguments();
+        if(args!=null){
+            recordId = args.getString(KEY_RECORD_ID) ;
+        }
 
         return view;
     }
@@ -98,7 +114,12 @@ public class ChartFragment extends Fragment {
 
     private void loadData() {
         loadingData = true;
-        ArrayList<SensorData> data = Storage.getSensorData(getActivity());
+        ArrayList<SensorData> data = new ArrayList<>();
+        if(recordId==null) data = Storage.getSensorData(getActivity());
+        else {
+            SensorTrack track = Storage.getTrack(getActivity(), recordId);
+            if(track!=null) data = track.data;
+        }
         if (data.isEmpty()) addData(0);
         else {
             Logger.i(TAG, "[CHART] loading recorded data..");

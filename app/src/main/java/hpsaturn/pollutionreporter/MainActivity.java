@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -91,9 +92,7 @@ public class MainActivity extends BaseActivity implements
         public void onServiceStatus(String status) {
 
             if (status.equals(ServiceManager.STATUS_BLE_START)) {
-                fragmentPicker.scrollToPosition(1);
                 showFragment(chartFragment);
-                fab.setVisibility(View.VISIBLE);
             } else if (status.equals(ServiceManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
             }
@@ -190,13 +189,12 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void refreshUI() {
-        fab.setVisibility(View.VISIBLE);
         if (prefBuilder.getBoolean(Keys.SENSOR_RECORD, false)) {
-            fab.setBackgroundTintList(getColorStateList(R.color.color_state_record_stop));
-            fab.setImageDrawable(getDrawable(R.drawable.ic_stop_white_24dp));
+            fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record_stop));
+            fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_stop_white_24dp));
         } else {
-            fab.setBackgroundTintList(getColorStateList(R.color.color_state_record));
-            fab.setImageDrawable(getDrawable(R.drawable.ic_record_white_24dp));
+            fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
+            fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_record_white_24dp));
         }
     }
 
@@ -278,16 +276,19 @@ public class MainActivity extends BaseActivity implements
         Logger.d(TAG, "onCurrentItemChanged: " + position);
         switch (position) {
             case 0:
+                fab.setVisibility(View.INVISIBLE);
                 hideFragment(recordsFragment);
                 hideFragment(chartFragment);
                 showFragment(mapFragment);
                 break;
             case 1:
+                fab.setVisibility(View.VISIBLE);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
                 showFragment(chartFragment);
                 break;
             case 2:
+                fab.setVisibility(View.INVISIBLE);
                 hideFragment(mapFragment);
                 hideFragment(chartFragment);
                 showFragment(recordsFragment);

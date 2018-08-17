@@ -101,6 +101,17 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
+    public void addFragmentPopup(Fragment fragment, String fragmentTag) {
+        try {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.content_subwindows, fragment, fragmentTag);
+            ft.addToBackStack(fragmentTag);
+            ft.commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void replaceFragment(Fragment fragment, String fragmentTag, boolean toStack) {
         try {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

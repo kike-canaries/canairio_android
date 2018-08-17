@@ -45,8 +45,8 @@ public class RecordsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_records, container, false);
-        mEmptyMessage = (TextView)view.findViewById(R.id.tv_records_empty_list);
-        mRecordsList = (RecyclerView) view.findViewById(R.id.rv_records);
+        mEmptyMessage = view.findViewById(R.id.tv_records_empty_list);
+        mRecordsList = view.findViewById(R.id.rv_records);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         mRecordsList.setLayoutManager(gridLayoutManager);
@@ -58,6 +58,7 @@ public class RecordsFragment extends Fragment {
         ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(mRecordsAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mRecordsList);
+
 
         return view;
 
@@ -106,7 +107,10 @@ public class RecordsFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             Logger.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
-//            getMain().showAddDialog(mRecordsAdapter.getItem(position),position);
+            String recordId = mRecordsAdapter.getItem(mRecordsList.indexOfChild(view)).name;
+            Logger.i(TAG, "showing record: "+recordId);
+            ChartFragment chart = ChartFragment.newInstance(recordId);
+            getMain().addFragmentPopup(chart,ChartFragment.TAG);
         }
     };
 
