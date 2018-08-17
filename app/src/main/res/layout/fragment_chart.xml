@@ -18,6 +18,28 @@
         android:id="@+id/rl_separator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_picker_card_height"
-        android:layout_alignParentBottom="true"></RelativeLayout>
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/tv_chart_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="20180816.201344"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_chart_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_chart_name"
+            android:text="20180816.201344"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

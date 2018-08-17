@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -37,6 +39,16 @@ public class ChartFragment extends Fragment {
 
     @BindView(R.id.lc_measures)
     LineChart chart;
+
+    @BindView(R.id.tv_chart_name)
+    TextView chart_name;
+
+    @BindView(R.id.tv_chart_date)
+    TextView chart_date;
+
+    @BindView(R.id.rl_separator)
+    RelativeLayout rl_separator;
+
 
     private List<Entry> entries = new ArrayList<Entry>();
     private LineDataSet dataSet;
@@ -118,7 +130,12 @@ public class ChartFragment extends Fragment {
         if(recordId==null) data = Storage.getSensorData(getActivity());
         else {
             SensorTrack track = Storage.getTrack(getActivity(), recordId);
-            if(track!=null) data = track.data;
+            if(track!=null) {
+                data = track.data;
+                chart_name.setText(track.getName());
+                chart_date.setText(track.getDate());
+                rl_separator.setVisibility(View.VISIBLE);
+            }
         }
         if (data.isEmpty()) addData(0);
         else {
