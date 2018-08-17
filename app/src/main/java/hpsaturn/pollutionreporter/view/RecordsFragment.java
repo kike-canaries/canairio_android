@@ -163,9 +163,12 @@ public class RecordsFragment extends Fragment {
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            String recordId = mRecordsAdapter.getItem(viewHolder.getAdapterPosition()).name;
+            int position = viewHolder.getAdapterPosition();
+            String recordId = mRecordsAdapter.getItem(position).name;
             Logger.i(TAG, "removing record: "+recordId);
             Storage.removeTrack(getActivity(),recordId);
+            mRecordsAdapter.removeItem(position);
+            mRecordsAdapter.notifyDataSetChanged();
         }
 
     }
