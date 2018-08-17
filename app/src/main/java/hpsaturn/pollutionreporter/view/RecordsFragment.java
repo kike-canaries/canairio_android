@@ -107,7 +107,7 @@ public class RecordsFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             Logger.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
-            String recordId = mRecordsAdapter.getItem(mRecordsList.indexOfChild(view)).name;
+            String recordId = mRecordsAdapter.getItem(position).name;
             Logger.i(TAG, "showing record: "+recordId);
             ChartFragment chart = ChartFragment.newInstance(recordId);
             getMain().addFragmentPopup(chart,ChartFragment.TAG);
