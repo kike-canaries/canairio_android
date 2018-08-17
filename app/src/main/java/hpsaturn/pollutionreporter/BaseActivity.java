@@ -104,6 +104,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     public void addFragmentPopup(Fragment fragment, String fragmentTag) {
         try {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
             ft.add(R.id.content_subwindows, fragment, fragmentTag);
             ft.addToBackStack(fragmentTag);
             ft.commitAllowingStateLoss();
