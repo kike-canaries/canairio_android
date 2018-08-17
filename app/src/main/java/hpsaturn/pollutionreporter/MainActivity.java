@@ -1,11 +1,9 @@
 package hpsaturn.pollutionreporter;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -94,9 +92,7 @@ public class MainActivity extends BaseActivity implements
         public void onServiceStatus(String status) {
 
             if (status.equals(ServiceManager.STATUS_BLE_START)) {
-                fragmentPicker.scrollToPosition(1);
                 showFragment(chartFragment);
-                fab.setVisibility(View.VISIBLE);
             } else if (status.equals(ServiceManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
             }
@@ -193,7 +189,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void refreshUI() {
-        fab.setVisibility(View.VISIBLE);
         if (prefBuilder.getBoolean(Keys.SENSOR_RECORD, false)) {
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record_stop));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_stop_white_24dp));
@@ -281,16 +276,19 @@ public class MainActivity extends BaseActivity implements
         Logger.d(TAG, "onCurrentItemChanged: " + position);
         switch (position) {
             case 0:
+                fab.setVisibility(View.INVISIBLE);
                 hideFragment(recordsFragment);
                 hideFragment(chartFragment);
                 showFragment(mapFragment);
                 break;
             case 1:
+                fab.setVisibility(View.VISIBLE);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
                 showFragment(chartFragment);
                 break;
             case 2:
+                fab.setVisibility(View.INVISIBLE);
                 hideFragment(mapFragment);
                 hideFragment(chartFragment);
                 showFragment(recordsFragment);

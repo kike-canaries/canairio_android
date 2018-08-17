@@ -40,17 +40,10 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/selectable_record_button"
         android:layout_margin="@dimen/fab_margin"
+        android:background="@drawable/selectable_record_button"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_record_white_24dp" />
-
-    <com.yarolegovich.discretescrollview.DiscreteScrollView
-        android:id="@+id/fragment_picker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="2dp" />
 
 </android.support.design.widget.CoordinatorLayout>
