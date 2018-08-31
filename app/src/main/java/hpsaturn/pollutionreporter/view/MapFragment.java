@@ -42,14 +42,14 @@ public class MapFragment extends Fragment {
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
-        mapView.setMaxZoomLevel(19);
+        mapView.setMaxZoomLevel((double) 19);
 
-        mapView.getController().setZoom(17); //set initial zoom-level, depends on your need
+        mapView.getController().setZoom((double)17); //set initial zoom-level, depends on your need
         //mapView.getController().setCenter(ONCATIVO);
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
         mapView.setDrawingCacheEnabled(true);
 
-        mapLocationOverlay = new MyLocationNewOverlay(getActivity(), mapView);
+        mapLocationOverlay = new MyLocationNewOverlay(mapView);
         mapLocationOverlay.enableMyLocation();
         mapLocationOverlay.enableFollowLocation();
         mapLocationOverlay.enableMyLocation();

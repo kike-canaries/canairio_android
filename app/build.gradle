@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.iamhabib:easy-preference:1.0.1'
     implementation 'net.steamcrafted:materialiconlib:1.1.5'
 
-    implementation 'org.osmdroid:osmdroid-android:5.0.1'
+    implementation 'org.osmdroid:osmdroid-android:6.0.2'
     implementation 'org.slf4j:slf4j-android:1.7.12'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
 
@@ -65,6 +65,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
     implementation 'com.google.firebase:firebase-core:16.0.3'
+
+    implementation 'com.github.MKergall:osmbonuspack:6.5.2'
 
 
     testImplementation 'junit:junit:4.12'
