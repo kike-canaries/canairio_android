@@ -68,6 +68,8 @@ dependencies {
 
     implementation 'com.github.MKergall:osmbonuspack:6.5.2'
 
+    implementation 'io.nlopez.smartlocation:library:3.3.3'
+
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
