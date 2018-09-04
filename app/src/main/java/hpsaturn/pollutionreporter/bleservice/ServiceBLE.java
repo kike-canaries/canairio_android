@@ -29,6 +29,7 @@ import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.location.config.LocationParams;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 11/17/17.
@@ -84,11 +85,11 @@ public class ServiceBLE extends Service {
         Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
         bleHandler = new BLEHandler(this, macAddress, bleListener);
         bleHandler.connect();
-        SmartLocation.with(this).location().start(onLocationListener);
+        SmartLocation.with(this)
+                .location()
+                .config(LocationParams.NAVIGATION)
+                .start(onLocationListener);
     }
-
-
-    private Location lastLocation;
 
     private OnLocationUpdatedListener onLocationListener = new OnLocationUpdatedListener() {
         @Override
@@ -97,7 +98,6 @@ public class ServiceBLE extends Service {
             Logger.i(TAG, "[BLE][LOC] accuracy: "+location.getAccuracy());
             Logger.i(TAG, "[BLE][LOC] coords  : "+location.getLatitude()+","+location.getLongitude());
             Logger.i(TAG, "[BLE][LOC] speed: "+location.getSpeed());
-            lastLocation=location;
         }
     };
 
@@ -213,8 +213,9 @@ public class ServiceBLE extends Service {
         SensorData item = new Gson().fromJson(strdata, SensorData.class);
         ArrayList<SensorData> data = Storage.getSensorData(this);
         item.timestamp = System.currentTimeMillis() / 1000;
-        if(lastLocation!=null)item.lat = lastLocation.getLatitude();
-        if(lastLocation!=null)item.lon = lastLocation.getLongitude();
+        Location lastLocation = SmartLocation.with(this).location().getLastLocation();
+        item.lat = lastLocation.getLatitude();
+        item.lon = lastLocation.getLongitude();
         data.add(item);
         Logger.d(TAG, "[BLE] data size: " + data.size());
         Storage.setSensorData(this, data);
@@ -238,7 +239,6 @@ public class ServiceBLE extends Service {
         track.setName(formattedDate);
         track.date = "points: "+data.size();
         track.data = data;
-        if(lastLocation!=null)track.location=lastLocation;
         return track;
     }
 
