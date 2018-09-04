@@ -11,7 +11,10 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 
@@ -42,6 +45,7 @@ public class ServiceBLE extends Service {
     private BLEHandler bleHandler;
     private boolean isRecording;
     private ServiceManager serviceManager;
+    private DatabaseReference mDatabase;
 
     private final int RETRY_POLICY = 5;
     private int retry_connect = 0;
@@ -54,6 +58,8 @@ public class ServiceBLE extends Service {
         prefBuilder = AppData.getPrefBuilder(this);
         isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
         serviceManager = new ServiceManager(this, managerListener);
+        String deviceName = DeviceUtil.getDeviceName() + "_" + DeviceUtil.getDeviceId(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference(deviceName);
         noticationChannelAPI26issue();
     }
 
@@ -224,7 +230,9 @@ public class ServiceBLE extends Service {
 
     private void saveTrack(){
         Logger.i(TAG, "[BLE] saving record track..");
-        Storage.saveTrack(this,getLastTrack());
+        SensorTrack lastTrack = getLastTrack();
+        Storage.saveTrack(this,lastTrack);
+        mDatabase.child(lastTrack.name).setValue(lastTrack);
         Storage.setSensorData(this,new ArrayList<>()); // clear sensor data
         serviceManager.tracksUpdated();
         Logger.i(TAG, "[BLE] record track done.");
@@ -234,7 +242,7 @@ public class ServiceBLE extends Service {
         ArrayList<SensorData> data = Storage.getSensorData(this);
         SensorTrack track = new SensorTrack();
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd.kkmmss", Locale.ENGLISH);
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddkkmmss", Locale.ENGLISH);
         String formattedDate = df.format(c);
         track.setName(formattedDate);
         track.date = "points: "+data.size();
