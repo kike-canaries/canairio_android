@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
+
+import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/2/18.
@@ -74,9 +77,9 @@ public class ServiceManager {
         ctx.sendBroadcast(intent);
     }
 
-    public void pushData(byte[] bytes){
+    public void pushData(SensorData data){
         Intent intent = new Intent(action_push);
-        intent.putExtra(KEY_SERVICE_DATA,bytes);
+        intent.putExtra(KEY_SERVICE_DATA,new Gson().toJson(data));
         ctx.sendBroadcast(intent);
     }
 
@@ -127,8 +130,9 @@ public class ServiceManager {
 
             } else if(action.equals(action_push)) {
 
-                byte[] bytes = intent.getExtras().getByteArray(KEY_SERVICE_DATA);
-                listener.onServiceData(bytes);
+                String data = intent.getExtras().getString(KEY_SERVICE_DATA);
+
+                listener.onServiceData(new Gson().fromJson(data,SensorData.class));
 
             } else if(action.equals(action_sensor_record)) {
 

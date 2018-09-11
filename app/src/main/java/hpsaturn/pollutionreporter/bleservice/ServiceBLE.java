@@ -143,7 +143,7 @@ public class ServiceBLE extends Service {
         }
 
         @Override
-        public void onServiceData(byte[] bytes) {
+        public void onServiceData(SensorData data) {
 
         }
 
@@ -206,23 +206,28 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            if (isRecording) record(bytes);
+            SensorData point = getSensorData(bytes);
+            if (isRecording) record(point);
             Logger.d(TAG, "[BLE] pushing data..");
-            serviceManager.pushData(bytes);
+            serviceManager.pushData(point);
             retry_notify_setup = 0;
         }
     };
 
-    private void record(byte[] bytes) {
+    private SensorData getSensorData(byte [] bytes){
         String strdata = new String(bytes);
-        Logger.d(TAG, "[BLE] saving sensor data: " + strdata);
-        SensorData item = new Gson().fromJson(strdata, SensorData.class);
-        ArrayList<SensorData> data = Storage.getSensorData(this);
-        item.timestamp = System.currentTimeMillis() / 1000;
+        Logger.d(TAG, "[BLE] sensor data: " + strdata);
+        SensorData point = new Gson().fromJson(strdata, SensorData.class);
+        point.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
-        item.lat = lastLocation.getLatitude();
-        item.lon = lastLocation.getLongitude();
-        data.add(item);
+        point.lat = lastLocation.getLatitude();
+        point.lon = lastLocation.getLongitude();
+        return point;
+    }
+
+    private void record(SensorData point) {
+        ArrayList<SensorData> data = Storage.getSensorData(this);
+        data.add(point);
         Logger.d(TAG, "[BLE] data size: " + data.size());
         Storage.setSensorData(this, data);
         Logger.d(TAG, "[BLE] saving sensor data done.");

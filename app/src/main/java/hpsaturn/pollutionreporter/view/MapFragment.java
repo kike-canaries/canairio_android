@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/13/18.
@@ -66,5 +69,12 @@ public class MapFragment extends Fragment {
     public void enableMyLocation(){
         mapLocationOverlay.enableMyLocation();
         mapLocationOverlay.enableFollowLocation();
+    }
+
+    public void addMarker(SensorData data){
+        Marker startMarker = new Marker(mapView);
+        startMarker.setPosition(new GeoPoint(data.lat,data.lon));
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        mapView.getOverlays().add(startMarker);
     }
 }
