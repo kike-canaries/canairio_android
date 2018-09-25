@@ -59,27 +59,27 @@ public class MapFragment extends Fragment {
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
         mapView.setDrawingCacheEnabled(true);
 
-        mapLocationOverlay = new MyLocationNewOverlay(mapView);
-        mapLocationOverlay.enableMyLocation();
-        mapLocationOverlay.enableFollowLocation();
-        mapLocationOverlay.enableMyLocation();
+//        mapLocationOverlay = new MyLocationNewOverlay(mapView);
+//        mapLocationOverlay.enableMyLocation();
+//        mapLocationOverlay.enableFollowLocation();
+//        mapLocationOverlay.enableMyLocation();
 
-        CompassOverlay compassOverlay = new CompassOverlay(getActivity(), mapView);
-        compassOverlay.enableCompass();
+//        CompassOverlay compassOverlay = new CompassOverlay(getActivity(), mapView);
+//        compassOverlay.enableCompass();
 
-        mapView.getOverlays().add(compassOverlay);
-        mapView.getOverlays().add(mapLocationOverlay);
+//        mapView.getOverlays().add(compassOverlay);
+//        mapView.getOverlays().add(mapLocationOverlay);
         mapView.buildDrawingCache();
         mapView.setEnabled(true);
     }
 
     public void enableMyLocation() {
-        mapLocationOverlay.enableMyLocation();
-        mapLocationOverlay.enableFollowLocation();
+//        mapLocationOverlay.enableMyLocation();
+//        mapLocationOverlay.enableFollowLocation();
     }
 
     public void addMarker(SensorData data) {
-        mapView.getOverlays().get(0).;
+        mapView.getOverlays().clear();
         Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
         MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
         Marker pointMarker = new Marker(mapView);
@@ -92,7 +92,6 @@ public class MapFragment extends Fragment {
         pointMarker.setIcon(icon);
         pointMarker.setInfoWindow(infoWindow);
         mapView.getOverlays().add(pointMarker);
-        mapView.setPositionAndScale()
-
+        mapView.getController().setCenter(new GeoPoint(data.lat,data.lon));
     }
 }
