@@ -138,6 +138,10 @@ public class MainActivity extends BaseActivity implements
         }
     };
 
+    private View.OnClickListener onFabShareClickListener = view -> {
+
+    };
+
     private void stopRecord() {
         showSnackMessageSlow(R.string.msg_record_stop);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, false).save();
@@ -194,6 +198,18 @@ public class MainActivity extends BaseActivity implements
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_record_white_24dp));
         }
+    }
+
+    public void enableShareButton (){
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(onFabShareClickListener);
+        fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
+        fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_share));
+    }
+
+    public void disableShareButton (){
+        fab.setOnClickListener(onFabClickListener);
+        fab.setVisibility(View.INVISIBLE);
     }
 
     private void addChartFragment() {

@@ -25,6 +25,7 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
@@ -142,6 +143,7 @@ public class ChartFragment extends Fragment {
                 chart_date.setText(track.getDate());
                 chart_desc.setText(""+track.size+" points");
                 rl_separator.setVisibility(View.VISIBLE);
+                getMain().enableShareButton();
             }
         }
         if (data.isEmpty()) addData(0);
@@ -169,6 +171,7 @@ public class ChartFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        getMain().disableShareButton();
         super.onDestroyView();
     }
 
@@ -185,5 +188,13 @@ public class ChartFragment extends Fragment {
         chart.clear();
         Storage.setSensorData(getActivity(), new ArrayList<>());
         calculateReferenceTime();
+    }
+
+    public void shareAction(){
+
+    }
+
+    private MainActivity getMain(){
+        return (MainActivity)getActivity();
     }
 }
