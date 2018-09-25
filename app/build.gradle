@@ -14,11 +14,21 @@ android {
                 cppFlags "-std=c++11"
             }
         }
+        signingConfigs {
+            release {
+                storeFile file(System.getenv("airStoreFile"))
+                storePassword System.getenv("airStorePassword")
+                keyAlias System.getenv("airKeyAlias")
+                keyPassword System.getenv("airKeyPassword")
+            }
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
         }
     }
     externalNativeBuild {

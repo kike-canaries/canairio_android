@@ -46,6 +46,12 @@ public class ChartFragment extends Fragment {
     @BindView(R.id.tv_chart_date)
     TextView chart_date;
 
+    @BindView(R.id.tv_chart_desc)
+    TextView chart_desc;
+
+    @BindView(R.id.tv_chart_loc)
+    TextView chart_loc;
+
     @BindView(R.id.rl_separator)
     RelativeLayout rl_separator;
 
@@ -134,6 +140,7 @@ public class ChartFragment extends Fragment {
                 data = track.data;
                 chart_name.setText(track.getName());
                 chart_date.setText(track.getDate());
+                chart_desc.setText(""+track.size+" points");
                 rl_separator.setVisibility(View.VISIBLE);
             }
         }

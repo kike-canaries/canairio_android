@@ -40,6 +40,26 @@
             android:textSize="18sp"
             android:textColor="@color/black" />
 
+        <TextView
+            android:id="@+id/tv_chart_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_chart_date"
+            android:text="18 points"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+
+
+        <TextView
+            android:id="@+id/tv_chart_loc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_chart_desc"
+            android:text=""
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+
+
     </RelativeLayout>
 
 </RelativeLayout>
