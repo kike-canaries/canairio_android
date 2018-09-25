@@ -1,5 +1,7 @@
 package hpsaturn.pollutionreporter.bleservice;
 
+import hpsaturn.pollutionreporter.models.SensorData;
+
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/2/18.
  */
@@ -11,7 +13,7 @@ public interface ServiceInterface {
 
     void onServiceStop();
 
-    void onServiceData(byte[] bytes);
+    void onServiceData(SensorData data);
 
     void onSensorRecord();
 

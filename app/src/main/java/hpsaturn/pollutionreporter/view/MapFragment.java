@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/13/18.
@@ -42,14 +45,14 @@ public class MapFragment extends Fragment {
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
-        mapView.setMaxZoomLevel(19);
+        mapView.setMaxZoomLevel((double) 19);
 
-        mapView.getController().setZoom(17); //set initial zoom-level, depends on your need
+        mapView.getController().setZoom((double)17); //set initial zoom-level, depends on your need
         //mapView.getController().setCenter(ONCATIVO);
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
         mapView.setDrawingCacheEnabled(true);
 
-        mapLocationOverlay = new MyLocationNewOverlay(getActivity(), mapView);
+        mapLocationOverlay = new MyLocationNewOverlay(mapView);
         mapLocationOverlay.enableMyLocation();
         mapLocationOverlay.enableFollowLocation();
         mapLocationOverlay.enableMyLocation();
@@ -66,5 +69,12 @@ public class MapFragment extends Fragment {
     public void enableMyLocation(){
         mapLocationOverlay.enableMyLocation();
         mapLocationOverlay.enableFollowLocation();
+    }
+
+    public void addMarker(SensorData data){
+        Marker startMarker = new Marker(mapView);
+        startMarker.setPosition(new GeoPoint(data.lat,data.lon));
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        mapView.getOverlays().add(startMarker);
     }
 }

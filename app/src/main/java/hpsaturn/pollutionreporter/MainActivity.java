@@ -108,12 +108,10 @@ public class MainActivity extends BaseActivity implements
         }
 
         @Override
-        public void onServiceData(byte[] bytes) {
+        public void onServiceData(SensorData data) {
             refreshUI();
-            String strdata = new String(bytes);
-            Logger.i(TAG, "data: " + strdata);
-            SensorData data = new Gson().fromJson(strdata, SensorData.class);
             if (chartFragment != null) chartFragment.addData(data.P25);
+            if (mapFragment != null) mapFragment.addMarker(data);
         }
 
         @Override

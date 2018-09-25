@@ -40,7 +40,8 @@ public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> i
 
         holder.record_name.setText(sensorTrack.getName());
         holder.record_date.setText(sensorTrack.getDate());
-        holder.record_location.setText(sensorTrack.getLocation());
+        // TODO: geocode inverse for location
+        holder.record_location.setText("");
 
     }
 

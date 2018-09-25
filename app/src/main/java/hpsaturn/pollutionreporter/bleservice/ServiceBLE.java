@@ -6,11 +6,15 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 
@@ -26,6 +30,9 @@ import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.location.config.LocationParams;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 11/17/17.
@@ -38,8 +45,7 @@ public class ServiceBLE extends Service {
     private BLEHandler bleHandler;
     private boolean isRecording;
     private ServiceManager serviceManager;
-
-    private ArrayList<SensorData> buffer = new ArrayList<>();
+    private DatabaseReference mDatabase;
 
     private final int RETRY_POLICY = 5;
     private int retry_connect = 0;
@@ -52,6 +58,8 @@ public class ServiceBLE extends Service {
         prefBuilder = AppData.getPrefBuilder(this);
         isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
         serviceManager = new ServiceManager(this, managerListener);
+        String deviceName = DeviceUtil.getDeviceName() + "_" + DeviceUtil.getDeviceId(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference(deviceName);
         noticationChannelAPI26issue();
     }
 
@@ -83,7 +91,21 @@ public class ServiceBLE extends Service {
         Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
         bleHandler = new BLEHandler(this, macAddress, bleListener);
         bleHandler.connect();
+        SmartLocation.with(this)
+                .location()
+                .config(LocationParams.NAVIGATION)
+                .start(onLocationListener);
     }
+
+    private OnLocationUpdatedListener onLocationListener = new OnLocationUpdatedListener() {
+        @Override
+        public void onLocationUpdated(Location location) {
+            Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
+            Logger.i(TAG, "[BLE][LOC] accuracy: "+location.getAccuracy());
+            Logger.i(TAG, "[BLE][LOC] coords  : "+location.getLatitude()+","+location.getLongitude());
+            Logger.i(TAG, "[BLE][LOC] speed: "+location.getSpeed());
+        }
+    };
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -113,12 +135,15 @@ public class ServiceBLE extends Service {
         @Override
         public void onServiceStop() {
             Logger.w(TAG, "[BLE] request service stop..");
-            if (bleHandler != null && !isRecording) bleHandler.triggerDisconnect();
+            if (bleHandler != null && !isRecording) {
+                bleHandler.triggerDisconnect();
+                SmartLocation.with(ServiceBLE.this).location().stop();
+            }
             else if (isRecording) Logger.w(TAG, "[BLE] isRecording override stop BLE service");
         }
 
         @Override
-        public void onServiceData(byte[] bytes) {
+        public void onServiceData(SensorData data) {
 
         }
 
@@ -181,20 +206,28 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            if (isRecording) record(bytes);
+            SensorData point = getSensorData(bytes);
+            if (isRecording) record(point);
             Logger.d(TAG, "[BLE] pushing data..");
-            serviceManager.pushData(bytes);
+            serviceManager.pushData(point);
             retry_notify_setup = 0;
         }
     };
 
-    private void record(byte[] bytes) {
+    private SensorData getSensorData(byte [] bytes){
         String strdata = new String(bytes);
-        Logger.d(TAG, "[BLE] saving sensor data: " + strdata);
-        SensorData item = new Gson().fromJson(strdata, SensorData.class);
+        Logger.d(TAG, "[BLE] sensor data: " + strdata);
+        SensorData point = new Gson().fromJson(strdata, SensorData.class);
+        point.timestamp = System.currentTimeMillis() / 1000;
+        Location lastLocation = SmartLocation.with(this).location().getLastLocation();
+        point.lat = lastLocation.getLatitude();
+        point.lon = lastLocation.getLongitude();
+        return point;
+    }
+
+    private void record(SensorData point) {
         ArrayList<SensorData> data = Storage.getSensorData(this);
-        item.timestamp = System.currentTimeMillis() / 1000;
-        data.add(item);
+        data.add(point);
         Logger.d(TAG, "[BLE] data size: " + data.size());
         Storage.setSensorData(this, data);
         Logger.d(TAG, "[BLE] saving sensor data done.");
@@ -202,7 +235,9 @@ public class ServiceBLE extends Service {
 
     private void saveTrack(){
         Logger.i(TAG, "[BLE] saving record track..");
-        Storage.saveTrack(this,getLastTrack());
+        SensorTrack lastTrack = getLastTrack();
+        Storage.saveTrack(this,lastTrack);
+        mDatabase.child(lastTrack.name).setValue(lastTrack);
         Storage.setSensorData(this,new ArrayList<>()); // clear sensor data
         serviceManager.tracksUpdated();
         Logger.i(TAG, "[BLE] record track done.");
@@ -212,7 +247,7 @@ public class ServiceBLE extends Service {
         ArrayList<SensorData> data = Storage.getSensorData(this);
         SensorTrack track = new SensorTrack();
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd.kkmmss", Locale.ENGLISH);
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddkkmmss", Locale.ENGLISH);
         String formattedDate = df.format(c);
         track.setName(formattedDate);
         track.date = "points: "+data.size();

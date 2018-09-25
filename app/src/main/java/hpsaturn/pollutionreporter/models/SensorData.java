@@ -8,8 +8,12 @@ public class SensorData {
 
     public Long timestamp;
 
+    public int P25;
+
     public int P10;
 
-    public int P25;
+    public double lat;
+
+    public double lon;
 
 }

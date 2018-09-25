@@ -1,5 +1,7 @@
 package hpsaturn.pollutionreporter.models;
 
+import android.location.Location;
+
 import java.util.ArrayList;
 
 /**
@@ -8,14 +10,14 @@ import java.util.ArrayList;
 public class SensorTrack {
 
     public String date;
-    public String location;
+    public Location location;
     public String name;
     public ArrayList<SensorData> data;
 
     public SensorTrack() {
     }
 
-    public SensorTrack(String name, String date, String location) {
+    public SensorTrack(String name, String date, Location location) {
         this.name = name;
         this.date = date;
         this.location = location;
@@ -29,12 +31,12 @@ public class SensorTrack {
         this.date = email;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String phone) {
-        this.location = phone;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public String getName() {
