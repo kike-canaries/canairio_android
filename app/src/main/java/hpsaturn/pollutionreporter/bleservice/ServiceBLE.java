@@ -60,6 +60,7 @@ public class ServiceBLE extends Service {
         serviceManager = new ServiceManager(this, managerListener);
         String deviceName = DeviceUtil.getDeviceName() + "_" + DeviceUtil.getDeviceId(this);
         mDatabase = FirebaseDatabase.getInstance().getReference(deviceName);
+        mDatabase.keepSynced(true);
         noticationChannelAPI26issue();
     }
 
