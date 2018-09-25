@@ -11,17 +11,12 @@ public class SensorTrack {
 
     public String date;
     public Location location;
+    private String desc;
     public String name;
+    public int size;
     public ArrayList<SensorData> data;
 
-    public SensorTrack() {
-    }
-
-    public SensorTrack(String name, String date, Location location) {
-        this.name = name;
-        this.date = date;
-        this.location = location;
-    }
+    public SensorTrack() { }
 
     public String getDate() {
         return date;
@@ -52,4 +47,11 @@ public class SensorTrack {
         return "name: "+name;
     }
 
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
 }

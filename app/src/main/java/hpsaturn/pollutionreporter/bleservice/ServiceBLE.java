@@ -248,10 +248,13 @@ public class ServiceBLE extends Service {
         ArrayList<SensorData> data = Storage.getSensorData(this);
         SensorTrack track = new SensorTrack();
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddkkmmss", Locale.ENGLISH);
-        String formattedDate = df.format(c);
-        track.setName(formattedDate);
-        track.date = "points: "+data.size();
+        SimpleDateFormat dfName = new SimpleDateFormat("yyyyMMddkkmmss", Locale.ENGLISH);
+        SimpleDateFormat dfDate = new SimpleDateFormat("LLL, EE dd", Locale.ENGLISH);
+        String nameDate = dfName.format(c);
+        String date = dfDate.format(c);
+        track.setName(nameDate);
+        track.size = data.size();
+        track.date = date;
         track.data = data;
         return track;
     }
