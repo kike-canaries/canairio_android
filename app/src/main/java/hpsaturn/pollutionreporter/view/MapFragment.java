@@ -1,8 +1,10 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,12 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.infowindow.InfoWindow;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorData;
@@ -47,7 +54,7 @@ public class MapFragment extends Fragment {
         mapView.setMultiTouchControls(true);
         mapView.setMaxZoomLevel((double) 19);
 
-        mapView.getController().setZoom((double)17); //set initial zoom-level, depends on your need
+        mapView.getController().setZoom((double) 17); //set initial zoom-level, depends on your need
         //mapView.getController().setCenter(ONCATIVO);
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
         mapView.setDrawingCacheEnabled(true);
@@ -66,15 +73,26 @@ public class MapFragment extends Fragment {
         mapView.setEnabled(true);
     }
 
-    public void enableMyLocation(){
+    public void enableMyLocation() {
         mapLocationOverlay.enableMyLocation();
         mapLocationOverlay.enableFollowLocation();
     }
 
-    public void addMarker(SensorData data){
-        Marker startMarker = new Marker(mapView);
-        startMarker.setPosition(new GeoPoint(data.lat,data.lon));
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mapView.getOverlays().add(startMarker);
+    public void addMarker(SensorData data) {
+        mapView.getOverlays().get(0).;
+        Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
+        MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
+        Marker pointMarker = new Marker(mapView);
+        pointMarker.setTitle("PM2.5: " + data.P25);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String dateString = formatter.format(new Date(Long.parseLong(String.valueOf(data.timestamp*1000))));
+        pointMarker.setSnippet(dateString);
+        pointMarker.setPosition(new GeoPoint(data.lat, data.lon));
+        pointMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        pointMarker.setIcon(icon);
+        pointMarker.setInfoWindow(infoWindow);
+        mapView.getOverlays().add(pointMarker);
+        mapView.setPositionAndScale()
+
     }
 }
