@@ -45,7 +45,7 @@ public class ServiceBLE extends Service {
     private BLEHandler bleHandler;
     private boolean isRecording;
     private ServiceManager serviceManager;
-    private DatabaseReference mDatabase;
+//    private DatabaseReference mDatabase;
 
     private final int RETRY_POLICY = 5;
     private int retry_connect = 0;
@@ -58,9 +58,9 @@ public class ServiceBLE extends Service {
         prefBuilder = AppData.getPrefBuilder(this);
         isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
         serviceManager = new ServiceManager(this, managerListener);
-        String deviceName = DeviceUtil.getDeviceName() + "_" + DeviceUtil.getDeviceId(this);
-        mDatabase = FirebaseDatabase.getInstance().getReference(deviceName);
-        mDatabase.keepSynced(true);
+//        String deviceName = DeviceUtil.getDeviceName() + "_" + DeviceUtil.getDeviceId(this);
+//        mDatabase = FirebaseDatabase.getInstance().getReference(deviceName);
+//        mDatabase.keepSynced(true);
         noticationChannelAPI26issue();
     }
 
@@ -238,7 +238,7 @@ public class ServiceBLE extends Service {
         Logger.i(TAG, "[BLE] saving record track..");
         SensorTrack lastTrack = getLastTrack();
         Storage.saveTrack(this,lastTrack);
-        mDatabase.child(lastTrack.name).setValue(lastTrack);
+//        mDatabase.child(lastTrack.name).setValue(lastTrack);
         Storage.setSensorData(this,new ArrayList<>()); // clear sensor data
         serviceManager.tracksUpdated();
         Logger.i(TAG, "[BLE] record track done.");

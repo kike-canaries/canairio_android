@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
+import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
+import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
@@ -65,6 +67,7 @@ public class ChartFragment extends Fragment {
 
     public static final String KEY_RECORD_ID = "key_record_id";
     private String recordId;
+    private SensorTrack track;
 
     public static ChartFragment newInstance() {
         ChartFragment fragment = new ChartFragment();
@@ -136,7 +139,7 @@ public class ChartFragment extends Fragment {
         ArrayList<SensorData> data = new ArrayList<>();
         if(recordId==null) data = Storage.getSensorData(getActivity());
         else {
-            SensorTrack track = Storage.getTrack(getActivity(), recordId);
+            track = Storage.getTrack(getActivity(), recordId);
             if(track!=null) {
                 data = track.data;
                 chart_name.setText(track.getName());
@@ -191,10 +194,16 @@ public class ChartFragment extends Fragment {
     }
 
     public void shareAction(){
-
+        if(recordId!=null && track!=null) {
+            Logger.i(TAG,"publis track..");
+            track.deviceId = DeviceUtil.getDeviceId(getActivity());
+            getMain().getDatabase().child("tracks_data").child(track.name).setValue(track);
+            getMain().getDatabase().child("tracks_info").child(track.name).setValue(new SensorTrackInfo(track));
+        }
     }
 
     private MainActivity getMain(){
         return (MainActivity)getActivity();
     }
+
 }

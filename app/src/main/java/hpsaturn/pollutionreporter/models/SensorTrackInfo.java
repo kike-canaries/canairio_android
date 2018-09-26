@@ -7,17 +7,23 @@ import java.util.ArrayList;
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
  */
-public class SensorTrack {
+public class SensorTrackInfo {
 
-    public String date;
-    public Location location;
-    public String desc;
-    public String name;
-    public int size;
-    public ArrayList<SensorData> data;
-    public String deviceId;
+    private String name;
+    private String date;
+    private Location location;
+    private String desc;
+    private String deviceId;
+    private int size;
 
-    public SensorTrack() { }
+    public SensorTrackInfo(SensorTrack track) {
+       this.name = track.name;
+       this.desc = track.desc;
+       this.date = track.date;
+       this.size = track.size;
+       this.deviceId = track.deviceId;
+       this.location = track.location;
+    }
 
     public String getDate() {
         return date;
@@ -43,11 +49,6 @@ public class SensorTrack {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "name: "+name;
-    }
-
     public void setDesc(String desc) {
         this.desc = desc;
     }
@@ -55,4 +56,14 @@ public class SensorTrack {
     public String getDesc() {
         return desc;
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return "name: "+name;
+    }
+
 }

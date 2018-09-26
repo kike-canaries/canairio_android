@@ -11,8 +11,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.BuildConfig;
+import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
@@ -67,6 +70,9 @@ public class MainActivity extends BaseActivity implements
     private boolean withoutDevice = BuildConfig.withoutDevice;
 
 
+    private DatabaseReference mDatabase;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,11 +86,15 @@ public class MainActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
         setupUI();
-
+        startDataBase();
         serviceManager = new ServiceManager(this, serviceListener);
         deviceConnect();
     }
 
+    private void startDataBase(){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.keepSynced(true);
+    }
 
     private ServiceInterface serviceListener = new ServiceInterface() {
 
@@ -109,7 +119,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onServiceData(SensorData data) {
-            refreshUI();
+            if (recordsFragment!=null && !recordsFragment.isShowingData()) refreshUI();
             if (chartFragment != null) chartFragment.addData(data.P25);
             if (mapFragment != null) mapFragment.addMarker(data);
         }
@@ -139,7 +149,7 @@ public class MainActivity extends BaseActivity implements
     };
 
     private View.OnClickListener onFabShareClickListener = view -> {
-
+        if(recordsFragment!=null)recordsFragment.shareAction();
     };
 
     private void stopRecord() {
@@ -208,6 +218,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void disableShareButton (){
+        if(recordsFragment!=null)recordsFragment.setIsShowingData(false);
         fab.setOnClickListener(onFabClickListener);
         fab.setVisibility(View.INVISIBLE);
     }
@@ -255,6 +266,10 @@ public class MainActivity extends BaseActivity implements
             showSnackMessage(R.string.msg_device_connecting);
             serviceManager.start();
         }
+    }
+
+    public DatabaseReference getDatabase() {
+        return mDatabase;
     }
 
     @Override

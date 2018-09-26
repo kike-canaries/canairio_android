@@ -35,6 +35,9 @@ public class RecordsFragment extends Fragment {
     private RecyclerView mRecordsList;
     private ListRecordsAdapter mRecordsAdapter;
     private TextView mEmptyMessage;
+    private ChartFragment chart;
+
+    private boolean showingData;
 
     public static RecordsFragment newInstance() {
         RecordsFragment fragment = new RecordsFragment();
@@ -59,9 +62,7 @@ public class RecordsFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mRecordsList);
 
-
         return view;
-
     }
 
     @Override
@@ -109,8 +110,9 @@ public class RecordsFragment extends Fragment {
             Logger.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
             String recordId = mRecordsAdapter.getItem(position).name;
             Logger.i(TAG, "showing record: "+recordId);
-            ChartFragment chart = ChartFragment.newInstance(recordId);
+            chart = ChartFragment.newInstance(recordId);
             getMain().addFragmentPopup(chart,ChartFragment.TAG);
+            showingData=true;
         }
     };
 
@@ -127,6 +129,10 @@ public class RecordsFragment extends Fragment {
     public void onResume() {
         loadData();
         super.onResume();
+    }
+
+    public void shareAction() {
+        if(showingData)chart.shareAction();
     }
 
     public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
@@ -172,6 +178,14 @@ public class RecordsFragment extends Fragment {
             updateUI();
         }
 
+    }
+
+    public boolean isShowingData() {
+        return showingData;
+    }
+
+    public void setIsShowingData(boolean isShowingData){
+        showingData=isShowingData;
     }
 
     private MainActivity getMain() {
