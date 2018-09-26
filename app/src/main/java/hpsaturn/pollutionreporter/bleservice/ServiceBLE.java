@@ -257,8 +257,10 @@ public class ServiceBLE extends Service {
         track.date = date;
         track.data = data;
         if(data.size()>0) {
-            track.lastLat = data.get(data.size() - 1).lat;
-            track.lastLon = data.get(data.size() - 1).lon;
+            SensorData lastSensorData = data.get(data.size() - 1);
+            track.lastSensorData = lastSensorData;
+            track.lastLat = lastSensorData.lat;
+            track.lastLon = lastSensorData.lon;
         }
         return track;
     }

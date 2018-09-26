@@ -29,6 +29,7 @@ import hpsaturn.pollutionreporter.bleservice.ServiceManager;
 import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.FragmentPickerAdapter;
 import hpsaturn.pollutionreporter.view.FragmentPickerData;
@@ -121,7 +122,6 @@ public class MainActivity extends BaseActivity implements
         public void onServiceData(SensorData data) {
             if (recordsFragment!=null && !recordsFragment.isShowingData()) refreshUI();
             if (chartFragment != null) chartFragment.addData(data.P25);
-            if (mapFragment != null) mapFragment.addMarker(data);
         }
 
         @Override
@@ -191,7 +191,8 @@ public class MainActivity extends BaseActivity implements
         fragmentPicker.setAdapter(new FragmentPickerAdapter(fragmentPickerInfos));
         fragmentPicker.addOnItemChangedListener(this);
         fragmentPicker.addScrollStateChangeListener(this);
-        fragmentPicker.scrollToPosition(1);
+        if(isPaired())fragmentPicker.scrollToPosition(2);
+        else fragmentPicker.scrollToPosition(1);
         fragmentPicker.setItemTransitionTimeMillis(100);
         fragmentPicker.setItemTransformer(new ScaleTransformer.Builder().setMinScale(0.8f).build());
     }
@@ -364,5 +365,9 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onScroll(float pos, int index, int newIndex, @Nullable FragmentPickerAdapter.ViewHolder holder, @Nullable FragmentPickerAdapter.ViewHolder newHolder) {
 
+    }
+
+    public void addTrackToMap(SensorTrackInfo trackInfo) {
+        if(mapFragment!=null)mapFragment.addMarker(trackInfo);
     }
 }

@@ -17,6 +17,7 @@ public class SensorTrack {
     public int size;
     public double lastLat;
     public double lastLon;
+    public SensorData lastSensorData;
     public ArrayList<SensorData> data;
     public String deviceId;
 

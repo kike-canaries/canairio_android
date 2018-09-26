@@ -90,20 +90,20 @@ public class PostsFragment extends Fragment {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull PostsViewHolder viewHolder, int position, @NonNull SensorTrackInfo model) {
+            protected void onBindViewHolder(@NonNull PostsViewHolder viewHolder, int position, @NonNull SensorTrackInfo trackInfo) {
                 final DatabaseReference postRef = getRef(position);
-
-                // Set click listener for the whole post view
-                final String postKey = postRef.getKey();
+                final String recordKey = postRef.getKey();
+                Logger.d(TAG,"onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
+                getMain().addTrackToMap(trackInfo);
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Logger.i(TAG,"onClick");
+                        Logger.i(TAG,"onClick: "+trackInfo.getName());
 
                     }
                 });
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(model);
+                viewHolder.bindToPost(trackInfo);
             }
         };
 

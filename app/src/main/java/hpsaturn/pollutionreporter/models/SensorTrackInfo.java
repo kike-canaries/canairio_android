@@ -15,6 +15,7 @@ public class SensorTrackInfo {
     private String deviceId;
     private double lastLat;
     private double lastLon;
+    private SensorData lastSensorData;
     private int size;
 
     public SensorTrackInfo() {
@@ -28,6 +29,7 @@ public class SensorTrackInfo {
        this.deviceId = track.deviceId;
        this.lastLat = track.lastLat;
        this.lastLon = track.lastLon;
+       this.lastSensorData = track.lastSensorData;
     }
 
     public String getDate() {
@@ -68,5 +70,9 @@ public class SensorTrackInfo {
 
     public String getDeviceId() {
         return deviceId;
+    }
+
+    public SensorData getLastSensorData() {
+        return lastSensorData;
     }
 }
