@@ -169,13 +169,8 @@ public class MainActivity extends BaseActivity implements
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
-        if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)&&!withoutDevice) {
-            fab.setVisibility(View.INVISIBLE);
-            addScanFragment();
-            showFragment(scanFragment);
-        } else {
-            setupAppFragments();
-        }
+        setupAppFragments();
+        if(isPaired())fab.setVisibility(View.VISIBLE);
     }
 
     public void setupAppFragments(){
@@ -183,10 +178,10 @@ public class MainActivity extends BaseActivity implements
         addPostsFragment();
         addRecordsFragment();
         addMapFragment();
-        addChartFragment();
-        showFragment(chartFragment);
+        if(isPaired())addChartFragment();
+        else addScanFragment();
+        //showFragment(chartFragment);
         setupFragmentPicker();
-        fab.setVisibility(View.VISIBLE);
     }
 
     private void setupFragmentPicker() {
@@ -199,6 +194,49 @@ public class MainActivity extends BaseActivity implements
         fragmentPicker.scrollToPosition(1);
         fragmentPicker.setItemTransitionTimeMillis(100);
         fragmentPicker.setItemTransformer(new ScaleTransformer.Builder().setMinScale(0.8f).build());
+    }
+
+    @Override
+    public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
+        Logger.d(TAG, "onCurrentItemChanged: " + position);
+        switch (position) {
+            case 0:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
+                hideFragment(recordsFragment);
+                if(isPaired())hideFragment(chartFragment);
+                else hideFragment(scanFragment);
+                showFragment(mapFragment);
+                break;
+            case 1:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(recordsFragment);
+                hideFragment(mapFragment);
+                if(isPaired())hideFragment(chartFragment);
+                else hideFragment(scanFragment);
+                showFragment(postsFragment);
+                break;
+            case 2:
+                hideFragment(postsFragment);
+                hideFragment(mapFragment);
+                hideFragment(recordsFragment);
+                if(isPaired()){
+                    fab.setVisibility(View.VISIBLE);
+                    showFragment(chartFragment);
+                }
+                else showFragment(scanFragment);
+                break;
+            case 3:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
+                hideFragment(mapFragment);
+                if(isPaired())hideFragment(chartFragment);
+                else hideFragment(scanFragment);
+                showFragment(recordsFragment);
+                break;
+
+        }
+        viewHolder.showText();
     }
 
     private void refreshUI() {
@@ -251,6 +289,9 @@ public class MainActivity extends BaseActivity implements
 
     public void removeScanFragment() {
         if (scanFragment != null) removeFragment(scanFragment);
+        addChartFragment();
+        fab.setVisibility(View.VISIBLE);
+        refreshUI();
     }
 
     private void showSnackMessage(int id) {
@@ -289,14 +330,12 @@ public class MainActivity extends BaseActivity implements
         stopRecord();
         serviceManager.stop();
         prefBuilder.clearAll().save();
+        fab.setVisibility(View.INVISIBLE);
         if (chartFragment != null) chartFragment.clearData();
         removeFragment(chartFragment);
-        removeFragment(mapFragment);
-        removeFragment(recordsFragment);
-        fab.setVisibility(View.INVISIBLE);
-        fragmentPicker.setVisibility(View.INVISIBLE);
-        if(scanFragment==null)addScanFragment();
-        else if (scanFragment.isAdded())showFragment(scanFragment);
+        addScanFragment();
+        fragmentPicker.scrollToPosition(2);
+        showFragment(scanFragment);
     }
 
     @Override
@@ -306,41 +345,9 @@ public class MainActivity extends BaseActivity implements
         super.onDestroy();
     }
 
-    @Override
-    public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
-        Logger.d(TAG, "onCurrentItemChanged: " + position);
-        switch (position) {
-            case 0:
-                fab.setVisibility(View.INVISIBLE);
-                hideFragment(postsFragment);
-                hideFragment(recordsFragment);
-                hideFragment(chartFragment);
-                showFragment(mapFragment);
-                break;
-            case 1:
-                fab.setVisibility(View.INVISIBLE);
-                hideFragment(recordsFragment);
-                hideFragment(mapFragment);
-                hideFragment(chartFragment);
-                showFragment(postsFragment);
-                break;
-            case 2:
-                fab.setVisibility(View.VISIBLE);
-                hideFragment(postsFragment);
-                hideFragment(mapFragment);
-                hideFragment(recordsFragment);
-                showFragment(chartFragment);
-                break;
-            case 3:
-                fab.setVisibility(View.INVISIBLE);
-                hideFragment(postsFragment);
-                hideFragment(mapFragment);
-                hideFragment(chartFragment);
-                showFragment(recordsFragment);
-                break;
+    private boolean isPaired(){
+        return prefBuilder.getBoolean(Keys.DEVICE_PAIR, false);
 
-        }
-        viewHolder.showText();
     }
 
     @Override
