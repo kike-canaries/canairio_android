@@ -18,13 +18,13 @@ public class FragmentPickerData {
     private FragmentPickerData() {
     }
 
-    public List<FragmentPickerInfo> getForecasts() {
+    public List<FragmentPickerInfo> getFragmentsInfo() {
 
         return Arrays.asList(
                 new FragmentPickerInfo("Map", R.drawable.ic_picker_map),
-                new FragmentPickerInfo("Data", R.drawable.ic_picker_chart),
-                new FragmentPickerInfo("Reports", R.drawable.ic_picker_records),
-                new FragmentPickerInfo("Public", R.drawable.ic_picker_records)
+                new FragmentPickerInfo("Public", R.drawable.ic_picker_cloud),
+                new FragmentPickerInfo("Sensor", R.drawable.ic_picker_chart),
+                new FragmentPickerInfo("Recors", R.drawable.ic_picker_records)
         );
 
     }

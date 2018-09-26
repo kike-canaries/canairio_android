@@ -51,6 +51,7 @@ public class PostsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_records, container, false);
         mEmptyMessage = view.findViewById(R.id.tv_records_empty_list);
+        mEmptyMessage.setText(R.string.msg_not_public_recors);
         mRecordsList = view.findViewById(R.id.rv_records);
         mRecordsList.setHasFixedSize(true);
 

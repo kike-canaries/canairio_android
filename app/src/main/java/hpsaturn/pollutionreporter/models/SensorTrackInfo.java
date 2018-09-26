@@ -11,9 +11,10 @@ public class SensorTrackInfo {
 
     private String name;
     private String date;
-    private Location location;
     private String desc;
     private String deviceId;
+    private double lastLat;
+    private double lastLon;
     private int size;
 
     public SensorTrackInfo() {
@@ -25,7 +26,8 @@ public class SensorTrackInfo {
        this.date = track.date;
        this.size = track.size;
        this.deviceId = track.deviceId;
-       this.location = track.location;
+       this.lastLat = track.lastLat;
+       this.lastLon = track.lastLon;
     }
 
     public String getDate() {
@@ -34,14 +36,6 @@ public class SensorTrackInfo {
 
     public void setDate(String email) {
         this.date = email;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public String getName() {
@@ -64,9 +58,15 @@ public class SensorTrackInfo {
         return size;
     }
 
-    @Override
-    public String toString() {
-        return "name: "+name;
+    public double getLastLat() {
+        return lastLat;
     }
 
+    public double getLastLon() {
+        return lastLon;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
 }

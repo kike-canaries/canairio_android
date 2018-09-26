@@ -13,9 +13,7 @@ import android.view.View;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
 import com.hpsaturn.tools.BuildConfig;
-import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
@@ -192,7 +190,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void setupFragmentPicker() {
-        List<FragmentPickerInfo> fragmentPickerInfos = FragmentPickerData.get().getForecasts();
+        List<FragmentPickerInfo> fragmentPickerInfos = FragmentPickerData.get().getFragmentsInfo();
         fragmentPicker.setVisibility(View.VISIBLE);
         fragmentPicker.setSlideOnFling(true);
         fragmentPicker.setAdapter(new FragmentPickerAdapter(fragmentPickerInfos));
@@ -320,26 +318,27 @@ public class MainActivity extends BaseActivity implements
                 showFragment(mapFragment);
                 break;
             case 1:
-                fab.setVisibility(View.VISIBLE);
-                hideFragment(postsFragment);
-                hideFragment(mapFragment);
-                hideFragment(recordsFragment);
-                showFragment(chartFragment);
-                break;
-            case 2:
-                fab.setVisibility(View.INVISIBLE);
-                hideFragment(postsFragment);
-                hideFragment(mapFragment);
-                hideFragment(chartFragment);
-                showFragment(recordsFragment);
-                break;
-            case 3:
                 fab.setVisibility(View.INVISIBLE);
                 hideFragment(recordsFragment);
                 hideFragment(mapFragment);
                 hideFragment(chartFragment);
                 showFragment(postsFragment);
                 break;
+            case 2:
+                fab.setVisibility(View.VISIBLE);
+                hideFragment(postsFragment);
+                hideFragment(mapFragment);
+                hideFragment(recordsFragment);
+                showFragment(chartFragment);
+                break;
+            case 3:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
+                hideFragment(mapFragment);
+                hideFragment(chartFragment);
+                showFragment(recordsFragment);
+                break;
+
         }
         viewHolder.showText();
     }
