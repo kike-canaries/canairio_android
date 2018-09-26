@@ -98,8 +98,11 @@ public class PostsFragment extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Logger.i(TAG,"onClick: "+trackInfo.getName());
-
+                        String recordId = trackInfo.getName();
+                        Logger.i(TAG,"onClick: "+recordId);
+                        Logger.i(TAG, "showing record: "+recordId);
+                        chart = ChartFragment.newInstance(recordId);
+                        getMain().addFragmentPopup(chart,ChartFragment.TAG);
                     }
                 });
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
@@ -126,19 +129,6 @@ public class PostsFragment extends Fragment {
             mEmptyMessage.setVisibility(View.VISIBLE);
         }
     }
-
-    private OnItemClickListener onItemClickListener = new OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            Logger.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
-//            String recordId = mRecordsAdapter.getItem(position).name;
-//            Logger.i(TAG, "showing record: "+recordId);
-//            chart = ChartFragment.newInstance(recordId);
-//            getMain().addFragmentPopup(chart,ChartFragment.TAG);
-//            showingData=true;
-        }
-    };
 
     @Override
     public void onStart() {

@@ -218,6 +218,7 @@ public class MainActivity extends BaseActivity implements
                 showFragment(postsFragment);
                 break;
             case 2:
+                refreshUI();
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);

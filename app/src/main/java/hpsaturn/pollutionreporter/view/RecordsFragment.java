@@ -120,10 +120,6 @@ public class RecordsFragment extends Fragment {
         return mRecordsAdapter.getRecords();
     }
 
-    public void removeRecords() {
-//        Storage.setRecords(getActivity(),new ArrayList<RecordItem>());
-//        mRecordsAdapter.updateData(Storage.getRecords(getActivity()));
-    }
 
     @Override
     public void onResume() {
@@ -191,15 +187,6 @@ public class RecordsFragment extends Fragment {
     private MainActivity getMain() {
         return ((MainActivity) getActivity());
     }
-
-
-//    private void getTestData() {
-//
-//        addRecord(new SensorTrack("record_2018-06-24","2018.06.24","Teusaquillo"));
-//        addRecord(new SensorTrack("record_2018-07-14","2018.07.14","Chapinero"));
-//        addRecord(new SensorTrack("record_2018-07-24","2018.07.24","Caracas"));
-//
-//    }
 
 
 }

@@ -23,8 +23,8 @@ public class FragmentPickerData {
         return Arrays.asList(
                 new FragmentPickerInfo("Reports", R.drawable.ic_picker_map),
                 new FragmentPickerInfo("Public", R.drawable.ic_picker_cloud),
-                new FragmentPickerInfo("Sensors", R.drawable.ic_picker_chart),
-                new FragmentPickerInfo("Captures", R.drawable.ic_picker_records)
+                new FragmentPickerInfo("MyDevice", R.drawable.ic_picker_chart),
+                new FragmentPickerInfo("MyRecords", R.drawable.ic_picker_records)
         );
 
     }
