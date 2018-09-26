@@ -18,5 +18,6 @@
     <string name="msg_record_stop">Stop recording…</string>
     <string name="msg_record">Start recording…</string>
     <string name="bt_map">Map</string>
-    <string name="msg_records_empty_list">No reports for now</string>
+    <string name="msg_records_empty_list">No records for now</string>
+    <string name="msg_not_public_recors">No publics reports yet!</string>
 </resources>

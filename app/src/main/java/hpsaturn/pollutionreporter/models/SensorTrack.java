@@ -2,6 +2,8 @@ package hpsaturn.pollutionreporter.models;
 
 import android.location.Location;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 
 /**
@@ -10,11 +12,14 @@ import java.util.ArrayList;
 public class SensorTrack {
 
     public String date;
-    public Location location;
-    private String desc;
+    public String desc;
     public String name;
     public int size;
+    public double lastLat;
+    public double lastLon;
+    public SensorData lastSensorData;
     public ArrayList<SensorData> data;
+    public String deviceId;
 
     public SensorTrack() { }
 
@@ -26,25 +31,12 @@ public class SensorTrack {
         this.date = email;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "name: "+name;
     }
 
     public void setDesc(String desc) {
@@ -54,4 +46,10 @@ public class SensorTrack {
     public String getDesc() {
         return desc;
     }
+
+    @Override
+    public String toString() {
+        return "name: "+name;
+    }
+
 }

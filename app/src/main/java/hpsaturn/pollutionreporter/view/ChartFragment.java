@@ -16,19 +16,26 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
+import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
@@ -64,6 +71,7 @@ public class ChartFragment extends Fragment {
 
     public static final String KEY_RECORD_ID = "key_record_id";
     private String recordId;
+    private SensorTrack track;
 
     public static ChartFragment newInstance() {
         ChartFragment fragment = new ChartFragment();
@@ -96,6 +104,7 @@ public class ChartFragment extends Fragment {
         Bundle args = getArguments();
         if(args!=null){
             recordId = args.getString(KEY_RECORD_ID) ;
+            Logger.i(TAG,"[CHART] recordId: "+recordId);
         }
 
         return view;
@@ -133,20 +142,45 @@ public class ChartFragment extends Fragment {
     private void loadData() {
         loadingData = true;
         ArrayList<SensorData> data = new ArrayList<>();
-        if(recordId==null) data = Storage.getSensorData(getActivity());
+        if(recordId==null) {
+            Logger.i(TAG,"[CHART] loading current data in storage..");
+            data = Storage.getSensorData(getActivity());
+        }
         else {
-            SensorTrack track = Storage.getTrack(getActivity(), recordId);
+            track = Storage.getTrack(getActivity(), recordId);
             if(track!=null) {
+                Logger.i(TAG,"[CHART] loading track data from storage..");
                 data = track.data;
-                chart_name.setText(track.getName());
-                chart_date.setText(track.getDate());
-                chart_desc.setText(""+track.size+" points");
-                rl_separator.setVisibility(View.VISIBLE);
+                setTrackDescription(track);
+                getMain().enableShareButton();
+            }
+            else{
+                DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference("tracks_data");
+                DatabaseReference trackRef = mDataBase.child(recordId);
+                trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Logger.i(TAG,"[CHART] loading track data from firebase..");
+                        SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
+                        if(track!=null){
+                            loadChart(track.data);
+                            setTrackDescription(track);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         }
+        loadChart(data);
+    }
+
+    private void loadChart(ArrayList<SensorData> data){
         if (data.isEmpty()) addData(0);
         else {
-            Logger.i(TAG, "[CHART] loading recorded data..");
             Iterator<SensorData> it = data.iterator();
             while (it.hasNext()) {
                 SensorData value = it.next();
@@ -160,15 +194,16 @@ public class ChartFragment extends Fragment {
         loadingData = false;
     }
 
-    private void loadTestData() {
-        Random rand = new Random();
-        int n = rand.nextInt(50) + 1;
-        addData(n);
-        Logger.d(TAG, "size: " + entries.size());
+    private void setTrackDescription(SensorTrack track){
+        chart_name.setText(track.getName());
+        chart_date.setText(track.getDate());
+        chart_desc.setText(""+ track.size+" points");
+        rl_separator.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onDestroyView() {
+        getMain().disableShareButton();
         super.onDestroyView();
     }
 
@@ -186,4 +221,19 @@ public class ChartFragment extends Fragment {
         Storage.setSensorData(getActivity(), new ArrayList<>());
         calculateReferenceTime();
     }
+
+    public void shareAction(){
+        if(recordId!=null && track!=null) {
+            Logger.i(TAG,"publis track..");
+            track.deviceId = DeviceUtil.getDeviceId(getActivity());
+            getMain().getDatabase().child("tracks_data").child(track.name).setValue(track);
+            getMain().getDatabase().child("tracks_info").child(track.name).setValue(new SensorTrackInfo(track));
+            getMain().popBackLastFragment();
+        }
+    }
+
+    private MainActivity getMain(){
+        return (MainActivity)getActivity();
+    }
+
 }

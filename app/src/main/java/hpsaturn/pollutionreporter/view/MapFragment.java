@@ -23,6 +23,7 @@ import java.util.Date;
 
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/13/18.
@@ -78,20 +79,18 @@ public class MapFragment extends Fragment {
 //        mapLocationOverlay.enableFollowLocation();
     }
 
-    public void addMarker(SensorData data) {
-        mapView.getOverlays().clear();
+    public void addMarker(SensorTrackInfo trackInfo) {
         Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
         MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
         Marker pointMarker = new Marker(mapView);
-        pointMarker.setTitle("PM2.5: " + data.P25);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String dateString = formatter.format(new Date(Long.parseLong(String.valueOf(data.timestamp*1000))));
-        pointMarker.setSnippet(dateString);
-        pointMarker.setPosition(new GeoPoint(data.lat, data.lon));
+        pointMarker.setTitle("" + trackInfo.getDate());
+        pointMarker.setSnippet("Last PM2.5: "+trackInfo.getLastSensorData().P25);
+        pointMarker.setSubDescription("report: "+trackInfo.getSize()+ " points");
+        pointMarker.setPosition(new GeoPoint(trackInfo.getLastLat(), trackInfo.getLastLon()));
         pointMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         pointMarker.setIcon(icon);
         pointMarker.setInfoWindow(infoWindow);
         mapView.getOverlays().add(pointMarker);
-        mapView.getController().setCenter(new GeoPoint(data.lat,data.lon));
+        mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
     }
 }

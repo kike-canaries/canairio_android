@@ -35,6 +35,9 @@ public class RecordsFragment extends Fragment {
     private RecyclerView mRecordsList;
     private ListRecordsAdapter mRecordsAdapter;
     private TextView mEmptyMessage;
+    private ChartFragment chart;
+
+    private boolean showingData;
 
     public static RecordsFragment newInstance() {
         RecordsFragment fragment = new RecordsFragment();
@@ -59,9 +62,7 @@ public class RecordsFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mRecordsList);
 
-
         return view;
-
     }
 
     @Override
@@ -109,8 +110,9 @@ public class RecordsFragment extends Fragment {
             Logger.d(TAG, "OnItemClickListener => Clicked: " + position + ", index " + mRecordsList.indexOfChild(view));
             String recordId = mRecordsAdapter.getItem(position).name;
             Logger.i(TAG, "showing record: "+recordId);
-            ChartFragment chart = ChartFragment.newInstance(recordId);
+            chart = ChartFragment.newInstance(recordId);
             getMain().addFragmentPopup(chart,ChartFragment.TAG);
+            showingData=true;
         }
     };
 
@@ -118,15 +120,15 @@ public class RecordsFragment extends Fragment {
         return mRecordsAdapter.getRecords();
     }
 
-    public void removeRecords() {
-//        Storage.setRecords(getActivity(),new ArrayList<RecordItem>());
-//        mRecordsAdapter.updateData(Storage.getRecords(getActivity()));
-    }
 
     @Override
     public void onResume() {
         loadData();
         super.onResume();
+    }
+
+    public void shareAction() {
+        if(showingData)chart.shareAction();
     }
 
     public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
@@ -174,18 +176,17 @@ public class RecordsFragment extends Fragment {
 
     }
 
+    public boolean isShowingData() {
+        return showingData;
+    }
+
+    public void setIsShowingData(boolean isShowingData){
+        showingData=isShowingData;
+    }
+
     private MainActivity getMain() {
         return ((MainActivity) getActivity());
     }
-
-
-//    private void getTestData() {
-//
-//        addRecord(new SensorTrack("record_2018-06-24","2018.06.24","Teusaquillo"));
-//        addRecord(new SensorTrack("record_2018-07-14","2018.07.14","Chapinero"));
-//        addRecord(new SensorTrack("record_2018-07-24","2018.07.24","Caracas"));
-//
-//    }
 
 
 }

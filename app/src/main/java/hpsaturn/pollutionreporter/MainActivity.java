@@ -11,7 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.google.gson.Gson;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.hpsaturn.tools.BuildConfig;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
@@ -28,11 +29,13 @@ import hpsaturn.pollutionreporter.bleservice.ServiceManager;
 import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.FragmentPickerAdapter;
 import hpsaturn.pollutionreporter.view.FragmentPickerData;
 import hpsaturn.pollutionreporter.view.FragmentPickerInfo;
 import hpsaturn.pollutionreporter.view.MapFragment;
+import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 
@@ -64,7 +67,11 @@ public class MainActivity extends BaseActivity implements
     private ServiceManager serviceManager;
     private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
+    private PostsFragment postsFragment;
     private boolean withoutDevice = BuildConfig.withoutDevice;
+
+
+    private DatabaseReference mDatabase;
 
 
     @Override
@@ -80,11 +87,15 @@ public class MainActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
         setupUI();
-
+        startDataBase();
         serviceManager = new ServiceManager(this, serviceListener);
         deviceConnect();
     }
 
+    private void startDataBase(){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.keepSynced(true);
+    }
 
     private ServiceInterface serviceListener = new ServiceInterface() {
 
@@ -109,9 +120,8 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onServiceData(SensorData data) {
-            refreshUI();
+            if (recordsFragment!=null && !recordsFragment.isShowingData()) refreshUI();
             if (chartFragment != null) chartFragment.addData(data.P25);
-            if (mapFragment != null) mapFragment.addMarker(data);
         }
 
         @Override
@@ -138,6 +148,10 @@ public class MainActivity extends BaseActivity implements
         }
     };
 
+    private View.OnClickListener onFabShareClickListener = view -> {
+        if(recordsFragment!=null)recordsFragment.shareAction();
+    };
+
     private void stopRecord() {
         showSnackMessageSlow(R.string.msg_record_stop);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, false).save();
@@ -155,35 +169,76 @@ public class MainActivity extends BaseActivity implements
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
-        if (!prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)&&!withoutDevice) {
-            fab.setVisibility(View.INVISIBLE);
-            addScanFragment();
-            showFragment(scanFragment);
-        } else {
-            setupAppFragments();
-        }
+        setupAppFragments();
+        if(isPaired())fab.setVisibility(View.VISIBLE);
     }
 
     public void setupAppFragments(){
         Logger.i(TAG, "setupAppFragments");
+        addPostsFragment();
         addRecordsFragment();
         addMapFragment();
-        addChartFragment();
-        showFragment(chartFragment);
+        if(isPaired())addChartFragment();
+        else addScanFragment();
+        //showFragment(chartFragment);
         setupFragmentPicker();
-        fab.setVisibility(View.VISIBLE);
     }
 
     private void setupFragmentPicker() {
-        List<FragmentPickerInfo> fragmentPickerInfos = FragmentPickerData.get().getForecasts();
+        List<FragmentPickerInfo> fragmentPickerInfos = FragmentPickerData.get().getFragmentsInfo();
         fragmentPicker.setVisibility(View.VISIBLE);
         fragmentPicker.setSlideOnFling(true);
         fragmentPicker.setAdapter(new FragmentPickerAdapter(fragmentPickerInfos));
         fragmentPicker.addOnItemChangedListener(this);
         fragmentPicker.addScrollStateChangeListener(this);
-        fragmentPicker.scrollToPosition(1);
+        if(isPaired())fragmentPicker.scrollToPosition(2);
+        else fragmentPicker.scrollToPosition(1);
         fragmentPicker.setItemTransitionTimeMillis(100);
         fragmentPicker.setItemTransformer(new ScaleTransformer.Builder().setMinScale(0.8f).build());
+    }
+
+    @Override
+    public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
+        Logger.d(TAG, "onCurrentItemChanged: " + position);
+        switch (position) {
+            case 0:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
+                hideFragment(recordsFragment);
+                if(isPaired())hideFragment(chartFragment);
+                else hideFragment(scanFragment);
+                showFragment(mapFragment);
+                break;
+            case 1:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(recordsFragment);
+                hideFragment(mapFragment);
+                if(isPaired())hideFragment(chartFragment);
+                else hideFragment(scanFragment);
+                showFragment(postsFragment);
+                break;
+            case 2:
+                refreshUI();
+                hideFragment(postsFragment);
+                hideFragment(mapFragment);
+                hideFragment(recordsFragment);
+                if(isPaired()){
+                    fab.setVisibility(View.VISIBLE);
+                    showFragment(chartFragment);
+                }
+                else showFragment(scanFragment);
+                break;
+            case 3:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
+                hideFragment(mapFragment);
+                if(isPaired())hideFragment(chartFragment);
+                else hideFragment(scanFragment);
+                showFragment(recordsFragment);
+                break;
+
+        }
+        viewHolder.showText();
     }
 
     private void refreshUI() {
@@ -194,6 +249,19 @@ public class MainActivity extends BaseActivity implements
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_record_white_24dp));
         }
+    }
+
+    public void enableShareButton (){
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(onFabShareClickListener);
+        fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
+        fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_share));
+    }
+
+    public void disableShareButton (){
+        if(recordsFragment!=null)recordsFragment.setIsShowingData(false);
+        fab.setOnClickListener(onFabClickListener);
+        fab.setVisibility(View.INVISIBLE);
     }
 
     private void addChartFragment() {
@@ -216,8 +284,16 @@ public class MainActivity extends BaseActivity implements
         addFragment(recordsFragment, RecordsFragment.TAG, false);
     }
 
+    private void addPostsFragment() {
+        if (postsFragment == null) postsFragment = PostsFragment.newInstance();
+        addFragment(postsFragment, PostsFragment.TAG, false);
+    }
+
     public void removeScanFragment() {
         if (scanFragment != null) removeFragment(scanFragment);
+        addChartFragment();
+        fab.setVisibility(View.VISIBLE);
+        refreshUI();
     }
 
     private void showSnackMessage(int id) {
@@ -241,6 +317,10 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
+    public DatabaseReference getDatabase() {
+        return mDatabase;
+    }
+
     @Override
     void onPermissionGranted() {
        if(mapFragment!=null)mapFragment.enableMyLocation();
@@ -252,14 +332,12 @@ public class MainActivity extends BaseActivity implements
         stopRecord();
         serviceManager.stop();
         prefBuilder.clearAll().save();
+        fab.setVisibility(View.INVISIBLE);
         if (chartFragment != null) chartFragment.clearData();
         removeFragment(chartFragment);
-        removeFragment(mapFragment);
-        removeFragment(recordsFragment);
-        fab.setVisibility(View.INVISIBLE);
-        fragmentPicker.setVisibility(View.INVISIBLE);
-        if(scanFragment==null)addScanFragment();
-        else if (scanFragment.isAdded())showFragment(scanFragment);
+        addScanFragment();
+        fragmentPicker.scrollToPosition(2);
+        showFragment(scanFragment);
     }
 
     @Override
@@ -269,30 +347,9 @@ public class MainActivity extends BaseActivity implements
         super.onDestroy();
     }
 
-    @Override
-    public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
-        Logger.d(TAG, "onCurrentItemChanged: " + position);
-        switch (position) {
-            case 0:
-                fab.setVisibility(View.INVISIBLE);
-                hideFragment(recordsFragment);
-                hideFragment(chartFragment);
-                showFragment(mapFragment);
-                break;
-            case 1:
-                fab.setVisibility(View.VISIBLE);
-                hideFragment(mapFragment);
-                hideFragment(recordsFragment);
-                showFragment(chartFragment);
-                break;
-            case 2:
-                fab.setVisibility(View.INVISIBLE);
-                hideFragment(mapFragment);
-                hideFragment(chartFragment);
-                showFragment(recordsFragment);
-                break;
-        }
-        viewHolder.showText();
+    private boolean isPaired(){
+        return prefBuilder.getBoolean(Keys.DEVICE_PAIR, false);
+
     }
 
     @Override
@@ -309,5 +366,9 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onScroll(float pos, int index, int newIndex, @Nullable FragmentPickerAdapter.ViewHolder holder, @Nullable FragmentPickerAdapter.ViewHolder newHolder) {
 
+    }
+
+    public void addTrackToMap(SensorTrackInfo trackInfo) {
+        if(mapFragment!=null)mapFragment.addMarker(trackInfo);
     }
 }
