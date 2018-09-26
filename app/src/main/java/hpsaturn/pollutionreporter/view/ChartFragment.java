@@ -198,7 +198,8 @@ public class ChartFragment extends Fragment {
             Logger.i(TAG,"publis track..");
             track.deviceId = DeviceUtil.getDeviceId(getActivity());
             getMain().getDatabase().child("tracks_data").child(track.name).setValue(track);
-            getMain().getDatabase().child("tracks_info").push().setValue(new SensorTrackInfo(track));
+            getMain().getDatabase().child("tracks_info").child(track.name).setValue(new SensorTrackInfo(track));
+            getMain().popBackLastFragment();
         }
     }
 

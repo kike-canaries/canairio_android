@@ -70,7 +70,7 @@ public class PostsFragment extends Fragment {
         mRecordsList.setLayoutManager(mManager);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = mDatabase.child("tracks_info");
+        Query postsQuery = mDatabase.child("tracks_info").orderByKey();
 
         Logger.d(TAG,"Query: "+postsQuery.toString());
 
