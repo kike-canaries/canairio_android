@@ -16,6 +16,9 @@ public class SensorTrackInfo {
     private String deviceId;
     private int size;
 
+    public SensorTrackInfo() {
+    }
+
     public SensorTrackInfo(SensorTrack track) {
        this.name = track.name;
        this.desc = track.desc;

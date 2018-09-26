@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -32,7 +33,7 @@ public class PostsFragment extends Fragment {
     public static String TAG = PostsFragment.class.getSimpleName();
 
     private RecyclerView mRecordsList;
-//    private TextView mEmptyMessage;
+    private TextView mEmptyMessage;
     private ChartFragment chart;
 
     private boolean showingData;
@@ -49,7 +50,7 @@ public class PostsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_records, container, false);
-//        mEmptyMessage = view.findViewById(R.id.tv_records_empty_list);
+        mEmptyMessage = view.findViewById(R.id.tv_records_empty_list);
         mRecordsList = view.findViewById(R.id.rv_records);
         mRecordsList.setHasFixedSize(true);
 
@@ -69,7 +70,9 @@ public class PostsFragment extends Fragment {
         mRecordsList.setLayoutManager(mManager);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = mDatabase.child("tracks-info");
+        Query postsQuery = mDatabase.child("tracks_info");
+
+        Logger.d(TAG,"Query: "+postsQuery.toString());
 
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)
@@ -113,15 +116,15 @@ public class PostsFragment extends Fragment {
     }
 
 
-//    private void updateUI() {
-//        if(mRecordsAdapter.getItemCount()>0) {
-//            mEmptyMessage.setVisibility(View.GONE);
-//            mRecordsList.setVisibility(View.VISIBLE);
-//        }else{
-//            mRecordsList.setVisibility(View.GONE);
-//            mEmptyMessage.setVisibility(View.VISIBLE);
-//        }
-//    }
+    private void updateUI() {
+        if(mAdapter.getItemCount()>0) {
+            mEmptyMessage.setVisibility(View.GONE);
+            mRecordsList.setVisibility(View.VISIBLE);
+        }else{
+            mRecordsList.setVisibility(View.GONE);
+            mEmptyMessage.setVisibility(View.VISIBLE);
+        }
+    }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
 
@@ -137,8 +140,26 @@ public class PostsFragment extends Fragment {
     };
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (mAdapter != null) {
+            mAdapter.startListening();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAdapter != null) {
+            mAdapter.stopListening();
+        }
+    }
+
+
+    @Override
     public void onResume() {
         super.onResume();
+        updateUI();
     }
 
     private MainActivity getMain() {

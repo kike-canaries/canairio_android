@@ -36,6 +36,7 @@ import hpsaturn.pollutionreporter.view.FragmentPickerAdapter;
 import hpsaturn.pollutionreporter.view.FragmentPickerData;
 import hpsaturn.pollutionreporter.view.FragmentPickerInfo;
 import hpsaturn.pollutionreporter.view.MapFragment;
+import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 
@@ -67,6 +68,7 @@ public class MainActivity extends BaseActivity implements
     private ServiceManager serviceManager;
     private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
+    private PostsFragment postsFragment;
     private boolean withoutDevice = BuildConfig.withoutDevice;
 
 
@@ -180,6 +182,7 @@ public class MainActivity extends BaseActivity implements
 
     public void setupAppFragments(){
         Logger.i(TAG, "setupAppFragments");
+        addPostsFragment();
         addRecordsFragment();
         addMapFragment();
         addChartFragment();
@@ -241,6 +244,11 @@ public class MainActivity extends BaseActivity implements
     private void addRecordsFragment() {
         if (recordsFragment == null) recordsFragment = RecordsFragment.newInstance();
         addFragment(recordsFragment, RecordsFragment.TAG, false);
+    }
+
+    private void addPostsFragment() {
+        if (postsFragment == null) postsFragment = PostsFragment.newInstance();
+        addFragment(postsFragment, PostsFragment.TAG, false);
     }
 
     public void removeScanFragment() {
@@ -306,21 +314,31 @@ public class MainActivity extends BaseActivity implements
         switch (position) {
             case 0:
                 fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
                 hideFragment(recordsFragment);
                 hideFragment(chartFragment);
                 showFragment(mapFragment);
                 break;
             case 1:
                 fab.setVisibility(View.VISIBLE);
+                hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
                 showFragment(chartFragment);
                 break;
             case 2:
                 fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(chartFragment);
                 showFragment(recordsFragment);
+                break;
+            case 3:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(recordsFragment);
+                hideFragment(mapFragment);
+                hideFragment(chartFragment);
+                showFragment(postsFragment);
                 break;
         }
         viewHolder.showText();
