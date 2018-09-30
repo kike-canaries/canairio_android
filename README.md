@@ -4,6 +4,9 @@
 
 This code is for [CanAir.io](http://canair.io) Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor.
 
+![alt text](https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png "Download App in GooglePlay")
+
+
 ---
 <a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg" align="right" width="512" ></a>
 ---
