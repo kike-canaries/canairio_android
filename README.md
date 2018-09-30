@@ -1,8 +1,8 @@
-# Pollution Reporter (hpma115s0)
+# CanAir.io Pollution Reporter (hpma115s0)
 
-**W A R N I N G :** Project in development
+[CanAirIO](http://canair.io) is a citizen science initiative for air quality tracking, visualization and dissemination by using PM2.5 particulate material sensors paired with your smartphone via bluetooth.
 
-Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor.
+This code is for CanAir.io Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor.
 
 ---
 <a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg" align="right" width="512" ></a>
@@ -18,9 +18,12 @@ Android client and reporter for [esp32-hpma115s0](https://github.com/kike-canari
 - [X] Recoding data in the phone
 - [X] List recorded tracks fragment
 - [X] Open Street map fragment
-- [ ] Connect list records to record track
-- [ ] Connect Open Street Maps to pollution data
-- [ ] MQTT subscription and publishing
+- [X] Connect list records to record track
+- [X] Connect Open Street Maps to pollution data
+- [X] Firebase connection for publish reports
+- [ ] Osmdroid clusters (for static points)
+- [ ] Osmdroid routes (for line or dinamic points)
+- [ ] Export data to json or others
 
 ## Dependencies
 
