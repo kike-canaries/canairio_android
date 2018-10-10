@@ -34,8 +34,30 @@ This code is for [CanAir.io](http://canair.io) Android client and reporter for [
 
 - Android SDK and NDK
 - Tested with gradle 4.4, SDK tools 26 and NDK 15
+- CMake
+
+## Requirements
+
+This application uses a Firebase Database instance to store air quality reports.
+
+For local development, you will need to create a database in the [Firebase Console](https://console.firebase.google.com/) using `hpsaturn.pollutionreporter` as the application identifier and retrieve a `google-services.json` file. See instructions [here](https://support.google.com/firebase/answer/7015592?hl=en).
 
 ## Compiling
+
+* Create a local keystore:
+
+`keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000`
+
+* Add a reference to the keystore to your environment variables by adding the following to `~/.bash_profile` or `~/.bashrc` depending on your local setup.
+
+```bash
+export airStoreFile=<your_test.keystore>
+export airStorePassword=<your_test_keystore_password>
+export airKeyAlias=<your_test_keystore_alias>
+export airKeyPassword=<your_key_password>
+```
+
+
 
 ```bash
 git clone https://github.com/kike-canaries/android-hpma115s0.git
