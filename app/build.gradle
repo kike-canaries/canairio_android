@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply from: 'secret.gradle'
 android {
     compileSdkVersion project.mCompileSdkVersion.toInteger()
     defaultConfig {
@@ -106,6 +106,13 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.2.0'
 
     implementation 'com.github.MKergall:osmbonuspack:6.5.2'
+
+    implementation 'org.web3j:core:3.3.1-android'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+
 
     implementation 'io.nlopez.smartlocation:library:3.3.3'
 

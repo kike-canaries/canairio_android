@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_separator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/tv_address_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="address"
+            android:textColor="@color/black"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_address_label"
+            android:layout_margin="5dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_balance_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_address"
+            android:text="balance"
+            android:textColor="@color/black"
+            android:textSize="9sp" />
+
+        <TextView
+            android:id="@+id/tv_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_balance_label"
+            android:layout_margin="5dp"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/tv_wallet_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_balance"
+            android:text="wallet"
+            android:textColor="@color/black"
+            android:textSize="9sp" />
+
+        <TextView
+            android:id="@+id/tv_wallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_wallet_label"
+            android:layout_margin="5dp"
+            android:hint="dont forget to save your wallet path"
+            android:text=""
+            android:textColor="@color/black"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
+
+
+        <EditText
+            android:id="@+id/et_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_wallet"
+            android:layout_alignRight="@+id/tv_balance"
+            android:layout_margin="2dp"
+            android:hint="Input your wallet password, write it down!"
+            android:inputType="textPassword"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_wallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_pwd"
+            android:layout_margin="2dp">
+
+            <Button
+                android:id="@+id/bt_create_wallet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="2dp"
+                android:text="Create wallet"
+                android:textSize="12sp" />
+
+
+            <Button
+                android:id="@+id/bt_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/bt_create_wallet"
+                android:text="Refresh your balance! "
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/bt_create_issue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_wallet"
+            android:layout_margin="2dp"
+            android:background="@drawable/selectable_picker_background"
+            android:text="Join the community! "
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
