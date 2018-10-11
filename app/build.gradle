@@ -17,7 +17,7 @@ android {
         
         signingConfigs {
             release {
-                storeFile file(String.valueOf(System.getenv("airStoreFile")))
+                storeFile file(System.getenv("airStoreFile"))
                 storePassword System.getenv("airStorePassword")
                 keyAlias System.getenv("airKeyAlias")
                 keyPassword System.getenv("airKeyPassword")
@@ -50,6 +50,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
