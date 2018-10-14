@@ -60,25 +60,24 @@ public class ScanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_devices, container, false);
-        ButterKnife.bind(this, view);
-
-        rxBleClient = AppData.getRxBleClient(getActivity());
-        Logger.i(TAG, "onCreateView: configureResultList..");
-        configureResultList();
-        Logger.i(TAG, "onCreateView: actionScan..");
-
-        scanning.setOnClickListener(view1 -> actionScan());
-
+        ButterKnife.bind(this,view);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Logger.i(TAG, "[BLE] configureResultList..");
+        configureResultList();
+        scanning.setOnClickListener(view1 -> actionScan());
+        Logger.i(TAG, "[BLE] starting scanning..");
+        rxBleClient = AppData.getRxBleClient(getActivity());
+        Logger.i(TAG, "[BLE] actionScan..");
         getActivity().runOnUiThread(() -> actionScan());
     }
 
     private void actionScan() {
+        Logger.i(TAG,"[BLE] actionScan()");
         if (isScanning()) {
             scanDisposable.dispose();
         } else {
@@ -132,7 +131,6 @@ public class ScanFragment extends Fragment {
         EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
         prefBuilder.addString(Keys.DEVICE_ADDRESS, macAddress).save();
         prefBuilder.addBoolean(Keys.DEVICE_PAIR, true).save();
-//        getMain().setupAppFragments();
         getMain().deviceConnect();
         getMain().removeScanFragment();
     }
