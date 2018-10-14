@@ -36,6 +36,7 @@ import io.reactivex.disposables.Disposable;
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
  */
+
 public class ScanFragment extends Fragment {
 
     public static String TAG = ScanFragment.class.getSimpleName();
@@ -69,10 +70,9 @@ public class ScanFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG, "[BLE] configureResultList..");
         configureResultList();
+        rxBleClient = AppData.getRxBleClient(getActivity());
         scanning.setOnClickListener(view1 -> actionScan());
         Logger.i(TAG, "[BLE] starting scanning..");
-        rxBleClient = AppData.getRxBleClient(getActivity());
-        Logger.i(TAG, "[BLE] actionScan..");
         getActivity().runOnUiThread(() -> actionScan());
     }
 

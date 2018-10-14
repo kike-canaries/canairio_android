@@ -64,6 +64,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
         }
+        else Logger.i(TAG,"[BLE] checkBluetoohtBle: ready!");
     }
 
     public void showFragment(Fragment fragment){
