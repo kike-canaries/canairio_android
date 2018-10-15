@@ -199,6 +199,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
+        // TODO: Refactor to dinamic plus fragment to scroll view
         Logger.d(TAG, "onCurrentItemChanged: " + position);
         switch (position) {
             case 0:
@@ -216,6 +217,7 @@ public class MainActivity extends BaseActivity implements
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
+                postsFragment.refresh();
                 break;
             case 2:
                 refreshUI();
@@ -266,26 +268,31 @@ public class MainActivity extends BaseActivity implements
 
     private void addChartFragment() {
         if (chartFragment == null) chartFragment = ChartFragment.newInstance();
+        if (chartFragment.isAdded()) return;
         addFragment(chartFragment, ChartFragment.TAG, false);
     }
 
     private void addScanFragment() {
         if (scanFragment == null) scanFragment = ScanFragment.newInstance();
+        if (scanFragment.isAdded()) return;
         addFragment(scanFragment, ScanFragment.TAG, false);
     }
 
     private void addMapFragment() {
         if (mapFragment == null) mapFragment = MapFragment.newInstance();
+        if (mapFragment.isAdded()) return;
         addFragment(mapFragment, MapFragment.TAG, false);
     }
 
     private void addRecordsFragment() {
         if (recordsFragment == null) recordsFragment = RecordsFragment.newInstance();
+        if (recordsFragment.isAdded()) return;
         addFragment(recordsFragment, RecordsFragment.TAG, false);
     }
 
     private void addPostsFragment() {
         if (postsFragment == null) postsFragment = PostsFragment.newInstance();
+        if (postsFragment.isAdded()) return;
         addFragment(postsFragment, PostsFragment.TAG, false);
     }
 

@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/colorPrimary"
-            app:layout_scrollFlags="snap"
+            app:layout_scrollFlags="enterAlways"
             app:toolbarId="@+id/toolbar">
 
             <android.support.v7.widget.Toolbar
