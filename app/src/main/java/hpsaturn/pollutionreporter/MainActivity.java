@@ -199,6 +199,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
+        // TODO: Refactor to dinamic plus fragment to scroll view
         Logger.d(TAG, "onCurrentItemChanged: " + position);
         switch (position) {
             case 0:
@@ -216,6 +217,7 @@ public class MainActivity extends BaseActivity implements
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
+                postsFragment.refresh();
                 break;
             case 2:
                 refreshUI();
