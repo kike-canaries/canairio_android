@@ -103,13 +103,11 @@ public class FileTools {
 
     public static class saveDownloadFile extends AsyncTask<byte[], Void, Void> {
 
-        private final Context ctx;
         private final byte[] downloadFile;
         private final String dirName;
         private final String fileName;
 
-        public saveDownloadFile(Context ctx, byte[] data, String dirName, String fileName) {
-            this.ctx=ctx;
+        public saveDownloadFile(byte[] data, String dirName, String fileName) {
             this.downloadFile = data;
             this.dirName = dirName;
             this.fileName = fileName;
@@ -117,23 +115,26 @@ public class FileTools {
 
         @Override
         protected Void doInBackground(byte[]... data) {
-
-            File file = getDownloadFilePath(ctx,dirName,fileName);
+            Logger.d(TAG, "[SD] saveDownloadFile /"+dirName+"/"+fileName);
+            File file = getDownloadFilePath(dirName,fileName);
+            Logger.d(TAG, "[SD] path: "+file.getAbsolutePath());
             try {
                 FileOutputStream fos = new FileOutputStream(file.getPath());
                 fos.write(downloadFile);
                 fos.close();
+                Logger.i(TAG, "[SD] saveDownloadFile done");
             } catch (IOException e) {
+                Logger.e(TAG, "[SD] saveDownloadFile failed!");
                 e.printStackTrace();
             }
             return null;
         }
     }
 
-    public static File getDownloadStorageDir(Context context, String dirName) {
+    public static File getDownloadStorageDir(String dirName) {
+        File sdcard = Environment.getExternalStorageDirectory();
+        File file = new File(sdcard.getAbsolutePath() + dirName);
         // Get the directory for the app's private pictures directory.
-        File file = new File(context.getExternalFilesDir(
-                Environment.DIRECTORY_DOWNLOADS), dirName);
         if (!file.mkdirs()) {
             Logger.e(TAG, dirName+ " directory not created!");
         }
@@ -141,8 +142,8 @@ public class FileTools {
     }
 
     @NonNull
-    private static File getDownloadFilePath(Context ctx, String dirName, String fileName) {
-        return new File(getDownloadStorageDir(ctx,dirName), fileName);
+    private static File getDownloadFilePath(String dirName, String fileName) {
+        return new File(getDownloadStorageDir(dirName), fileName);
     }
 
     @NonNull
