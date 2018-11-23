@@ -167,7 +167,6 @@ public class FileTools {
         return byteArrayFromBitmap(bitmap);
     }
 
-
     public static byte[] byteArrayFromBitmap(Bitmap bmp) {
         byte[] byteArray;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -175,7 +174,6 @@ public class FileTools {
         byteArray = stream.toByteArray();
         return byteArray;
     }
-
 
     public static Allocation renderScriptNV21ToRGBA888(Context context, int width, int height, byte[] nv21) {
         RenderScript rs = RenderScript.create(context);

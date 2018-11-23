@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.DeviceUtil;
+import com.hpsaturn.tools.FileTools;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 
@@ -242,6 +243,16 @@ public class ServiceBLE extends Service {
         Storage.setSensorData(this,new ArrayList<>()); // clear sensor data
         serviceManager.tracksUpdated();
         Logger.i(TAG, "[BLE] record track done.");
+    }
+
+    private void saveTrackOnSD(SensorTrack track){
+        String data = new Gson().toJson(track);
+        new FileTools.saveDownloadFile(
+                this,
+                data.getBytes(),
+                "canairio",
+                track.name
+        ).execute();
     }
 
     private SensorTrack getLastTrack(){
