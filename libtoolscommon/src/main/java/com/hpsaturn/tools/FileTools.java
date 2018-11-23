@@ -133,7 +133,7 @@ public class FileTools {
 
     public static File getDownloadStorageDir(String dirName) {
         File sdcard = Environment.getExternalStorageDirectory();
-        File file = new File(sdcard.getAbsolutePath() + dirName);
+        File file = new File(sdcard.getAbsolutePath() + "/" + dirName);
         // Get the directory for the app's private pictures directory.
         if (!file.mkdirs()) {
             Logger.e(TAG, dirName+ " directory not created!");

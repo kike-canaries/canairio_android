@@ -56,9 +56,6 @@ public class ServiceBLE extends Service {
         prefBuilder = AppData.getPrefBuilder(this);
         isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
         serviceManager = new ServiceManager(this, managerListener);
-//        String deviceName = DeviceUtil.getDeviceName() + "_" + DeviceUtil.getDeviceId(this);
-//        mDatabase = FirebaseDatabase.getInstance().getReference(deviceName);
-//        mDatabase.keepSynced(true);
         noticationChannelAPI26issue();
     }
 
@@ -248,7 +245,7 @@ public class ServiceBLE extends Service {
         new FileTools.saveDownloadFile(
                 data.getBytes(),
                 "canairio",
-                track.name
+                track.name+".json"
         ).execute();
     }
 
