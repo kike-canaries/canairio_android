@@ -29,10 +29,12 @@ import java.util.Date;
 
 public class FileTools {
 
+    public static final String TAG = FileTools.class.getSimpleName();
+
     public static String saveByteArrayImage(byte[] face) {
         File file;
         try {
-            file = getFilePath();
+            file = getTempFilePath();
             FileOutputStream fos = new FileOutputStream(file.getPath());
             fos.write(face);
             fos.close();
@@ -55,7 +57,7 @@ public class FileTools {
         @Override
         protected Void doInBackground(byte[]... jpeg) {
 
-            File file = getFilePath();
+            File file = getTempFilePath();
             try {
                 FileOutputStream fos = new FileOutputStream(file.getPath());
                 fos.write(image);
@@ -78,7 +80,7 @@ public class FileTools {
         @Override
         protected Void doInBackground(Bitmap... jpeg) {
 
-            File file = getFilePath();
+            File file = getTempFilePath();
             try {
                 FileOutputStream fos = new FileOutputStream(file.getPath());
                 image.compress(Bitmap.CompressFormat.JPEG, 90, fos);
@@ -91,8 +93,60 @@ public class FileTools {
         }
     }
 
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static class saveDownloadFile extends AsyncTask<byte[], Void, Void> {
+
+        private final Context ctx;
+        private final byte[] downloadFile;
+        private final String dirName;
+        private final String fileName;
+
+        public saveDownloadFile(Context ctx, byte[] data, String dirName, String fileName) {
+            this.ctx=ctx;
+            this.downloadFile = data;
+            this.dirName = dirName;
+            this.fileName = fileName;
+        }
+
+        @Override
+        protected Void doInBackground(byte[]... data) {
+
+            File file = getDownloadFilePath(ctx,dirName,fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(file.getPath());
+                fos.write(downloadFile);
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public static File getDownloadStorageDir(Context context, String dirName) {
+        // Get the directory for the app's private pictures directory.
+        File file = new File(context.getExternalFilesDir(
+                Environment.DIRECTORY_DOWNLOADS), dirName);
+        if (!file.mkdirs()) {
+            Logger.e(TAG, dirName+ " directory not created!");
+        }
+        return file;
+    }
+
     @NonNull
-    private static File getFilePath() {
+    private static File getDownloadFilePath(Context ctx, String dirName, String fileName) {
+        return new File(getDownloadStorageDir(ctx,dirName), fileName);
+    }
+
+    @NonNull
+    private static File getTempFilePath() {
         File sdcard = Environment.getExternalStorageDirectory();
         File dir = new File(sdcard.getAbsolutePath() + "/temp/");
         dir.mkdir();
