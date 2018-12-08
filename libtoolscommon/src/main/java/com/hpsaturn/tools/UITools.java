@@ -39,9 +39,9 @@ import java.util.regex.Pattern;
  */
 
 public class UITools {
+
     private static final boolean DEBUG = false;
     public static final String TAG = UITools.class.getSimpleName();
-
 
     public static void showToast(Context context, int i) {
         int duration = Toast.LENGTH_LONG;
