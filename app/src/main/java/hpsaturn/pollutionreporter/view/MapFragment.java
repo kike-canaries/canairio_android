@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -86,11 +87,13 @@ public class MapFragment extends Fragment {
     }
 
     public void addMarker(SensorTrackInfo trackInfo) {
+
         Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
         MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
         Marker pointMarker = new Marker(mapView);
         pointMarker.setTitle("" + trackInfo.getDate());
-        pointMarker.setSnippet("Last PM2.5: "+trackInfo.getLastSensorData().P25);
+        SensorData lastSensorData = trackInfo.getLastSensorData();
+        if(lastSensorData!=null) pointMarker.setSnippet("Last PM2.5: "+ lastSensorData.P25);
         pointMarker.setSubDescription("report: "+trackInfo.getSize()+ " points");
         pointMarker.setPosition(new GeoPoint(trackInfo.getLastLat(), trackInfo.getLastLon()));
         pointMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);

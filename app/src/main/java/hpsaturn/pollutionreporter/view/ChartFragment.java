@@ -179,6 +179,7 @@ public class ChartFragment extends Fragment {
     }
 
     private void loadChart(ArrayList<SensorData> data){
+        if(data==null)return;
         if (data.isEmpty()) addData(0);
         else {
             Iterator<SensorData> it = data.iterator();
