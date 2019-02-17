@@ -11,15 +11,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.hpsaturn.tools.BuildConfig;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,7 +100,26 @@ public class MainActivity extends BaseActivity implements
 
     private void startDataBase(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.keepSynced(true);
+        //mDatabase.keepSynced(true);
+
+        Logger.i(TAG,"[FB] try to remove old posts..");
+        Query oldItems = mDatabase.child("tracks_data").orderByChild("name").startAt("2018");
+//        long cutoff = new Date().getTime() - TimeUnit.MILLISECONDS.convert(30, TimeUnit.DAYS);
+//        Query oldItems = mDatabase.child("tracks_data").orderByKey().startAt("2018");
+        oldItems.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot itemSnapshot: snapshot.getChildren()) {
+                    Logger.i(TAG,"[FB] removing item: "+itemSnapshot.getKey());
+                    itemSnapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 
     private ServiceInterface serviceListener = new ServiceInterface() {
@@ -217,7 +242,7 @@ public class MainActivity extends BaseActivity implements
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
-                postsFragment.refresh();
+//                postsFragment.refresh();
                 break;
             case 2:
                 refreshUI();

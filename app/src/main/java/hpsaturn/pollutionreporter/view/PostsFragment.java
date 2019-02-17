@@ -70,8 +70,8 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = mDatabase.child("tracks_info").orderByKey();
-        Logger.d(TAG,"[POSTS] Query: "+postsQuery.toString());
+        Query postsQuery = mDatabase.child("tracks_info").orderByKey().limitToLast(20);
+        Logger.d(TAG,"[FB][POSTS] Query: "+postsQuery.toString());
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)
                 .build();
@@ -89,13 +89,13 @@ public class PostsFragment extends Fragment {
             protected void onBindViewHolder(@NonNull PostsViewHolder viewHolder, int position, @NonNull SensorTrackInfo trackInfo) {
                 final DatabaseReference postRef = getRef(position);
                 final String recordKey = postRef.getKey();
-                Logger.d(TAG,"[POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
+                Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
                 getMain().addTrackToMap(trackInfo);
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String recordId = trackInfo.getName();
-                        Logger.i(TAG,"[POSTS] onClick -> showing record: "+recordId);
+                        Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);
                         chart = ChartFragment.newInstance(recordId);
                         getMain().addFragmentPopup(chart,ChartFragment.TAG);
                     }
@@ -118,7 +118,8 @@ public class PostsFragment extends Fragment {
 
     class UpdateTimeTask extends TimerTask {
         public void run() {
-            refresh();
+            Logger.i(TAG,"[FB][POST] UpdateTimeTask, force refresh data..");
+            //refresh();
             mHandler.postDelayed(this,2000);
         }
     }
@@ -135,7 +136,7 @@ public class PostsFragment extends Fragment {
 
     public void refresh() {
         if(mAdapter!=null){
-            Logger.i(TAG,"[POSTS] refresh query");
+            Logger.i(TAG,"[FB][POSTS] refresh query");
             mAdapter.startListening();
             updateUI();
         }
