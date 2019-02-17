@@ -41,6 +41,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_WIFI_STATE);
+        permissions.add(Manifest.permission.FOREGROUND_SERVICE);
         permissionManager.checkPermissions(permissions, new PermissionManager.PermissionRequestListener() {
             @Override
             public void onPermissionGranted() {
