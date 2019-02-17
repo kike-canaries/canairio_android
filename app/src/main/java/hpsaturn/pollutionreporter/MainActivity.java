@@ -38,6 +38,7 @@ import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
+import hpsaturn.pollutionreporter.view.SettingsFragment;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -68,6 +69,8 @@ public class MainActivity extends BaseActivity implements
     private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
     private PostsFragment postsFragment;
+    private SettingsFragment settingsFragment;
+
     private boolean withoutDevice = BuildConfig.withoutDevice;
 
 
@@ -178,6 +181,7 @@ public class MainActivity extends BaseActivity implements
         addPostsFragment();
         addRecordsFragment();
         addMapFragment();
+        addSettingsFragment();
         if(isPaired())addChartFragment();
         else addScanFragment();
         //showFragment(chartFragment);
@@ -206,6 +210,7 @@ public class MainActivity extends BaseActivity implements
                 fab.setVisibility(View.INVISIBLE);
                 hideFragment(postsFragment);
                 hideFragment(recordsFragment);
+                hideFragment(settingsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(mapFragment);
@@ -214,6 +219,7 @@ public class MainActivity extends BaseActivity implements
                 fab.setVisibility(View.INVISIBLE);
                 hideFragment(recordsFragment);
                 hideFragment(mapFragment);
+                hideFragment(settingsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
@@ -224,6 +230,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
+                hideFragment(settingsFragment);
                 if(isPaired()){
                     fab.setVisibility(View.VISIBLE);
                     showFragment(chartFragment);
@@ -234,9 +241,20 @@ public class MainActivity extends BaseActivity implements
                 fab.setVisibility(View.INVISIBLE);
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
+                hideFragment(settingsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(recordsFragment);
+                break;
+
+            case 4:
+                fab.setVisibility(View.INVISIBLE);
+                hideFragment(postsFragment);
+                hideFragment(mapFragment);
+                hideFragment(recordsFragment);
+                if(isPaired())hideFragment(chartFragment);
+                else hideFragment(scanFragment);
+                showFragment(settingsFragment);
                 break;
 
         }
@@ -288,6 +306,12 @@ public class MainActivity extends BaseActivity implements
         if (recordsFragment == null) recordsFragment = RecordsFragment.newInstance();
         if (recordsFragment.isAdded()) return;
         addFragment(recordsFragment, RecordsFragment.TAG, false);
+    }
+
+    private void addSettingsFragment() {
+        if (settingsFragment == null) settingsFragment = new SettingsFragment();
+        if (settingsFragment.isAdded()) return;
+        addFragment(settingsFragment, SettingsFragment.TAG, false);
     }
 
     private void addPostsFragment() {
