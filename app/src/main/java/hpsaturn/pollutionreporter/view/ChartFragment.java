@@ -11,11 +11,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -93,7 +93,7 @@ public class ChartFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         ButterKnife.bind(this, view);
 
-        chart.setDescription(getString(R.string.app_name));
+//        chart.setDescription(new Description().setText(getString(R.string.app_name)));
 
         calculateReferenceTime();
 
@@ -124,7 +124,7 @@ public class ChartFragment extends Fragment {
         } else {
             referenceTimestamp = data.get(0).timestamp;
         }
-        AxisValueFormatter xAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
+        HourAxisValueFormatter xAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
         XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(xAxisFormatter);
     }
