@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import hpsaturn.pollutionreporter.AppData;
+import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.common.BLEHandler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
@@ -39,6 +40,7 @@ import io.nlopez.smartlocation.location.config.LocationParams;
 public class ServiceBLE extends Service {
 
     private static final String TAG = ServiceBLE.class.getSimpleName();
+    private static final boolean VERBOSE = Config.DEBUG && false;
     private EasyPreference.Builder prefBuilder;
     private BLEHandler bleHandler;
     private boolean isRecording;
@@ -96,10 +98,12 @@ public class ServiceBLE extends Service {
     private OnLocationUpdatedListener onLocationListener = new OnLocationUpdatedListener() {
         @Override
         public void onLocationUpdated(Location location) {
-            Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
-            Logger.i(TAG, "[BLE][LOC] accuracy: "+location.getAccuracy());
-            Logger.i(TAG, "[BLE][LOC] coords  : "+location.getLatitude()+","+location.getLongitude());
-            Logger.i(TAG, "[BLE][LOC] speed: "+location.getSpeed());
+            if(VERBOSE) {
+                Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
+                Logger.i(TAG, "[BLE][LOC] accuracy: " + location.getAccuracy());
+                Logger.i(TAG, "[BLE][LOC] coords  : " + location.getLatitude() + "," + location.getLongitude());
+                Logger.i(TAG, "[BLE][LOC] speed: " + location.getSpeed());
+            }
         }
     };
 
