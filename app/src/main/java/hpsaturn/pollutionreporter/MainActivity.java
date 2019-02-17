@@ -100,26 +100,7 @@ public class MainActivity extends BaseActivity implements
 
     private void startDataBase(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        //mDatabase.keepSynced(true);
-
-        Logger.i(TAG,"[FB] try to remove old posts..");
-        Query oldItems = mDatabase.child("tracks_data").orderByChild("name").startAt("2018");
-//        long cutoff = new Date().getTime() - TimeUnit.MILLISECONDS.convert(30, TimeUnit.DAYS);
-//        Query oldItems = mDatabase.child("tracks_data").orderByKey().startAt("2018");
-        oldItems.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot itemSnapshot: snapshot.getChildren()) {
-                    Logger.i(TAG,"[FB] removing item: "+itemSnapshot.getKey());
-                    itemSnapshot.getRef().removeValue();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+        mDatabase.keepSynced(true);
     }
 
     private ServiceInterface serviceListener = new ServiceInterface() {

@@ -22,6 +22,7 @@ import com.hpsaturn.tools.Logger;
 
 import java.util.TimerTask;
 
+import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
@@ -70,7 +71,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = mDatabase.child("tracks_info").orderByKey().limitToLast(20);
+        Query postsQuery = mDatabase.child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(20);
         Logger.d(TAG,"[FB][POSTS] Query: "+postsQuery.toString());
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)
@@ -119,8 +120,8 @@ public class PostsFragment extends Fragment {
     class UpdateTimeTask extends TimerTask {
         public void run() {
             Logger.i(TAG,"[FB][POST] UpdateTimeTask, force refresh data..");
-            //refresh();
-            mHandler.postDelayed(this,2000);
+            refresh();
+            mHandler.postDelayed(this,3000);
         }
     }
 

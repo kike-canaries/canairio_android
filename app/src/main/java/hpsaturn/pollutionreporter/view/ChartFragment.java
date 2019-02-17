@@ -30,6 +30,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
@@ -155,7 +156,7 @@ public class ChartFragment extends Fragment {
                 getMain().enableShareButton();
             }
             else{
-                DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference("tracks_data");
+                DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference(Config.FB_TRACKS_DATA);
                 DatabaseReference trackRef = mDataBase.child(recordId);
                 trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -227,8 +228,8 @@ public class ChartFragment extends Fragment {
         if(recordId!=null && track!=null) {
             Logger.i(TAG,"publis track..");
             track.deviceId = DeviceUtil.getDeviceId(getActivity());
-            getMain().getDatabase().child("tracks_data").child(track.name).setValue(track);
-            getMain().getDatabase().child("tracks_info").child(track.name).setValue(new SensorTrackInfo(track));
+            getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(track.name).setValue(track);
+            getMain().getDatabase().child(Config.FB_TRACKS_INFO).child(track.name).setValue(new SensorTrackInfo(track));
             getMain().popBackLastFragment();
         }
     }
