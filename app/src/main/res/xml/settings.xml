@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreferenceCompat
-        app:key="notifications"
-        app:title="Enable message notifications"/>
+    <PreferenceCategory android:title="WiFi Connection">
+        <EditTextPreference
+            android:inputType="text"
+            app:key="wifi_ssid"
+            android:password="true"
+            app:summary="WiFi network name"
+            app:title="SSID"
+            android:icon="@drawable/ic_picker_records"
+            />
+
+        <EditTextPreference
+            android:inputType="textPassword"
+            app:key="wifi_pass"
+            app:summary="WiFi password"
+            app:title="Password" />
+
+        <SwitchPreferenceCompat
+            app:key="wifi_enable"
+            app:title="Enable WiFi connection" />
+
+
+    </PreferenceCategory>
+
 
     <Preference
-        app:key="feedback"
-        app:title="Send feedback"
-        app:summary="Report technical issues or suggest new features"/>
+            app:key="feedback"
+            app:summary="Report technical issues or suggest new features"
+            app:title="Send feedback" />
+
 
 </PreferenceScreen>
