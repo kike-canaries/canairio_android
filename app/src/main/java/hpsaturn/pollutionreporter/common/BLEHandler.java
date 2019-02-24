@@ -29,7 +29,8 @@ public class BLEHandler {
     private String address;
 
     private UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
-    private UUID characteristicUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
+    private UUID charactDataUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
+    private UUID charactConfigUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae02");
 
     private PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
     private Observable<RxBleConnection> connectionObservable;
@@ -71,7 +72,7 @@ public class BLEHandler {
             try {
                 connectionObservable
                         .flatMapSingle(RxBleConnection::discoverServices)
-                        .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUuid))
+                        .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(charactDataUuid))
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
                         .subscribe(
@@ -99,12 +100,25 @@ public class BLEHandler {
     public void setupNotification() {
         if (isConnected()) {
             connectionObservable
-                    .flatMap(rxBleConnection -> rxBleConnection.setupNotification(characteristicUuid))
+                    .flatMap(rxBleConnection -> rxBleConnection.setupNotification(charactDataUuid))
                     .doOnNext(notificationObservable -> { notificationHasBeenSetUp(); })
                     .flatMap(notificationObservable -> notificationObservable)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onNotificationReceived, this::onNotificationSetupFailure);
         }
+    }
+
+    public void readConfig(){
+        bleDevice.establishConnection(false)
+                .flatMapSingle(rxBleConnection -> rxBleConnection.readCharacteristic(charactConfigUuid))
+                .subscribe(
+                        characteristicValue -> {
+                            // Read characteristic value.
+                        },
+                        throwable -> {
+                            // Handle an error here.
+                        }
+                );
     }
 
     public boolean isConnected() {

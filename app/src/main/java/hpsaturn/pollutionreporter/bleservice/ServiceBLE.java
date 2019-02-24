@@ -148,18 +148,28 @@ public class ServiceBLE extends Service {
         }
 
         @Override
-        public void onSensorRecord() {
+        public void onServiceRecord() {
             isRecording = true;
         }
 
         @Override
-        public void onSensorRecordStop() {
+        public void onServiceRecordStop() {
             isRecording = false;
             saveTrack();
         }
 
         @Override
         public void onTracksUpdated() {
+
+        }
+
+        @Override
+        public void onSensorConfigRead() {
+            bleHandler.readConfig();
+        }
+
+        @Override
+        public void onSensorConfigWrite(String config) {
 
         }
     };

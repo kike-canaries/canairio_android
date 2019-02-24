@@ -15,9 +15,13 @@ public interface ServiceInterface {
 
     void onServiceData(SensorData data);
 
-    void onSensorRecord();
+    void onServiceRecord();
 
-    void onSensorRecordStop();
+    void onServiceRecordStop();
 
     void onTracksUpdated();
+
+    void onSensorConfigRead();
+
+    void onSensorConfigWrite(String config);
 }

@@ -128,18 +128,28 @@ public class MainActivity extends BaseActivity implements
         }
 
         @Override
-        public void onSensorRecord() {
+        public void onServiceRecord() {
 
         }
 
         @Override
-        public void onSensorRecordStop() {
+        public void onServiceRecordStop() {
 
         }
 
         @Override
         public void onTracksUpdated() {
             if(recordsFragment!=null)recordsFragment.loadData();
+        }
+
+        @Override
+        public void onSensorConfigRead() {
+
+        }
+
+        @Override
+        public void onSensorConfigWrite(String config) {
+
         }
     };
 
@@ -159,14 +169,14 @@ public class MainActivity extends BaseActivity implements
         showSnackMessageSlow(R.string.msg_record_stop);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, false).save();
         refreshUI();
-        serviceManager.sensorRecordStop();
+        serviceManager.serviceRecordStop();
     }
 
     private void startRecord() {
         showSnackMessageSlow(R.string.msg_record);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, true).save();
         refreshUI();
-        serviceManager.sensorRecord();
+        serviceManager.serviceRecord();
     }
 
     private void setupUI() {
