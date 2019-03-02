@@ -110,8 +110,12 @@ public class ServiceBLE extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.d(TAG, "[BLE] onStartCommand");
         serviceManager.status(ServiceManager.STATUS_SERVICE_OK);
-        if (isRecording) startConnection();
-        return START_STICKY;
+        startConnection();
+        if (isRecording) {
+            return START_STICKY;
+        } else {
+            return START_NOT_STICKY;
+        }
     }
 
 
@@ -127,18 +131,13 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onServiceStart() {
-            Logger.d(TAG, "[BLE] request service start..");
-            startConnection();
+//            Logger.d(TAG, "[BLE] request service start..");
+//            startConnection();
         }
 
         @Override
         public void onServiceStop() {
-            Logger.w(TAG, "[BLE] request service stop..");
-            if (bleHandler != null && !isRecording) {
-                bleHandler.triggerDisconnect();
-                SmartLocation.with(ServiceBLE.this).location().stop();
-            }
-            else if (isRecording) Logger.w(TAG, "[BLE] isRecording override stop BLE service");
+           stopService();
         }
 
         @Override
@@ -170,6 +169,18 @@ public class ServiceBLE extends Service {
 
         }
     };
+
+    private void stopService() {
+        Logger.w(TAG, "[BLE] request service stop..");
+        if (bleHandler != null && !isRecording) {
+            bleHandler.triggerDisconnect();
+            SmartLocation.with(ServiceBLE.this).location().stop();
+            ServiceScheduler.stopSheduleService(this);
+            Logger.w(TAG, "[BLE] kill service..");
+            this.stopSelf();
+        }
+        else if (isRecording) Logger.w(TAG, "[BLE] isRecording override stop BLE service");
+    }
 
 
     /*********************************************************************
@@ -290,6 +301,7 @@ public class ServiceBLE extends Service {
 
     @Override
     public void onDestroy() {
+        bleHandler.triggerDisconnect();
         serviceManager.unregister();
         super.onDestroy();
     }

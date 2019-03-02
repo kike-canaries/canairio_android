@@ -108,7 +108,6 @@ public class MainActivity extends BaseActivity implements
             if (status.equals(ServiceManager.STATUS_BLE_START)) {
                 showFragment(chartFragment);
             } else if (status.equals(ServiceManager.STATUS_SERVICE_OK)){
-                deviceConnect();
             } else if (status.equals(ServiceManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
             }
@@ -355,8 +354,8 @@ public class MainActivity extends BaseActivity implements
 
     public void deviceConnect() {
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
+            startBleService();
             showSnackMessage(R.string.msg_device_connecting);
-            serviceManager.start();
         }
     }
 
