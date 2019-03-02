@@ -13,6 +13,7 @@ import java.util.UUID;
 import hpsaturn.pollutionreporter.AppData;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -29,7 +30,7 @@ public class BLEHandler {
     private String address;
 
     private UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
-    private UUID charactDataUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
+    private UUID charactSensorDataUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
     private UUID charactConfigUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae02");
 
     private PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
@@ -37,6 +38,7 @@ public class BLEHandler {
     private Disposable scanDisposable;
     private RxBleClient rxBleClient;
     private RxBleDevice bleDevice;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public BLEHandler(Context ctx, String address, OnBLEConnectionListener listener) {
         this.ctx = ctx;
@@ -70,9 +72,9 @@ public class BLEHandler {
             triggerDisconnect();
         } else {
             try {
-                connectionObservable
+                final Disposable connectionDisposable = connectionObservable
                         .flatMapSingle(RxBleConnection::discoverServices)
-                        .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(charactDataUuid))
+                        .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(charactSensorDataUuid))
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
                         .subscribe(
@@ -84,6 +86,7 @@ public class BLEHandler {
                                 this::onConnectionFailure,
                                 this::onConnectionFinished
                         );
+                compositeDisposable.add(connectionDisposable);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -99,26 +102,40 @@ public class BLEHandler {
 
     public void setupNotification() {
         if (isConnected()) {
-            connectionObservable
-                    .flatMap(rxBleConnection -> rxBleConnection.setupNotification(charactDataUuid))
+            final Disposable disposable = connectionObservable
+                    .flatMap(rxBleConnection -> rxBleConnection.setupNotification(charactSensorDataUuid))
                     .doOnNext(notificationObservable -> { notificationHasBeenSetUp(); })
                     .flatMap(notificationObservable -> notificationObservable)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onNotificationReceived, this::onNotificationSetupFailure);
+            compositeDisposable.add(disposable);
         }
     }
 
     public void readConfig(){
-        bleDevice.establishConnection(false)
-                .flatMapSingle(rxBleConnection -> rxBleConnection.readCharacteristic(charactConfigUuid))
-                .subscribe(
-                        characteristicValue -> {
-                            // Read characteristic value.
-                        },
-                        throwable -> {
-                            // Handle an error here.
-                        }
-                );
+        if (isConnected()) {
+            final Disposable disposable = connectionObservable
+                    .firstOrError()
+                    .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactConfigUuid))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(bytes -> {
+                        Logger.i(TAG,"[BLE] ConfigReadCharacteristic->"+new String(bytes));
+                    }, this::onReadFailure);
+            compositeDisposable.add(disposable);
+        }
+    }
+
+    public void readSensorData(){
+        if (isConnected()) {
+            final Disposable disposable = connectionObservable
+                    .firstOrError()
+                    .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactSensorDataUuid))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(bytes -> {
+                        Logger.i(TAG,"[BLE] sensorDataCharacteristic->"+new String(bytes));
+                    }, this::onReadFailure);
+            compositeDisposable.add(disposable);
+        }
     }
 
     public boolean isConnected() {
@@ -153,6 +170,10 @@ public class BLEHandler {
     private void notificationHasBeenSetUp() {
         Logger.i(TAG, "notificationHasBeenSetUp");
         listener.onNotificationSetup();
+    }
+
+    private void onReadFailure(Throwable throwable) {
+        Logger.e(TAG,"onReadFailure: " + throwable);
     }
 
 }

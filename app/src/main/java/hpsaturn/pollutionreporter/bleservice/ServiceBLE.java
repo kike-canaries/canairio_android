@@ -45,7 +45,6 @@ public class ServiceBLE extends Service {
     private BLEHandler bleHandler;
     private boolean isRecording;
     private ServiceManager serviceManager;
-//    private DatabaseReference mDatabase;
 
     private final int RETRY_POLICY = 5;
     private int retry_connect = 0;
@@ -221,6 +220,8 @@ public class ServiceBLE extends Service {
             Logger.d(TAG, "[BLE] pushing data..");
             serviceManager.pushData(point);
             retry_notify_setup = 0;
+            bleHandler.readSensorData();
+            bleHandler.readConfig();
         }
     };
 
