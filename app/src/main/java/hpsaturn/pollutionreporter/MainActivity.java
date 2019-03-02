@@ -92,7 +92,6 @@ public class MainActivity extends BaseActivity implements
         setupUI();
         startDataBase();
         serviceManager = new ServiceManager(this, serviceListener);
-        deviceConnect();
     }
 
     private void startDataBase(){
@@ -105,8 +104,11 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onServiceStatus(String status) {
 
+
             if (status.equals(ServiceManager.STATUS_BLE_START)) {
                 showFragment(chartFragment);
+            } else if (status.equals(ServiceManager.STATUS_SERVICE_OK)){
+                deviceConnect();
             } else if (status.equals(ServiceManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
             }

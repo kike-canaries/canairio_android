@@ -159,12 +159,10 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onTracksUpdated() {
-
         }
 
         @Override
         public void onSensorConfigRead() {
-            bleHandler.readConfig();
         }
 
         @Override

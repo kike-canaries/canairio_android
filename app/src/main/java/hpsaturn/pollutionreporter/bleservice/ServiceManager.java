@@ -116,7 +116,6 @@ public class ServiceManager {
         ctx.sendBroadcast(intent);
     }
 
-
     public void sensorConfigWrite(String config) {
         Intent intent = new Intent(action_sensor_write_config);
         intent.putExtra(KEY_SENSOR_CONFIG_WRITE,config);
