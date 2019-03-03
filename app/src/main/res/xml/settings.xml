@@ -6,16 +6,16 @@
         <EditTextPreference
             android:inputType="text"
             app:key="wifi_ssid"
-            android:password="true"
             app:summary="WiFi network name"
             app:title="SSID"
-            android:icon="@drawable/ic_picker_records"
+            android:icon="@android:drawable/ic_menu_preferences"
             />
 
         <EditTextPreference
             android:inputType="textPassword"
             app:key="wifi_pass"
             app:summary="WiFi password"
+            android:password="true"
             app:title="Password" />
 
         <SwitchPreferenceCompat
@@ -24,6 +24,27 @@
 
 
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="InfluxDB config">
+        <EditTextPreference
+            app:title="Database name"
+            app:key="ifxdb"
+            android:inputType="text"
+            app:summary="InfluxDB database name"
+            android:icon="@android:drawable/ic_menu_save"
+            />
+
+        <EditTextPreference
+            app:title="Hostname"
+            app:key="ifxip"
+            android:inputType="textUri"
+            app:summary="InfluxDB IP server or hostname"
+            />
+
+
+
+    </PreferenceCategory>
+
 
 
     <Preference

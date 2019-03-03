@@ -60,6 +60,10 @@ public class BLEHandler {
 
         void onNotificationReceived(byte[] bytes);
 
+        void onSensorConfigRead(byte[] bytes);
+
+        void onSensorDataRead(byte[] bytes);
+
     }
 
 
@@ -79,7 +83,7 @@ public class BLEHandler {
                         .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
                         .subscribe(
                                 characteristic -> {
-                                    Logger.i(TAG, "Connection has been established.");
+                                    Logger.v(TAG, "[BLE] Connection has been established.");
                                     setupNotification();
                                     listener.onConnectionSuccess();
                                 },
@@ -112,15 +116,13 @@ public class BLEHandler {
         }
     }
 
-    public void readConfig(){
+    public void readSensorConfig(){
         if (isConnected()) {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactConfigUuid))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(bytes -> {
-                        Logger.i(TAG,"[BLE] ConfigReadCharacteristic->"+new String(bytes));
-                    }, this::onReadFailure);
+                    .subscribe(this::onSensorConfigRead, this::onReadFailure);
             compositeDisposable.add(disposable);
         }
     }
@@ -131,9 +133,7 @@ public class BLEHandler {
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactSensorDataUuid))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(bytes -> {
-                        Logger.i(TAG,"[BLE] sensorDataCharacteristic->"+new String(bytes));
-                    }, this::onReadFailure);
+                    .subscribe(this::onSensorDataRead, this::onReadFailure);
             compositeDisposable.add(disposable);
         }
     }
@@ -143,37 +143,47 @@ public class BLEHandler {
     }
 
     public void triggerDisconnect() {
-        Logger.w(TAG, "triggerDisconnect..");
+        Logger.w(TAG, "[BLE] triggerDisconnect..");
         disconnectTriggerSubject.onNext(true);
     }
 
     private void onNotificationReceived(byte[] bytes) {
-        Logger.d(TAG, "onNotificationReceived");
+        Logger.v(TAG, "[BLE] onNotificationReceived->"+new String(bytes));
         listener.onNotificationReceived(bytes);
     }
 
     private void onNotificationSetupFailure(Throwable throwable) {
-        Logger.e(TAG, "onNotificationSetupFailure");
+        Logger.e(TAG, "[BLE] onNotificationSetupFailure: "+throwable.getMessage());
         listener.onNotificationSetupFailure();
     }
 
     private void onConnectionFailure(Throwable throwable) {
-        Logger.e(TAG, "onConnectionFailure");
+        Logger.e(TAG, "[BLE] onConnectionFailure: "+throwable.getMessage());
         listener.onConectionFailure();
     }
 
     private void onConnectionFinished() {
-        Logger.w(TAG, "onConnectionFinished");
+        Logger.w(TAG, "[BLE] onConnectionFinished");
         listener.onConnectionFinished();
     }
 
     private void notificationHasBeenSetUp() {
-        Logger.i(TAG, "notificationHasBeenSetUp");
+        Logger.i(TAG, "[BLE] notificationHasBeenSetUp");
         listener.onNotificationSetup();
     }
 
+    private void onSensorConfigRead(byte[] bytes){
+        Logger.v(TAG,"[BLE] onSensorConfigRead->"+new String(bytes));
+        listener.onSensorConfigRead(bytes);
+    }
+
+    private void onSensorDataRead(byte[] bytes){
+        Logger.v(TAG,"[BLE] onSensorDataRead->"+new String(bytes));
+        listener.onSensorDataRead(bytes);
+    }
+
     private void onReadFailure(Throwable throwable) {
-        Logger.e(TAG,"onReadFailure: " + throwable);
+        Logger.e(TAG,"[BLE] onReadFailure: " + throwable.getMessage());
     }
 
 }

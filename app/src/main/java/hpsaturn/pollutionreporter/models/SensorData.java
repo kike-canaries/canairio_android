@@ -16,4 +16,8 @@ public class SensorData {
 
     public double lon;
 
+    public float alt;
+
+    public float spd;
+
 }

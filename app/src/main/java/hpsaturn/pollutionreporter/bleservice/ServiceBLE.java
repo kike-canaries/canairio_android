@@ -27,6 +27,7 @@ import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.common.BLEHandler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
+import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
@@ -141,7 +142,7 @@ public class ServiceBLE extends Service {
         }
 
         @Override
-        public void onServiceData(SensorData data) {
+        public void onSensorNotificationData(SensorData data) {
 
         }
 
@@ -161,13 +162,30 @@ public class ServiceBLE extends Service {
         }
 
         @Override
-        public void onSensorConfigRead() {
+        public void requestSensorConfigRead() {
+            bleHandler.readSensorConfig();
         }
 
         @Override
-        public void onSensorConfigWrite(String config) {
+        public void requestSensorDataRead() {
+            bleHandler.readSensorData();
+        }
+
+        @Override
+        public void onSensorConfigRead(SensorConfig config) {
 
         }
+
+        @Override
+        public void onSensorDataRead(SensorData data) {
+
+        }
+
+        @Override
+        public void onSensorConfigWrite(SensorConfig config) {
+
+        }
+
     };
 
     private void stopService() {
@@ -224,25 +242,39 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            SensorData point = getSensorData(bytes);
-            if (isRecording) record(point);
-            Logger.d(TAG, "[BLE] pushing data..");
-            serviceManager.pushData(point);
+            SensorData data = getSensorData(bytes);
+            if (isRecording) record(data);
+            Logger.d(TAG, "[BLE] pushing notification data to GUI..");
+            serviceManager.sensorNotificationData(data);
             retry_notify_setup = 0;
+
+            // TODO: remove the next lines, is for test only
             bleHandler.readSensorData();
-            bleHandler.readConfig();
+            bleHandler.readSensorConfig();
+        }
+
+        @Override
+        public void onSensorConfigRead(byte[] bytes) {
+            String strdata = new String(bytes);
+            SensorConfig config = new Gson().fromJson(strdata, SensorConfig.class);
+            serviceManager.responseSensorConfig(config);
+        }
+
+        @Override
+        public void onSensorDataRead(byte[] bytes) {
+
         }
     };
 
     private SensorData getSensorData(byte [] bytes){
         String strdata = new String(bytes);
-        Logger.d(TAG, "[BLE] sensor data: " + strdata);
-        SensorData point = new Gson().fromJson(strdata, SensorData.class);
-        point.timestamp = System.currentTimeMillis() / 1000;
+        Logger.v(TAG, "[BLE] sensor data: " + strdata);
+        SensorData data = new Gson().fromJson(strdata, SensorData.class);
+        data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
-        point.lat = lastLocation.getLatitude();
-        point.lon = lastLocation.getLongitude();
-        return point;
+        data.lat = lastLocation.getLatitude();
+        data.lon = lastLocation.getLongitude();
+        return data;
     }
 
     private void record(SensorData point) {

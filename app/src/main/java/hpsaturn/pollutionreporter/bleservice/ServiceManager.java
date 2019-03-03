@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 
+import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
@@ -26,17 +27,20 @@ public class ServiceManager {
     private String action_service_record;
     private String action_service_record_stop;
     private String action_sensor_read_config;
+    private String action_sensor_read_data;
     private String action_sensor_write_config;
     private String action_tracks_updated;
+    private String response_sensor_config;
 
-    private static String KEY_SERVICE_DATA = "KEY_SERVICE_DATA";
-    private static String KEY_SERVICE_STATUS = "KEY_SERVICE_STATUS";
-    private static String KEY_SENSOR_CONFIG_WRITE = "KEY_SENSOR_CONFIG_WRITE";
+    private static final String KEY_SERVICE_DATA = "KEY_SERVICE_DATA";
+    private static final String KEY_SERVICE_STATUS = "KEY_SERVICE_STATUS";
+    private static final String KEY_SENSOR_CONFIG_WRITE = "KEY_SENSOR_CONFIG_WRITE";
+    private static final String KEY_SENSOR_CONFIG_RESPONSE = "KEY_SENSOR_CONFIG_RESPONSE";
 
-    public static String STATUS_BLE_START   = "STATUS_BLE_START";
-    public static String STATUS_BLE_STOP    = "STATUS_BLE_STOP";
-    public static String STATUS_BLE_FAILURE = "STATUS_BLE_FAILURE";
-    public static String STATUS_SERVICE_OK  = "STATUS_SERVICE_OK";
+    public static final String STATUS_BLE_START   = "STATUS_BLE_START";
+    public static final String STATUS_BLE_STOP    = "STATUS_BLE_STOP";
+    public static final String STATUS_BLE_FAILURE = "STATUS_BLE_FAILURE";
+    public static final String STATUS_SERVICE_OK  = "STATUS_SERVICE_OK";
 
     public ServiceManager(Context ctx, ServiceInterface listener) {
 
@@ -54,7 +58,9 @@ public class ServiceManager {
             action_service_record_stop = "ACTION_SERVICE_RECORD_STOP";
             action_tracks_updated      = "ACTION_TRACKS_UPDATED";
             action_sensor_read_config  = "ACTION_SENSOR_READ_CONFIG";
+            action_sensor_read_data    = "ACTION_SENSOR_READ_DATA";
             action_sensor_write_config = "ACTION_SENSOR_READ_CONFIG";
+            response_sensor_config  = "RESPONSE_SENSOR_CONFIG";
 
             intentFilter.addAction(action_start);
             intentFilter.addAction(action_stop);
@@ -64,7 +70,9 @@ public class ServiceManager {
             intentFilter.addAction(action_service_record_stop);
             intentFilter.addAction(action_tracks_updated);
             intentFilter.addAction(action_sensor_read_config);
+            intentFilter.addAction(action_sensor_read_data);
             intentFilter.addAction(action_sensor_write_config);
+            intentFilter.addAction(response_sensor_config);
 
             ctx.registerReceiver(mReceiver,intentFilter);
 
@@ -84,7 +92,7 @@ public class ServiceManager {
         ctx.sendBroadcast(intent);
     }
 
-    public void pushData(SensorData data){
+    public void sensorNotificationData(SensorData data){
         Intent intent = new Intent(action_push);
         intent.putExtra(KEY_SERVICE_DATA,new Gson().toJson(data));
         ctx.sendBroadcast(intent);
@@ -111,14 +119,25 @@ public class ServiceManager {
         ctx.sendBroadcast(intent);
     }
 
-    public void sensorConfigRead() {
+    public void readSensorConfig() {
         Intent intent = new Intent(action_sensor_read_config);
         ctx.sendBroadcast(intent);
     }
 
-    public void sensorConfigWrite(String config) {
+    public void responseSensorConfig(SensorConfig config){
+        Intent intent = new Intent(response_sensor_config);
+        intent.putExtra(KEY_SENSOR_CONFIG_RESPONSE,new Gson().toJson(config));
+        ctx.sendBroadcast(intent);
+    }
+
+    public void readSensorData() {
+        Intent intent = new Intent(action_sensor_read_data);
+        ctx.sendBroadcast(intent);
+    }
+
+    public void writeSensorConfig(SensorConfig config) {
         Intent intent = new Intent(action_sensor_write_config);
-        intent.putExtra(KEY_SENSOR_CONFIG_WRITE,config);
+        intent.putExtra(KEY_SENSOR_CONFIG_WRITE,new Gson().toJson(config));
         ctx.sendBroadcast(intent);
     }
 
@@ -149,8 +168,7 @@ public class ServiceManager {
             } else if(action.equals(action_push)) {
 
                 String data = intent.getExtras().getString(KEY_SERVICE_DATA);
-
-                listener.onServiceData(new Gson().fromJson(data,SensorData.class));
+                listener.onSensorNotificationData(new Gson().fromJson(data,SensorData.class));
 
             } else if(action.equals(action_service_record)) {
 
@@ -166,12 +184,21 @@ public class ServiceManager {
 
             } else if(action.equals(action_sensor_read_config)) {
 
-                listener.onSensorConfigRead();
+                listener.requestSensorConfigRead();
+
+            } else if(action.equals(response_sensor_config)) {
+
+                String config = intent.getExtras().getString(KEY_SENSOR_CONFIG_RESPONSE);
+                listener.onSensorConfigRead(new Gson().fromJson(config, SensorConfig.class));
+
+            } else if(action.equals(action_sensor_read_data)) {
+
+                listener.requestSensorDataRead();
 
             } else if(action.equals(action_sensor_write_config)) {
 
                 String config = intent.getExtras().getString(KEY_SENSOR_CONFIG_WRITE);
-                listener.onSensorConfigWrite(config);
+                listener.onSensorConfigWrite(new Gson().fromJson(config, SensorConfig.class));
 
             }
 

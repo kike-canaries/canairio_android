@@ -28,6 +28,7 @@ import hpsaturn.pollutionreporter.bleservice.ServiceInterface;
 import hpsaturn.pollutionreporter.bleservice.ServiceManager;
 import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
+import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
@@ -103,8 +104,6 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onServiceStatus(String status) {
-
-
             if (status.equals(ServiceManager.STATUS_BLE_START)) {
                 showFragment(chartFragment);
             } else if (status.equals(ServiceManager.STATUS_SERVICE_OK)){
@@ -123,7 +122,7 @@ public class MainActivity extends BaseActivity implements
         }
 
         @Override
-        public void onServiceData(SensorData data) {
+        public void onSensorNotificationData(SensorData data) {
             if (recordsFragment!=null && !recordsFragment.isShowingData()) refreshUI();
             if (chartFragment != null) chartFragment.addData(data.P25);
         }
@@ -144,12 +143,36 @@ public class MainActivity extends BaseActivity implements
         }
 
         @Override
-        public void onSensorConfigRead() {
+        public void requestSensorConfigRead() {
 
         }
 
         @Override
-        public void onSensorConfigWrite(String config) {
+        public void requestSensorDataRead() {
+
+        }
+
+        @Override
+        public void onSensorConfigRead(SensorConfig config) {
+
+            if(config!=null){
+                Logger.i(TAG,"Ifxdb: "+config.ifxdb);
+                Logger.i(TAG,"Ifxip: "+config.ifxip);
+                Logger.i(TAG,"Ifxid: "+config.ifxid);
+                Logger.i(TAG,"Ifxtg: "+config.ifxtg);
+                Logger.i(TAG,"ssid: "+config.ssid);
+                Logger.i(TAG,"stime: "+config.stime);
+            }
+
+        }
+
+        @Override
+        public void onSensorDataRead(SensorData data) {
+
+        }
+
+        @Override
+        public void onSensorConfigWrite(SensorConfig config) {
 
         }
     };
