@@ -207,6 +207,12 @@ public class MainActivity extends BaseActivity implements
         serviceManager.serviceRecord();
     }
 
+    public void saveSampleTime(int stime){
+        SensorConfig config = new SensorConfig();
+        config.stime = stime;
+        serviceManager.writeSensorConfig(config);
+    }
+
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
@@ -374,11 +380,11 @@ public class MainActivity extends BaseActivity implements
         refreshUI();
     }
 
-    private void showSnackMessage(int id) {
+    public void showSnackMessage(int id) {
         Snackbar.make(coordinatorLayout, getString(id), Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
-    private void showSnackMessageSlow(int id) {
+    public void showSnackMessageSlow(int id) {
         Snackbar.make(coordinatorLayout, getString(id), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
     }
 

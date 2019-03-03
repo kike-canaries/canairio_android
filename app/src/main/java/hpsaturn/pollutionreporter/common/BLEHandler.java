@@ -138,6 +138,19 @@ public class BLEHandler {
         }
     }
 
+    public void writeSensorConfig(byte[] bytes){
+        Logger.v(TAG,"[BLE] writing sensor config -> "+new String(bytes));
+        if (isConnected()) {
+            final Disposable disposable = connectionObservable
+                    .firstOrError()
+                    .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(charactConfigUuid, bytes))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onWriteSuccess, this::onWriteFailure );
+
+            compositeDisposable.add(disposable);
+        }
+    }
+
     public boolean isConnected() {
         return bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
     }
@@ -184,6 +197,15 @@ public class BLEHandler {
 
     private void onReadFailure(Throwable throwable) {
         Logger.e(TAG,"[BLE] onReadFailure: " + throwable.getMessage());
+    }
+
+    private void onWriteSuccess(byte[] bytes) {
+        Logger.v(TAG,"[BLE] onWriteSuccess->"+new String(bytes));
+        readSensorConfig();
+    }
+
+    private void onWriteFailure(Throwable throwable) {
+        Logger.e(TAG,"[BLE] onWriteFailure: " + throwable.getMessage());
     }
 
 }

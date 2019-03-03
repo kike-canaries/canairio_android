@@ -25,6 +25,7 @@ import java.util.Locale;
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.common.BLEHandler;
+import hpsaturn.pollutionreporter.common.HexString;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorConfig;
@@ -183,7 +184,8 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onSensorConfigWrite(SensorConfig config) {
-
+            String data = new Gson().toJson(config);
+            bleHandler.writeSensorConfig(data.getBytes());
         }
 
     };

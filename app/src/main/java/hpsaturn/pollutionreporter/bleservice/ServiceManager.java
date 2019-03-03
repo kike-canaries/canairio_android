@@ -59,7 +59,7 @@ public class ServiceManager {
             action_tracks_updated      = "ACTION_TRACKS_UPDATED";
             action_sensor_read_config  = "ACTION_SENSOR_READ_CONFIG";
             action_sensor_read_data    = "ACTION_SENSOR_READ_DATA";
-            action_sensor_write_config = "ACTION_SENSOR_READ_CONFIG";
+            action_sensor_write_config = "ACTION_SENSOR_WRITE_CONFIG";
             response_sensor_config  = "RESPONSE_SENSOR_CONFIG";
 
             intentFilter.addAction(action_start);

@@ -9,9 +9,10 @@
         <EditTextPreference
             android:icon="@android:drawable/ic_menu_rotate"
             android:inputType="number"
-            app:key="stime"
-            app:summary="Time interval for each sample"
-            app:title="Sample Time" />
+            android:defaultValue="5"
+            app:key="@string/key_setting_stime"
+            app:summary="@string/summary_stime"
+            app:title="Sample Time Interval" />
 
         <EditTextPreference
             android:icon="@android:drawable/ic_menu_save"
@@ -19,7 +20,7 @@
             android:editable="false"
             android:enabled="false"
             android:defaultValue="/sdcard/canairio"
-            app:key="export_path"
+            app:key="@string/key_setting_export_path"
             app:summary="/sdcard/canairio"
             app:title="Export Directory" />
 

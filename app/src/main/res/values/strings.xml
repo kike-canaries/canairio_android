@@ -23,4 +23,8 @@
     <string name="msg_records_empty_list">No records for now</string>
     <string name="msg_not_public_recors">Loading public reports…</string>
     <string name="msg_record_stop_alert">Please stop the current recording track</string>
+    <string name="key_setting_stime">key_setting_stime</string>
+    <string name="key_setting_export_path">key_setting_export_path</string>
+    <string name="summary_stime">5 seconds</string>
+    <string name="msg_save_device_setting">Save device setting…</string>
 </resources>
