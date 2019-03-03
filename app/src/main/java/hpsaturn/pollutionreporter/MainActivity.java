@@ -177,8 +177,12 @@ public class MainActivity extends BaseActivity implements
         }
     };
 
+    private boolean isRecording(){
+        return prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
+    }
+
     private View.OnClickListener onFabClickListener = view -> {
-        if (prefBuilder.getBoolean(Keys.SENSOR_RECORD, false)) {
+        if (isRecording()) {
             stopRecord();
         } else {
             startRecord();
@@ -235,6 +239,10 @@ public class MainActivity extends BaseActivity implements
         fragmentPicker.setItemTransformer(new ScaleTransformer.Builder().setMinScale(0.8f).build());
     }
 
+    private void fragmentPickerHide(){
+        fragmentPicker.setVisibility(View.INVISIBLE);
+    }
+
     @Override
     public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
         // TODO: Refactor to dinamic plus fragment to scroll view
@@ -272,13 +280,7 @@ public class MainActivity extends BaseActivity implements
                 else showFragment(scanFragment);
                 break;
             case 3:
-                fab.setVisibility(View.INVISIBLE);
-                hideFragment(postsFragment);
-                hideFragment(mapFragment);
-                hideFragment(settingsFragment);
-                if(isPaired())hideFragment(chartFragment);
-                else hideFragment(scanFragment);
-                showFragment(recordsFragment);
+                scrollToRecordsFragment();
                 break;
 
             case 4:
@@ -289,10 +291,21 @@ public class MainActivity extends BaseActivity implements
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(settingsFragment);
+                fragmentPickerHide();
                 break;
 
         }
         viewHolder.showText();
+    }
+
+    private void scrollToRecordsFragment() {
+        fab.setVisibility(View.INVISIBLE);
+        hideFragment(postsFragment);
+        hideFragment(mapFragment);
+        hideFragment(settingsFragment);
+        if(isPaired())hideFragment(chartFragment);
+        else hideFragment(scanFragment);
+        showFragment(recordsFragment);
     }
 
     private void refreshUI() {
@@ -393,16 +406,20 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     void actionUnPair() {
-        Logger.i(TAG, "[BLE] unpaired..");
-        stopRecord();
-        serviceManager.stop();
-        prefBuilder.clearAll().save();
-        fab.setVisibility(View.INVISIBLE);
-        if (chartFragment != null) chartFragment.clearData();
-        removeFragment(chartFragment);
-        addScanFragment();
-        fragmentPicker.scrollToPosition(2);
-        showFragment(scanFragment);
+        if(isRecording()){
+            showSnackMessageSlow(R.string.msg_record_stop_alert);
+        } else {
+            Logger.i(TAG, "[BLE] unpaired..");
+            stopRecord();
+            serviceManager.stop();
+            prefBuilder.clearAll().save();
+            fab.setVisibility(View.INVISIBLE);
+            if (chartFragment != null) chartFragment.clearData();
+            removeFragment(chartFragment);
+            addScanFragment();
+            fragmentPicker.scrollToPosition(2);
+            showFragment(scanFragment);
+        }
     }
 
     @Override
@@ -414,7 +431,17 @@ public class MainActivity extends BaseActivity implements
 
     private boolean isPaired(){
         return prefBuilder.getBoolean(Keys.DEVICE_PAIR, false);
+    }
 
+    @Override
+    public void onBackPressed() {
+        if(settingsFragment.isVisible()){
+            fragmentPicker.setVisibility(View.VISIBLE);
+            fragmentPicker.scrollToPosition(3);
+            scrollToRecordsFragment();
+        }else{
+            super.onBackPressed();
+        }
     }
 
     @Override

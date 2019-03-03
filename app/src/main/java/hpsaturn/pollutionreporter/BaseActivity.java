@@ -230,9 +230,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
         switch (item.getItemId()) {
 
-            case R.id.action_settings:
-                break;
-
             case R.id.action_unpair:
                 actionUnPair();
                 break;

@@ -247,10 +247,6 @@ public class ServiceBLE extends Service {
             Logger.d(TAG, "[BLE] pushing notification data to GUI..");
             serviceManager.sensorNotificationData(data);
             retry_notify_setup = 0;
-
-            // TODO: remove the next lines, is for test only
-            bleHandler.readSensorData();
-            bleHandler.readSensorConfig();
         }
 
         @Override
@@ -268,7 +264,6 @@ public class ServiceBLE extends Service {
 
     private SensorData getSensorData(byte [] bytes){
         String strdata = new String(bytes);
-        Logger.v(TAG, "[BLE] sensor data: " + strdata);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
         data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();

@@ -2,55 +2,99 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="WiFi Connection">
+    <PreferenceCategory
+        android:iconSpaceReserved="false"
+        android:title="Sensor settings">
+
         <EditTextPreference
+            android:icon="@android:drawable/ic_menu_rotate"
+            android:inputType="number"
+            app:key="stime"
+            app:summary="Time interval for each sample"
+            app:title="Sample Time" />
+
+        <EditTextPreference
+            android:icon="@android:drawable/ic_menu_save"
+            android:inputType="textUri"
+            android:editable="false"
+            android:enabled="false"
+            android:defaultValue="/sdcard/canairio"
+            app:key="export_path"
+            app:summary="/sdcard/canairio"
+            app:title="Export Directory" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:iconSpaceReserved="false"
+        android:title="Dedicated WiFi Connection">
+
+        <EditTextPreference
+            android:icon="@android:drawable/ic_lock_lock"
             android:inputType="text"
             app:key="wifi_ssid"
             app:summary="WiFi network name"
-            app:title="SSID"
-            android:icon="@android:drawable/ic_menu_preferences"
-            />
+            app:title="SSID" />
 
         <EditTextPreference
-            android:inputType="textPassword"
+            android:inputType="textWebPassword"
+            android:password="true"
             app:key="wifi_pass"
             app:summary="WiFi password"
-            android:password="true"
             app:title="Password" />
 
         <SwitchPreferenceCompat
             app:key="wifi_enable"
-            app:title="Enable WiFi connection" />
-
+            app:title="Enable WiFi Connection" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="InfluxDB config">
+    <PreferenceCategory
+        android:dependency="wifi_enable"
+        android:iconSpaceReserved="false"
+        android:title="InfluxDB config">
         <EditTextPreference
-            app:title="Database name"
-            app:key="ifxdb"
+            android:icon="@android:drawable/ic_menu_upload"
             android:inputType="text"
+            app:key="ifxdb"
             app:summary="InfluxDB database name"
-            android:icon="@android:drawable/ic_menu_save"
-            />
+            app:title="Database Name" />
 
         <EditTextPreference
-            app:title="Hostname"
-            app:key="ifxip"
             android:inputType="textUri"
+            app:key="ifxip"
             app:summary="InfluxDB IP server or hostname"
-            />
+            app:title="Hostname" />
 
+        <EditTextPreference
+            android:inputType="text"
+            app:key="ifxid"
+            app:summary="Station name or id"
+            app:title="Station ID" />
 
+        <EditTextPreference
+            android:inputType="text"
+            app:key="ifxtg"
+            app:summary="Optional data tags (JSON format)"
+            app:title="InfluxDb Data Tags" />
+
+        <SwitchPreferenceCompat
+            app:key="ifxenable"
+            app:title="Enable InfluxDB Connection" />
 
     </PreferenceCategory>
 
 
+    <PreferenceCategory>
 
-    <Preference
+        <Preference
+            android:icon="@android:drawable/ic_menu_send"
             app:key="feedback"
             app:summary="Report technical issues or suggest new features"
-            app:title="Send feedback" />
+            app:title="Send Feedback" />
+
+    </PreferenceCategory>
 
 
 </PreferenceScreen>
