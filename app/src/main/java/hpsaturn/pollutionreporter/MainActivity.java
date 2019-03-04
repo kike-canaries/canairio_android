@@ -154,16 +154,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorConfigRead(SensorConfig config) {
-
-            if(config!=null){
-                Logger.i(TAG,"Ifxdb: "+config.ifxdb);
-                Logger.i(TAG,"Ifxip: "+config.ifxip);
-                Logger.i(TAG,"Ifxid: "+config.ifxid);
-                Logger.i(TAG,"Ifxtg: "+config.ifxtg);
-                Logger.i(TAG,"ssid: "+config.ssid);
-                Logger.i(TAG,"stime: "+config.stime);
-            }
-
+            settingsFragment.configCallBack(config);
         }
 
         @Override
@@ -207,11 +198,6 @@ public class MainActivity extends BaseActivity implements
         serviceManager.serviceRecord();
     }
 
-    public void saveSampleTime(int stime){
-        SensorConfig config = new SensorConfig();
-        config.stime = stime;
-        serviceManager.writeSensorConfig(config);
-    }
 
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
@@ -468,5 +454,9 @@ public class MainActivity extends BaseActivity implements
 
     public void addTrackToMap(SensorTrackInfo trackInfo) {
         if(mapFragment!=null)mapFragment.addMarker(trackInfo);
+    }
+
+    public ServiceManager getServiceManager() {
+        return serviceManager;
     }
 }

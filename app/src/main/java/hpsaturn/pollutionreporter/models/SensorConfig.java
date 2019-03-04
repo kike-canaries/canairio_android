@@ -7,6 +7,8 @@ public class SensorConfig {
 
     public String ssid;
 
+    public String pass;
+
     public String ifxdb;
 
     public String ifxip;

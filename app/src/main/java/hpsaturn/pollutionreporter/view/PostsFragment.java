@@ -171,6 +171,7 @@ public class PostsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
+        mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in fist time
     }
 
     private MainActivity getMain() {

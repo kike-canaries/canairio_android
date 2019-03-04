@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:iconSpaceReserved="false"
         android:title="Sensor settings">
 
         <EditTextPreference
+            android:defaultValue="5"
             android:icon="@android:drawable/ic_menu_rotate"
             android:inputType="number"
-            android:defaultValue="5"
             app:key="@string/key_setting_stime"
             app:summary="@string/summary_stime"
             app:title="Sample Time Interval" />
 
         <EditTextPreference
-            android:icon="@android:drawable/ic_menu_save"
-            android:inputType="textUri"
+            android:defaultValue="/sdcard/canairio"
             android:editable="false"
             android:enabled="false"
-            android:defaultValue="/sdcard/canairio"
-            app:key="@string/key_setting_export_path"
+            android:icon="@android:drawable/ic_menu_save"
+            android:inputType="textUri"
+            app:key="@string/key_setting_sdpath"
             app:summary="/sdcard/canairio"
             app:title="Export Directory" />
 
@@ -28,60 +27,60 @@
 
 
     <PreferenceCategory
-        android:iconSpaceReserved="false"
         android:title="Dedicated WiFi Connection">
 
         <EditTextPreference
             android:icon="@android:drawable/ic_lock_lock"
             android:inputType="text"
-            app:key="wifi_ssid"
+            app:key="@string/key_setting_ssid"
             app:summary="WiFi network name"
             app:title="SSID" />
 
         <EditTextPreference
             android:inputType="textWebPassword"
             android:password="true"
-            app:key="wifi_pass"
+            app:key="@string/key_setting_pass"
             app:summary="WiFi password"
             app:title="Password" />
 
         <SwitchPreferenceCompat
-            app:key="wifi_enable"
-            app:title="Enable WiFi Connection" />
+            android:defaultValue="false"
+            android:key="@string/key_setting_enable_wifi"
+            android:summary="@string/summary_wifi"
+            android:title="Enable WiFi Connection" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:dependency="wifi_enable"
-        android:iconSpaceReserved="false"
+        android:dependency="@string/key_setting_enable_wifi"
         android:title="InfluxDB config">
         <EditTextPreference
             android:icon="@android:drawable/ic_menu_upload"
             android:inputType="text"
-            app:key="ifxdb"
+            app:key="@string/key_setting_ifxdb"
             app:summary="InfluxDB database name"
             app:title="Database Name" />
 
         <EditTextPreference
             android:inputType="textUri"
-            app:key="ifxip"
+            app:key="@string/key_setting_ifxip"
             app:summary="InfluxDB IP server or hostname"
             app:title="Hostname" />
 
         <EditTextPreference
             android:inputType="text"
-            app:key="ifxid"
+            app:key="@string/key_setting_ifxid"
             app:summary="Station name or id"
             app:title="Station ID" />
 
         <EditTextPreference
             android:inputType="text"
-            app:key="ifxtg"
+            app:key="@string/key_setting_ifxtg"
             app:summary="Optional data tags (JSON format)"
             app:title="InfluxDb Data Tags" />
 
         <SwitchPreferenceCompat
-            app:key="ifxenable"
+            app:key="@string/key_setting_enable_ifx"
             app:title="Enable InfluxDB Connection" />
 
     </PreferenceCategory>
@@ -98,4 +97,4 @@
     </PreferenceCategory>
 
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

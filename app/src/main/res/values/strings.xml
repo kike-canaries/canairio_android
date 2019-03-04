@@ -23,8 +23,22 @@
     <string name="msg_records_empty_list">No records for now</string>
     <string name="msg_not_public_recors">Loading public reports…</string>
     <string name="msg_record_stop_alert">Please stop the current recording track</string>
-    <string name="key_setting_stime">key_setting_stime</string>
-    <string name="key_setting_export_path">key_setting_export_path</string>
+
     <string name="summary_stime">5 seconds</string>
+    <string name="summary_wifi">Sensor WiFi connection</string>
     <string name="msg_save_device_setting">Save device setting…</string>
+    <string name="msg_stime_error"><![CDATA[The sample time should be >= 5 seconds]]></string>
+    <string name="key_setting_stime">key_setting_stime</string>
+    <string name="key_setting_sdpath">key_setting_sdpath</string>
+    <string name="key_setting_pass">key_setting_pass</string>
+    <string name="key_setting_ssid">key_setting_ssid</string>
+    <string name="key_setting_ifxdb">key_setting_ifxdb</string>
+    <string name="key_setting_ifxip">key_setting_ifxip</string>
+    <string name="key_setting_ifxid">key_setting_ifxid</string>
+    <string name="key_setting_ifxtg">key_setting_ifxtg</string>
+    <string name="key_setting_enable_wifi">key_setting_wifi_enable</string>
+    <string name="key_setting_enable_ifx">key_setting_ifx_enable</string>
+    <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
+    <string name="summary_wifi_enable">Disable WiFi Connection</string>
+    <string name="summary_wifi_disable">Enable WiFi Connection</string>
 </resources>
