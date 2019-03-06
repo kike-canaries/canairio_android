@@ -262,6 +262,16 @@ public class ServiceBLE extends Service {
         public void onSensorDataRead(byte[] bytes) {
 
         }
+
+        @Override
+        public void onReadFailure() {
+
+        }
+
+        @Override
+        public void onWriteFailure() {
+
+        }
     };
 
     private SensorData getSensorData(byte [] bytes){

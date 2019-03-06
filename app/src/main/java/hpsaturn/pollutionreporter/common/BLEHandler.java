@@ -64,6 +64,9 @@ public class BLEHandler {
 
         void onSensorDataRead(byte[] bytes);
 
+        void onReadFailure();
+
+        void onWriteFailure();
     }
 
 
@@ -197,15 +200,18 @@ public class BLEHandler {
 
     private void onReadFailure(Throwable throwable) {
         Logger.e(TAG,"[BLE] onReadFailure: " + throwable.getMessage());
+        listener.onReadFailure();
     }
 
     private void onWriteSuccess(byte[] bytes) {
         Logger.v(TAG,"[BLE] onWriteSuccess->"+new String(bytes));
+        Logger.i(TAG,"[BLE] reading new config..");
         readSensorConfig();
     }
 
     private void onWriteFailure(Throwable throwable) {
         Logger.e(TAG,"[BLE] onWriteFailure: " + throwable.getMessage());
+        listener.onWriteFailure();
     }
 
 }
