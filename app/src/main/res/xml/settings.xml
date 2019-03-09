@@ -34,7 +34,7 @@
             android:inputType="text"
             app:key="@string/key_setting_ssid"
             app:summary=""
-            app:title="WiFi SSID Name" />
+            app:title="WiFi Name" />
 
         <EditTextPreference
             android:inputType="textWebPassword"
