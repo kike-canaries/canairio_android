@@ -24,13 +24,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
+    private String ssid, pass;
+    private int stime;
+
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
 
+        ssid = getSharedPreference(getString(R.string.key_setting_ssid));
+        pass = getSharedPreference(getString(R.string.key_setting_pass));
+        stime = getCurrentStime();
+
         updateStimeSummary();
         updateWifiSwitch();
+        
     }
 
     @Override
@@ -43,7 +51,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         if (key.equals(getString(R.string.key_setting_stime))) {
-            saveSensorSampleTime(sharedPreferences, key);
+            validateSensorSampleTime(sharedPreferences, key);
         }
         else if (key.equals(getString(R.string.key_setting_ssid))) {
             updateWifiSwitch();
@@ -56,22 +64,30 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
     }
 
-    private void saveSensorSampleTime(SharedPreferences sharedPreferences, String key) {
+    private void validateSensorSampleTime(SharedPreferences sharedPreferences, String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_stime));
-        int stime = 0;
-        try {
-            stime = Integer.parseInt(sharedPreferences.getString(key, "5"));
-        } catch (NumberFormatException e) { e.printStackTrace(); }
-        if (stime >= 5) {
-            getMain().showSnackMessage(R.string.msg_save_device_setting);
-            SensorConfig config = new SensorConfig();
-            config.stime = stime;
-            getMain().getServiceManager().writeSensorConfig(config);
-        } else {
-            saveSharedPreference(key, "5");
-            getMain().showSnackMessage(R.string.msg_stime_error);
+        int old_stime = stime;
+        stime = getCurrentStime();
+        if (old_stime != stime && stime >= 5) {
+            saveSensorSampleTime(stime);
+        } else if (old_stime != stime){
+            saveSharedPreference(key, "" + old_stime);
         }
         updateStimeSummary();
+    }
+
+    private void saveSensorSampleTime(int time){
+        getMain().showSnackMessage(R.string.msg_save_config);
+        SensorConfig config = new SensorConfig();
+        config.stime = time;
+        getMain().getServiceManager().writeSensorConfig(config);
+    }
+
+    private int getCurrentStime() {
+        try {
+            return Integer.parseInt(getSharedPreference(getString(R.string.key_setting_stime)));
+        } catch (NumberFormatException e) { e.printStackTrace(); }
+        return 0;
     }
 
     private void updateStimeSummary(){
@@ -90,8 +106,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if(switchPreference.isChecked()) {
             String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
             String pass = getSharedPreference(getString(R.string.key_setting_pass));
-
-            getMain().showSnackMessage(R.string.msg_save_device_setting);
+            getMain().showSnackMessage(R.string.msg_save_config);
             SensorConfig config = new SensorConfig();
             config.ssid = ssid;
             config.pass = pass;
@@ -105,9 +120,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private void updateWifiSwitch(){
         SwitchPreferenceCompat wifiSwitch = (SwitchPreferenceCompat) findPreference(getString(R.string.key_setting_enable_wifi));
-        String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
-        String pass = getSharedPreference(getString(R.string.key_setting_pass));
+        String old_ssid = ssid;
+        String old_pass = pass;
+        ssid = getSharedPreference(getString(R.string.key_setting_ssid));
+        pass = getSharedPreference(getString(R.string.key_setting_pass));
         wifiSwitch.setEnabled(!(ssid.length()==0 || pass.length()==0));
+        if(!(old_ssid.equals(ssid) && old_pass.equals(pass))) {
+            wifiSwitch.setChecked(false);   // TODO: force user to enable again?
+        }
     }
 
     public void configCallBack(SensorConfig config) {
@@ -118,6 +138,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "Ifxtg: " + config.ifxtg);
             Logger.i(TAG, "ssid: " + config.ssid);
             Logger.i(TAG, "stime: " + config.stime);
+            getMain().showSnackMessage(R.string.msg_config_saved);
         }
     }
 
@@ -144,7 +165,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onResume() {
         super.onResume();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
     }
 
     @Override

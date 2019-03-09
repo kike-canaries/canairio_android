@@ -33,8 +33,8 @@
             android:icon="@android:drawable/ic_lock_lock"
             android:inputType="text"
             app:key="@string/key_setting_ssid"
-            app:summary="WiFi network name"
-            app:title="SSID" />
+            app:summary=""
+            app:title="WiFi SSID Name" />
 
         <EditTextPreference
             android:inputType="textWebPassword"
@@ -54,30 +54,31 @@
     <PreferenceCategory
         android:dependency="@string/key_setting_enable_wifi"
         android:title="InfluxDB config">
+
         <EditTextPreference
             android:icon="@android:drawable/ic_menu_upload"
             android:inputType="text"
             app:key="@string/key_setting_ifxdb"
-            app:summary="InfluxDB database name"
+            app:summary=""
             app:title="Database Name" />
 
         <EditTextPreference
             android:inputType="textUri"
             app:key="@string/key_setting_ifxip"
-            app:summary="InfluxDB IP server or hostname"
+            app:summary=""
             app:title="Hostname" />
 
         <EditTextPreference
             android:inputType="text"
             app:key="@string/key_setting_ifxid"
-            app:summary="Station name or id"
-            app:title="Station ID" />
+            app:summary=""
+            app:title="Station Name" />
 
         <EditTextPreference
             android:inputType="text"
             app:key="@string/key_setting_ifxtg"
-            app:summary="Optional data tags (JSON format)"
-            app:title="InfluxDb Data Tags" />
+            app:summary=""
+            app:title="Optional Data Tags" />
 
         <SwitchPreferenceCompat
             app:key="@string/key_setting_enable_ifx"

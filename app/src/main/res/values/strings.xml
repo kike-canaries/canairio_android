@@ -25,9 +25,10 @@
     <string name="msg_record_stop_alert">Please stop the current recording track</string>
 
     <string name="summary_stime">5 seconds</string>
-    <string name="summary_wifi">Sensor WiFi connection</string>
-    <string name="msg_save_device_setting">Save device setting…</string>
-    <string name="msg_stime_error"><![CDATA[The sample time should be >= 5 seconds]]></string>
+    <string name="summary_wifi">Send WiFi settings</string>
+    <string name="msg_save_config">Saving device setting…</string>
+    <string name="msg_config_saved">Device settings updated!</string>
+    <string name="msg_stime_error">Wrong value, restoring default value…</string>
     <string name="key_setting_stime">key_setting_stime</string>
     <string name="key_setting_sdpath">key_setting_sdpath</string>
     <string name="key_setting_pass">key_setting_pass</string>
@@ -40,5 +41,5 @@
     <string name="key_setting_enable_ifx">key_setting_ifx_enable</string>
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
-    <string name="summary_wifi_disable">Enable WiFi Connection</string>
+    <string name="summary_wifi_disable">Send WiFi settings</string>
 </resources>
