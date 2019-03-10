@@ -108,7 +108,6 @@ public class PostsFragment extends Fragment {
 
         mRecordsList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-//        mDatabase.keepSynced(true);
         mAdapter.startListening();
         mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in fist time
 
