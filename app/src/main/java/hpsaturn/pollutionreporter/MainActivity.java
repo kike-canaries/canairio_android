@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.hpsaturn.tools.BuildConfig;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
@@ -71,9 +70,6 @@ public class MainActivity extends BaseActivity implements
     private RecordsFragment recordsFragment;
     private PostsFragment postsFragment;
     private SettingsFragment settingsFragment;
-
-    private boolean withoutDevice = BuildConfig.withoutDevice;
-
     private DatabaseReference mDatabase;
 
 
@@ -122,7 +118,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorNotificationData(SensorData data) {
-//            if (recordsFragment!=null && !recordsFragment.isShowingData()) refreshUI();
+//            if (recordsFragment!=null && !recordsFragment.isShowingData()) fabUpdateLayout();
             if (chartFragment != null) chartFragment.addData(data.P25);
         }
 
@@ -186,15 +182,15 @@ public class MainActivity extends BaseActivity implements
     private void stopRecord() {
         showSnackMessageSlow(R.string.msg_record_stop);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, false).save();
-        refreshUI();
         serviceManager.serviceRecordStop();
+        fabUpdateLayout();
     }
 
     private void startRecord() {
         showSnackMessageSlow(R.string.msg_record);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, true).save();
-        refreshUI();
         serviceManager.serviceRecord();
+        fabUpdateLayout();
     }
 
 
@@ -259,7 +255,7 @@ public class MainActivity extends BaseActivity implements
 //                postsFragment.refresh();
                 break;
             case 2:
-                refreshUI();
+                fabUpdateLayout();
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
@@ -300,7 +296,8 @@ public class MainActivity extends BaseActivity implements
         showFragment(recordsFragment);
     }
 
-    private void refreshUI() {
+    private void fabUpdateLayout() {
+        fab.hide();
         if (prefBuilder.getBoolean(Keys.SENSOR_RECORD, false)) {
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record_stop));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_stop_white_24dp));
@@ -308,7 +305,7 @@ public class MainActivity extends BaseActivity implements
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_record_white_24dp));
         }
-        fab.invalidate();
+        fab.show();
     }
 
     public void enableShareButton (){
@@ -363,8 +360,7 @@ public class MainActivity extends BaseActivity implements
     public void removeScanFragment() {
         if (scanFragment != null) removeFragment(scanFragment);
         addChartFragment();
-        refreshUI();
-        fab.show();
+        fabUpdateLayout();
     }
 
     public void showSnackMessage(int id) {
