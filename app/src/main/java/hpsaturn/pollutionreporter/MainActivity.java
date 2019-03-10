@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity implements
 
     private boolean withoutDevice = BuildConfig.withoutDevice;
 
-
     private DatabaseReference mDatabase;
 
 
@@ -123,7 +122,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorNotificationData(SensorData data) {
-            if (recordsFragment!=null && !recordsFragment.isShowingData()) refreshUI();
+//            if (recordsFragment!=null && !recordsFragment.isShowingData()) refreshUI();
             if (chartFragment != null) chartFragment.addData(data.P25);
         }
 
@@ -203,7 +202,7 @@ public class MainActivity extends BaseActivity implements
         fab.setOnClickListener(onFabClickListener);
         checkForPermissions();
         setupAppFragments();
-        if(isPaired())fab.setVisibility(View.VISIBLE);
+        if(isPaired())fab.show();
     }
 
     public void setupAppFragments(){
@@ -241,7 +240,7 @@ public class MainActivity extends BaseActivity implements
         Logger.d(TAG, "onCurrentItemChanged: " + position);
         switch (position) {
             case 0:
-                fab.setVisibility(View.INVISIBLE);
+                fab.hide();
                 hideFragment(postsFragment);
                 hideFragment(recordsFragment);
                 hideFragment(settingsFragment);
@@ -250,7 +249,7 @@ public class MainActivity extends BaseActivity implements
                 showFragment(mapFragment);
                 break;
             case 1:
-                fab.setVisibility(View.INVISIBLE);
+                fab.hide();
                 hideFragment(recordsFragment);
                 hideFragment(mapFragment);
                 hideFragment(settingsFragment);
@@ -266,7 +265,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(recordsFragment);
                 hideFragment(settingsFragment);
                 if(isPaired()){
-                    fab.setVisibility(View.VISIBLE);
+                    fab.show();
                     showFragment(chartFragment);
                 }
                 else showFragment(scanFragment);
@@ -276,7 +275,7 @@ public class MainActivity extends BaseActivity implements
                 break;
 
             case 4:
-                fab.setVisibility(View.INVISIBLE);
+                fab.hide();
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
@@ -292,7 +291,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void scrollToRecordsFragment() {
-        fab.setVisibility(View.INVISIBLE);
+        fab.hide();
         hideFragment(postsFragment);
         hideFragment(mapFragment);
         hideFragment(settingsFragment);
@@ -309,10 +308,11 @@ public class MainActivity extends BaseActivity implements
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_record_white_24dp));
         }
+        fab.invalidate();
     }
 
     public void enableShareButton (){
-        fab.setVisibility(View.VISIBLE);
+        fab.show();
         fab.setOnClickListener(onFabShareClickListener);
         fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
         fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_share));
@@ -321,7 +321,7 @@ public class MainActivity extends BaseActivity implements
     public void disableShareButton (){
         if(recordsFragment!=null)recordsFragment.setIsShowingData(false);
         fab.setOnClickListener(onFabClickListener);
-        fab.setVisibility(View.INVISIBLE);
+        fab.hide();
     }
 
     private void addChartFragment() {
@@ -363,8 +363,8 @@ public class MainActivity extends BaseActivity implements
     public void removeScanFragment() {
         if (scanFragment != null) removeFragment(scanFragment);
         addChartFragment();
-        fab.setVisibility(View.VISIBLE);
         refreshUI();
+        fab.show();
     }
 
     public void showSnackMessage(int id) {
@@ -406,7 +406,7 @@ public class MainActivity extends BaseActivity implements
             stopRecord();
             serviceManager.stop();
             prefBuilder.clearAll().save();
-            fab.setVisibility(View.INVISIBLE);
+            fab.hide();
             if (chartFragment != null) chartFragment.clearData();
             removeFragment(chartFragment);
             addScanFragment();
