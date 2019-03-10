@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
 import com.hpsaturn.tools.FileTools;
@@ -25,7 +25,6 @@ import java.util.Locale;
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.common.BLEHandler;
-import hpsaturn.pollutionreporter.common.HexString;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.SensorConfig;

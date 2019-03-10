@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/app_picker_card_width"
     android:layout_height="@dimen/app_picker_card_height"
@@ -40,4 +40,4 @@
 
     </FrameLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>
