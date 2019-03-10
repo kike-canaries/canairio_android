@@ -108,7 +108,7 @@ public class PostsFragment extends Fragment {
 
         mRecordsList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        mDatabase.keepSynced(true);
+//        mDatabase.keepSynced(true);
         mAdapter.startListening();
         mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in fist time
 
@@ -118,13 +118,13 @@ public class PostsFragment extends Fragment {
     private UpdateTimeTask mUpdateTimeTask = new UpdateTimeTask();
 
     class UpdateTimeTask extends TimerTask {
-        private int retries = 3;
+        private int retries = 5;
         private int counter = 0;
         public void run() {
             Logger.i(TAG,"[FB][POST] UpdateTimeTask, force refresh data..");
             refresh();
             if(counter++>retries)this.cancel();
-            else mHandler.postDelayed(this,2000);
+            else mHandler.postDelayed(this,3000);
         }
     }
 
@@ -171,7 +171,6 @@ public class PostsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
-        mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in fist time
     }
 
     private MainActivity getMain() {

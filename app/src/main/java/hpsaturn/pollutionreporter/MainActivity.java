@@ -252,7 +252,7 @@ public class MainActivity extends BaseActivity implements
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
-//                postsFragment.refresh();
+                postsFragment.refresh();
                 break;
             case 2:
                 fabUpdateLayout();
@@ -260,10 +260,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
                 hideFragment(settingsFragment);
-                if(isPaired()){
-                    fab.show();
-                    showFragment(chartFragment);
-                }
+                if(isPaired()) showFragment(chartFragment);
                 else showFragment(scanFragment);
                 break;
             case 3:
@@ -305,7 +302,7 @@ public class MainActivity extends BaseActivity implements
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_record_white_24dp));
         }
-        fab.show();
+        if(isPaired())fab.show();
     }
 
     public void enableShareButton (){
