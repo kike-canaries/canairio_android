@@ -163,12 +163,12 @@ public class ServiceBLE extends Service {
 
         @Override
         public void requestSensorConfigRead() {
-            bleHandler.readSensorConfig();
+            if(bleHandler!=null) bleHandler.readSensorConfig();
         }
 
         @Override
         public void requestSensorDataRead() {
-            bleHandler.readSensorData();
+            if(bleHandler!=null)bleHandler.readSensorData();
         }
 
         @Override
@@ -184,7 +184,7 @@ public class ServiceBLE extends Service {
         @Override
         public void onSensorConfigWrite(SensorConfig config) {
             String data = new Gson().toJson(config);
-            bleHandler.writeSensorConfig(data.getBytes());
+            if(bleHandler!=null)bleHandler.writeSensorConfig(data.getBytes());
         }
 
     };
@@ -339,7 +339,7 @@ public class ServiceBLE extends Service {
 
     @Override
     public void onDestroy() {
-        bleHandler.triggerDisconnect();
+        if(bleHandler!=null) bleHandler.triggerDisconnect();
         serviceManager.unregister();
         super.onDestroy();
     }
