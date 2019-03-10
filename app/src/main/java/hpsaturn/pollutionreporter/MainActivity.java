@@ -284,6 +284,7 @@ public class MainActivity extends BaseActivity implements
                 else hideFragment(scanFragment);
                 showFragment(settingsFragment);
                 fragmentPickerHide();
+                serviceManager.readSensorConfig();
                 break;
 
         }

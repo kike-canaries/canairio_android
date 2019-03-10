@@ -146,6 +146,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "stime: " + config.stime);
             getMain().showSnackMessage(R.string.msg_config_saved);
             updatePreferencesSummmary(config);
+            saveAllPreferences(config);
         }
     }
 
@@ -163,6 +164,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(config.ifxtg);
         pref = findPreference(getString(R.string.key_setting_stime));
         pref.setSummary("" + config.stime + " seconds");
+    }
+
+    private void saveAllPreferences(SensorConfig config) {
+        Preference pref;
+        saveSharedPreference(R.string.key_setting_ssid,config.ssid);
+        saveSharedPreference(R.string.key_setting_ifxdb,config.ifxdb);
+        saveSharedPreference(R.string.key_setting_ifxip,config.ifxip);
+        saveSharedPreference(R.string.key_setting_ifxid,config.ifxid);
+        saveSharedPreference(R.string.key_setting_ifxtg,config.ifxtg);
+        saveSharedPreference(R.string.key_setting_stime,""+config.stime);
+    }
+
+    public void saveSharedPreference(int key, String value){
+        saveSharedPreference(getString(key),value);
     }
 
     public void saveSharedPreference(String key, String value) {
