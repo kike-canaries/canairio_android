@@ -30,6 +30,7 @@
     <string name="msg_config_saved">Device settings updated!</string>
     <string name="msg_stime_error">Wrong value, restoring default value…</string>
     <string name="key_setting_stime">key_setting_stime</string>
+    <string name="key_setting_wmac">key_setting_wmac</string>
     <string name="key_setting_sdpath">key_setting_sdpath</string>
     <string name="key_setting_pass">key_setting_pass</string>
     <string name="key_setting_ssid">key_setting_ssid</string>

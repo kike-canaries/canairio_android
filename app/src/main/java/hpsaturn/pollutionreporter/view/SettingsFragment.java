@@ -28,6 +28,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private String ssid, pass, ifxdb, ifxip, ifxid, ifxtg;
     private int stime;
+    private boolean onCredentialsChanged;
 
 
     @Override
@@ -128,9 +129,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             config.pass = pass;
             getMain().getServiceManager().writeSensorConfig(config);
         }
-        else{
-            // TODO: ???
+        else if (!onCredentialsChanged){
+            disableWifiOnDevice();
         }
+        else {
+            Logger.d(TAG,"[Config] onCredentialsChanged skip disable wifi.");
+            onCredentialsChanged=false;
+        }
+    }
+
+    private void disableWifiOnDevice() {
+        SensorConfig config = new SensorConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "wst";
+        getMain().getServiceManager().writeSensorConfig(config);
     }
 
     private void updateWifiSwitch(){
@@ -143,7 +155,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         wifiSwitch.setEnabled(!(ssid.length()==0 || pass.length()==0));
 
         if(!(old_ssid.equals(ssid) && old_pass.equals(pass))) {
-            wifiSwitch.setChecked(false);   // TODO: force user to enable again?
+            onCredentialsChanged = true;
+            wifiSwitch.setChecked(false);   // TODO: force user to enable again
         }
     }
 
@@ -196,8 +209,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "Ifxip: " + config.ifxip);
             Logger.i(TAG, "Ifxid: " + config.ifxid);
             Logger.i(TAG, "Ifxtg: " + config.ifxtg);
-            Logger.i(TAG, "ssid: " + config.ssid);
+            Logger.i(TAG, "ssid:  " + config.ssid);
             Logger.i(TAG, "stime: " + config.stime);
+            Logger.i(TAG, "wmac:  " + config.wmac);
+            Logger.i(TAG, "wifien:" + config.wenb);
             getMain().showSnackMessage(R.string.msg_config_saved);
             updatePreferencesSummmary(config);
             saveAllPreferences(config);
@@ -218,16 +233,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(config.ifxtg);
         pref = findPreference(getString(R.string.key_setting_stime));
         pref.setSummary("" + config.stime + " seconds");
+        SwitchPreferenceCompat wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
+        wifiSwitch.setChecked(config.wenb);
     }
 
     private void saveAllPreferences(SensorConfig config) {
-        Preference pref;
         saveSharedPreference(R.string.key_setting_ssid,config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb,config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip,config.ifxip);
         saveSharedPreference(R.string.key_setting_ifxid,config.ifxid);
         saveSharedPreference(R.string.key_setting_ifxtg,config.ifxtg);
         saveSharedPreference(R.string.key_setting_stime,""+config.stime);
+        saveSharedPreference(R.string.key_setting_wmac,""+config.wmac);
     }
 
     public void saveSharedPreference(int key, String value){
