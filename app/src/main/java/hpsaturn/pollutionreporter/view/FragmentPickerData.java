@@ -24,7 +24,8 @@ public class FragmentPickerData {
                 new FragmentPickerInfo("Reports", R.drawable.ic_picker_map),
                 new FragmentPickerInfo("Public", R.drawable.ic_picker_cloud),
                 new FragmentPickerInfo("MyDevice", R.drawable.ic_picker_chart),
-                new FragmentPickerInfo("MyRecords", R.drawable.ic_picker_records)
+                new FragmentPickerInfo("MyRecords", R.drawable.ic_picker_records),
+                new FragmentPickerInfo("Settings", R.drawable.ic_picker_settings)
         );
 
     }

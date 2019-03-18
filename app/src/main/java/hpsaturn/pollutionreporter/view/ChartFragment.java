@@ -1,9 +1,9 @@
 package hpsaturn.pollutionreporter.view;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
@@ -92,7 +92,7 @@ public class ChartFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         ButterKnife.bind(this, view);
 
-        chart.setDescription(getString(R.string.app_name));
+//        chart.setDescription(new Description().setText(getString(R.string.app_name)));
 
         calculateReferenceTime();
 
@@ -123,7 +123,7 @@ public class ChartFragment extends Fragment {
         } else {
             referenceTimestamp = data.get(0).timestamp;
         }
-        AxisValueFormatter xAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
+        HourAxisValueFormatter xAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
         XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(xAxisFormatter);
     }
@@ -155,7 +155,7 @@ public class ChartFragment extends Fragment {
                 getMain().enableShareButton();
             }
             else{
-                DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference("tracks_data");
+                DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference(Config.FB_TRACKS_DATA);
                 DatabaseReference trackRef = mDataBase.child(recordId);
                 trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -227,8 +227,8 @@ public class ChartFragment extends Fragment {
         if(recordId!=null && track!=null) {
             Logger.i(TAG,"publis track..");
             track.deviceId = DeviceUtil.getDeviceId(getActivity());
-            getMain().getDatabase().child("tracks_data").child(track.name).setValue(track);
-            getMain().getDatabase().child("tracks_info").child(track.name).setValue(new SensorTrackInfo(track));
+            getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(track.name).setValue(track);
+            getMain().getDatabase().child(Config.FB_TRACKS_INFO).child(track.name).setValue(new SensorTrackInfo(track));
             getMain().popBackLastFragment();
         }
     }

@@ -6,10 +6,10 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -19,9 +19,6 @@ import com.intentfilter.androidpermissions.PermissionManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
-
-import static java.util.Collections.singleton;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/1/18.
@@ -41,6 +38,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_WIFI_STATE);
+        permissions.add(Manifest.permission.FOREGROUND_SERVICE);
         permissionManager.checkPermissions(permissions, new PermissionManager.PermissionRequestListener() {
             @Override
             public void onPermissionGranted() {
@@ -228,9 +226,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         int id = item.getItemId();
 
         switch (item.getItemId()) {
-
-            case R.id.action_settings:
-                break;
 
             case R.id.action_unpair:
                 actionUnPair();

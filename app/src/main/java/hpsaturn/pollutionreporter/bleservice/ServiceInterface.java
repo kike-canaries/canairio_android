@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.bleservice;
 
+import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
@@ -13,11 +14,21 @@ public interface ServiceInterface {
 
     void onServiceStop();
 
-    void onServiceData(SensorData data);
+    void onSensorNotificationData(SensorData data);
 
-    void onSensorRecord();
+    void onServiceRecord();
 
-    void onSensorRecordStop();
+    void onServiceRecordStop();
 
     void onTracksUpdated();
+
+    void requestSensorConfigRead();
+
+    void requestSensorDataRead();
+
+    void onSensorConfigRead(SensorConfig config);
+
+    void onSensorDataRead(SensorData data);
+
+    void onSensorConfigWrite(SensorConfig config);
 }

@@ -11,7 +11,7 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.renderscript.Type;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -131,12 +131,11 @@ public class FileTools {
         }
     }
 
-    public static File getDownloadStorageDir(String dirName) {
+    private static File getDownloadStorageDir(String dirName) {
         File sdcard = Environment.getExternalStorageDirectory();
         File file = new File(sdcard.getAbsolutePath() + "/" + dirName);
-        // Get the directory for the app's private pictures directory.
-        if (!file.mkdirs()) {
-            Logger.e(TAG, dirName+ " directory not created!");
+        if (!file.mkdir()) {
+            Logger.i(TAG,"[SD] '"+ dirName+ "' mkdir false! (maybe it already exists)");
         }
         return file;
     }

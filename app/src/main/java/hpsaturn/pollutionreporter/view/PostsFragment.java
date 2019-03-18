@@ -3,11 +3,11 @@ package hpsaturn.pollutionreporter.view;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,7 @@ import com.hpsaturn.tools.Logger;
 
 import java.util.TimerTask;
 
+import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
@@ -70,8 +71,8 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = mDatabase.child("tracks_info").orderByKey();
-        Logger.d(TAG,"[POSTS] Query: "+postsQuery.toString());
+        Query postsQuery = mDatabase.child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(20);
+        Logger.d(TAG,"[FB][POSTS] Query: "+postsQuery.toString());
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)
                 .build();
@@ -89,13 +90,13 @@ public class PostsFragment extends Fragment {
             protected void onBindViewHolder(@NonNull PostsViewHolder viewHolder, int position, @NonNull SensorTrackInfo trackInfo) {
                 final DatabaseReference postRef = getRef(position);
                 final String recordKey = postRef.getKey();
-                Logger.d(TAG,"[POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
+                Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
                 getMain().addTrackToMap(trackInfo);
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String recordId = trackInfo.getName();
-                        Logger.i(TAG,"[POSTS] onClick -> showing record: "+recordId);
+                        Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);
                         chart = ChartFragment.newInstance(recordId);
                         getMain().addFragmentPopup(chart,ChartFragment.TAG);
                     }
@@ -107,7 +108,6 @@ public class PostsFragment extends Fragment {
 
         mRecordsList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        mDatabase.keepSynced(true);
         mAdapter.startListening();
         mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in fist time
 
@@ -117,9 +117,13 @@ public class PostsFragment extends Fragment {
     private UpdateTimeTask mUpdateTimeTask = new UpdateTimeTask();
 
     class UpdateTimeTask extends TimerTask {
+        private int retries = 5;
+        private int counter = 0;
         public void run() {
+            Logger.i(TAG,"[FB][POST] UpdateTimeTask, force refresh data..");
             refresh();
-            mHandler.postDelayed(this,2000);
+            if(counter++>retries)this.cancel();
+            else mHandler.postDelayed(this,3000);
         }
     }
 
@@ -135,7 +139,7 @@ public class PostsFragment extends Fragment {
 
     public void refresh() {
         if(mAdapter!=null){
-            Logger.i(TAG,"[POSTS] refresh query");
+            Logger.i(TAG,"[FB][POSTS] refresh query");
             mAdapter.startListening();
             updateUI();
         }
