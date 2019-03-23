@@ -399,31 +399,6 @@ public class MainActivity extends BaseActivity implements
         startDataBase();
     }
 
-    public void checkForPermissions() {
-
-
-//        PermissionManager permissionManager = PermissionManager.getInstance(this);
-//        ArrayList<String> permissions = new ArrayList<>();
-//        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-//        permissions.add(Manifest.permission.INTERNET);
-//        permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
-//        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-//        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-//        permissions.add(Manifest.permission.ACCESS_WIFI_STATE);
-//        permissions.add(Manifest.permission.FOREGROUND_SERVICE);
-//        permissionManager.checkPermissions(permissions, new PermissionManager.PermissionRequestListener() {
-//            @Override
-//            public void onPermissionGranted() {
-
-//            }
-//
-//            @Override
-//            public void onPermissionDenied() {
-//            }
-//        });
-    }
-
     @Override
     void actionUnPair() {
         if(isRecording()){
