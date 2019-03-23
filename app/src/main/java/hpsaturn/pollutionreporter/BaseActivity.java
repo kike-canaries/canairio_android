@@ -27,31 +27,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     public static String TAG = BaseActivity.class.getSimpleName();
 
-
-    public void checkForPermissions() {
-        PermissionManager permissionManager = PermissionManager.getInstance(this);
-        ArrayList<String> permissions = new ArrayList<>();
-        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        permissions.add(Manifest.permission.INTERNET);
-        permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
-        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        permissions.add(Manifest.permission.ACCESS_WIFI_STATE);
-        permissions.add(Manifest.permission.FOREGROUND_SERVICE);
-        permissionManager.checkPermissions(permissions, new PermissionManager.PermissionRequestListener() {
-            @Override
-            public void onPermissionGranted() {
-            }
-
-            @Override
-            public void onPermissionDenied() {
-            }
-        });
-    }
-
-    abstract void onPermissionGranted();
-
     public void checkBluetoohtBle() {
         // Use this check to determine whether BLE is supported on the device.
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);

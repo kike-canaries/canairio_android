@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
+import com.livinglifetechway.quickpermissions.annotations.WithPermissions;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -85,8 +87,7 @@ public class MainActivity extends BaseActivity implements
 
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
-        setupUI();
-        startDataBase();
+        startPermissionsFlow();
         serviceManager = new ServiceManager(this, serviceListener);
     }
 
@@ -100,7 +101,7 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onServiceStatus(String status) {
             if (status.equals(ServiceManager.STATUS_BLE_START)) {
-                showFragment(chartFragment);
+//                showFragment(chartFragment);
             } else if (status.equals(ServiceManager.STATUS_SERVICE_OK)){
             } else if (status.equals(ServiceManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
@@ -196,7 +197,6 @@ public class MainActivity extends BaseActivity implements
 
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
-        checkForPermissions();
         setupAppFragments();
         if(isPaired())fab.show();
     }
@@ -385,9 +385,43 @@ public class MainActivity extends BaseActivity implements
         return mDatabase;
     }
 
-    @Override
-    void onPermissionGranted() {
-       if(mapFragment!=null)mapFragment.enableMyLocation();
+
+    @WithPermissions(
+            permissions = {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.BLUETOOTH
+            }
+    )
+    public void startPermissionsFlow() {
+        Logger.i(TAG, "onPermissionGranted..");
+        setupUI();
+        startDataBase();
+    }
+
+    public void checkForPermissions() {
+
+
+//        PermissionManager permissionManager = PermissionManager.getInstance(this);
+//        ArrayList<String> permissions = new ArrayList<>();
+//        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+//        permissions.add(Manifest.permission.INTERNET);
+//        permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
+//        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+//        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+//        permissions.add(Manifest.permission.ACCESS_WIFI_STATE);
+//        permissions.add(Manifest.permission.FOREGROUND_SERVICE);
+//        permissionManager.checkPermissions(permissions, new PermissionManager.PermissionRequestListener() {
+//            @Override
+//            public void onPermissionGranted() {
+
+//            }
+//
+//            @Override
+//            public void onPermissionDenied() {
+//            }
+//        });
     }
 
     @Override
