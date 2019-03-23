@@ -44,8 +44,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         stime = getCurrentStime();
 
         updateStimeSummary();
-        updateWifiSwitch();
-        updateIfxdbSwitch();
+        validateWifiSwitch();
+        validateIfxdbSwitch();
     }
 
     @Override
@@ -66,19 +66,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             validateSensorSampleTime(sharedPreferences, key);
         }
         else if (key.equals(getString(R.string.key_setting_ssid))) {
-            updateWifiSwitch();
+            validateWifiSwitch();
         }
         else if (key.equals(getString(R.string.key_setting_pass))) {
-            updateWifiSwitch();
+            validateWifiSwitch();
         }
         else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
-            validateSensorWifiConfig(sharedPreferences, key);
+            saveWifiConfig(sharedPreferences, key);
         }
         else if (key.equals(getString(R.string.key_setting_enable_ifx))){
-            validateInfluxConfig(sharedPreferences,key) ;
+            saveInfluxConfig(sharedPreferences,key) ;
         }
         else
-            updateIfxdbSwitch();
+            validateIfxdbSwitch();
     }
 
     private void validateSensorSampleTime(SharedPreferences sharedPreferences, String key) {
@@ -115,7 +115,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary("" + stime + " seconds");
     }
 
-    private void validateSensorWifiConfig(SharedPreferences sharedPreferences, String key) {
+    private void saveWifiConfig(SharedPreferences sharedPreferences, String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_enable_wifi));
 
         SwitchPreferenceCompat switchPreference = findPreference(key);
@@ -127,6 +127,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             SensorConfig config = new SensorConfig();
             config.ssid = ssid;
             config.pass = pass;
+            Logger.v(TAG, "[Config] writing wifi credentials..");
             getMain().getServiceManager().writeSensorConfig(config);
         }
         else if (!onCredentialsChanged){
@@ -145,7 +146,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getMain().getServiceManager().writeSensorConfig(config);
     }
 
-    private void updateWifiSwitch(){
+    private void validateWifiSwitch(){
         SwitchPreferenceCompat wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
         String old_ssid = ssid;
         String old_pass = pass;
@@ -160,9 +161,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
     }
 
-    private void validateInfluxConfig(SharedPreferences sharedPreferences, String key) {
+    private void saveInfluxConfig(SharedPreferences sharedPreferences, String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
-
         SwitchPreferenceCompat switchPreference = findPreference(key);
 
         if(switchPreference.isChecked()) {
@@ -178,6 +178,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             config.ifxip = ifxip;
             config.ifxid = ifxid;
             config.ifxtg = ifxtg;
+            Logger.v(TAG, "[Config] writing InfluxDb settings..");
             getMain().getServiceManager().writeSensorConfig(config);
         }
         else{
@@ -185,7 +186,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
     }
 
-    private void updateIfxdbSwitch(){
+    private void validateIfxdbSwitch(){
         SwitchPreferenceCompat ifxdbSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
         String old_ifxdb = ifxdb;
         String old_ifxip = ifxip;
@@ -195,6 +196,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
         ifxid = getSharedPreference(getString(R.string.key_setting_ifxid));
         ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
+        updateIfxdbSummmary();
 
         ifxdbSwitch.setEnabled(!(ifxdb.length()==0 || ifxip.length()==0) || ifxid.length()==0);
 
@@ -235,6 +237,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary("" + config.stime + " seconds");
         SwitchPreferenceCompat wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
         wifiSwitch.setChecked(config.wenb);
+    }
+
+    private void updateIfxdbSummmary() {
+        Preference pref;
+        pref = findPreference(getString(R.string.key_setting_ifxdb));
+        pref.setSummary(ifxdb);
+        pref = findPreference(getString(R.string.key_setting_ifxip));
+        pref.setSummary(ifxip);
+        pref = findPreference(getString(R.string.key_setting_ifxid));
+        pref.setSummary(ifxid);
+        pref = findPreference(getString(R.string.key_setting_ifxtg));
+        pref.setSummary(ifxtg);
     }
 
     private void saveAllPreferences(SensorConfig config) {
