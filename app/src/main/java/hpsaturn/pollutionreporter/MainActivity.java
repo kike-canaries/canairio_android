@@ -93,7 +93,6 @@ public class MainActivity extends BaseActivity implements
 
     private void startDataBase(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.keepSynced(true);
     }
 
     private ServiceInterface serviceListener = new ServiceInterface() {
@@ -384,7 +383,6 @@ public class MainActivity extends BaseActivity implements
     public DatabaseReference getDatabase() {
         return mDatabase;
     }
-
 
     @WithPermissions(
             permissions = {

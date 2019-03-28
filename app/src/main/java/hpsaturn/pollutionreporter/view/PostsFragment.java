@@ -38,7 +38,6 @@ public class PostsFragment extends Fragment {
     private TextView mEmptyMessage;
     private ChartFragment chart;
 
-    private DatabaseReference mDatabase;
     private LinearLayoutManager mManager;
     private FirebaseRecyclerAdapter<SensorTrackInfo, PostsViewHolder> mAdapter;
 
@@ -55,9 +54,6 @@ public class PostsFragment extends Fragment {
         mRecordsList = view.findViewById(R.id.rv_records);
         mEmptyMessage.setText(R.string.msg_not_public_recors);
 
-        // [START create_database_reference]
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         mManager = new LinearLayoutManager(getActivity());
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
@@ -71,7 +67,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = mDatabase.child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(20);
+        Query postsQuery = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(20);
         Logger.d(TAG,"[FB][POSTS] Query: "+postsQuery.toString());
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)
