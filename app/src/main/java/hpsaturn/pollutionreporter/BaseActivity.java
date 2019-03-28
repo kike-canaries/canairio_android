@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import hpsaturn.pollutionreporter.view.FragmentWebView;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -204,6 +206,14 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
             case R.id.action_unpair:
                 actionUnPair();
+                break;
+
+            case R.id.action_donation:
+
+//                addFragmentPopup(
+//                        FragmentWebView.newInstance(getString(R.string.url_hacksterio_es)),
+//                        FragmentWebView.TAG
+//                );
                 break;
         }
 

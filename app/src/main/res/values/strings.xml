@@ -43,4 +43,5 @@
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>
+    <string name="url_hacksterio_es">https://www.hackster.io/114723/canairio-red-ciudadana-para-monitoreo-de-calidad-del-aire-96f79a</string>
 </resources>
