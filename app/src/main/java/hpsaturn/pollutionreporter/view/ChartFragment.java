@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -72,13 +75,12 @@ public class ChartFragment extends Fragment {
     private long referenceTimestamp;
     private boolean loadingData = true;
 
-    public static final String KEY_RECORD_ID = "key_record_id";
+    private static final String KEY_RECORD_ID = "key_record_id";
     private String recordId;
     private SensorTrack track;
 
     public static ChartFragment newInstance() {
-        ChartFragment fragment = new ChartFragment();
-        return fragment;
+        return new ChartFragment();
     }
 
     public static ChartFragment newInstance(String recordId) {
@@ -95,7 +97,17 @@ public class ChartFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         ButterKnife.bind(this, view);
 
-//        chart.setDescription(new Description().setText(getString(R.string.app_name)));
+        Description description = new Description();
+        description.setTextColor(ColorTemplate.VORDIPLOM_COLORS[2]);
+        description.setText(getString(R.string.app_name));
+
+        chart.setDescription(description);
+        chart.setNoDataText(getString(R.string.msg_chart_loading));
+
+        //Display the axis on the left (contains the labels 1*, 2* and so on)
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+        xAxis.setEnabled(true);
 
         calculateReferenceTime();
 
@@ -135,10 +147,12 @@ public class ChartFragment extends Fragment {
     public void addData(int value) {
         if (!loadingData) {
             Long currentTime = System.currentTimeMillis() / 1000;
-            Long time = currentTime - referenceTimestamp;
+            long time = currentTime - referenceTimestamp;
             dataSet.addEntry(new Entry(time, value));
+            dataSet.notifyDataSetChanged();
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
+            chart.notifyDataSetChanged();
             chart.invalidate();
         }
     }

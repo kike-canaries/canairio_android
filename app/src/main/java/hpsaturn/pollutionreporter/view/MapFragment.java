@@ -34,7 +34,6 @@ public class MapFragment extends Fragment {
 
     public static final String TAG = MapFragment.class.getSimpleName();
     private MapView mapView;
-    private MyLocationNewOverlay mapLocationOverlay;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -50,7 +49,6 @@ public class MapFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_osmap, container, false);
     }
 
@@ -69,31 +67,11 @@ public class MapFragment extends Fragment {
         mapView.setMaxZoomLevel((double) 19);
 
         mapView.getController().setZoom((double) 17); //set initial zoom-level, depends on your need
-        //mapView.getController().setCenter(ONCATIVO);
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
-        mapView.setDrawingCacheEnabled(true);
-
-//        mapLocationOverlay = new MyLocationNewOverlay(mapView);
-//        mapLocationOverlay.enableMyLocation();
-//        mapLocationOverlay.enableFollowLocation();
-//        mapLocationOverlay.enableMyLocation();
-
-//        CompassOverlay compassOverlay = new CompassOverlay(getActivity(), mapView);
-//        compassOverlay.enableCompass();
-
-//        mapView.getOverlays().add(compassOverlay);
-//        mapView.getOverlays().add(mapLocationOverlay);
-        mapView.buildDrawingCache();
         mapView.setEnabled(true);
     }
 
-    public void enableMyLocation() {
-//        mapLocationOverlay.enableMyLocation();
-//        mapLocationOverlay.enableFollowLocation();
-    }
-
     public void addMarker(SensorTrackInfo trackInfo) {
-
         Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
         MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
         Marker pointMarker = new Marker(mapView);

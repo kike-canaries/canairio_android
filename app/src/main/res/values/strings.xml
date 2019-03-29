@@ -49,4 +49,5 @@
     <string name="menu_guide">Sensor DIY Guide</string>
     <string name="url_paypal_hpsaturn">https://www.paypal.me/avanegasp</string>
     <string name="url_canairio_page">http://canair.io</string>
+    <string name="msg_chart_loading">Loading data, please wait…</string>
 </resources>
