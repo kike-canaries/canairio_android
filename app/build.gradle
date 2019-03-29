@@ -98,7 +98,7 @@ dependencies {
 
     implementation 'com.github.MKergall:osmbonuspack:6.5.2'
     implementation 'io.nlopez.smartlocation:library:3.3.3'
-    implementation 'org.osmdroid:osmdroid-android:6.0.2'
+    implementation 'org.osmdroid:osmdroid-android:6.1.0'
 
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.yarolegovich:discrete-scrollview:1.4.8'
