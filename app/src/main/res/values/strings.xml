@@ -43,5 +43,10 @@
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>
+    <string name="bt_device_build">build your own device</string>
+    <string name="url_hacksterio_en">https://www.hackster.io/canairio-guide-team/canairio-citizen-network-for-air-quality-monitoring-bbf647</string>
     <string name="url_hacksterio_es">https://www.hackster.io/114723/canairio-red-ciudadana-para-monitoreo-de-calidad-del-aire-96f79a</string>
+    <string name="menu_guide">Sensor DIY Guide</string>
+    <string name="url_paypal_hpsaturn">https://www.paypal.me/avanegasp</string>
+    <string name="url_canairio_page">http://canair.io</string>
 </resources>

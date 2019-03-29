@@ -22,6 +22,7 @@ import com.polidea.rxandroidble2.scan.ScanSettings;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -45,7 +46,11 @@ public class ScanFragment extends Fragment {
     RecyclerView recyclerView;
 
     @BindView(R.id.bt_device_scanning)
-    Button scanning;
+    Button btnScanning;
+
+    @BindView(R.id.bt_device_build)
+    Button btnBuilding;
+
 
     private Disposable scanDisposable;
     private RxBleClient rxBleClient;
@@ -70,18 +75,19 @@ public class ScanFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG, "[BLE] configureResultList..");
         configureResultList();
-        rxBleClient = AppData.getRxBleClient(getActivity());
-        scanning.setOnClickListener(view1 -> actionScan());
-        Logger.i(TAG, "[BLE] starting scanning..");
-        getActivity().runOnUiThread(() -> actionScan());
+        rxBleClient = AppData.getRxBleClient(Objects.requireNonNull(getActivity()));
+        btnScanning.setOnClickListener(view1 -> actionScan());
+        btnBuilding.setOnClickListener(view1 -> actionViewGuide());
+        Logger.i(TAG, "[BLE] starting btnScanning..");
+        getActivity().runOnUiThread(this::actionScan);
     }
 
     private void actionScan() {
         Logger.i(TAG,"[BLE] actionScan()");
-        if (isScanning()) {
+        if (getBtnScanning()) {
             scanDisposable.dispose();
         } else {
-            scanning.setText(R.string.bt_device_scanning);
+            btnScanning.setText(R.string.bt_device_scanning);
             scanDisposable = rxBleClient.scanBleDevices(
                     new ScanSettings.Builder()
                             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
@@ -100,6 +106,10 @@ public class ScanFragment extends Fragment {
 
     }
 
+    private void actionViewGuide (){
+        UITools.viewLink(Objects.requireNonNull(getActivity()),getString(R.string.url_hacksterio_en));
+    }
+
     private void onScanAdd(ScanResult scanResult) {
         resultsAdapter.addScanResult(scanResult);
         updateUIState();
@@ -107,9 +117,9 @@ public class ScanFragment extends Fragment {
 
     private void updateUIState() {
         if (resultsAdapter.getItemCount() == 0) {
-            scanning.setText(R.string.bt_device_scan);
-            scanning.setVisibility(View.VISIBLE);
-        } else scanning.setVisibility(View.INVISIBLE);
+            btnScanning.setText(R.string.bt_device_scan);
+            btnScanning.setVisibility(View.VISIBLE);
+        } else btnScanning.setVisibility(View.INVISIBLE);
     }
 
     private void configureResultList() {
@@ -135,7 +145,7 @@ public class ScanFragment extends Fragment {
         getMain().removeScanFragment();
     }
 
-    private boolean isScanning() {
+    private boolean getBtnScanning() {
         return scanDisposable != null;
     }
 
@@ -158,7 +168,7 @@ public class ScanFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (isScanning()) scanDisposable.dispose();
+        if (getBtnScanning()) scanDisposable.dispose();
         updateUIState();
     }
 
@@ -203,7 +213,7 @@ public class ScanFragment extends Fragment {
             case BleScanException.UNKNOWN_ERROR_CODE:
             case BleScanException.BLUETOOTH_CANNOT_START:
             default:
-                text = "Unable to start scanning";
+                text = "Unable to start btnScanning";
                 break;
         }
         Logger.w(TAG, "EXCEPTION: " + text + " " + bleScanException.getMessage());

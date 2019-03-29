@@ -85,6 +85,7 @@ public class MainActivity extends BaseActivity implements
         ButterKnife.bind(this);
         prefBuilder = AppData.getPrefBuilder(this);
 
+        startDataBase();
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
         startPermissionsFlow();
@@ -394,7 +395,6 @@ public class MainActivity extends BaseActivity implements
     public void startPermissionsFlow() {
         Logger.i(TAG, "onPermissionGranted..");
         setupUI();
-        startDataBase();
     }
 
     @Override

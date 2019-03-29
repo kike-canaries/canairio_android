@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.hpsaturn.tools.Logger;
+import com.hpsaturn.tools.UITools;
 import com.intentfilter.androidpermissions.PermissionManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -209,12 +210,17 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 break;
 
             case R.id.action_donation:
-
-//                addFragmentPopup(
-//                        FragmentWebView.newInstance(getString(R.string.url_hacksterio_es)),
-//                        FragmentWebView.TAG
-//                );
+                UITools.viewLink(this,getString(R.string.url_paypal_hpsaturn));
                 break;
+
+            case R.id.action_about:
+                UITools.viewLink(this,getString(R.string.url_canairio_page));
+                break;
+
+            case R.id.action_guide:
+                UITools.viewLink(this,getString(R.string.url_hacksterio_en));
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);

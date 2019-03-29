@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,7 +116,8 @@ public class ChartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().runOnUiThread(this::loadData);
+        Logger.i(TAG,"[CHART] starting load data thread..");
+        Objects.requireNonNull(getActivity()).runOnUiThread(this::loadData);
     }
 
     private void calculateReferenceTime(){
@@ -142,6 +144,7 @@ public class ChartFragment extends Fragment {
     }
 
     private void loadData() {
+        Logger.i(TAG,"[CHART] loading data..");
         loadingData = true;
         ArrayList<SensorData> data = new ArrayList<>();
         if(recordId==null) {
@@ -157,22 +160,25 @@ public class ChartFragment extends Fragment {
                 getMain().enableShareButton();
             }
             else{
-                DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference(Config.FB_TRACKS_DATA);
-                DatabaseReference trackRef = mDataBase.child(recordId);
+                Logger.i(TAG,"[CHART] loading track from firebase..");
+                DatabaseReference trackRef = getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(recordId);
                 trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Logger.i(TAG,"[CHART] loading track data from firebase..");
                         SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
                         if(track!=null){
+                            Logger.i(TAG,"[CHART] loading track on chart..");
                             loadChart(track.data);
                             setTrackDescription(track);
+                        }
+                        else{
+                            Logger.e(TAG,"[CHART] onDataChange getValue is null");
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        Logger.e(TAG,"[CHART] onCancelled, databaseError: "+databaseError.getDetails());
                     }
                 });
             }
