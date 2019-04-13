@@ -7,13 +7,13 @@
 
         <EditTextPreference
             android:inputType="text"
+            android:icon="@android:drawable/ic_menu_save"
             app:key="@string/key_setting_dname"
             app:summary=""
             app:title="Station Name" />
 
         <EditTextPreference
             android:defaultValue="5"
-            android:icon="@android:drawable/ic_menu_rotate"
             android:inputType="number"
             app:key="@string/key_setting_stime"
             app:summary="@string/summary_stime"
@@ -23,7 +23,6 @@
             android:defaultValue="/sdcard/canairio"
             android:editable="false"
             android:enabled="false"
-            android:icon="@android:drawable/ic_menu_save"
             android:inputType="textUri"
             app:key="@string/key_setting_sdpath"
             app:summary="/sdcard/canairio"

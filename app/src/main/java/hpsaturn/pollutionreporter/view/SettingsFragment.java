@@ -209,6 +209,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         apiusr = getSharedPreference(getString(R.string.key_setting_apiusr));
         apipss = getSharedPreference(getString(R.string.key_setting_apipss));
 
+        updateApiSummmary();
+
         apiSwitch.setEnabled(!(apiusr.length()==0 || apipss.length()==0));
 
         if(!(old_apiusr.equals(apiusr) && old_apipss.equals(apipss))) {
@@ -284,6 +286,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "stime: " + config.stime);
             Logger.i(TAG, "wmac:  " + config.wmac);
             Logger.i(TAG, "wifien:" + config.wenb);
+            Logger.i(TAG, "apiusr: " + config.apiusr);
             getMain().showSnackMessage(R.string.msg_config_saved);
             updatePreferencesSummmary(config);
             saveAllPreferences(config);
@@ -294,6 +297,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         Preference pref;
         pref = findPreference(getString(R.string.key_setting_dname));
         pref.setSummary(config.dname);
+        pref = findPreference(getString(R.string.key_setting_apiusr));
+        pref.setSummary(config.apiusr);
         pref = findPreference(getString(R.string.key_setting_ssid));
         pref.setSummary(config.ssid);
         pref = findPreference(getString(R.string.key_setting_ifxdb));
@@ -316,6 +321,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(ifxip);
         pref = findPreference(getString(R.string.key_setting_ifxtg));
         pref.setSummary(ifxtg);
+    }
+
+    private void updateApiSummmary() {
+        Preference pref;
+        pref = findPreference(getString(R.string.key_setting_apiusr));
+        pref.setSummary(apiusr);
+        pref = findPreference(getString(R.string.key_setting_apipss));
+        pref.setSummary(apipss);
     }
 
     private void saveAllPreferences(SensorConfig config) {
