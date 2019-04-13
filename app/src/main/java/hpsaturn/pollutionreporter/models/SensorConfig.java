@@ -5,15 +5,19 @@ package hpsaturn.pollutionreporter.models;
  */
 public class SensorConfig {
 
+    public String dname;
+
     public String ssid;
 
     public String pass;
 
+    public String apiusr;
+
+    public String apipss;
+
     public String ifxdb;
 
     public String ifxip;
-
-    public String ifxid;
 
     public String ifxtg;
 

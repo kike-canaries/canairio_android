@@ -6,6 +6,12 @@
         android:title="Sensor settings">
 
         <EditTextPreference
+            android:inputType="text"
+            app:key="@string/key_setting_dname"
+            app:summary=""
+            app:title="Station Name" />
+
+        <EditTextPreference
             android:defaultValue="5"
             android:icon="@android:drawable/ic_menu_rotate"
             android:inputType="number"
@@ -53,7 +59,32 @@
 
     <PreferenceCategory
         android:dependency="@string/key_setting_enable_wifi"
-        android:title="InfluxDB config">
+        android:title="CanAirIO Cloud Config">
+
+        <EditTextPreference
+            android:icon="@android:drawable/ic_menu_upload"
+            android:inputType="text"
+            app:key="@string/key_setting_apiusr"
+            app:summary=""
+            app:title="Username" />
+
+        <EditTextPreference
+            android:inputType="textUri"
+            app:key="@string/key_setting_apipss"
+            android:password="true"
+            app:summary="CanAirIO API Password"
+            app:title="Password" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/key_setting_enable_api"
+            app:title="Save API settings" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:dependency="@string/key_setting_enable_wifi"
+        android:title="Optional InfluxDB Config">
 
         <EditTextPreference
             android:icon="@android:drawable/ic_menu_upload"
@@ -70,19 +101,13 @@
 
         <EditTextPreference
             android:inputType="text"
-            app:key="@string/key_setting_ifxid"
-            app:summary=""
-            app:title="Station Name" />
-
-        <EditTextPreference
-            android:inputType="text"
             app:key="@string/key_setting_ifxtg"
             app:summary=""
             app:title="Optional Data Tags" />
 
         <SwitchPreferenceCompat
             app:key="@string/key_setting_enable_ifx"
-            app:title="Enable InfluxDB Connection" />
+            app:title="Save InfluxDB Settings" />
 
     </PreferenceCategory>
 
