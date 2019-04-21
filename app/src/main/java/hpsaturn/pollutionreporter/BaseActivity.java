@@ -1,6 +1,5 @@
 package hpsaturn.pollutionreporter;
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.pm.PackageManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import hpsaturn.pollutionreporter.view.FragmentWebView;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +16,7 @@ import android.widget.Toast;
 
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
-import com.intentfilter.androidpermissions.PermissionManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-
-import java.util.ArrayList;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/1/18.

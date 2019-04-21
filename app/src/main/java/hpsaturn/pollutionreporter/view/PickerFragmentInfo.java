@@ -4,12 +4,12 @@ package hpsaturn.pollutionreporter.view;
  * created by antonio vanegas @hpsaturn on 7/23/18.
  */
 
-public class FragmentPickerInfo {
+public class PickerFragmentInfo {
 
     private final String name;
     private final int icon;
 
-    public FragmentPickerInfo(String name, int icon) {
+    public PickerFragmentInfo(String name, int icon) {
         this.name = name;
         this.icon = icon;
     }

@@ -33,9 +33,9 @@ import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
-import hpsaturn.pollutionreporter.view.FragmentPickerAdapter;
-import hpsaturn.pollutionreporter.view.FragmentPickerData;
-import hpsaturn.pollutionreporter.view.FragmentPickerInfo;
+import hpsaturn.pollutionreporter.view.PickerFragmentAdapter;
+import hpsaturn.pollutionreporter.view.PickerFragmentData;
+import hpsaturn.pollutionreporter.view.PickerFragmentInfo;
 import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
@@ -47,8 +47,8 @@ import hpsaturn.pollutionreporter.view.SettingsFragment;
  */
 
 public class MainActivity extends BaseActivity implements
-        DiscreteScrollView.ScrollStateChangeListener<FragmentPickerAdapter.ViewHolder>,
-        DiscreteScrollView.OnItemChangedListener<FragmentPickerAdapter.ViewHolder> {
+        DiscreteScrollView.ScrollStateChangeListener<PickerFragmentAdapter.ViewHolder>,
+        DiscreteScrollView.OnItemChangedListener<PickerFragmentAdapter.ViewHolder> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -214,10 +214,10 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void setupFragmentPicker() {
-        List<FragmentPickerInfo> fragmentPickerInfos = FragmentPickerData.get().getFragmentsInfo();
+        List<PickerFragmentInfo> pickerFragmentInfos = PickerFragmentData.get().getFragmentsInfo();
         fragmentPicker.setVisibility(View.VISIBLE);
         fragmentPicker.setSlideOnFling(true);
-        fragmentPicker.setAdapter(new FragmentPickerAdapter(fragmentPickerInfos));
+        fragmentPicker.setAdapter(new PickerFragmentAdapter(pickerFragmentInfos));
         fragmentPicker.addOnItemChangedListener(this);
         fragmentPicker.addScrollStateChangeListener(this);
         if(isPaired())fragmentPicker.scrollToPosition(2);
@@ -231,7 +231,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public void onCurrentItemChanged(@Nullable FragmentPickerAdapter.ViewHolder viewHolder, int position) {
+    public void onCurrentItemChanged(@Nullable PickerFragmentAdapter.ViewHolder viewHolder, int position) {
         // TODO: Refactor to dinamic plus fragment to scroll view
         Logger.d(TAG, "onCurrentItemChanged: " + position);
         switch (position) {
@@ -441,18 +441,18 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public void onScrollStart(@NonNull FragmentPickerAdapter.ViewHolder holder, int adapterPosition) {
+    public void onScrollStart(@NonNull PickerFragmentAdapter.ViewHolder holder, int adapterPosition) {
         Logger.d(TAG, "onScrollStart");
         holder.hideText();
     }
 
     @Override
-    public void onScrollEnd(@NonNull FragmentPickerAdapter.ViewHolder currentItemHolder, int adapterPosition) {
+    public void onScrollEnd(@NonNull PickerFragmentAdapter.ViewHolder currentItemHolder, int adapterPosition) {
         Logger.d(TAG, "onScrollEnd");
     }
 
     @Override
-    public void onScroll(float pos, int index, int newIndex, @Nullable FragmentPickerAdapter.ViewHolder holder, @Nullable FragmentPickerAdapter.ViewHolder newHolder) {
+    public void onScroll(float pos, int index, int newIndex, @Nullable PickerFragmentAdapter.ViewHolder holder, @Nullable PickerFragmentAdapter.ViewHolder newHolder) {
 
     }
 

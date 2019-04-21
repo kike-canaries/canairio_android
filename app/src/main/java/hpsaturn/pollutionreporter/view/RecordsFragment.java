@@ -33,7 +33,7 @@ public class RecordsFragment extends Fragment {
     public static String TAG = RecordsFragment.class.getSimpleName();
 
     private RecyclerView mRecordsList;
-    private ListRecordsAdapter mRecordsAdapter;
+    private RecordsAdapter mRecordsAdapter;
     private TextView mEmptyMessage;
     private ChartFragment chart;
 
@@ -54,7 +54,7 @@ public class RecordsFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         mRecordsList.setLayoutManager(gridLayoutManager);
 
-        mRecordsAdapter = new ListRecordsAdapter();
+        mRecordsAdapter = new RecordsAdapter();
         mRecordsAdapter.setOnItemClickListener(onItemClickListener);
         mRecordsList.setAdapter(mRecordsAdapter);
 

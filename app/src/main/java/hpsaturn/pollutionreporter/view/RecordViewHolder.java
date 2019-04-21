@@ -15,10 +15,10 @@ public class RecordViewHolder extends RecyclerView.ViewHolder implements View.On
     protected final TextView record_date;
     protected final TextView record_location;
     protected final TextView record_name;
-    private final ListRecordsAdapter mAdapter;
+    private final RecordsAdapter mAdapter;
 
 
-    public RecordViewHolder(View itemView, ListRecordsAdapter adapter) {
+    public RecordViewHolder(View itemView, RecordsAdapter adapter) {
         super(itemView);
         itemView.setOnClickListener(this);
         this.mAdapter=adapter;

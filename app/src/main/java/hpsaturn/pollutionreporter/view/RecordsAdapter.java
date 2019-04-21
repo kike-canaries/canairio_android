@@ -18,7 +18,7 @@ import hpsaturn.pollutionreporter.models.SensorTrack;
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
  */
 
-public class ListRecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> implements ItemTouchHelperAdapter {
+public class RecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> implements ItemTouchHelperAdapter {
 
     private AdapterView.OnItemClickListener mOnItemClickListener;
     private Context ctx;

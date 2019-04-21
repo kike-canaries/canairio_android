@@ -22,9 +22,9 @@ import vcm.github.webkit.proview.ProWebView;
 /**
  * Created by Antonio Vanegas @hpsaturn on 3/28/19.
  */
-public class FragmentWebView extends Fragment {
+public class WebViewFragment extends Fragment {
 
-    public static final String TAG = FragmentWebView.class.getSimpleName();
+    public static final String TAG = WebViewFragment.class.getSimpleName();
 
     private static final String KEY_URL = "key_url";
 
@@ -33,8 +33,8 @@ public class FragmentWebView extends Fragment {
     @BindView(R.id.webview)
     ProWebView webView;
 
-    public static FragmentWebView newInstance(String url) {
-        FragmentWebView fragment = new FragmentWebView();
+    public static WebViewFragment newInstance(String url) {
+        WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
         args.putString(KEY_URL, url);
         fragment.setArguments(args);

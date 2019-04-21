@@ -21,12 +21,12 @@ import hpsaturn.pollutionreporter.R;
  * created by antonio vanegas @hpsaturn on 7/23/18.
  */
 
-public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAdapter.ViewHolder> {
+public class PickerFragmentAdapter extends RecyclerView.Adapter<PickerFragmentAdapter.ViewHolder> {
 
     private RecyclerView parentRecycler;
-    private List<FragmentPickerInfo> data;
+    private List<PickerFragmentInfo> data;
 
-    public FragmentPickerAdapter(List<FragmentPickerInfo> data) {
+    public PickerFragmentAdapter(List<PickerFragmentInfo> data) {
         this.data = data;
     }
 
@@ -45,11 +45,11 @@ public class FragmentPickerAdapter extends RecyclerView.Adapter<FragmentPickerAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        FragmentPickerInfo fragmentPickerInfo = data.get(position);
+        PickerFragmentInfo pickerFragmentInfo = data.get(position);
         Glide.with(holder.itemView.getContext())
-                .load(fragmentPickerInfo.getIcon())
+                .load(pickerFragmentInfo.getIcon())
                 .into(holder.imageView);
-        holder.textView.setText(fragmentPickerInfo.getName());
+        holder.textView.setText(pickerFragmentInfo.getName());
     }
 
     @Override
