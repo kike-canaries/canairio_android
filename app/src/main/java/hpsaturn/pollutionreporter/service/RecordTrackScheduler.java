@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter.bleservice;
+package hpsaturn.pollutionreporter.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -16,9 +16,9 @@ import hpsaturn.pollutionreporter.Config;
  * Created by Antonio Vanegas @hpsaturn on 3/24/17.
  */
 
-public class ServiceScheduler extends BroadcastReceiver {
+public class RecordTrackScheduler extends BroadcastReceiver {
 
-    public static final String TAG = ServiceScheduler.class.getSimpleName();
+    public static final String TAG = RecordTrackScheduler.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -30,7 +30,7 @@ public class ServiceScheduler extends BroadcastReceiver {
     public static void startScheduleService(Context context, long repeatTime) {
         Logger.d(TAG, "startScheduleService");
         AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(context, ServiceReceiver.class);
+        Intent i = new Intent(context, RecordTrackReceiver.class);
         PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
         Calendar cal = Calendar.getInstance();
         // Start x seconds after boot completed
@@ -45,7 +45,7 @@ public class ServiceScheduler extends BroadcastReceiver {
     public static void stopSheduleService(Context context) {
         Logger.d(TAG, "stopSheduleService:");
         AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(context, ServiceReceiver.class);
+        Intent i = new Intent(context, RecordTrackReceiver.class);
         PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
         service.cancel(pending);
     }

@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter.bleservice;
+package hpsaturn.pollutionreporter.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -38,14 +38,14 @@ import io.nlopez.smartlocation.location.config.LocationParams;
  * Created by Antonio Vanegas @hpsaturn on 11/17/17.
  */
 
-public class ServiceBLE extends Service {
+public class RecordTrackService extends Service {
 
-    private static final String TAG = ServiceBLE.class.getSimpleName();
+    private static final String TAG = RecordTrackService.class.getSimpleName();
     private static final boolean VERBOSE = Config.DEBUG && false;
     private EasyPreference.Builder prefBuilder;
     private BLEHandler bleHandler;
     private boolean isRecording;
-    private ServiceManager serviceManager;
+    private RecordTrackManager recordTrackManager;
 
     private final int RETRY_POLICY = 5;
     private int retry_connect = 0;
@@ -57,7 +57,7 @@ public class ServiceBLE extends Service {
         Logger.i(TAG, "[BLE] Creating Service container..");
         prefBuilder = AppData.getPrefBuilder(this);
         isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
-        serviceManager = new ServiceManager(this, managerListener);
+        recordTrackManager = new RecordTrackManager(this, managerListener);
         noticationChannelAPI26issue();
     }
 
@@ -95,22 +95,19 @@ public class ServiceBLE extends Service {
                 .start(onLocationListener);
     }
 
-    private OnLocationUpdatedListener onLocationListener = new OnLocationUpdatedListener() {
-        @Override
-        public void onLocationUpdated(Location location) {
-            if(VERBOSE) {
-                Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
-                Logger.i(TAG, "[BLE][LOC] accuracy: " + location.getAccuracy());
-                Logger.i(TAG, "[BLE][LOC] coords  : " + location.getLatitude() + "," + location.getLongitude());
-                Logger.i(TAG, "[BLE][LOC] speed: " + location.getSpeed());
-            }
+    private OnLocationUpdatedListener onLocationListener = location -> {
+        if(VERBOSE) {
+            Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
+            Logger.i(TAG, "[BLE][LOC] accuracy: " + location.getAccuracy());
+            Logger.i(TAG, "[BLE][LOC] coords  : " + location.getLatitude() + "," + location.getLongitude());
+            Logger.i(TAG, "[BLE][LOC] speed: " + location.getSpeed());
         }
     };
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.d(TAG, "[BLE] onStartCommand");
-        serviceManager.status(ServiceManager.STATUS_SERVICE_OK);
+        recordTrackManager.status(RecordTrackManager.STATUS_SERVICE_OK);
         startConnection();
         if (isRecording) {
             return START_STICKY;
@@ -124,7 +121,7 @@ public class ServiceBLE extends Service {
      * S E R V I C E  I N T E R F A C E
      *********************************************************************/
 
-    private ServiceInterface managerListener = new ServiceInterface() {
+    private RecordTrackInterface managerListener = new RecordTrackInterface() {
         @Override
         public void onServiceStatus(String status) {
 
@@ -193,8 +190,8 @@ public class ServiceBLE extends Service {
         Logger.w(TAG, "[BLE] request service stop..");
         if (bleHandler != null && !isRecording) {
             bleHandler.triggerDisconnect();
-            SmartLocation.with(ServiceBLE.this).location().stop();
-            ServiceScheduler.stopSheduleService(this);
+            SmartLocation.with(RecordTrackService.this).location().stop();
+            RecordTrackScheduler.stopSheduleService(this);
             Logger.w(TAG, "[BLE] kill service..");
             this.stopSelf();
         }
@@ -209,13 +206,13 @@ public class ServiceBLE extends Service {
     private BLEHandler.OnBLEConnectionListener bleListener = new BLEHandler.OnBLEConnectionListener() {
         @Override
         public void onConnectionSuccess() {
-            serviceManager.status(ServiceManager.STATUS_BLE_START);
+            recordTrackManager.status(RecordTrackManager.STATUS_BLE_START);
             retry_connect = 0;
         }
 
         @Override
         public void onConectionFailure() {
-            serviceManager.status(ServiceManager.STATUS_BLE_FAILURE);
+            recordTrackManager.status(RecordTrackManager.STATUS_BLE_FAILURE);
             if (retry_connect++ < RETRY_POLICY) {
                 Logger.w(TAG, "[BLE] retry connection on failure.." + retry_connect);
                 startConnection();
@@ -224,7 +221,7 @@ public class ServiceBLE extends Service {
 
         @Override
         public void onConnectionFinished() {
-            serviceManager.status(ServiceManager.STATUS_BLE_STOP);
+            recordTrackManager.status(RecordTrackManager.STATUS_BLE_STOP);
         }
 
         @Override
@@ -246,7 +243,7 @@ public class ServiceBLE extends Service {
             SensorData data = getSensorData(bytes);
             if (isRecording) record(data);
             Logger.d(TAG, "[BLE] pushing notification data to GUI..");
-            serviceManager.sensorNotificationData(data);
+            recordTrackManager.sensorNotificationData(data);
             retry_notify_setup = 0;
         }
 
@@ -254,7 +251,7 @@ public class ServiceBLE extends Service {
         public void onSensorConfigRead(byte[] bytes) {
             String strdata = new String(bytes);
             SensorConfig config = new Gson().fromJson(strdata, SensorConfig.class);
-            serviceManager.responseSensorConfig(config);
+            recordTrackManager.responseSensorConfig(config);
         }
 
         @Override
@@ -297,7 +294,7 @@ public class ServiceBLE extends Service {
         Storage.saveTrack(this,lastTrack);
         saveTrackOnSD(lastTrack);
         Storage.setSensorData(this,new ArrayList<>()); // clear sensor data
-        serviceManager.tracksUpdated();
+        recordTrackManager.tracksUpdated();
         Logger.i(TAG, "[BLE] record track done.");
     }
 
@@ -340,7 +337,7 @@ public class ServiceBLE extends Service {
     @Override
     public void onDestroy() {
         if(bleHandler!=null) bleHandler.triggerDisconnect();
-        serviceManager.unregister();
+        recordTrackManager.unregister();
         super.onDestroy();
     }
 }

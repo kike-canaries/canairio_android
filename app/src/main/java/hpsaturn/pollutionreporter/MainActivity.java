@@ -24,10 +24,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import hpsaturn.pollutionreporter.bleservice.ServiceBLE;
-import hpsaturn.pollutionreporter.bleservice.ServiceInterface;
-import hpsaturn.pollutionreporter.bleservice.ServiceManager;
-import hpsaturn.pollutionreporter.bleservice.ServiceScheduler;
+import hpsaturn.pollutionreporter.service.RecordTrackService;
+import hpsaturn.pollutionreporter.service.RecordTrackInterface;
+import hpsaturn.pollutionreporter.service.RecordTrackManager;
+import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity implements
     private ScanFragment scanFragment;
     private EasyPreference.Builder prefBuilder;
     private ChartFragment chartFragment;
-    private ServiceManager serviceManager;
+    private RecordTrackManager recordTrackManager;
     private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
     private PostsFragment postsFragment;
@@ -89,21 +89,21 @@ public class MainActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
         startPermissionsFlow();
-        serviceManager = new ServiceManager(this, serviceListener);
+        recordTrackManager = new RecordTrackManager(this, recordTrackListener);
     }
 
     private void startDataBase(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
-    private ServiceInterface serviceListener = new ServiceInterface() {
+    private RecordTrackInterface recordTrackListener = new RecordTrackInterface() {
 
         @Override
         public void onServiceStatus(String status) {
-            if (status.equals(ServiceManager.STATUS_BLE_START)) {
+            if (status.equals(RecordTrackManager.STATUS_BLE_START)) {
 //                showFragment(chartFragment);
-            } else if (status.equals(ServiceManager.STATUS_SERVICE_OK)){
-            } else if (status.equals(ServiceManager.STATUS_BLE_FAILURE)) {
+            } else if (status.equals(RecordTrackManager.STATUS_SERVICE_OK)){
+            } else if (status.equals(RecordTrackManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
             }
         }
@@ -183,14 +183,14 @@ public class MainActivity extends BaseActivity implements
     private void stopRecord() {
         showSnackMessageSlow(R.string.msg_record_stop);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, false).save();
-        serviceManager.serviceRecordStop();
+        recordTrackManager.serviceRecordStop();
         fabUpdateLayout();
     }
 
     private void startRecord() {
         showSnackMessageSlow(R.string.msg_record);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, true).save();
-        serviceManager.serviceRecord();
+        recordTrackManager.serviceRecord();
         fabUpdateLayout();
     }
 
@@ -276,7 +276,7 @@ public class MainActivity extends BaseActivity implements
                 else hideFragment(scanFragment);
                 showFragment(settingsFragment);
                 fragmentPickerHide();
-                serviceManager.readSensorConfig();
+                recordTrackManager.readSensorConfig();
                 break;
 
         }
@@ -369,9 +369,9 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void startBleService() {
-        Intent newIntent = new Intent(this, ServiceBLE.class);
+        Intent newIntent = new Intent(this, RecordTrackService.class);
         startService(newIntent);
-        ServiceScheduler.startScheduleService(this, Config.DEFAULT_INTERVAL);
+        RecordTrackScheduler.startScheduleService(this, Config.DEFAULT_INTERVAL);
     }
 
     public void deviceConnect() {
@@ -407,7 +407,7 @@ public class MainActivity extends BaseActivity implements
         } else {
             Logger.i(TAG, "[BLE] unpaired..");
             stopRecord();
-            serviceManager.stop();
+            recordTrackManager.stop();
             prefBuilder.clearAll().save();
             fab.hide();
             if (chartFragment != null) chartFragment.clearData();
@@ -420,8 +420,8 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     protected void onDestroy() {
-        serviceManager.stop();
-        serviceManager.unregister();
+        recordTrackManager.stop();
+        recordTrackManager.unregister();
         super.onDestroy();
     }
 
@@ -460,7 +460,7 @@ public class MainActivity extends BaseActivity implements
         if(mapFragment!=null)mapFragment.addMarker(trackInfo);
     }
 
-    public ServiceManager getServiceManager() {
-        return serviceManager;
+    public RecordTrackManager getRecordTrackManager() {
+        return recordTrackManager;
     }
 }

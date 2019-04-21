@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter.bleservice;
+package hpsaturn.pollutionreporter.service;
 
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
@@ -6,7 +6,7 @@ import hpsaturn.pollutionreporter.models.SensorData;
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/2/18.
  */
-public interface ServiceInterface {
+public interface RecordTrackInterface {
 
     void onServiceStatus(String status);
 

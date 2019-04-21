@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".bleservice.ServiceBLE"
+            android:name=".service.RecordTrackService"
             android:enabled="true"
             android:exported="true" />
 
@@ -41,7 +41,7 @@
                 <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
             <!--</intent-filter>-->
         <!--</receiver>-->
-        <receiver android:name=".bleservice.ServiceReceiver" />
+        <receiver android:name=".service.RecordTrackReceiver" />
 
     </application>
 

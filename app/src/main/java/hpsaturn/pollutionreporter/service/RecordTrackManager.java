@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter.bleservice;
+package hpsaturn.pollutionreporter.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,12 +14,12 @@ import hpsaturn.pollutionreporter.models.SensorData;
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/2/18.
  */
-public class ServiceManager {
+public class RecordTrackManager {
 
-    public static String TAG = ServiceManager.class.getSimpleName();
+    public static String TAG = RecordTrackManager.class.getSimpleName();
 
     private Context ctx;
-    private ServiceInterface listener;
+    private RecordTrackInterface listener;
     private String action_start;
     private String action_stop;
     private String action_push;
@@ -42,7 +42,7 @@ public class ServiceManager {
     public static final String STATUS_BLE_FAILURE = "STATUS_BLE_FAILURE";
     public static final String STATUS_SERVICE_OK  = "STATUS_SERVICE_OK";
 
-    public ServiceManager(Context ctx, ServiceInterface listener) {
+    public RecordTrackManager(Context ctx, RecordTrackInterface listener) {
 
         this.ctx = ctx;
         this.listener = listener;

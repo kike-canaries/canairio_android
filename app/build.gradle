@@ -111,8 +111,8 @@ dependencies {
     implementation 'com.github.vic797:prowebview:2.2.1'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
+    androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
 }
 
 apply plugin: 'com.google.gms.google-services'

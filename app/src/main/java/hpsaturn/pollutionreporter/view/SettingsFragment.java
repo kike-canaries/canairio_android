@@ -59,7 +59,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getMain().getServiceManager().readSensorConfig();
+        getMain().getRecordTrackManager().readSensorConfig();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getMain().showSnackMessage(R.string.msg_save_config);
         SensorConfig config = new SensorConfig();
         config.dname = name;
-        getMain().getServiceManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
 
@@ -138,7 +138,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getMain().showSnackMessage(R.string.msg_save_config);
         SensorConfig config = new SensorConfig();
         config.stime = time;
-        getMain().getServiceManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
     private int getCurrentStime() {
@@ -169,7 +169,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             config.ssid = ssid;
             config.pass = pass;
             Logger.v(TAG, "[Config] writing wifi credentials..");
-            getMain().getServiceManager().writeSensorConfig(config);
+            getMain().getRecordTrackManager().writeSensorConfig(config);
         }
         else if (!onCredentialsChanged){
             disableWifiOnDevice();
@@ -184,7 +184,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SensorConfig config = new SensorConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "wst";
-        getMain().getServiceManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
     private void validateWifiSwitch(){
@@ -231,7 +231,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             config.apiusr = api_usr;
             config.apipss = api_pss;
             Logger.v(TAG, "[Config] writing API credentials..");
-            getMain().getServiceManager().writeSensorConfig(config);
+            getMain().getRecordTrackManager().writeSensorConfig(config);
         }
     }
 
@@ -252,7 +252,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             config.ifxip = ifxip;
             config.ifxtg = ifxtg;
             Logger.v(TAG, "[Config] writing InfluxDb settings..");
-            getMain().getServiceManager().writeSensorConfig(config);
+            getMain().getRecordTrackManager().writeSensorConfig(config);
         }
         else{
             // TODO: ???
