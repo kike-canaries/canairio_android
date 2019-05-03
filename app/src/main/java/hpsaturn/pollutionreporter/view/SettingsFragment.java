@@ -327,8 +327,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         Preference pref;
         pref = findPreference(getString(R.string.key_setting_apiusr));
         pref.setSummary(apiusr);
-        pref = findPreference(getString(R.string.key_setting_apipss));
-        pref.setSummary(apipss);
     }
 
     private void saveAllPreferences(SensorConfig config) {
