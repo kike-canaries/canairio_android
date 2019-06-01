@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -21,12 +20,10 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -92,7 +89,7 @@ public class ChartFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         ButterKnife.bind(this, view);
@@ -220,7 +217,7 @@ public class ChartFragment extends Fragment {
     private void setTrackDescription(SensorTrack track){
         chart_name.setText(track.getName());
         chart_date.setText(track.getDate());
-        chart_desc.setText(""+ track.size+" points");
+        chart_desc.setText(""+track.size+" points");
         rl_separator.setVisibility(View.VISIBLE);
     }
 
