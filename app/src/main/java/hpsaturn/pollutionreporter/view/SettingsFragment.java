@@ -275,15 +275,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SwitchPreferenceCompat ifxdbSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
         String old_ifxdb = ifxdb;
         String old_ifxip = ifxip;
-        String old_ifxtg = ifxtg;
+//        String old_ifxtg = ifxtg;
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-        ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
+//        ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
         updateIfxdbSummmary();
 
         ifxdbSwitch.setEnabled(!(ifxdb.length() == 0 || ifxip.length() == 0));
 
-        if (!(old_ifxdb.equals(ifxdb) && old_ifxip.equals(ifxip) && old_ifxtg.equals(ifxtg))) {
+//        if (!(old_ifxdb.equals(ifxdb) && old_ifxip.equals(ifxip) && old_ifxtg.equals(ifxtg))) {
+        if (!(old_ifxdb.equals(ifxdb) && old_ifxip.equals(ifxip))) {
             ifxdbSwitch.setChecked(false);   // TODO: force user to enable again?
             onInfluxDBConfigChanged = true;
         }
@@ -302,7 +303,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "dname: " + config.dname);
             Logger.i(TAG, "ifxdb: " + config.ifxdb);
             Logger.i(TAG, "ifxip: " + config.ifxip);
-            Logger.i(TAG, "ifxtg: " + config.ifxtg);
+//            Logger.i(TAG, "ifxtg: " + config.ifxtg);
             Logger.i(TAG, "ssid:  " + config.ssid);
             Logger.i(TAG, "stime: " + config.stime);
             Logger.i(TAG, "wmac:  " + config.wmac);
@@ -326,8 +327,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(config.ifxdb);
         pref = findPreference(getString(R.string.key_setting_ifxip));
         pref.setSummary(config.ifxip);
-        pref = findPreference(getString(R.string.key_setting_ifxtg));
-        pref.setSummary(config.ifxtg);
+//        pref = findPreference(getString(R.string.key_setting_ifxtg));
+//        pref.setSummary(config.ifxtg);
         pref = findPreference(getString(R.string.key_setting_stime));
         pref.setSummary("" + config.stime + " seconds");
         SwitchPreferenceCompat wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
@@ -340,8 +341,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(ifxdb);
         pref = findPreference(getString(R.string.key_setting_ifxip));
         pref.setSummary(ifxip);
-        pref = findPreference(getString(R.string.key_setting_ifxtg));
-        pref.setSummary(ifxtg);
+//        pref = findPreference(getString(R.string.key_setting_ifxtg));
+//        pref.setSummary(ifxtg);
     }
 
     private void updateApiSummmary() {
@@ -355,7 +356,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
-        saveSharedPreference(R.string.key_setting_ifxtg, config.ifxtg);
+//        saveSharedPreference(R.string.key_setting_ifxtg, config.ifxtg);
         saveSharedPreference(R.string.key_setting_stime, "" + config.stime);
         saveSharedPreference(R.string.key_setting_wmac, "" + config.wmac);
     }

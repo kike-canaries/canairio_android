@@ -106,21 +106,6 @@
     <PreferenceCategory
         android:title="Optional Static Station Settings">
 
-        <SwitchPreferenceCompat
-            android:icon="@drawable/ic_stop_white_18dp"
-            app:key="@string/key_setting_location"
-            app:title="Save Current Location" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory>
-
-        <Preference
-            android:icon="@android:drawable/ic_menu_send"
-            app:key="feedback"
-            app:summary="Report technical issues or suggest new features"
-            app:title="Send Feedback" />
-
         <EditTextPreference
             android:defaultValue="5"
             android:inputType="number"
@@ -128,6 +113,18 @@
             app:summary="@string/summary_stime"
             app:title="Sample Time Interval" />
 
+        <SwitchPreferenceCompat
+            app:key="@string/key_setting_location"
+            app:title="Save Current Location" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:icon="@android:drawable/ic_menu_send"
+            app:key="feedback"
+            app:summary="Report technical issues or suggest new features"
+            app:title="Send Feedback" />
     </PreferenceCategory>
 
 
