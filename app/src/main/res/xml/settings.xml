@@ -76,7 +76,7 @@
 
         <SwitchPreferenceCompat
             app:key="@string/key_setting_enable_api"
-            app:title="Save API settings" />
+            app:title="Enable CanAirIO API" />
 
     </PreferenceCategory>
 
@@ -106,7 +106,7 @@
 
         <SwitchPreferenceCompat
             app:key="@string/key_setting_enable_ifx"
-            app:title="Save InfluxDB Settings" />
+            app:title="Enable InfluxDB Cloud" />
 
     </PreferenceCategory>
 
