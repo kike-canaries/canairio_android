@@ -29,6 +29,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private String sname, ssid, pass, ifxdb, ifxip, ifxtg, apiusr, apipss;
     private int stime;
     private boolean onCredentialsChanged;
+    private boolean onInfluxDBConfigChanged;
+    private boolean onAPIConfigChanged;
 
 
     @Override
@@ -184,6 +186,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SensorConfig config = new SensorConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "wst";
+        config.wenb = false;
         getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
@@ -215,6 +218,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         if(!(old_apiusr.equals(apiusr) && old_apipss.equals(apipss))) {
             apiSwitch.setChecked(false);   // TODO: force user to enable again
+            onAPIConfigChanged = true;
         }
     }
 
@@ -233,6 +237,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.v(TAG, "[Config] writing API credentials..");
             getMain().getRecordTrackManager().writeSensorConfig(config);
         }
+        else if (!onAPIConfigChanged) {
+            disableApi();
+        }
+        else {
+            Logger.d(TAG,"[Config] onAPIConfigChanged skip disable API.");
+            onAPIConfigChanged=false;
+        }
+    }
+
+    private void disableApi() {
+        SensorConfig config = new SensorConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "ast";
+        config.aenb = false;
+        getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
 
@@ -254,8 +273,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.v(TAG, "[Config] writing InfluxDb settings..");
             getMain().getRecordTrackManager().writeSensorConfig(config);
         }
-        else{
-            // TODO: ???
+        else if (!onInfluxDBConfigChanged){
+            disableInfluxDB();
+        }
+        else {
+            Logger.d(TAG,"[Config] onInfluxDBConfigChanged skip disable Influx.");
+            onInfluxDBConfigChanged=false;
         }
     }
 
@@ -273,7 +296,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         if(!(old_ifxdb.equals(ifxdb) && old_ifxip.equals(ifxip) && old_ifxtg.equals(ifxtg))) {
             ifxdbSwitch.setChecked(false);   // TODO: force user to enable again?
+            onInfluxDBConfigChanged = true;
         }
+    }
+
+    private void disableInfluxDB() {
+        SensorConfig config = new SensorConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "ist";
+        config.ienb = false;
+        getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
     public void configCallBack(SensorConfig config) {
