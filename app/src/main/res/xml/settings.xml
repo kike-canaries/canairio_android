@@ -68,7 +68,7 @@
             app:title="Username" />
 
         <EditTextPreference
-            android:inputType="textUri"
+            android:inputType="textWebPassword"
             app:key="@string/key_setting_apipss"
             android:password="true"
             app:summary="CanAirIO API Password"
@@ -110,6 +110,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="Optional Static Station Location">
+
+        <SwitchPreferenceCompat
+            android:icon="@drawable/ic_stop_white_18dp"
+            app:key="@string/key_setting_location"
+            app:title="Save Current Location" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory>
 
