@@ -46,7 +46,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pass = getSharedPreference(getString(R.string.key_setting_pass));
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-        ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
+//        ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
         stime = getCurrentStime();
 
         updateSensorNameSummary();
@@ -254,13 +254,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
             ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
             ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-            ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
+//            ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
 
             getMain().showSnackMessage(R.string.msg_save_config);
             SensorConfig config = new SensorConfig();
             config.ifxdb = ifxdb;
             config.ifxip = ifxip;
-            config.ifxtg = ifxtg;
+//            config.ifxtg = ifxtg;
             Logger.v(TAG, "[Config] writing InfluxDb settings..");
             getMain().getRecordTrackManager().writeSensorConfig(config);
         } else if (!onInfluxDBConfigChanged) {
