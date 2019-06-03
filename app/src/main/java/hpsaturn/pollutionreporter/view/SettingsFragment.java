@@ -1,6 +1,7 @@
 package hpsaturn.pollutionreporter.view;
 
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.hpsaturn.tools.Logger;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorConfig;
+import io.nlopez.smartlocation.SmartLocation;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 2/17/19.
@@ -34,6 +36,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private boolean onCredentialsChanged;
     private boolean onInfluxDBConfigChanged;
     private boolean onAPIConfigChanged;
+    private Location lastLocation;
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -53,6 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         updateStimeSummary();
         validateWifiSwitch();
         validateIfxdbSwitch();
+
     }
 
     @Override
@@ -387,6 +391,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onResume() {
         super.onResume();
+        lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
