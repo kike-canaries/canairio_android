@@ -11,12 +11,12 @@
             app:summary=""
             app:title="Station Name" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_enable_reboot"
             app:summary="@string/summary_reboot"
             app:title="Reboot Device" />
-
+        
     </PreferenceCategory>
 
 
@@ -36,7 +36,7 @@
             app:summary="WiFi password"
             app:title="Password" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_enable_wifi"
             app:summary="@string/summary_wifi"
@@ -62,7 +62,7 @@
             app:summary="CanAirIO API Password"
             app:title="Password" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:key="@string/key_setting_enable_api"
             app:title="Enable CanAirIO API" />
 
@@ -92,7 +92,7 @@
         <!--app:summary=""-->
         <!--app:title="Optional Data Tags" />-->
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:key="@string/key_setting_enable_ifx"
             app:title="Enable InfluxDB Cloud" />
 
@@ -116,7 +116,7 @@
             app:summary="/sdcard/canairio"
             app:title="Export Directory" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:key="@string/key_setting_location"
             app:title="Save Current Location" />
 

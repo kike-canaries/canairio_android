@@ -10,7 +10,7 @@
     </style>
 
     <style name="PreferenceStyle" parent="@style/PreferenceThemeOverlay.v14.Material">
-        <item name="preferenceCategoryStyle">@style/CustomPreferenceCategory</item>
+        <!--<item name="preferenceCategoryStyle">@style/CustomPreferenceCategory</item>-->
     </style>
 
     <style name="CustomPreferenceCategory" parent="@style/Preference.Category">

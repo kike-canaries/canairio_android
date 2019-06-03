@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreferenceCompat;
+import androidx.preference.SwitchPreference;
 
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
@@ -160,7 +160,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private void saveWifiConfig(SharedPreferences sharedPreferences, String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_enable_wifi));
 
-        SwitchPreferenceCompat switchPreference = findPreference(key);
+        SwitchPreference switchPreference = findPreference(key);
 
         if (switchPreference.isChecked()) {
             String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
@@ -188,7 +188,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void validateWifiSwitch() {
-        SwitchPreferenceCompat wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
+        SwitchPreference wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
         String old_ssid = ssid;
         String old_pass = pass;
         ssid = getSharedPreference(getString(R.string.key_setting_ssid));
@@ -203,7 +203,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void validateApiSwitch() {
-        SwitchPreferenceCompat apiSwitch = findPreference(getString(R.string.key_setting_enable_api));
+        SwitchPreference apiSwitch = findPreference(getString(R.string.key_setting_enable_api));
         String old_apiusr = apiusr;
         String old_apipss = apipss;
         apiusr = getSharedPreference(getString(R.string.key_setting_apiusr));
@@ -222,7 +222,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private void saveApiConfig(SharedPreferences sharedPreferences, String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_enable_api));
 
-        SwitchPreferenceCompat switchPreference = findPreference(key);
+        SwitchPreference switchPreference = findPreference(key);
 
         if (switchPreference.isChecked()) {
             String api_usr = getSharedPreference(getString(R.string.key_setting_apiusr));
@@ -252,7 +252,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private void saveInfluxConfig(SharedPreferences sharedPreferences, String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
-        SwitchPreferenceCompat switchPreference = findPreference(key);
+        SwitchPreference switchPreference = findPreference(key);
 
         if (switchPreference.isChecked()) {
 
@@ -276,7 +276,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void validateIfxdbSwitch() {
-        SwitchPreferenceCompat ifxdbSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
+        SwitchPreference ifxdbSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
         String old_ifxdb = ifxdb;
         String old_ifxip = ifxip;
 //        String old_ifxtg = ifxtg;
@@ -335,7 +335,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 //        pref.setSummary(config.ifxtg);
         pref = findPreference(getString(R.string.key_setting_stime));
         pref.setSummary("" + config.stime + " seconds");
-        SwitchPreferenceCompat wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
+        SwitchPreference wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
         wifiSwitch.setChecked(config.wenb);
     }
 
