@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        android:title="Sensor settings">
+    <PreferenceCategory app:title="Sensor settings">
 
         <EditTextPreference
             android:inputType="text"
-            android:icon="@android:drawable/ic_menu_save"
+            app:icon="@android:drawable/ic_menu_save"
             app:key="@string/key_setting_dname"
             app:summary=""
             app:title="Station Name" />
 
-        <EditTextPreference
-            android:defaultValue="/sdcard/canairio"
-            android:editable="false"
-            android:enabled="false"
-            android:inputType="textUri"
-            app:key="@string/key_setting_sdpath"
-            app:summary="/sdcard/canairio"
-            app:title="Export Directory" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_reboot"
+            app:summary="@string/summary_reboot"
+            app:title="Reboot Device" />
 
     </PreferenceCategory>
 
 
-    <PreferenceCategory
-        android:title="Dedicated WiFi Connection">
+    <PreferenceCategory app:title="Dedicated WiFi Connection">
 
         <EditTextPreference
-            android:icon="@android:drawable/ic_lock_lock"
             android:inputType="text"
+            app:icon="@android:drawable/ic_lock_lock"
             app:key="@string/key_setting_ssid"
             app:summary=""
             app:title="WiFi Name" />
@@ -42,28 +37,28 @@
             app:title="Password" />
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="@string/key_setting_enable_wifi"
-            android:summary="@string/summary_wifi"
-            android:title="Enable WiFi Connection" />
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_wifi"
+            app:summary="@string/summary_wifi"
+            app:title="Enable WiFi Connection" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:dependency="@string/key_setting_enable_wifi"
-        android:title="CanAirIO Cloud Config">
+        app:dependency="@string/key_setting_enable_wifi"
+        app:title="CanAirIO Cloud Config">
 
         <EditTextPreference
-            android:icon="@android:drawable/ic_menu_upload"
             android:inputType="text"
+            app:icon="@android:drawable/ic_menu_upload"
             app:key="@string/key_setting_apiusr"
             app:summary=""
             app:title="Username" />
 
         <EditTextPreference
             android:inputType="textWebPassword"
-            app:key="@string/key_setting_apipss"
             android:password="true"
+            app:key="@string/key_setting_apipss"
             app:summary="CanAirIO API Password"
             app:title="Password" />
 
@@ -75,12 +70,12 @@
 
 
     <PreferenceCategory
-        android:dependency="@string/key_setting_enable_wifi"
-        android:title="Optional InfluxDB Config">
+        app:dependency="@string/key_setting_enable_wifi"
+        app:title="Optional InfluxDB Config">
 
         <EditTextPreference
-            android:icon="@android:drawable/ic_menu_upload"
             android:inputType="text"
+            app:icon="@android:drawable/ic_menu_upload"
             app:key="@string/key_setting_ifxdb"
             app:summary=""
             app:title="Database Name" />
@@ -92,10 +87,10 @@
             app:title="Hostname" />
 
         <!--<EditTextPreference-->
-            <!--android:inputType="text"-->
-            <!--app:key="@string/key_setting_ifxtg"-->
-            <!--app:summary=""-->
-            <!--app:title="Optional Data Tags" />-->
+        <!--app:inputType="text"-->
+        <!--app:key="@string/key_setting_ifxtg"-->
+        <!--app:summary=""-->
+        <!--app:title="Optional Data Tags" />-->
 
         <SwitchPreferenceCompat
             app:key="@string/key_setting_enable_ifx"
@@ -103,29 +98,38 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="Optional Static Station Settings">
+    <PreferenceCategory app:title="Optional Static Station Settings">
 
         <EditTextPreference
-            android:defaultValue="5"
             android:inputType="number"
+            app:defaultValue="5"
             app:key="@string/key_setting_stime"
             app:summary="@string/summary_stime"
             app:title="Sample Time Interval" />
+
+        <EditTextPreference
+            android:editable="false"
+            android:inputType="textUri"
+            app:defaultValue="/sdcard/canairio"
+            app:enabled="false"
+            app:key="@string/key_setting_sdpath"
+            app:summary="/sdcard/canairio"
+            app:title="Export Directory" />
 
         <SwitchPreferenceCompat
             app:key="@string/key_setting_location"
             app:title="Save Current Location" />
 
+
     </PreferenceCategory>
 
-    <PreferenceCategory>
+    <PreferenceCategory app:title="">
         <Preference
-            android:icon="@android:drawable/ic_menu_send"
+            app:icon="@android:drawable/ic_menu_send"
             app:key="feedback"
             app:summary="Report technical issues or suggest new features"
             app:title="Send Feedback" />
     </PreferenceCategory>
 
 
-</androidx.preference.PreferenceScreen>
+</PreferenceScreen>
