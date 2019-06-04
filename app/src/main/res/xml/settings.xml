@@ -16,7 +16,7 @@
             app:key="@string/key_setting_enable_reboot"
             app:summary="@string/summary_reboot"
             app:title="Reboot Device" />
-        
+
     </PreferenceCategory>
 
 

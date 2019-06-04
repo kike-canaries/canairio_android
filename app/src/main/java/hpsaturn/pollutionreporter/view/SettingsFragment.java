@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 
 import com.hpsaturn.tools.Logger;
 
+import java.text.DecimalFormat;
+
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorConfig;
@@ -56,7 +58,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         updateStimeSummary();
         validateWifiSwitch();
         validateIfxdbSwitch();
-
     }
 
     @Override
@@ -312,8 +313,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "stime: " + config.stime);
             Logger.i(TAG, "wmac:  " + config.wmac);
             Logger.i(TAG, "wifien:" + config.wenb);
-            Logger.i(TAG, "apiusr: " + config.apiusr);
-            getMain().showSnackMessage(R.string.msg_config_saved);
+            Logger.i(TAG, "apien: " + config.aenb);
+            Logger.i(TAG, "ifxen: " + config.ienb);
+            Logger.i(TAG, "apiusr:" + config.apiusr);
+//            getMain().showSnackMessage(R.string.msg_config_saved);
             updatePreferencesSummmary(config);
             saveAllPreferences(config);
         }
@@ -335,8 +338,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 //        pref.setSummary(config.ifxtg);
         pref = findPreference(getString(R.string.key_setting_stime));
         pref.setSummary("" + config.stime + " seconds");
+
+        if(lastLocation!=null) {
+            pref = findPreference(getString(R.string.key_setting_location));
+            DecimalFormat precision = new DecimalFormat("0.000");
+            String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
+            String lat = "(" + precision.format(lastLocation.getLatitude());
+            String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
+            pref.setSummary(accu + lat + lon);
+        }
+
         SwitchPreference wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
         wifiSwitch.setChecked(config.wenb);
+        SwitchPreference apiSwitch = findPreference(getString(R.string.key_setting_enable_api));
+        apiSwitch.setChecked(config.aenb);
+        SwitchPreference ifxSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
+        ifxSwitch.setChecked(config.ienb);
     }
 
     private void updateIfxdbSummmary() {
