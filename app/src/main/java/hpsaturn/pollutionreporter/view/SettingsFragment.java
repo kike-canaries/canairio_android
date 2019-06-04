@@ -92,8 +92,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveApiConfig(sharedPreferences, key);
         } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
             saveInfluxConfig(sharedPreferences, key);
+        } else if (key.equals(getString(R.string.key_setting_enable_reboot))){
+            performRebootDevice();
         } else
             validateIfxdbSwitch();
+    }
+
+    private void performRebootDevice() {
+        SensorConfig config = new SensorConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "rbt";
+        getMain().getRecordTrackManager().writeSensorConfig(config);
+    }
+
+    private void performClearDevice() {
+        SensorConfig config = new SensorConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "cls";
+        getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
     private void validateSensorName(SharedPreferences sharedPreferences, String key) {

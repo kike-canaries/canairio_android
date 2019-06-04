@@ -215,6 +215,7 @@ public class RecordTrackService extends Service {
             recordTrackManager.status(RecordTrackManager.STATUS_BLE_FAILURE);
             if (retry_connect++ < RETRY_POLICY) {
                 Logger.w(TAG, "[BLE] retry connection on failure.." + retry_connect);
+                if(bleHandler!=null) bleHandler.triggerDisconnect();
                 startConnection();
             }
         }
