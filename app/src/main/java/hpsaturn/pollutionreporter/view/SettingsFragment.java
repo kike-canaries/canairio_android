@@ -103,7 +103,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (!old_sname.equals(sname)) {
             saveSensorName(sname);
         }
-        updateStimeSummary();
+        updateSensorNameSummary();
     }
 
     private void saveSensorName(String name) {

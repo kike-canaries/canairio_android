@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Sensor settings">
+    <PreferenceCategory app:title="Mobile Sensor Settings">
 
         <EditTextPreference
             android:inputType="text"
@@ -11,16 +11,27 @@
             app:summary=""
             app:title="Station Name" />
 
-        <SwitchPreference
-            app:defaultValue="false"
-            app:key="@string/key_setting_enable_reboot"
-            app:summary="@string/summary_reboot"
-            app:title="Reboot Device" />
+        <EditTextPreference
+            android:inputType="number"
+            app:defaultValue="5"
+            app:key="@string/key_setting_stime"
+            app:summary="@string/summary_stime"
+            app:title="Sample Time Interval" />
+
+        <EditTextPreference
+            android:editable="false"
+            android:inputType="textUri"
+            app:defaultValue="/sdcard/canairio"
+            app:enabled="false"
+            app:key="@string/key_setting_sdpath"
+            app:summary="/sdcard/canairio"
+            app:title="Auto Save Directory" />
 
     </PreferenceCategory>
 
-
-    <PreferenceCategory app:title="Dedicated WiFi Connection">
+    <PreferenceCategory
+        app:dependency="@string/key_setting_dname"
+        app:title="Static Sensor Settings">
 
         <EditTextPreference
             android:inputType="text"
@@ -46,7 +57,7 @@
 
     <PreferenceCategory
         app:dependency="@string/key_setting_enable_wifi"
-        app:title="CanAirIO Cloud Config">
+        app:title="CanAirIO Cloud">
 
         <EditTextPreference
             android:inputType="text"
@@ -71,7 +82,7 @@
 
     <PreferenceCategory
         app:dependency="@string/key_setting_enable_wifi"
-        app:title="Optional InfluxDB Config">
+        app:title="Optional InfluxDB Cloud">
 
         <EditTextPreference
             android:inputType="text"
@@ -98,28 +109,17 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Optional Static Station Settings">
-
-        <EditTextPreference
-            android:inputType="number"
-            app:defaultValue="5"
-            app:key="@string/key_setting_stime"
-            app:summary="@string/summary_stime"
-            app:title="Sample Time Interval" />
-
-        <EditTextPreference
-            android:editable="false"
-            android:inputType="textUri"
-            app:defaultValue="/sdcard/canairio"
-            app:enabled="false"
-            app:key="@string/key_setting_sdpath"
-            app:summary="/sdcard/canairio"
-            app:title="Export Directory" />
+    <PreferenceCategory app:title="Optional Device Settings">
 
         <SwitchPreference
             app:key="@string/key_setting_location"
             app:title="Save Current Location" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_reboot"
+            app:summary="@string/summary_reboot"
+            app:title="Reboot Device" />
 
     </PreferenceCategory>
 
