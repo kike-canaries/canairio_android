@@ -112,7 +112,7 @@
     <PreferenceCategory app:title="Optional Device Settings">
 
         <SwitchPreference
-            app:key="@string/key_setting_location"
+            app:key="@string/key_setting_enable_location"
             app:title="Save Current Location" />
 
         <SwitchPreference

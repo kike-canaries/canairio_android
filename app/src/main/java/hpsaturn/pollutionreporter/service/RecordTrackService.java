@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
+
 import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
@@ -96,7 +97,7 @@ public class RecordTrackService extends Service {
     }
 
     private OnLocationUpdatedListener onLocationListener = location -> {
-        if(VERBOSE) {
+        if (VERBOSE) {
             Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
             Logger.i(TAG, "[BLE][LOC] accuracy: " + location.getAccuracy());
             Logger.i(TAG, "[BLE][LOC] coords  : " + location.getLatitude() + "," + location.getLongitude());
@@ -135,7 +136,7 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onServiceStop() {
-           stopService();
+            stopService();
         }
 
         @Override
@@ -160,12 +161,12 @@ public class RecordTrackService extends Service {
 
         @Override
         public void requestSensorConfigRead() {
-            if(bleHandler!=null) bleHandler.readSensorConfig();
+            if (bleHandler != null) bleHandler.readSensorConfig();
         }
 
         @Override
         public void requestSensorDataRead() {
-            if(bleHandler!=null)bleHandler.readSensorData();
+            if (bleHandler != null) bleHandler.readSensorData();
         }
 
         @Override
@@ -181,7 +182,7 @@ public class RecordTrackService extends Service {
         @Override
         public void onSensorConfigWrite(SensorConfig config) {
             String data = new Gson().toJson(config);
-            if(bleHandler!=null)bleHandler.writeSensorConfig(data.getBytes());
+            if (bleHandler != null) bleHandler.writeSensorConfig(data.getBytes());
         }
 
     };
@@ -193,9 +194,9 @@ public class RecordTrackService extends Service {
             SmartLocation.with(RecordTrackService.this).location().stop();
             RecordTrackScheduler.stopSheduleService(this);
             Logger.w(TAG, "[BLE] kill service..");
+            bleHandler=null;
             this.stopSelf();
-        }
-        else if (isRecording) Logger.w(TAG, "[BLE] isRecording override stop BLE service");
+        } else if (isRecording) Logger.w(TAG, "[BLE] isRecording override stop BLE service");
     }
 
 
@@ -215,7 +216,6 @@ public class RecordTrackService extends Service {
             recordTrackManager.status(RecordTrackManager.STATUS_BLE_FAILURE);
             if (retry_connect++ < RETRY_POLICY) {
                 Logger.w(TAG, "[BLE] retry connection on failure.." + retry_connect);
-                if(bleHandler!=null) bleHandler.triggerDisconnect();
                 startConnection();
             }
         }
@@ -235,7 +235,7 @@ public class RecordTrackService extends Service {
             Logger.e(TAG, "[BLE] onNotificationSetupFailure");
             if (retry_notify_setup++ < RETRY_POLICY) {
                 Logger.w(TAG, "[BLE] retry notify setup.." + retry_notify_setup);
-                bleHandler.setupNotification();
+                if(bleHandler!=null)bleHandler.setupNotification();
             }
         }
 
@@ -271,7 +271,7 @@ public class RecordTrackService extends Service {
         }
     };
 
-    private SensorData getSensorData(byte [] bytes){
+    private SensorData getSensorData(byte[] bytes) {
         String strdata = new String(bytes);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
         data.timestamp = System.currentTimeMillis() / 1000;
@@ -289,27 +289,27 @@ public class RecordTrackService extends Service {
         Logger.d(TAG, "[BLE] saving sensor data done.");
     }
 
-    private void saveTrack(){
+    private void saveTrack() {
         Logger.i(TAG, "[BLE] saving record track..");
         SensorTrack lastTrack = getLastTrack();
-        Storage.saveTrack(this,lastTrack);
+        Storage.saveTrack(this, lastTrack);
         saveTrackOnSD(lastTrack);
-        Storage.setSensorData(this,new ArrayList<>()); // clear sensor data
+        Storage.setSensorData(this, new ArrayList<>()); // clear sensor data
         recordTrackManager.tracksUpdated();
         Logger.i(TAG, "[BLE] record track done.");
     }
 
-    private void saveTrackOnSD(SensorTrack track){
+    private void saveTrackOnSD(SensorTrack track) {
         Logger.i(TAG, "[BLE] saving track on SD..");
         String data = new Gson().toJson(track);
         new FileTools.saveDownloadFile(
                 data.getBytes(),
                 "canairio",
-                track.name+".json"
+                track.name + ".json"
         ).execute();
     }
 
-    private SensorTrack getLastTrack(){
+    private SensorTrack getLastTrack() {
         ArrayList<SensorData> data = Storage.getSensorData(this);
         SensorTrack track = new SensorTrack();
         Date c = Calendar.getInstance().getTime();
@@ -321,7 +321,7 @@ public class RecordTrackService extends Service {
         track.size = data.size();
         track.date = date;
         track.data = data;
-        if(data.size()>0) {
+        if (data.size() > 0) {
             SensorData lastSensorData = data.get(data.size() - 1);
             track.lastSensorData = lastSensorData;
             track.lastLat = lastSensorData.lat;
@@ -337,7 +337,7 @@ public class RecordTrackService extends Service {
 
     @Override
     public void onDestroy() {
-        if(bleHandler!=null) bleHandler.triggerDisconnect();
+        if (bleHandler != null) bleHandler.triggerDisconnect();
         recordTrackManager.unregister();
         super.onDestroy();
     }

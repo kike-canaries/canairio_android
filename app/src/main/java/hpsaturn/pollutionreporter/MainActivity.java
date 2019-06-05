@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startBleService();
+        startRecordTrackService();
 
         ButterKnife.bind(this);
         prefBuilder = AppData.getPrefBuilder(this);
@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity implements
         }
     };
 
-    private boolean isRecording(){
+    public boolean isRecording(){
         return prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
     }
 
@@ -368,15 +368,21 @@ public class MainActivity extends BaseActivity implements
         Snackbar.make(coordinatorLayout, getString(id), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
     }
 
-    private void startBleService() {
+    public void startRecordTrackService() {
+        Logger.v(TAG,"starting RecordTrackService..");
         Intent newIntent = new Intent(this, RecordTrackService.class);
         startService(newIntent);
         RecordTrackScheduler.startScheduleService(this, Config.DEFAULT_INTERVAL);
     }
 
+    public void stopRecordTrackService() {
+        Logger.v(TAG,"stoping RecordTrackService..");
+        recordTrackManager.stop();
+    }
+
     public void deviceConnect() {
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
-            startBleService();
+            startRecordTrackService();
             showSnackMessage(R.string.msg_device_connecting);
         }
     }
@@ -420,7 +426,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     protected void onDestroy() {
-        recordTrackManager.stop();
+        stopRecordTrackService();
         recordTrackManager.unregister();
         super.onDestroy();
     }

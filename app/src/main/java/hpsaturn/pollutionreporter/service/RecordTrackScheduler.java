@@ -47,6 +47,7 @@ public class RecordTrackScheduler extends BroadcastReceiver {
         AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, RecordTrackReceiver.class);
         PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+        assert service != null;
         service.cancel(pending);
     }
 

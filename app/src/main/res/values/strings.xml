@@ -44,7 +44,7 @@
     <string name="key_setting_enable_api">key_setting_api_enable</string>
     <string name="key_setting_enable_ifx">key_setting_ifx_enable</string>
     <string name="key_setting_enable_reboot">key_setting_reboot_enable</string>
-    <string name="key_setting_location">key_setting_location</string>
+    <string name="key_setting_enable_location">key_setting_location</string>
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>

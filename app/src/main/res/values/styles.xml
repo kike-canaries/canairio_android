@@ -13,7 +13,7 @@
         <!--<item name="preferenceCategoryStyle">@style/CustomPreferenceCategory</item>-->
     </style>
 
-    <style name="CustomPreferenceCategory" parent="@style/Preference.Category">
+    <style name="CustomPreferenceCategory" parent="@style/Preference.Category.Material">
         <!--<item name="android:layout">@layout/setting_text</item>-->
     </style>
 

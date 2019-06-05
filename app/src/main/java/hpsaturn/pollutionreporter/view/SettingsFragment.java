@@ -12,6 +12,7 @@ import androidx.preference.SwitchPreference;
 
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         updateSensorNameSummary();
         updateStimeSummary();
+
         validateWifiSwitch();
         validateIfxdbSwitch();
     }
@@ -92,17 +94,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveApiConfig(sharedPreferences, key);
         } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
             saveInfluxConfig(sharedPreferences, key);
-        } else if (key.equals(getString(R.string.key_setting_enable_reboot))){
+        } else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
             performRebootDevice();
         } else
             validateIfxdbSwitch();
     }
 
     private void performRebootDevice() {
+        SwitchPreference rebootSwitch = findPreference(getString(R.string.key_setting_enable_reboot));
+        if (!rebootSwitch.isChecked()) return;
         SensorConfig config = new SensorConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "rbt";
         getMain().getRecordTrackManager().writeSensorConfig(config);
+        Handler handler = new Handler();
+        handler.postDelayed(() -> getMain().stopRecordTrackService(), 2000);
+        handler.postDelayed(() -> {
+            getMain().startRecordTrackService();
+            rebootSwitch.setChecked(false);
+        }, 3000);
     }
 
     private void performClearDevice() {
@@ -354,22 +364,28 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 //        pref.setSummary(config.ifxtg);
         pref = findPreference(getString(R.string.key_setting_stime));
         pref.setSummary("" + config.stime + " seconds");
-
-        if(lastLocation!=null) {
-            pref = findPreference(getString(R.string.key_setting_location));
-            DecimalFormat precision = new DecimalFormat("0.000");
-            String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
-            String lat = "(" + precision.format(lastLocation.getLatitude());
-            String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
-            pref.setSummary(accu + lat + lon);
-        }
-
+        updateLocationSummary();
         SwitchPreference wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
         wifiSwitch.setChecked(config.wenb);
         SwitchPreference apiSwitch = findPreference(getString(R.string.key_setting_enable_api));
         apiSwitch.setChecked(config.aenb);
         SwitchPreference ifxSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
         ifxSwitch.setChecked(config.ienb);
+    }
+
+    private void updateLocationSummary() {
+        if (lastLocation != null) {
+            Preference pref;
+            pref = findPreference(getString(R.string.key_setting_enable_location));
+            DecimalFormat precision = new DecimalFormat("0.000");
+            String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
+            String lat = "(" + precision.format(lastLocation.getLatitude());
+            String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
+            pref.setSummary(accu + lat + lon);
+        }
+        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
+        locationSwitch.setChecked(false);
+
     }
 
     private void updateIfxdbSummmary() {
@@ -426,6 +442,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         super.onResume();
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        updateLocationSummary();
     }
 
     @Override
