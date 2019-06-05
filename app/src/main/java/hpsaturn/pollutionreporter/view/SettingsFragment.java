@@ -57,7 +57,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         updateSensorNameSummary();
         updateStimeSummary();
-
         validateWifiSwitch();
         validateIfxdbSwitch();
     }
@@ -133,6 +132,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void saveSensorName(String name) {
+        if(name.length() == 0 ) return;
         getMain().showSnackMessage(R.string.msg_save_config);
         SensorConfig config = new SensorConfig();
         config.dname = name;
@@ -192,6 +192,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (switchPreference.isChecked()) {
             String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
             String pass = getSharedPreference(getString(R.string.key_setting_pass));
+            if(ssid.length()==0 || pass.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config);
             SensorConfig config = new SensorConfig();
             config.ssid = ssid;
@@ -254,6 +255,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (switchPreference.isChecked()) {
             String api_usr = getSharedPreference(getString(R.string.key_setting_apiusr));
             String api_pss = getSharedPreference(getString(R.string.key_setting_apipss));
+            if(api_usr.length() == 0 || api_pss.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config);
             SensorConfig config = new SensorConfig();
             config.apiusr = api_usr;
@@ -283,10 +285,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         if (switchPreference.isChecked()) {
 
-            ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
-            ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-//            ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
-
+            String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
+            String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
+//          String ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
+            if(ifxdb.length() == 0 || ifxip.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config);
             SensorConfig config = new SensorConfig();
             config.ifxdb = ifxdb;
@@ -342,7 +344,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "apien: " + config.aenb);
             Logger.i(TAG, "ifxen: " + config.ienb);
             Logger.i(TAG, "apiusr:" + config.apiusr);
-//            getMain().showSnackMessage(R.string.msg_config_saved);
             updatePreferencesSummmary(config);
             saveAllPreferences(config);
         }
