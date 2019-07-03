@@ -386,7 +386,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
         SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
         locationSwitch.setChecked(false);
+    }
 
+    private void saveLocation(String name) {
+        if(lastLocation != null) {
+            SensorConfig config = new SensorConfig();
+            config.lat = lastLocation.getLatitude();
+            config.lon = lastLocation.getLongitude();
+            config.alt = lastLocation.getAltitude();
+            config.spd = lastLocation.getSpeed();
+            updateLocationSummary();
+            getMain().getRecordTrackManager().writeSensorConfig(config);
+            getMain().showSnackMessage(R.string.msg_save_location);
+        }
+        else
+            getMain().showSnackMessage(R.string.msg_save_location_failed);
     }
 
     private void updateIfxdbSummmary() {

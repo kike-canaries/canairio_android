@@ -34,4 +34,12 @@ public class SensorConfig {
     public String cmd;
 
     public String act;
+
+    public double lat;
+
+    public double lon;
+
+    public double alt;
+
+    public float spd;
 }

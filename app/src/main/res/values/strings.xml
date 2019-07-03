@@ -29,6 +29,8 @@
     <string name="msg_save_config">Saving device setting…</string>
     <string name="msg_config_saved">Device settings updated!</string>
     <string name="msg_stime_error">Wrong value, restoring default value…</string>
+    <string name="msg_save_location">Saving location…</string>
+    <string name="msg_save_location_failed">Location is no ready…</string>
     <string name="key_setting_dname">key_setting_dname</string>
     <string name="key_setting_apiusr">key_setting_apiusr</string>
     <string name="key_setting_apipss">key_setting_apipss</string>
