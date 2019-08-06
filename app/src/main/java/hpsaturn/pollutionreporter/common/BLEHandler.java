@@ -163,9 +163,14 @@ public class BLEHandler {
     }
 
     public void triggerDisconnect() {
-        Logger.w(TAG, "[BLE] triggerDisconnect..");
-        compositeDisposable.clear();
-        disconnectTriggerSubject.onNext(true);
+        try {
+            Logger.w(TAG, "[BLE] triggerDisconnect..");
+            compositeDisposable.clear();
+            disconnectTriggerSubject.onNext(true);
+        } catch (Exception e) {
+            Logger.e(TAG,"triggerDisconnect exception: "+e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void onNotificationReceived(byte[] bytes) {
