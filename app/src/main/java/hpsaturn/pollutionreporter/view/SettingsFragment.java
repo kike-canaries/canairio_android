@@ -34,7 +34,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
-    private String sname, ssid, pass, ifxdb, ifxip, ifxtg, apiusr, apipss;
+    private String sname, ssid, pass, ifxdb, ifxip, apiusr, apipss;
     private int stime;
     private boolean onCredentialsChanged;
     private boolean onInfluxDBConfigChanged;
@@ -52,7 +52,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pass = getSharedPreference(getString(R.string.key_setting_pass));
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-//        ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
         stime = getCurrentStime();
 
         updateSensorNameSummary();
@@ -287,13 +286,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
             String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
             String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-//          String ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
             if(ifxdb.length() == 0 || ifxip.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config);
             SensorConfig config = new SensorConfig();
             config.ifxdb = ifxdb;
             config.ifxip = ifxip;
-//            config.ifxtg = ifxtg;
             Logger.v(TAG, "[Config] writing InfluxDb settings..");
             getMain().getRecordTrackManager().writeSensorConfig(config);
         } else if (!onInfluxDBConfigChanged) {
@@ -308,15 +305,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SwitchPreference ifxdbSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
         String old_ifxdb = ifxdb;
         String old_ifxip = ifxip;
-//        String old_ifxtg = ifxtg;
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-//        ifxtg = getSharedPreference(getString(R.string.key_setting_ifxtg));
         updateIfxdbSummmary();
 
         ifxdbSwitch.setEnabled(!(ifxdb.length() == 0 || ifxip.length() == 0));
 
-//        if (!(old_ifxdb.equals(ifxdb) && old_ifxip.equals(ifxip) && old_ifxtg.equals(ifxtg))) {
         if (!(old_ifxdb.equals(ifxdb) && old_ifxip.equals(ifxip))) {
             ifxdbSwitch.setChecked(false);   // TODO: force user to enable again?
             onInfluxDBConfigChanged = true;
@@ -336,7 +330,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "dname: " + config.dname);
             Logger.i(TAG, "ifxdb: " + config.ifxdb);
             Logger.i(TAG, "ifxip: " + config.ifxip);
-//            Logger.i(TAG, "ifxtg: " + config.ifxtg);
             Logger.i(TAG, "ssid:  " + config.ssid);
             Logger.i(TAG, "stime: " + config.stime);
             Logger.i(TAG, "wmac:  " + config.wmac);
@@ -361,8 +354,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(config.ifxdb);
         pref = findPreference(getString(R.string.key_setting_ifxip));
         pref.setSummary(config.ifxip);
-//        pref = findPreference(getString(R.string.key_setting_ifxtg));
-//        pref.setSummary(config.ifxtg);
         pref = findPreference(getString(R.string.key_setting_stime));
         pref.setSummary("" + config.stime + " seconds");
         updateLocationSummary();
@@ -410,8 +401,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(ifxdb);
         pref = findPreference(getString(R.string.key_setting_ifxip));
         pref.setSummary(ifxip);
-//        pref = findPreference(getString(R.string.key_setting_ifxtg));
-//        pref.setSummary(ifxtg);
     }
 
     private void updateApiSummmary() {
@@ -425,7 +414,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
-//        saveSharedPreference(R.string.key_setting_ifxtg, config.ifxtg);
         saveSharedPreference(R.string.key_setting_stime, "" + config.stime);
         saveSharedPreference(R.string.key_setting_wmac, "" + config.wmac);
     }
