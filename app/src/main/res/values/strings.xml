@@ -29,6 +29,8 @@
     <string name="msg_save_config">Saving device setting…</string>
     <string name="msg_config_saved">Device settings updated!</string>
     <string name="msg_stime_error">Wrong value, restoring default value…</string>
+    <string name="msg_save_location">Saving location…</string>
+    <string name="msg_save_location_failed">Location is no ready…</string>
     <string name="key_setting_dname">key_setting_dname</string>
     <string name="key_setting_apiusr">key_setting_apiusr</string>
     <string name="key_setting_apipss">key_setting_apipss</string>
@@ -43,9 +45,12 @@
     <string name="key_setting_enable_wifi">key_setting_wifi_enable</string>
     <string name="key_setting_enable_api">key_setting_api_enable</string>
     <string name="key_setting_enable_ifx">key_setting_ifx_enable</string>
+    <string name="key_setting_enable_reboot">key_setting_reboot_enable</string>
+    <string name="key_setting_enable_location">key_setting_location</string>
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>
+    <string name="summary_reboot">Send reboot command to device</string>
     <string name="bt_device_build">build your own device</string>
     <string name="url_hacksterio_en">https://www.hackster.io/canairio-guide-team/canairio-citizen-network-for-air-quality-monitoring-bbf647</string>
     <string name="url_hacksterio_es">https://www.hackster.io/114723/canairio-red-ciudadana-para-monitoreo-de-calidad-del-aire-96f79a</string>

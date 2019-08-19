@@ -8,6 +8,8 @@ import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.RxBleConnection;
 import com.polidea.rxandroidble2.RxBleDevice;
 
+import org.reactivestreams.Subscription;
+
 import java.util.UUID;
 
 import hpsaturn.pollutionreporter.AppData;
@@ -34,6 +36,7 @@ public class BLEHandler {
     private UUID charactConfigUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae02");
 
     private PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
+    private Subscription connectionSubscription;
     private Observable<RxBleConnection> connectionObservable;
     private Disposable scanDisposable;
     private RxBleClient rxBleClient;
@@ -74,6 +77,7 @@ public class BLEHandler {
         rxBleClient = AppData.getRxBleClient(ctx);
         bleDevice = rxBleClient.getBleDevice(address);
         connectionObservable = prepareConnectionObservable();
+
 
         if (isConnected()) {
             triggerDisconnect();
@@ -159,8 +163,14 @@ public class BLEHandler {
     }
 
     public void triggerDisconnect() {
-        Logger.w(TAG, "[BLE] triggerDisconnect..");
-        disconnectTriggerSubject.onNext(true);
+        try {
+            Logger.w(TAG, "[BLE] triggerDisconnect..");
+            compositeDisposable.clear();
+            disconnectTriggerSubject.onNext(true);
+        } catch (Exception e) {
+            Logger.e(TAG,"triggerDisconnect exception: "+e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void onNotificationReceived(byte[] bytes) {

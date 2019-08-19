@@ -27,7 +27,19 @@ public class SensorConfig {
 
     public boolean wenb;
 
+    public boolean ienb;
+
+    public boolean aenb;
+
     public String cmd;
 
     public String act;
+
+    public double lat;
+
+    public double lon;
+
+    public double alt;
+
+    public float spd;
 }

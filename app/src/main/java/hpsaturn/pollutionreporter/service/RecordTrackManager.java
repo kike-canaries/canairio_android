@@ -142,7 +142,11 @@ public class RecordTrackManager {
     }
 
     public void unregister() {
-        ctx.unregisterReceiver(mReceiver);
+        try {
+            ctx.unregisterReceiver(mReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
