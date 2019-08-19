@@ -378,8 +378,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
             pref.setSummary(accu + lat + lon);
         }
-        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
-        locationSwitch.setChecked(false);
     }
 
     private void saveLocation() {
