@@ -58,6 +58,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         updateStimeSummary();
         validateWifiSwitch();
         validateIfxdbSwitch();
+        validateLocationSwitch();
     }
 
     @Override
@@ -94,6 +95,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveInfluxConfig(sharedPreferences, key);
         } else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
             performRebootDevice();
+        } else if (key.equals(getString(R.string.key_setting_enable_location))) {
+            saveLocation();
         } else
             validateIfxdbSwitch();
     }
@@ -379,8 +382,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         locationSwitch.setChecked(false);
     }
 
-    private void saveLocation(String name) {
-        if(lastLocation != null) {
+    private void saveLocation() {
+        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
+        if(lastLocation != null && locationSwitch.isChecked()) {
             getMain().showSnackMessage(R.string.msg_save_location);
             SensorConfig config = new SensorConfig();
             config.lat = lastLocation.getLatitude();
@@ -393,6 +397,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             getMain().showSnackMessage(R.string.msg_save_location_failed);
         }
         updateLocationSummary();
+    }
+
+    private void validateLocationSwitch() {
+        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
+        locationSwitch.setEnabled(lastLocation!=null);
     }
 
     private void updateIfxdbSummmary() {
@@ -447,6 +456,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         updateLocationSummary();
+        validateLocationSwitch();
     }
 
     @Override
