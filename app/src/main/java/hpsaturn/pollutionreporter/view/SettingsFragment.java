@@ -388,14 +388,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private void saveLocation() {
         SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
-        if(lastLocation != null && locationSwitch.isChecked()) {
-            getMain().showSnackMessage(R.string.msg_save_location);
-            SensorConfig config = new SensorConfig();
-            config.lat = lastLocation.getLatitude();
-            config.lon = lastLocation.getLongitude();
-            config.alt = lastLocation.getAltitude();
-            config.spd = lastLocation.getSpeed();
-            getMain().getRecordTrackManager().writeSensorConfig(config);
+        if(lastLocation != null) {
+            if(locationSwitch.isChecked()) {
+                snackBar = getMain().getSnackBar(R.string.msg_set_current_location, R.string.bt_location_save_action, view -> {
+                    locationSwitch.setChecked(false);
+                    getMain().showSnackMessage(R.string.msg_save_location);
+                    SensorConfig config = new SensorConfig();
+                    config.lat = lastLocation.getLatitude();
+                    config.lon = lastLocation.getLongitude();
+                    config.alt = lastLocation.getAltitude();
+                    config.spd = lastLocation.getSpeed();
+                    getMain().getRecordTrackManager().writeSensorConfig(config);
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> locationSwitch.setChecked(false), 3000);
+                });
+                snackBar.show();
+            }
+            else{
+                snackBar.dismiss();
+            }
         }
         else {
             getMain().showSnackMessage(R.string.msg_save_location_failed);

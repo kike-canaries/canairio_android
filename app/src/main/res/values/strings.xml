@@ -61,4 +61,6 @@
     <string name="bt_device_reboot">Please restart the app after this</string>
     <string name="bt_device_reboot_action">REBOOT</string>
     <string name="msg_device_reboot">CanAirio device rebooting…</string>
+    <string name="msg_set_current_location">Set current location into the device?</string>
+    <string name="bt_location_save_action">set</string>
 </resources>
