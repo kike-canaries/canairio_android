@@ -116,7 +116,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 getMain().showSnackMessageSlow(R.string.msg_device_reboot);
                 getMain().getRecordTrackManager().writeSensorConfig(config);
                 Handler handler = new Handler();
-                handler.postDelayed(() -> getMain().finish(), 4000);
+                handler.postDelayed(() -> getMain().finish(), 3000);
             });
             snackBar.show();
         }
