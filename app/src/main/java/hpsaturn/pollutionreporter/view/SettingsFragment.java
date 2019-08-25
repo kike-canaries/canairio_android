@@ -3,25 +3,19 @@ package hpsaturn.pollutionreporter.view;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
-
 import com.google.android.material.snackbar.Snackbar;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.hpsaturn.tools.Logger;
-
 import java.text.DecimalFormat;
-
+import com.hpsaturn.tools.Logger;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorConfig;
@@ -55,10 +49,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
         stime = getCurrentStime();
+    }
 
+    public void refreshUI(){
         updateSensorNameSummary();
         updateStimeSummary();
+        updateLocationSummary();
         validateWifiSwitch();
+        validateApiSwitch();
         validateIfxdbSwitch();
         validateLocationSwitch();
     }
@@ -97,10 +95,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveInfluxConfig(sharedPreferences, key);
         } else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
             performRebootDevice();
+        } else if (key.equals(getString(R.string.key_setting_enable_clear))) {
+            performClearDevice();
         } else if (key.equals(getString(R.string.key_setting_enable_location))) {
             saveLocation();
         } else
             validateIfxdbSwitch();
+        refreshUI();
     }
 
     private void performRebootDevice() {
@@ -123,10 +124,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void performClearDevice() {
-        SensorConfig config = new SensorConfig();
-        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
-        config.act = "cls";
-        getMain().getRecordTrackManager().writeSensorConfig(config);
+        SwitchPreference clearSwitch = findPreference(getString(R.string.key_setting_enable_clear));
+        if (!clearSwitch.isChecked()) {
+            if(snackBar!=null)snackBar.dismiss();
+        } else {
+            snackBar = getMain().getSnackBar(R.string.bt_device_clear, R.string.bt_device_clear_action, view -> {
+                clearSwitch.setChecked(false);
+                SensorConfig config = new SensorConfig();
+                config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+                config.act = "cls";
+                getMain().showSnackMessageSlow(R.string.msg_device_clear);
+                getMain().getRecordTrackManager().writeSensorConfig(config);
+                Handler handler = new Handler();
+                handler.postDelayed(() -> getMain().finish(), 3000);
+            });
+            snackBar.show();
+        }
     }
 
     private void validateSensorName(SharedPreferences sharedPreferences, String key) {
@@ -149,11 +162,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
 
     private void updateSensorNameSummary() {
+        updateSummary(R.string.key_setting_dname);
+    }
+
+    private void updateSummary(int key){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getMain());
-        String key = getString(R.string.key_setting_dname);
-        Preference pref = findPreference(key);
-        String dname = sharedPref.getString(key, "");
-        pref.setSummary(dname);
+        String skey = getString(key);
+        Preference pref = findPreference(skey);
+        String value = sharedPref.getString(skey, "");
+        pref.setSummary(value);
+    }
+
+    private void updateSummary(int key, String msg){
+        Preference pref = findPreference(getString(key));
+        pref.setSummary(msg);
+    }
+
+    private void updateSwitch(int key,boolean enable){
+        SwitchPreference mSwitch = findPreference(getString(key));
+        mSwitch.setChecked(enable);
     }
 
     private void validateSensorSampleTime(SharedPreferences sharedPreferences, String key) {
@@ -208,18 +235,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.v(TAG, "[Config] writing wifi credentials..");
             getMain().getRecordTrackManager().writeSensorConfig(config);
         } else if (!onCredentialsChanged) {
-            disableWifiOnDevice();
+            enableWifiOnDevice(false);
         } else {
             Logger.d(TAG, "[Config] onCredentialsChanged skip disable wifi.");
             onCredentialsChanged = false;
         }
     }
 
-    private void disableWifiOnDevice() {
+    private void enableWifiOnDevice(boolean enable) {
         SensorConfig config = new SensorConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "wst";
-        config.wenb = false;
+        config.wenb = enable;
         getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
@@ -229,7 +256,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         String old_pass = pass;
         ssid = getSharedPreference(getString(R.string.key_setting_ssid));
         pass = getSharedPreference(getString(R.string.key_setting_pass));
-
+        updateSummary(R.string.key_setting_ssid);
         wifiSwitch.setEnabled(!(ssid.length() == 0 || pass.length() == 0));
 
         if (!(old_ssid.equals(ssid) && old_pass.equals(pass))) {
@@ -268,6 +295,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             SensorConfig config = new SensorConfig();
             config.apiusr = api_usr;
             config.apipss = api_pss;
+            config.aenb = true;
             Logger.v(TAG, "[Config] writing API credentials..");
             getMain().getRecordTrackManager().writeSensorConfig(config);
         } else if (!onAPIConfigChanged) {
@@ -347,31 +375,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "ifxen: " + config.ienb);
             Logger.i(TAG, "apiusr:" + config.apiusr);
             updatePreferencesSummmary(config);
+            updateSwitches(config);
             saveAllPreferences(config);
         }
     }
 
     private void updatePreferencesSummmary(SensorConfig config) {
-        Preference pref;
-        pref = findPreference(getString(R.string.key_setting_dname));
-        pref.setSummary(config.dname);
-        pref = findPreference(getString(R.string.key_setting_apiusr));
-        pref.setSummary(config.apiusr);
-        pref = findPreference(getString(R.string.key_setting_ssid));
-        pref.setSummary(config.ssid);
-        pref = findPreference(getString(R.string.key_setting_ifxdb));
-        pref.setSummary(config.ifxdb);
-        pref = findPreference(getString(R.string.key_setting_ifxip));
-        pref.setSummary(config.ifxip);
-        pref = findPreference(getString(R.string.key_setting_stime));
-        pref.setSummary("" + config.stime + " seconds");
+        if(config.dname.length()!=0)updateSummary(R.string.key_setting_dname,config.dname);
+        if(config.apiusr.length()!=0)updateSummary(R.string.key_setting_apiusr,config.apiusr);
+        if(config.ssid.length()!=0)updateSummary(R.string.key_setting_ssid,config.ssid);
+        if(config.ifxdb.length()!=0)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
+        if(config.ifxip.length()!=0)updateSummary(R.string.key_setting_ifxip,config.ifxip);
+        if(config.stime>0)updateSummary(R.string.key_setting_stime,"" + config.stime + " seconds");
         updateLocationSummary();
-        SwitchPreference wifiSwitch = findPreference(getString(R.string.key_setting_enable_wifi));
-        wifiSwitch.setChecked(config.wenb);
-        SwitchPreference apiSwitch = findPreference(getString(R.string.key_setting_enable_api));
-        apiSwitch.setChecked(config.aenb);
-        SwitchPreference ifxSwitch = findPreference(getString(R.string.key_setting_enable_ifx));
-        ifxSwitch.setChecked(config.ienb);
+    }
+
+    private void updateSwitches(SensorConfig config){
+        updateSwitch(R.string.key_setting_enable_wifi,config.wenb);
+        updateSwitch(R.string.key_setting_enable_ifx,config.ienb);
+        updateSwitch(R.string.key_setting_enable_api,config.aenb);
     }
 
     private void updateLocationSummary() {
@@ -440,6 +462,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
         saveSharedPreference(R.string.key_setting_stime, "" + config.stime);
         saveSharedPreference(R.string.key_setting_wmac, "" + config.wmac);
+        saveSharedPreference(R.string.key_setting_enable_wifi,config.wenb);
+        saveSharedPreference(R.string.key_setting_enable_ifx,config.ienb);
+        saveSharedPreference(R.string.key_setting_enable_api,config.aenb);
     }
 
     public void saveSharedPreference(int key, String value) {
@@ -447,16 +472,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     public void saveSharedPreference(String key, String value) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(key, value);
-        editor.apply();
+        if(value.length()!=0) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(key, value);
+            editor.apply();
+        }
     }
 
-    public void saveSharedPreference(String key, boolean enable) {
+    public void saveSharedPreference(int key, boolean enable) {
+        String skey = getString(key);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(key, enable);
+        editor.putBoolean(skey, enable);
         editor.apply();
     }
 
@@ -470,8 +498,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         super.onResume();
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-        updateLocationSummary();
-        validateLocationSwitch();
+        refreshUI();
     }
 
     @Override

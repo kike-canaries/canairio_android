@@ -121,6 +121,13 @@
             app:summary="@string/summary_reboot"
             app:title="Reboot Device" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_clear"
+            app:summary="@string/summary_clear"
+            app:title="Factory Reset" />
+
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="">
