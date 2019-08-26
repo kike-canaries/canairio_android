@@ -181,14 +181,14 @@ public class MainActivity extends BaseActivity implements
     };
 
     private void stopRecord() {
-        showSnackMessageSlow(R.string.msg_record_stop);
+        showSnackMessage(R.string.msg_record_stop);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, false).save();
         recordTrackManager.serviceRecordStop();
         fabUpdateLayout();
     }
 
     private void startRecord() {
-        showSnackMessageSlow(R.string.msg_record);
+        showSnackMessage(R.string.msg_record);
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, true).save();
         recordTrackManager.serviceRecord();
         fabUpdateLayout();
@@ -368,6 +368,12 @@ public class MainActivity extends BaseActivity implements
         Snackbar.make(coordinatorLayout, getString(id), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
     }
 
+    public Snackbar getSnackBar(int id, int action, View.OnClickListener listener) {
+        return Snackbar.make(coordinatorLayout, getString(id), Snackbar.LENGTH_INDEFINITE)
+                .setAction(action, listener)
+                .setActionTextColor(getResources().getColor(R.color.white));
+    }
+
     public void startRecordTrackService() {
         Logger.v(TAG,"starting RecordTrackService..");
         Intent newIntent = new Intent(this, RecordTrackService.class);
@@ -409,7 +415,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     void actionUnPair() {
         if(isRecording()){
-            showSnackMessageSlow(R.string.msg_record_stop_alert);
+            showSnackMessage(R.string.msg_record_stop_alert);
         } else {
             Logger.i(TAG, "[BLE] unpaired..");
             stopRecord();
