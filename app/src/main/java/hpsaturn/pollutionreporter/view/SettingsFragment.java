@@ -400,6 +400,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 config.act = "cls";
                 getMain().showSnackMessageSlow(R.string.msg_device_clear);
                 getMain().getRecordTrackManager().writeSensorConfig(config);
+                clearSharedPreferences();
                 Handler handler = new Handler();
                 handler.postDelayed(() -> getMain().finish(), 3000);
             });
@@ -517,6 +518,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private String getSharedPreference(String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         return preferences.getString(key, "");
+    }
+
+    private void clearSharedPreferences(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        preferences.edit().clear().apply();
     }
 
     @Override
