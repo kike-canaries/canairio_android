@@ -10,6 +10,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import android.os.Handler;
@@ -40,6 +41,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private boolean onInfluxDBConfigChanged;
     private boolean onAPIConfigChanged;
     private Location lastLocation;
+    private Snackbar snackBar;
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -103,17 +105,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private void performRebootDevice() {
         SwitchPreference rebootSwitch = findPreference(getString(R.string.key_setting_enable_reboot));
-        if (!rebootSwitch.isChecked()) return;
-        SensorConfig config = new SensorConfig();
-        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
-        config.act = "rbt";
-        getMain().getRecordTrackManager().writeSensorConfig(config);
-        Handler handler = new Handler();
-        handler.postDelayed(() -> getMain().stopRecordTrackService(), 2000);
-        handler.postDelayed(() -> {
-            getMain().startRecordTrackService();
-            rebootSwitch.setChecked(false);
-        }, 3000);
+        if (!rebootSwitch.isChecked()) {
+            if(snackBar!=null)snackBar.dismiss();
+        } else {
+            snackBar = getMain().getSnackBar(R.string.bt_device_reboot, R.string.bt_device_reboot_action, view -> {
+                rebootSwitch.setChecked(false);
+                SensorConfig config = new SensorConfig();
+                config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+                config.act = "rbt";
+                getMain().showSnackMessageSlow(R.string.msg_device_reboot);
+                getMain().getRecordTrackManager().writeSensorConfig(config);
+                Handler handler = new Handler();
+                handler.postDelayed(() -> getMain().finish(), 4000);
+            });
+            snackBar.show();
+        }
     }
 
     private void performClearDevice() {

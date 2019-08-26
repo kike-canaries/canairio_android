@@ -58,4 +58,7 @@
     <string name="url_paypal_hpsaturn">https://www.paypal.me/avanegasp</string>
     <string name="url_canairio_page">http://canair.io</string>
     <string name="msg_chart_loading">Loading data, please wait…</string>
+    <string name="bt_device_reboot">Please restart the app after this</string>
+    <string name="bt_device_reboot_action">REBOOT</string>
+    <string name="msg_device_reboot">CanAirio device rebooting…</string>
 </resources>
