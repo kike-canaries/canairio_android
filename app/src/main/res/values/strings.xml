@@ -27,6 +27,9 @@
     <string name="summary_stime">5 seconds</string>
     <string name="summary_wifi">Send WiFi settings</string>
     <string name="msg_save_config">Saving device setting…</string>
+    <string name="msg_save_config_ifx">Saving InfluxDB setting…</string>
+    <string name="msg_save_config_api">Saving CanAirio API setting…</string>
+    <string name="msg_save_config_wfi">Saving WiFi setting…</string>
     <string name="msg_config_saved">Device settings updated!</string>
     <string name="msg_stime_error">Wrong value, restoring default value…</string>
     <string name="msg_save_location">Saving location…</string>
