@@ -107,7 +107,7 @@ public class ScanFragment extends Fragment {
     }
 
     private void actionViewGuide (){
-        UITools.viewLink(Objects.requireNonNull(getActivity()),getString(R.string.url_hacksterio_en));
+        UITools.viewLink(Objects.requireNonNull(getActivity()),getString(R.string.url_oficial_guide_en));
     }
 
     private void onScanAdd(ScanResult scanResult) {

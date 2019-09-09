@@ -213,7 +213,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 break;
 
             case R.id.action_guide:
-                UITools.viewLink(this,getString(R.string.url_hacksterio_en));
+                UITools.viewLink(this,getString(R.string.url_oficial_guide_en));
                 break;
 
         }
