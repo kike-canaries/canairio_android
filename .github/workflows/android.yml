@@ -16,7 +16,7 @@ jobs:
     - name: Loading submodules
       run: git submodule update --init --recursive   
     - name: Work directory
-      run: echo $PATH
+      run: pwd
     - name: Loading secrets
       env:
         gservices: ${{ secrets.googleservices }}
