@@ -17,9 +17,8 @@ jobs:
       run: git submodule update --init --recursive   
     - name: Work directory
       run: echo $PATH
-      shell: bash
     - name: Loading secrets
-      with:
-        googleservices: ${{ secrets.googleservices }}
+      env:
+        gservices: ${{ secrets.googleservices }}
     - name: Build with Gradle 
       run: ./gradlew build
