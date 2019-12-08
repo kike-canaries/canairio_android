@@ -15,7 +15,7 @@ jobs:
         java-version: 1.8
     - name: Loading submodules
       run: git submodule update --init --recursive   
-    - name: Work directory:
+    - name: Work directory
       run: echo $PATH
       shell: bash
     - name: Loading secrets
