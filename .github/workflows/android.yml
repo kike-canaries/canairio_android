@@ -21,6 +21,5 @@ jobs:
     - name: Loading secrets
       with:
         googleservices: ${{ secrets.googleservices }}
-      run: echo $googleservices
     - name: Build with Gradle 
       run: ./gradlew build
