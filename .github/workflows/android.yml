@@ -18,7 +18,8 @@ jobs:
     - name: Work directory
       run: echo $PATH
     - name: Loading secrets
-      env:
+      with:
         gservices: ${{ secrets.googleservices }}
+      run: cp gservices ./app/google-services.json
     - name: Build with Gradle 
       run: ./gradlew build
