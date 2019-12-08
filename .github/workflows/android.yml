@@ -20,6 +20,7 @@ jobs:
     - name: Loading secrets
       env:
         gservices: ${{ secrets.googleservices }}
-      run: cat $gservices > ./app/google-services.json
+      run: |
+        echo $gservices > ./app/google-services.json
     - name: Build with Gradle 
       run: ./gradlew build
