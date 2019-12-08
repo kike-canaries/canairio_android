@@ -15,49 +15,17 @@ android {
             cmake {
             }
         }
-
-        signingConfigs {
-            release {
-                storeFile file(System.getenv("airStoreFile"))
-                storePassword System.getenv("airStorePassword")
-                keyAlias System.getenv("airKeyAlias")
-                keyPassword System.getenv("airKeyPassword")
-            }
-            debug {
-                def keystorePropertiesFile = rootProject.file("local.properties")
-                def keystoreProperties = new Properties()
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
-                if (!keystoreProperties['airStoreFile']) {
-                    return
-                }
-
-                def keystoreFile = rootProject.file(keystoreProperties['airStoreFile'])
-
-                if (!keystoreFile.canRead()) {
-                    return
-                }
-
-                storeFile keystoreFile
-                storePassword keystoreProperties['airStorePassword']
-                keyAlias keystoreProperties['airKeyAlias']
-                keyPassword keystoreProperties['airKeyPassword']
-
-            }
-        }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
-            signingConfig signingConfigs.release
         }
         debug {
+            testCoverageEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            zipAlignEnabled true
-            signingConfig signingConfigs.debug
         }
     }
     externalNativeBuild {
