@@ -37,6 +37,7 @@
     <string name="key_setting_dname">key_setting_dname</string>
     <string name="key_setting_apiusr">key_setting_apiusr</string>
     <string name="key_setting_apipss">key_setting_apipss</string>
+    <string name="key_setting_apisrv">key_setting_apisrv</string>
     <string name="key_setting_stime">key_setting_stime</string>
     <string name="key_setting_wmac">key_setting_wmac</string>
     <string name="key_setting_sdpath">key_setting_sdpath</string>
