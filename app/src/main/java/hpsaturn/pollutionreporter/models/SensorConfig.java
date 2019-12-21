@@ -15,6 +15,8 @@ public class SensorConfig {
 
     public String apipss;
 
+    public String apisrv;
+
     public String ifxdb;
 
     public String ifxip;

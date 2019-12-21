@@ -73,6 +73,7 @@
         <EditTextPreference
             android:inputType="text"
             app:key="@string/key_setting_apisrv"
+            android:defaultValue="@string/value_apisrv_default"
             app:summary=""
             app:title="Hostname" />
 

@@ -52,6 +52,7 @@
     <string name="key_setting_enable_clear">key_setting_enable_clear</string>
     <string name="key_setting_enable_reboot">key_setting_reboot_enable</string>
     <string name="key_setting_enable_location">key_setting_location</string>
+    <string name="value_apisrv_default">canairio.herokuapp.com</string>
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>
