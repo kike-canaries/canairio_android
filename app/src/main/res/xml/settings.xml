@@ -78,6 +78,14 @@
             app:summary=""
             app:title="Hostname" />
 
+        <EditTextPreference
+            android:inputType="text"
+            app:key="@string/key_setting_apiuri"
+            android:defaultValue="@string/value_apiuri_default"
+            app:summary=""
+            app:title="API target" />
+
+
         <SwitchPreference
             app:key="@string/key_setting_enable_api"
             app:title="Enable CanAirIO API" />
