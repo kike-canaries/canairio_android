@@ -30,6 +30,16 @@ This code is for [CanAir.io](http://canair.io) Android app that using a reporter
 - [ ] Osmdroid routes (for line or dinamic points)
 - [ ] Export data to json or others
 
+<a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
+
+# Installation
+
+You can install it from the [release section](https://github.com/kike-canaries/esp32-hpma115s0/releases) downloading the last signed apk or installing from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter)
+
+___
+
+# Building
+
 ## Dependencies
 
 - Android SDK
@@ -41,18 +51,18 @@ This application uses a Firebase Database instance to store mobile air quality r
 
 For local development, you will need to create a database in the [Firebase Console](https://console.firebase.google.com/) using `hpsaturn.pollutionreporter` as the application identifier and retrieve a `google-services.json` file. See instructions [here](https://support.google.com/firebase/answer/7015592?hl=en).
 
-## Compiling Debug
+## Compiling
 
 ```bash
 git clone --recursive https://github.com/kike-canaries/android-hpma115s0.git
 cd android-hpma115s0.git && cp ~/google-services.json app/
- ./gradlew assembleDebug
+./gradlew assembleDebug
 ```
 
-## App configuration and using it
+# App configuration and using it
 
 Please see the firmware [documentation](https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(EN)#using-canairio-app).
 
-## Credits
+# Credits
 
 <div>Icons made by <a href="https://www.flaticon.com/authors/prosymbols" title="Prosymbols">Prosymbols</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
