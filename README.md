@@ -30,13 +30,12 @@ This code is for [CanAir.io](http://canair.io) Android app that using a reporter
 - [ ] Osmdroid routes (for line or dinamic points)
 - [ ] Export data to json or others
 
-<a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
 # Installation
 
-You can install it from the [release section](https://github.com/kike-canaries/esp32-hpma115s0/releases) downloading the last signed apk or installing from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter)
+<a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
-___
+You can install it from the [release section](https://github.com/kike-canaries/esp32-hpma115s0/releases) downloading the last signed apk or installing from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter)
 
 # Building
 
@@ -59,9 +58,9 @@ cd android-hpma115s0.git && cp ~/google-services.json app/
 ./gradlew assembleDebug
 ```
 
-# App configuration and using it
+# Configuration
 
-Please see the firmware [documentation](https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(EN)#using-canairio-app).
+Please see the firmware [documentation](https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(EN)#using-canairio-app) for using and configure your device.
 
 # Credits
 
