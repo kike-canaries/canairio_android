@@ -23,7 +23,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:dependency="@string/key_setting_dname"
         app:title="Static Sensor Settings">
 
         <EditTextPreference
@@ -34,12 +33,14 @@
             app:title="Station Name" />
 
         <EditTextPreference
+            app:dependency="@string/key_setting_dname"
             android:inputType="text"
             app:key="@string/key_setting_ssid"
             app:summary=""
             app:title="WiFi Name" />
 
         <EditTextPreference
+            app:dependency="@string/key_setting_dname"
             android:inputType="textPassword"
             app:key="@string/key_setting_pass"
             app:summary="WiFi password"
