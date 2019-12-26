@@ -29,7 +29,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
-    private String sname, ssid, pass, ifxdb, ifxip, apiusr, apipss;
+    private String sname, ssid, pass, ifxdb, ifxip, apiusr, apipss, apisrv, apiuri;
     private int stime;
     private boolean onWifiConfigChanged;
     private boolean onInfluxDBConfigChanged;
@@ -44,6 +44,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         sname = getSharedPreference(getString(R.string.key_setting_dname));
         apiusr = getSharedPreference(getString(R.string.key_setting_apiusr));
         apipss = getSharedPreference(getString(R.string.key_setting_apipss));
+        apisrv = getSharedPreference(getString(R.string.key_setting_apisrv));
+        apiuri = getSharedPreference(getString(R.string.key_setting_apiuri));
         ssid = getSharedPreference(getString(R.string.key_setting_ssid));
         pass = getSharedPreference(getString(R.string.key_setting_pass));
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
@@ -56,6 +58,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         updateSensorNameSummary();
         updateStimeSummary();
         updateLocationSummary();
+        updateApiHostSummary();
+        updateApiUriSummary();
         validateWifiSwitch();
         validateApiSwitch();
         validateIfxdbSwitch();
@@ -91,9 +95,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         } else if (key.equals(getString(R.string.key_setting_apipss))) {
             validateApiSwitch();
         } else if (key.equals(getString(R.string.key_setting_enable_api))) {
-            saveApiConfig(sharedPreferences, key);
+            saveApiConfig(key);
         } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
-            saveInfluxConfig(sharedPreferences, key);
+            saveInfluxConfig(key);
         } else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
             performRebootDevice();
         } else if (key.equals(getString(R.string.key_setting_enable_clear))) {
@@ -196,10 +200,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SwitchPreference apiSwitch = findPreference(getString(R.string.key_setting_enable_api));
         String old_apiusr = apiusr;
         String old_apipss = apipss;
+
         apiusr = getSharedPreference(getString(R.string.key_setting_apiusr));
         apipss = getSharedPreference(getString(R.string.key_setting_apipss));
+        apisrv = getSharedPreference(getString(R.string.key_setting_apisrv));
+        apiuri = getSharedPreference(getString(R.string.key_setting_apiuri));
 
-        updateApiSummmary();
+        updateApiUsrSummmary();
+        updateApiUriSummary();
+        updateApiHostSummary();
 
         apiSwitch.setEnabled(!(apiusr.length() == 0 || apipss.length() == 0));
 
@@ -265,7 +274,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
-    private void saveApiConfig(SharedPreferences sharedPreferences, String key) {
+    private void saveApiConfig(String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_enable_api));
 
         SwitchPreference switchPreference = findPreference(key);
@@ -273,11 +282,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (switchPreference.isChecked()) {
             String api_usr = getSharedPreference(getString(R.string.key_setting_apiusr));
             String api_pss = getSharedPreference(getString(R.string.key_setting_apipss));
-            if(api_usr.length() == 0 || api_pss.length() == 0) return;
+            String api_srv = getSharedPreference(getString(R.string.key_setting_apisrv));
+            String api_uri = getSharedPreference(getString(R.string.key_setting_apiuri));
+            if(api_usr.length() == 0 || api_pss.length() == 0 || api_srv.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config_api);
             SensorConfig config = new SensorConfig();
             config.apiusr = api_usr;
             config.apipss = api_pss;
+            config.apisrv = api_srv;
+            config.apiuri = api_uri;
+            config.apiprt = 80;  // TODO: sending via UI
             Logger.v(TAG, "[Config] writing API credentials..");
             getMain().getRecordTrackManager().writeSensorConfig(config);
         } else if (!onAPIConfigChanged) {
@@ -296,7 +310,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getMain().getRecordTrackManager().writeSensorConfig(config);
     }
 
-    private void saveInfluxConfig(SharedPreferences sharedPreferences, String key) {
+    private void saveInfluxConfig(String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
         SwitchPreference switchPreference = findPreference(key);
 
@@ -424,6 +438,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "apien: " + config.aenb);
             Logger.i(TAG, "ifxen: " + config.ienb);
             Logger.i(TAG, "apiusr:" + config.apiusr);
+            Logger.i(TAG, "apisrv:" + config.apisrv);
+            Logger.i(TAG, "apiuri:" + config.apiuri);
+            Logger.i(TAG, "apiprt:" + config.apiprt);
             updatePreferencesSummmary(config);
             updateSwitches(config);
             saveAllPreferences(config);
@@ -431,11 +448,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void updatePreferencesSummmary(SensorConfig config) {
-        if(config.dname.length()!=0)updateSummary(R.string.key_setting_dname,config.dname);
-        if(config.apiusr.length()!=0)updateSummary(R.string.key_setting_apiusr,config.apiusr);
-        if(config.ssid.length()!=0)updateSummary(R.string.key_setting_ssid,config.ssid);
-        if(config.ifxdb.length()!=0)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
-        if(config.ifxip.length()!=0)updateSummary(R.string.key_setting_ifxip,config.ifxip);
+        if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
+        if(config.apiusr !=null)updateSummary(R.string.key_setting_apiusr,config.apiusr);
+        if(config.apisrv !=null)updateSummary(R.string.key_setting_apisrv,config.apisrv);
+        if(config.apiuri !=null)updateSummary(R.string.key_setting_apiuri,config.apiuri);
+        if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
+        if(config.ifxdb !=null)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
+        if(config.ifxip !=null)updateSummary(R.string.key_setting_ifxip,config.ifxip);
         if(config.stime>0)updateSummary(R.string.key_setting_stime,"" + config.stime + " seconds");
         updateLocationSummary();
     }
@@ -461,10 +480,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pref.setSummary(ifxip);
     }
 
-    private void updateApiSummmary() {
+    private void updateApiUsrSummmary() {
         Preference pref;
         pref = findPreference(getString(R.string.key_setting_apiusr));
         pref.setSummary(apiusr);
+    }
+
+    private void updateApiHostSummary() {
+        Preference pref;
+        pref = findPreference(getString(R.string.key_setting_apisrv));
+        pref.setSummary(apisrv);
+    }
+
+    private void updateApiUriSummary() {
+        Preference pref;
+        pref = findPreference(getString(R.string.key_setting_apiuri));
+        pref.setSummary(apiuri);
     }
 
     private void updateSwitch(int key,boolean enable){

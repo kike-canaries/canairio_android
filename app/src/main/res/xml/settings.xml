@@ -5,21 +5,14 @@
     <PreferenceCategory app:title="Mobile Sensor Settings">
 
         <EditTextPreference
-            android:inputType="text"
-            app:icon="@android:drawable/ic_menu_save"
-            app:key="@string/key_setting_dname"
-            app:summary=""
-            app:title="Station Name" />
-
-        <EditTextPreference
             android:inputType="number"
+            app:icon="@android:drawable/ic_menu_save"
             app:defaultValue="5"
             app:key="@string/key_setting_stime"
             app:summary="@string/summary_stime"
             app:title="Sample Time Interval" />
 
         <EditTextPreference
-            android:editable="false"
             android:inputType="textUri"
             app:defaultValue="/sdcard/canairio"
             app:enabled="false"
@@ -30,19 +23,25 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:dependency="@string/key_setting_dname"
         app:title="Static Sensor Settings">
 
         <EditTextPreference
             android:inputType="text"
-            app:icon="@android:drawable/ic_lock_lock"
+            app:icon="@android:drawable/ic_menu_edit"
+            app:key="@string/key_setting_dname"
+            app:summary=""
+            app:title="Station Name" />
+
+        <EditTextPreference
+            app:dependency="@string/key_setting_dname"
+            android:inputType="text"
             app:key="@string/key_setting_ssid"
             app:summary=""
             app:title="WiFi Name" />
 
         <EditTextPreference
-            android:inputType="textWebPassword"
-            android:password="true"
+            app:dependency="@string/key_setting_dname"
+            android:inputType="textPassword"
             app:key="@string/key_setting_pass"
             app:summary="WiFi password"
             app:title="Password" />
@@ -67,11 +66,25 @@
             app:title="Username" />
 
         <EditTextPreference
-            android:inputType="textWebPassword"
-            android:password="true"
+            android:inputType="textPassword"
             app:key="@string/key_setting_apipss"
             app:summary="CanAirIO API Password"
             app:title="Password" />
+
+        <EditTextPreference
+            android:inputType="text"
+            app:key="@string/key_setting_apisrv"
+            android:defaultValue="@string/value_apisrv_default"
+            app:summary=""
+            app:title="Hostname" />
+
+        <EditTextPreference
+            android:inputType="text"
+            app:key="@string/key_setting_apiuri"
+            android:defaultValue="@string/value_apiuri_default"
+            app:summary=""
+            app:title="API target" />
+
 
         <SwitchPreference
             app:key="@string/key_setting_enable_api"

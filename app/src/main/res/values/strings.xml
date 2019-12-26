@@ -37,6 +37,8 @@
     <string name="key_setting_dname">key_setting_dname</string>
     <string name="key_setting_apiusr">key_setting_apiusr</string>
     <string name="key_setting_apipss">key_setting_apipss</string>
+    <string name="key_setting_apisrv">key_setting_apisrv</string>
+    <string name="key_setting_apiuri">key_setting_apiuri</string>
     <string name="key_setting_stime">key_setting_stime</string>
     <string name="key_setting_wmac">key_setting_wmac</string>
     <string name="key_setting_sdpath">key_setting_sdpath</string>
@@ -51,6 +53,8 @@
     <string name="key_setting_enable_clear">key_setting_enable_clear</string>
     <string name="key_setting_enable_reboot">key_setting_reboot_enable</string>
     <string name="key_setting_enable_location">key_setting_location</string>
+    <string name="value_apisrv_default">canairio.herokuapp.com</string>
+    <string name="value_apiuri_default">points/save/</string>
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>

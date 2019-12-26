@@ -15,11 +15,15 @@ public class SensorConfig {
 
     public String apipss;
 
+    public String apisrv;
+
+    public String apiuri;
+
+    public int apiprt;
+
     public String ifxdb;
 
     public String ifxip;
-
-    public String ifxtg;
 
     public int stime;
 
