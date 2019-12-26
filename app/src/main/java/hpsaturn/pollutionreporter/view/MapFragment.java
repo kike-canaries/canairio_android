@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -62,13 +63,14 @@ public class MapFragment extends Fragment {
         mapView = view.findViewById(R.id.mapview);
         mapView.setClickable(true);
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-        mapView.setBuiltInZoomControls(false);
+
         mapView.setMultiTouchControls(true);
         mapView.setMaxZoomLevel((double) 19);
 
         mapView.getController().setZoom((double) 17); //set initial zoom-level, depends on your need
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
         mapView.setEnabled(true);
+        (mapView.getTileProvider().getTileCache()).getProtectedTileComputers().clear();
     }
 
     public void addMarker(SensorTrackInfo trackInfo) {
@@ -86,4 +88,6 @@ public class MapFragment extends Fragment {
         mapView.getOverlays().add(pointMarker);
         mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
     }
+
+
 }
