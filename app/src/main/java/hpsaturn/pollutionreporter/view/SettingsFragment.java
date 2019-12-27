@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import android.os.Handler;
@@ -441,6 +443,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "apisrv:" + config.apisrv);
             Logger.i(TAG, "apiuri:" + config.apiuri);
             Logger.i(TAG, "apiprt:" + config.apiprt);
+            Crashlytics.setString(getString(R.string.crashkey_device_name),""+config.dname);
+            Crashlytics.setString(getString(R.string.crashkey_device_wmac),""+config.wmac);
+            Crashlytics.setString(getString(R.string.crashkey_api_usr),""+config.apiusr);
             updatePreferencesSummmary(config);
             updateSwitches(config);
             saveAllPreferences(config);

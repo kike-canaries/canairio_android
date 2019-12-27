@@ -75,4 +75,7 @@
     <string name="msg_device_reboot">CanAirio device rebooting…</string>
     <string name="msg_set_current_location">Set current location into the device?</string>
     <string name="bt_location_save_action">set</string>
+    <string name="crashkey_device_wmac">crashkey_device_wmac</string>
+    <string name="crashkey_device_name">crashkey_device_name</string>
+    <string name="crashkey_api_usr">crashkey_api_usr</string>
 </resources>
