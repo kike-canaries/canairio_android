@@ -146,7 +146,7 @@
     <PreferenceCategory app:title="">
         <Preference
             app:icon="@android:drawable/ic_menu_send"
-            app:key="feedback"
+            app:key="@string/key_send_feedback"
             app:summary="Report technical issues or suggest new features"
             app:title="Send Feedback" />
     </PreferenceCategory>
