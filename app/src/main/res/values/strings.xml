@@ -79,4 +79,5 @@
     <string name="crashkey_device_name">crashkey_device_name</string>
     <string name="crashkey_api_usr">crashkey_api_usr</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="key_send_feedback">key_send_feedback</string>
 </resources>

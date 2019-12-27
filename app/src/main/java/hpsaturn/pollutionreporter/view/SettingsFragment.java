@@ -11,6 +11,7 @@ import androidx.preference.SwitchPreference;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.hpsaturn.tools.UITools;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -53,6 +54,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
         stime = getCurrentStime();
+
+        Preference myPref = findPreference(getString(R.string.key_send_feedback));
+        myPref.setOnPreferenceClickListener(preference -> {
+            UITools.viewLink(getActivity(),getString(R.string.url_canairio_feedback));
+            return true;
+        });
+
         refreshUI();
     }
 
