@@ -64,8 +64,8 @@
     <string name="url_oficial_guide_en">https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(EN)</string>
     <string name="url_oficial_guide_es">https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(ES)</string>
     <string name="menu_guide">Sensor DIY Guide</string>
-    <string name="url_paypal_hpsaturn">https://www.paypal.me/avanegasp</string>
-    <string name="url_canairio_page">http://canair.io</string>
+    <string name="url_canairio_page">https://canair.io</string>
+    <string name="url_canairio_feedback">https://canair.io/#three</string>
     <string name="msg_chart_loading">Loading data, please wait…</string>
     <string name="bt_device_clear">Please restart the app after this</string>
     <string name="bt_device_clear_action">CLEAR</string>
@@ -78,4 +78,5 @@
     <string name="crashkey_device_wmac">crashkey_device_wmac</string>
     <string name="crashkey_device_name">crashkey_device_name</string>
     <string name="crashkey_api_usr">crashkey_api_usr</string>
+    <string name="menu_feedback">Feedback</string>
 </resources>

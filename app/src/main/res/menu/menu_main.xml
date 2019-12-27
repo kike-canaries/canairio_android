@@ -5,26 +5,23 @@
 
     <item
         android:id="@+id/action_unpair"
-        android:orderInCategory="200"
         android:title="@string/menu_unpair"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_guide"
-        android:orderInCategory="100"
         android:title="@string/menu_guide"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_feedback"
+        android:title="@string/menu_feedback"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_about"
-        android:orderInCategory="50"
         android:title="@string/menu_about"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_donation"
-        android:orderInCategory="100"
-        android:title="@string/menu_donation"
         app:showAsAction="never" />
 
 </menu>

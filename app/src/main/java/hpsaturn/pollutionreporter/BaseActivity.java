@@ -204,13 +204,14 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 actionUnPair();
                 break;
 
-            case R.id.action_donation:
-                UITools.viewLink(this,getString(R.string.url_paypal_hpsaturn));
-                break;
-
             case R.id.action_about:
                 UITools.viewLink(this,getString(R.string.url_canairio_page));
                 break;
+
+            case R.id.action_feedback:
+                UITools.viewLink(this,getString(R.string.url_canairio_feedback));
+                break;
+
 
             case R.id.action_guide:
                 UITools.viewLink(this,getString(R.string.url_oficial_guide_en));
