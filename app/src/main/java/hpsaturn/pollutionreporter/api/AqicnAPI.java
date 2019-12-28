@@ -18,6 +18,7 @@ public class AqicnAPI {
     public static final String API_URL = "https://api.waqi.info/";
     private static final String TAG = AqicnAPI.class.getSimpleName();
 
+
     public static class Contributor {
         public final String login;
         public final int contributions;
