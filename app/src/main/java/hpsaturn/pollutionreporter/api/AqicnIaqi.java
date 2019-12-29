@@ -5,6 +5,15 @@ package hpsaturn.pollutionreporter.api;
  */
 public class AqicnIaqi {
 
+    public AqicnCo co;
+    public AqicnH h;
+    public AqicnNo2 no2;
+    public AqicnO3 o3;
+    public AqicnP p;
+    public AqicnPm10 pm10;
     public AqicnPm25 pm25;
+    public AqicnSo2 so2;
+    public AqicnT t;
+    public AqicnW w;
 
 }
