@@ -9,4 +9,6 @@ public class AqicnTime {
 
     public String tz;
 
+    public int v;
+
 }

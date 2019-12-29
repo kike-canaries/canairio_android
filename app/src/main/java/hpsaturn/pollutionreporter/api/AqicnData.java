@@ -18,4 +18,8 @@ public class AqicnData {
     public List<AqicnAttributions> attributions;
 
     public AqicnIaqi iaqi;
+
+    public String dominentpol;
+
+    public AqicnDebug debug;
 }

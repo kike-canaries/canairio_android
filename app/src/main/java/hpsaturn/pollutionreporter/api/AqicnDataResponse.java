@@ -8,4 +8,7 @@ public class AqicnDataResponse {
     public String status;
 
     public AqicnData data;
+
+    public String message;
+
 }
