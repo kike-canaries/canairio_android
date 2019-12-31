@@ -4,7 +4,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 12/31/19.
