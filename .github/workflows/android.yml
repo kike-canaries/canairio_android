@@ -20,7 +20,10 @@ jobs:
     - name: Loading secrets
       env:
         gservices: ${{ secrets.googleservices }}
+        aqicnkey: ${{ secrets.aqicnapikey }}
       run: |
         echo $gservices > ./app/google-services.json
+        echo $aqicnkey > ./app/src/main/res/values/api_aqicn.xml
+
     - name: Build with Gradle 
       run: ./gradlew build
