@@ -5,9 +5,9 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hpsaturn.tools.Logger;
-
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -35,13 +35,21 @@ public class AqicnApiManager {
         mContext = context;
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
 
-        Logger.i(TAG,"Aqicn API retrofit builder set to "+API_URL);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL)
-                .build();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+
+        Logger.i(TAG,"[API] AQICN retrofit builder set to "+API_URL);
+        Retrofit retrofit = new Retrofit.
+                Builder().
+                addConverterFactory(GsonConverterFactory.create(gson)).
+                baseUrl(API_URL).
+                build();
+
         service = retrofit.create(AqicnInterface.class);
     }
 
-    
+    public void getDataFromCity (String token, String city, Callback <AqicnDataResponse> callback){
+        Call<AqicnDataResponse> call = service.getDataFromCity(city,token);
+        call.enqueue(callback);
+    }
 
 }

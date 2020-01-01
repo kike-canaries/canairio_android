@@ -5,5 +5,5 @@ package hpsaturn.pollutionreporter.api;
  */
 public class AqicnNo2 {
 
-    public int v;
+    public double v;
 }
