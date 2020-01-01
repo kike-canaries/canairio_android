@@ -8,7 +8,6 @@ import com.iamhabib.easy_preference.EasyPreference;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.internal.RxBleLog;
 
-import hpsaturn.pollutionreporter.api.AqicnAPI;
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
 
 /**

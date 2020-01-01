@@ -5,7 +5,6 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hpsaturn.tools.Logger;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -33,7 +32,6 @@ public class AqicnApiManager {
 
     public void init(Context context) {
         mContext = context;
-        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
 
@@ -49,6 +47,16 @@ public class AqicnApiManager {
 
     public void getDataFromCity (String token, String city, Callback <AqicnDataResponse> callback){
         Call<AqicnDataResponse> call = service.getDataFromCity(city,token);
+        call.enqueue(callback);
+    }
+
+    public void getDataFromHere (String token, Callback <AqicnDataResponse> callback){
+        Call<AqicnDataResponse> call = service.getDataFromHere(token);
+        call.enqueue(callback);
+    }
+
+    public void getDataFromMapBounds (String token, String latlng, Callback <AqicnDataResponse> callback){
+        Call<AqicnDataResponse> call = service.getDataFromMapBounds(token,latlng);
         call.enqueue(callback);
     }
 

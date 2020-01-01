@@ -99,9 +99,8 @@ public class MainActivity extends BaseActivity implements
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
 
         Logger.i(TAG,"[API] AQICN testing request");
-        AqicnApiManager.getInstance().getDataFromCity(
+        AqicnApiManager.getInstance().getDataFromHere(
                 getString(R.string.api_aqicn_key),
-                "shanghai",
                 new Callback<AqicnDataResponse>() {
                     @Override
                     public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
