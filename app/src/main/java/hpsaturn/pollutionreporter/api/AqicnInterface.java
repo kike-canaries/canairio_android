@@ -16,15 +16,15 @@ public interface AqicnInterface {
 
     /**
      * get for the real-time Air Qualuty index for a given station.
-     * @param city
      * @param token
+     * @param city
      * @return
      */
 
     @GET("/feed/{city}/")
     Call <AqicnDataResponse> getDataFromCity(
-            @Path("city") String city,
-            @Query("token") String token
+            @Query("token") String token,
+            @Path("city") String city
     );
 
     /**
