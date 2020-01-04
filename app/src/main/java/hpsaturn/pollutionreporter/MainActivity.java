@@ -26,7 +26,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
-import hpsaturn.pollutionreporter.api.AqicnData;
 import hpsaturn.pollutionreporter.api.AqicnDataResponse;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
@@ -100,7 +99,6 @@ public class MainActivity extends BaseActivity implements
 
         Logger.i(TAG,"[API] AQICN testing request");
         AqicnApiManager.getInstance().getDataFromHere(
-                getString(R.string.api_aqicn_key),
                 new Callback<AqicnDataResponse>() {
                     @Override
                     public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
