@@ -12,21 +12,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Objects;
-import java.util.ResourceBundle;
-
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
 import hpsaturn.pollutionreporter.api.AqicnDataResponse;
-import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 1/2/20.
