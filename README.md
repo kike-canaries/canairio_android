@@ -46,9 +46,21 @@ You can install it from the [release section](https://github.com/kike-canaries/e
 
 ## Requirements
 
+### Firebase
+
 This application uses a Firebase Database instance to store mobile air quality reports, 
 
 For local development, you will need to create a database in the [Firebase Console](https://console.firebase.google.com/) using `hpsaturn.pollutionreporter` as the application identifier and retrieve a `google-services.json` file. See instructions [here](https://support.google.com/firebase/answer/7015592?hl=en).
+
+### Aqicn API key
+
+Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` like this:
+
+``` xml
+<resources>
+    <string name="api_aqicn_key">7cbbbb864b9c0755b8xxxxyyy</string>
+</resources>
+```
 
 ## Compiling
 

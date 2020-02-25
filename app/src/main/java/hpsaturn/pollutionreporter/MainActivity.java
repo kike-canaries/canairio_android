@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.livinglifetechway.quickpermissions.annotations.WithPermissions;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.api.AqicnApiManager;
+import hpsaturn.pollutionreporter.api.AqicnDataResponse;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
@@ -41,6 +44,9 @@ import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 import hpsaturn.pollutionreporter.view.SettingsFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -90,6 +96,22 @@ public class MainActivity extends BaseActivity implements
         checkBluetoohtBle();
         startPermissionsFlow();
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
+
+        Logger.i(TAG,"[API] AQICN testing request");
+        AqicnApiManager.getInstance().getDataFromHere(
+                new Callback<AqicnDataResponse>() {
+                    @Override
+                    public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
+                        Logger.v(TAG,"[API] AQICN response: "+response.body().status);
+                        Logger.v(TAG,"[API] AQICN JSON parse: "+new Gson().toJson(response));
+                    }
+
+                    @Override
+                    public void onFailure(Call<AqicnDataResponse> call, Throwable t) {
+                        Logger.e(TAG,"[API] AQICN response error: "+t.getMessage());
+                        Logger.e(TAG,"[API] AQICN"+t.getLocalizedMessage());
+                    }
+                });
     }
 
     private void startDataBase(){

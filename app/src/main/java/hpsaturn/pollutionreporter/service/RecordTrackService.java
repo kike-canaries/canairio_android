@@ -187,16 +187,28 @@ public class RecordTrackService extends Service {
 
     };
 
+    private void killSerivices(){
+        Logger.w(TAG, "[BLE] stoping location and recording service..");
+        SmartLocation.with(RecordTrackService.this).location().stop();
+        RecordTrackScheduler.stopSheduleService(this);
+        this.stopSelf();
+    }
+
     private void stopService() {
         Logger.w(TAG, "[BLE] request service stop..");
         if (bleHandler != null && !isRecording) {
-            bleHandler.triggerDisconnect();
-            SmartLocation.with(RecordTrackService.this).location().stop();
-            RecordTrackScheduler.stopSheduleService(this);
             Logger.w(TAG, "[BLE] kill service..");
+            bleHandler.triggerDisconnect();
             bleHandler=null;
-            this.stopSelf();
-        } else if (isRecording) Logger.w(TAG, "[BLE] isRecording override stop BLE service");
+            killSerivices();
+        }
+        else if (isRecording){
+            Logger.w(TAG, "[BLE] isRecording override stop BLE service");
+        }
+        else {
+            Logger.w(TAG, "[BLE] any device is connected, stop services..");
+            killSerivices();
+        }
     }
 
 
