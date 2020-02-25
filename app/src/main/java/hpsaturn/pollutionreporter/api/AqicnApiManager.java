@@ -37,7 +37,9 @@ public class AqicnApiManager {
         mContext = context;
         API_KEY=context.getString(R.string.api_aqicn_key);
 
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
 
         Logger.i(TAG,"[API] AQICN retrofit builder set to "+API_URL);
         Retrofit retrofit = new Retrofit.

@@ -102,8 +102,8 @@ public class MainActivity extends BaseActivity implements
                 new Callback<AqicnDataResponse>() {
                     @Override
                     public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
-                        Logger.v(TAG,"[API] AQICN response: "+response.body().status);
-                        Logger.v(TAG,"[API] AQICN JSON parse: "+new Gson().toJson(response));
+                        if(response!=null) Logger.v(TAG,"[API] AQICN response: "+response.body().status);
+                        else Logger.e(TAG,"[API] AQICN response: null");
                     }
 
                     @Override
