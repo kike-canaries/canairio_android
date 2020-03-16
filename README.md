@@ -3,9 +3,9 @@
 
 <a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
-[CanAirIO](http://canair.io) is a citizen science initiative for air quality tracking, visualization and dissemination by using PM2.5 particulate material sensors paired with your smartphone via bluetooth.
+[CanAirIO](https://canair.io) is a citizen science initiative for air quality tracking, visualization and dissemination by using PM2.5 particulate material sensors paired with your smartphone via bluetooth.
 
-This code is for [CanAir.io](http://canair.io) Android app that using a reporter device [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor.
+This code is for [CanAir.io](https://canair.io) Android app that using a reporter device [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor.
 
 **Full guide:** [English](https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(EN)) **|** [Spanish](https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(ES))
 
