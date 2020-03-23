@@ -19,17 +19,18 @@ import hpsaturn.pollutionreporter.models.SensorTrack;
  */
 public class Storage {
 
+    private static final String KEYS_TRACKS_PREFERENCES = "keys_tracks_preferences";
     private final String TAG = Storage.class.getSimpleName();
 
     public static void setSensorData(Context ctx, ArrayList<SensorData> items) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
         editor.apply();
     }
 
     public static ArrayList<SensorData> getSensorData(Context ctx) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
         String ringJson = preferences.getString(Keys.SENSOR_DATA, "");
         if (ringJson.equals("")) return new ArrayList<>();
         else {
@@ -41,7 +42,7 @@ public class Storage {
 
     public static ArrayList<SensorTrack> getTracks(Context ctx) {
         try {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
             String ringJson = preferences.getString(Keys.SENSOR_TRACKS, "");
             if (ringJson.equals("")) return new ArrayList<>();
             else {
@@ -82,7 +83,7 @@ public class Storage {
     }
 
     private static void saveTracks(Context ctx,ArrayList<SensorTrack>tracks){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Keys.SENSOR_TRACKS, new Gson().toJson(tracks));
         editor.apply();
