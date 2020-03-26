@@ -1,5 +1,6 @@
 # CanAir.io Air quality Reporter 
 
+<a href="https://liberapay.com/CanAirIO" target="_blank"><img src="http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay"></a>
 
 <a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
@@ -8,6 +9,8 @@
 This code is for [CanAir.io](https://canair.io) Android app that using a reporter device [esp32-hpma115s0](https://github.com/kike-canaries/esp32-hpma115s0) pollution sensor.
 
 **Full guide:** [English](https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(EN)) **|** [Spanish](https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(ES))
+
+<script src="https://liberapay.com/CanAirIO/widgets/receiving.js"></script>
 
 ---
 <a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg" align="right" width="512" ></a>
