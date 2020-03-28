@@ -1,9 +1,7 @@
 
-[![Actions Status](https://github.com/kike-canaries/android-hpma115s0/workflows/Android%20CI/badge.svg)](https://github.com/kike-canaries/android-hpma115s0/actions)
+[![Actions Status](https://github.com/kike-canaries/android-hpma115s0/workflows/Android%20CI/badge.svg)](https://github.com/kike-canaries/android-hpma115s0/actions) [![Liberapay Status](http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay)](https://liberapay.com/CanAirIO)
 
 # CanAir.io Air quality Reporter 
-
-<a href="https://liberapay.com/CanAirIO" target="_blank"><img src="http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay"></a>
 
 <a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
