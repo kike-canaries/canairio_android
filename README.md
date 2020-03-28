@@ -1,5 +1,6 @@
 # CanAir.io Air quality Reporter 
 
+<a href="https://liberapay.com/CanAirIO" target="_blank"><img src="http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay"></a>
 
 <a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
