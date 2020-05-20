@@ -3,26 +3,23 @@ package hpsaturn.pollutionreporter.view;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+
 import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.util.Objects;
-
-import androidx.preference.PreferenceManager;
 import hpsaturn.pollutionreporter.BuildConfig;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorData;
@@ -56,7 +53,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> setupMap(view));
+        requireActivity().runOnUiThread(() -> setupMap(view));
     }
 
     private void setupMap(View view) {
