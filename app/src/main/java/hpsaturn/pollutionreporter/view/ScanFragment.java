@@ -75,7 +75,7 @@ public class ScanFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG, "[BLE] configureResultList..");
         configureResultList();
-        rxBleClient = AppData.getRxBleClient(Objects.requireNonNull(getActivity()));
+        rxBleClient = AppData.getRxBleClient(requireActivity());
         btnScanning.setOnClickListener(view1 -> actionScan());
         btnBuilding.setOnClickListener(view1 -> actionViewGuide());
         Logger.i(TAG, "[BLE] starting btnScanning..");
@@ -107,7 +107,7 @@ public class ScanFragment extends Fragment {
     }
 
     private void actionViewGuide (){
-        UITools.viewLink(Objects.requireNonNull(getActivity()),getString(R.string.url_oficial_guide_en));
+        UITools.viewLink(requireActivity(),getString(R.string.url_oficial_guide_en));
     }
 
     private void onScanAdd(ScanResult scanResult) {

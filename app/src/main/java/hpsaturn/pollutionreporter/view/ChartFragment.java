@@ -126,7 +126,7 @@ public class ChartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG,"[CHART] starting load data thread..");
-        Objects.requireNonNull(getActivity()).runOnUiThread(this::loadData);
+        requireActivity().runOnUiThread(this::loadData);
     }
 
     private void calculateReferenceTime(){
