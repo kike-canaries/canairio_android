@@ -45,6 +45,8 @@ android {
         unitTests.includeAndroidResources = true
     }
 
+    ndkVersion "21.1.6352462"
+
 }
 
 dependencies {
