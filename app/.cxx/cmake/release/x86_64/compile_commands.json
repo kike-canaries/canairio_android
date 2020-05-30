@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/juanpenaloza/Developer/OpenSource/android-hpma115s0/app/.cxx/cmake/release/x86_64",
+  "command": "/opt/android_sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=x86_64-none-linux-android21 --gcc-toolchain=/opt/android_sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/opt/android_sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Dnative_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O2 -DNDEBUG  -fPIC   -o CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o -c /Users/juanpenaloza/Developer/OpenSource/android-hpma115s0/app/src/main/cpp/native-lib.cpp",
+  "file": "/Users/juanpenaloza/Developer/OpenSource/android-hpma115s0/app/src/main/cpp/native-lib.cpp"
+}
+]
