@@ -1,7 +1,0 @@
-Executable : /opt/android_sdk/cmake/3.10.2.4988404/bin/ninja
-arguments : 
--C
-/Users/juanpenaloza/Developer/OpenSource/android-hpma115s0/app/.cxx/cmake/debug/x86
-native-lib
-jvmArgs : 
-
