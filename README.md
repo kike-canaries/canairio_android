@@ -48,15 +48,27 @@ You can install it from the [release section](https://github.com/kike-canaries/e
 
 ## Requirements
 
+Please first clone the project with all submodules:
+
+```bash
+git clone --recursive https://github.com/kike-canaries/android-hpma115s0.git
+```
+
 ### Firebase
 
 This application uses a Firebase Database instance to store mobile air quality reports, 
 
 For local development, you will need to create a database in the [Firebase Console](https://console.firebase.google.com/) using `hpsaturn.pollutionreporter` as the application identifier and retrieve a `google-services.json` file. See instructions [here](https://support.google.com/firebase/answer/7015592?hl=en).
 
+After that copy this file into the project:
+
+```bash
+cd android-hpma115s0.git && cp ~/google-services.json app/
+```
+
 ### Aqicn API key
 
-Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` like this:
+Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or create a fake file like with:
 
 ``` xml
 <resources>
@@ -67,8 +79,6 @@ Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` like th
 ## Compiling
 
 ```bash
-git clone --recursive https://github.com/kike-canaries/android-hpma115s0.git
-cd android-hpma115s0.git && cp ~/google-services.json app/
 ./gradlew assembleDebug
 ```
 
