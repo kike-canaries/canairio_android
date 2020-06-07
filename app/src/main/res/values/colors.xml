@@ -15,6 +15,7 @@
 
     <!-- Website Colors -->
     <color name="colorPrimaryWeb">#B74E91</color>
+    <color name="colorPrimaryDarkWeb">#841B63</color>
     <color name="colorPrimaryLightWeb">#EB7EC1</color>
 
     <color name="colorAccentWeb">#5E42A6</color>
@@ -24,6 +25,7 @@
 
     <color name="colorTextWeb">#30292F</color>
 
+    <color name="colorGrayWeb">#515052</color>
     <color name="colorLightGrayWeb">#BFC0C0</color>
     <color name="colorLightLightGrayWeb">#EAEAEA</color>
 
