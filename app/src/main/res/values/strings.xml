@@ -80,4 +80,10 @@
     <string name="crashkey_api_usr">crashkey_api_usr</string>
     <string name="menu_feedback">Feedback</string>
     <string name="key_send_feedback">key_send_feedback</string>
+
+    <string name="air_quality_index">Air Quality Index</string>
+    <string name="give_us_feedback">Give Us Feedback</string>
+    <string name="unpair_device">Unpair Device</string>
+    <string name="sensor_diy_guide">Sensor DIY Guide</string>
+    <string name="about">About</string>
 </resources>
