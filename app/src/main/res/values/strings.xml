@@ -86,4 +86,12 @@
     <string name="unpair_device">Unpair Device</string>
     <string name="sensor_diy_guide">Sensor DIY Guide</string>
     <string name="about">About</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_settings_description">App settings.</string>
+    <string name="diy_sensor_description">DIY sensor.</string>
+    <string name="about_canairio_description">About CanAirIO.</string>
+    <string name="give_us_feedback_description">Give us feedback.</string>
+    <string name="upair_device_description">Upair device.</string>
 </resources>

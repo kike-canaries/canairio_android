@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="hpsaturn.pollutionreporter.dashboard.DashboardFragment"
+        android:label="fragment_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="hpsaturn.pollutionreporter.view.MapFragment"
+        android:label="MapFragment" />
+    <fragment
+        android:id="@+id/recordsFragment"
+        android:name="hpsaturn.pollutionreporter.view.RecordsFragment"
+        android:label="RecordsFragment" />
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="hpsaturn.pollutionreporter.view.ScanFragment"
+        android:label="ScanFragment" />
+    <fragment
+        android:id="@+id/postsFragment"
+        android:name="hpsaturn.pollutionreporter.view.PostsFragment"
+        android:label="PostsFragment" />
+</navigation>

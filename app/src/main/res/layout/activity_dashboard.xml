@@ -6,224 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".dashboard.DashboardActivity">
 
-    <TextView
-        android:id="@+id/currentLocationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="81dp"
-        android:text="Bogota, Colombia"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Headline6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/todayDateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Junio 2, 2020"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
-        android:textColor="@color/colorLightGrayWeb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentLocationTextView" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/circular_progress_bar_shape"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="65"
-        android:progressDrawable="@drawable/circular_progress_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/todayDateTextView" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="81dp"
-        android:text="42"
-        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Headline2"
-        android:textColor="@color/colorTextWeb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/todayDateTextView" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/air_quality_index"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
-        android:textColor="@color/colorLightGrayWeb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
-        android:layout_width="wrap_content"
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:defaultNavHost="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/size_small">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="@dimen/option_card_size"
-                android:layout_height="@dimen/option_card_size"
-                android:layout_marginHorizontal="@dimen/size_small"
-                android:background="@color/background"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardElevation="@dimen/size_x_small"
-                app:contentPadding="@dimen/size_x_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/illustration_diy_sensor" />
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="@string/sensor_diy_guide"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
-                        android:textColor="@color/colorAccentWeb" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="@dimen/option_card_size"
-                android:layout_height="@dimen/option_card_size"
-                android:layout_marginHorizontal="@dimen/size_small"
-                android:background="@color/background"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardElevation="@dimen/size_x_small"
-                app:contentPadding="@dimen/size_x_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/illustration_about_us" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="@string/about"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
-                        android:textColor="@color/colorAccentWeb" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="@dimen/option_card_size"
-                android:layout_height="@dimen/option_card_size"
-                android:layout_marginHorizontal="@dimen/size_small"
-                android:background="@color/background"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardElevation="@dimen/size_x_small"
-                app:contentPadding="@dimen/size_x_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/illustration_feedback" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="@string/give_us_feedback"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
-                        android:textColor="@color/colorAccentWeb" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="@dimen/option_card_size"
-                android:layout_height="@dimen/option_card_size"
-                android:layout_marginHorizontal="@dimen/size_small"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardElevation="@dimen/size_x_small"
-                app:contentPadding="@dimen/size_x_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginVertical="@dimen/size_small"
-                        android:layout_weight="1"
-                        android:src="@drawable/illustration_unpair_device" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="@string/unpair_device"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
-                        android:textColor="@color/colorAccentWeb" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-    </HorizontalScrollView>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="visible"
@@ -232,5 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/bottom_navigation" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
