@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.text.DecimalFormat;
+import java.util.Objects;
+
 import com.hpsaturn.tools.Logger;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
@@ -56,15 +58,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         stime = getCurrentStime();
 
         Preference myPref = findPreference(getString(R.string.key_send_feedback));
-        myPref.setOnPreferenceClickListener(preference -> {
-            UITools.viewLink(getActivity(),getString(R.string.url_canairio_feedback));
-            return true;
-        });
+        if (myPref != null) {
+            myPref.setOnPreferenceClickListener(preference -> {
+                UITools.viewLink(requireActivity(),getString(R.string.url_canairio_feedback));
+
+                return true;
+            });
+        }
 
         refreshUI();
     }
 
     public void refreshUI(){
+        getPreferenceScreen().removeAll();
+        addPreferencesFromResource(R.xml.settings);
         updateSensorNameSummary();
         updateStimeSummary();
         updateLocationSummary();
