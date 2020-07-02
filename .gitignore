@@ -110,3 +110,6 @@ screenshots
 store
 api_aqicn.xml
 
+# C++ generated files
+app/.cxx/*
+

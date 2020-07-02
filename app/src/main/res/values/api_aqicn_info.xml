@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_aqicn_url">https://api.waqi.info/</string>
+    <string name="api_aqicn_token_query_name">token</string>
+</resources>

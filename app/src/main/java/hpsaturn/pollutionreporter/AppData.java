@@ -8,11 +8,14 @@ import com.iamhabib.easy_preference.EasyPreference;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.internal.RxBleLog;
 
+import dagger.hilt.android.HiltAndroidApp;
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/13/18.
  */
+
+@HiltAndroidApp
 public class AppData extends MultiDexApplication{
 
     private RxBleClient rxBleClient;

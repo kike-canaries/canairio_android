@@ -1,0 +1,76 @@
+{
+  "status": "ok",
+  "data": {
+    "aqi": 11,
+    "idx": 6236,
+    "attributions": [
+      {
+        "url": "http://oab.ambientebogota.gov.co/",
+        "name": "OAB - El Observatorio Ambiental de Bogot\u0026aacute;",
+        "logo": "Colombia-OAB.png"
+      },
+      {
+        "url": "https://waqi.info/",
+        "name": "World Air Quality Index Project"
+      }
+    ],
+    "city": {
+      "geo": [
+        4.5725,
+        -74.0836
+      ],
+      "name": "San Cristobal, Bogota, Colombia",
+      "url": "https://aqicn.org/city/colombia/bogota/san-cristobal"
+    },
+    "dominentpol": "pm25",
+    "iaqi": {
+      "co": {
+        "v": 3.7
+      },
+      "dew": {
+        "v": 9
+      },
+      "h": {
+        "v": 73
+      },
+      "no2": {
+        "v": 4.2
+      },
+      "o3": {
+        "v": 3.7
+      },
+      "p": {
+        "v": 1028.4
+      },
+      "pm10": {
+        "v": 4
+      },
+      "pm25": {
+        "v": 11
+      },
+      "r": {
+        "v": 0.4
+      },
+      "so2": {
+        "v": 0.4
+      },
+      "t": {
+        "v": 13.3
+      },
+      "w": {
+        "v": 0.7
+      },
+      "wd": {
+        "v": 135
+      }
+    },
+    "time": {
+      "s": "2020-06-14 00:00:00",
+      "tz": "-05:00",
+      "v": 1592092800
+    },
+    "debug": {
+      "sync": "2020-06-14T14:13:59+09:00"
+    }
+  }
+}

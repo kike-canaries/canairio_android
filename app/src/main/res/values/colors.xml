@@ -15,7 +15,24 @@
 
     <!-- Website Colors -->
     <color name="colorPrimaryWeb">#B74E91</color>
+    <color name="colorPrimaryDarkWeb">#841B63</color>
+    <color name="colorPrimaryLightWeb">#EB7EC1</color>
+
     <color name="colorAccentWeb">#5E42A6</color>
+    <color name="colorAccentDarkWeb">#2C1976</color>
+
+    <color name="colorErrorWeb">#FF595E</color>
+
+    <color name="colorTextWeb">#30292F</color>
+
+    <color name="colorGrayWeb">#515052</color>
+    <color name="colorLightGrayWeb">#BFC0C0</color>
+    <color name="colorLightLightGrayWeb">#EAEAEA</color>
+
+    <color name="colorGreenWeb">#8AC926</color>
+    <color name="colorGreenDarkWeb">#388E3C</color>
+
+    <color name="background">#FDFDFD</color>
 
     <!-- GENERIC COLORS -->
     <color name="red">#f00</color>
