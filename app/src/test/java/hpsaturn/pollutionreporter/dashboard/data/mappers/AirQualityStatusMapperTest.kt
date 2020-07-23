@@ -1,19 +1,18 @@
 package hpsaturn.pollutionreporter.dashboard.data.mappers
 
-import com.google.gson.Gson
 import hpsaturn.pollutionreporter.dashboard.data.models.AqicnFeedResponse
 import hpsaturn.pollutionreporter.fixtures.JsonFixture
 import hpsaturn.pollutionreporter.fixtures.readFixture
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 internal class AirQualityStatusMapperTest {
 
-    private val tAqicnFeedResponseJson = readFixture(JsonFixture.STATION_FEED)
-    private val tAqicnFeedResponse = Gson().fromJson(tAqicnFeedResponseJson, AqicnFeedResponse::class.java)
     private lateinit var tAirQualityStatusMapper: AirQualityStatusMapper
+
+    private val tAqicnFeedResponse =
+        readFixture(JsonFixture.STATION_FEED, AqicnFeedResponse::class.java)
 
     @BeforeEach
     internal fun setUp() {

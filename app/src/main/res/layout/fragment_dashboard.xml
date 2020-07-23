@@ -21,7 +21,7 @@
         android:focusable="true" />
 
     <TextView
-        android:id="@+id/currentLocationTextView"
+        android:id="@+id/currentLocationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="81dp"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/todayDateTextView"
+        android:id="@+id/todayDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Junio 2, 2020"
@@ -42,10 +42,10 @@
         android:textColor="@color/colorLightGrayWeb"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentLocationTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/currentLocationText" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/airQualityIndexBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="250dp"
         android:layout_height="250dp"
@@ -59,22 +59,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/todayDateTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/airQualittyIdexText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="81dp"
         android:text="42"
+        android:maxLines="1"
         android:textAppearance="@style/TextAppearance.MaterialAppTheme.Headline2"
         android:textColor="@color/colorTextWeb"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/todayDateTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/airQualityLableText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/air_quality_index"
@@ -83,7 +84,7 @@
         android:textColor="@color/colorLightGrayWeb"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/airQualittyIdexText" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
@@ -92,7 +93,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar">
+        app:layout_constraintTop_toBottomOf="@+id/airQualityIndexBar">
 
         <LinearLayout
             android:layout_width="wrap_content"
