@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.text.DecimalFormat;
+
 import com.hpsaturn.tools.Logger;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
@@ -55,12 +56,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
         stime = getCurrentStime();
 
-        Preference myPref = findPreference(getString(R.string.key_send_feedback));
-        myPref.setOnPreferenceClickListener(preference -> {
-            UITools.viewLink(getActivity(),getString(R.string.url_canairio_feedback));
-            return true;
-        });
+        String feedback = getSharedPreference(getString(R.string.key_send_feedback));
 
+//        feedback.(preference -> {
+//            UITools.viewLink(getMain(),getString(R.string.url_canairio_feedback));
+//            return true;
+//        });
+
+        rebuildUI();
+    }
+
+
+    public void rebuildUI(){
+        getPreferenceScreen().removeAll();
+        addPreferencesFromResource(R.xml.settings);
         refreshUI();
     }
 
@@ -457,6 +466,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             updatePreferencesSummmary(config);
             updateSwitches(config);
             saveAllPreferences(config);
+            rebuildUI();
         }
     }
 
