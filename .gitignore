@@ -110,3 +110,7 @@ screenshots
 store
 api_aqicn.xml
 
+app/.cxx
+mainframer
+remoteAssemble
+.mainframer/
