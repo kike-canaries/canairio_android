@@ -94,8 +94,10 @@ public class ScanFragment extends Fragment {
                             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                             .build(),
                     new ScanFilter.Builder()
+                            .setDeviceName(getString(R.string.ble_device_name_legacy))
+                            .build(),
+                    new ScanFilter.Builder()
                             .setDeviceName(getString(R.string.ble_device_name))
-                            // add custom filters if needed
                             .build()
             )
                     .observeOn(AndroidSchedulers.mainThread())
