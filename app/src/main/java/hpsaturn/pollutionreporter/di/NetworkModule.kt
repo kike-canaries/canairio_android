@@ -62,7 +62,10 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofitInstance(@ApplicationContext context: Context, okHttpClient: OkHttpClient) =
+    fun provideRetrofitInstance(
+        @ApplicationContext context: Context,
+        okHttpClient: OkHttpClient
+    ): Retrofit =
         Retrofit.Builder()
             .baseUrl(context.getString(R.string.api_aqicn_url))
             .client(okHttpClient)

@@ -12,7 +12,9 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import retrofit2.Response
 
+@ExperimentalCoroutinesApi
 @ExtendWith(MockKExtension::class)
 internal class AirQualityStatusRepositoryImplTest {
 
@@ -50,7 +53,7 @@ internal class AirQualityStatusRepositoryImplTest {
     }
 
     @Test
-    fun `should return remote data when the call to remote data source is ok`() {
+    fun `should return remote data when the call to remote data source is ok`() = runBlockingTest {
         // arrange
         every { mockMapper(any()) } returns tAirQualityStatus
         coEvery {
@@ -60,7 +63,8 @@ internal class AirQualityStatusRepositoryImplTest {
             )
         } returns Response.success<AqicnFeedResponse>(tAqicnFeedResponse)
         // act
-        val result = runBlocking { repository.getNearestAirQualityStatus(tLatitude, tLongitude) }
+        val result = repository.getNearestAirQualityStatus(tLatitude, tLongitude)
+        repository.getNearestAirQualityStatus(tLatitude, tLongitude)
         // assert
         coVerify { mockAqicnApiFeedService.getGeolocationFeed(tLatitude, tLongitude) }
         assertEquals(tAirQualityStatus, result)

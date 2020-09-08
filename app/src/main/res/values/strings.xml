@@ -94,4 +94,5 @@
     <string name="about_canairio_description">About CanAirIO.</string>
     <string name="give_us_feedback_description">Give us feedback.</string>
     <string name="upair_device_description">Upair device.</string>
+    <string name="NoAQIFound">None</string>
 </resources>

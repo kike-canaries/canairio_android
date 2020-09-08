@@ -6,12 +6,14 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @ExtendWith(MockKExtension::class)
 internal class FindNearestAirQualityStatusTest {
 
@@ -36,23 +38,24 @@ internal class FindNearestAirQualityStatusTest {
     }
 
     @Test
-    fun `should call the repository to fetch the nearest air quality given coordinates`() {
-        // arrange
-        coEvery {
-            mockAirQualityStatusRepository.getNearestAirQualityStatus(
-                any(),
-                any()
-            )
-        } returns tAirQualityStatus
-        // act
-        val result = runBlocking { useCase(tLatitude, tLongitude) }
-        // assert
-        assertEquals(tAirQualityStatus, result)
-        coVerify {
-            mockAirQualityStatusRepository.getNearestAirQualityStatus(
-                tLatitude,
-                tLongitude
-            )
+    fun `should call the repository to fetch the nearest air quality given coordinates`() =
+        runBlockingTest {
+            // arrange
+            coEvery {
+                mockAirQualityStatusRepository.getNearestAirQualityStatus(
+                    any(),
+                    any()
+                )
+            } returns tAirQualityStatus
+            // act
+            val result = useCase(tLatitude, tLongitude)
+            // assert
+            assertEquals(tAirQualityStatus, result)
+            coVerify {
+                mockAirQualityStatusRepository.getNearestAirQualityStatus(
+                    tLatitude,
+                    tLongitude
+                )
+            }
         }
-    }
 }

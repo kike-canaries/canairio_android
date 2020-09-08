@@ -56,13 +56,16 @@ internal class AqicnApiFeedServiceTest {
     @Test
     fun `should deserialize JSON to AqicnFeedResponse`() {
         // arrange
-        val mockResponse = MockResponse().setResponseCode(HttpURLConnection.HTTP_OK).setBody(readFixture(JsonFixture.STATION_FEED))
+        val mockResponse = MockResponse().setResponseCode(HttpURLConnection.HTTP_OK)
+            .setBody(readFixture(JsonFixture.STATION_FEED))
         mockWebServer.enqueue(mockResponse)
         // act
         val result = runBlocking { aqicnApiFeedService.getGeolocationFeed(tLatitude, tLongitude) }
         val lastRequest = mockWebServer.takeRequest()
         // assert
         assertNotNull(result.body())
+        assertNotNull(lastRequest)
+        assertNotNull(lastRequest.requestUrl)
         assertEquals("ok", result.body()!!.status)
         assertEquals(11, result.body()!!.data.aqi)
         assertEquals(6236, result.body()!!.data.idx)
