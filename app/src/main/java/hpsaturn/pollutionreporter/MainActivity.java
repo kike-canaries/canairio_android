@@ -98,20 +98,20 @@ public class MainActivity extends BaseActivity implements
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
 
         Logger.i(TAG,"[API] AQICN testing request");
-        AqicnApiManager.getInstance().getDataFromHere(
-                new Callback<AqicnDataResponse>() {
-                    @Override
-                    public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
-                        if(response!=null) Logger.v(TAG,"[API] AQICN response: "+response.body().status);
-                        else Logger.e(TAG,"[API] AQICN response: null");
-                    }
-
-                    @Override
-                    public void onFailure(Call<AqicnDataResponse> call, Throwable t) {
-                        Logger.e(TAG,"[API] AQICN response error: "+t.getMessage());
-                        Logger.e(TAG,"[API] AQICN"+t.getLocalizedMessage());
-                    }
-                });
+//        AqicnApiManager.getInstance().getDataFromHere(
+//                new Callback<AqicnDataResponse>() {
+//                    @Override
+//                    public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
+//                        if(response!=null) Logger.v(TAG,"[API] AQICN response: "+response.body().status);
+//                        else Logger.e(TAG,"[API] AQICN response: null");
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<AqicnDataResponse> call, Throwable t) {
+//                        Logger.e(TAG,"[API] AQICN response error: "+t.getMessage());
+//                        Logger.e(TAG,"[API] AQICN"+t.getLocalizedMessage());
+//                    }
+//                });
     }
 
     private void startDataBase(){
