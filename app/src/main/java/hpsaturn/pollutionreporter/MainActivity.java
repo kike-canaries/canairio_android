@@ -12,12 +12,13 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
-import com.livinglifetechway.quickpermissions.annotations.WithPermissions;
+//import com.livinglifetechway.quickpermissions.annotations.WithPermissions;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -96,6 +97,8 @@ public class MainActivity extends BaseActivity implements
         checkBluetoohtBle();
         startPermissionsFlow();
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
+
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
         Logger.i(TAG,"[API] AQICN testing request");
 //        AqicnApiManager.getInstance().getDataFromHere(
@@ -419,16 +422,16 @@ public class MainActivity extends BaseActivity implements
         return mDatabase;
     }
 
-    @WithPermissions(
-            permissions = {
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BLUETOOTH
-            }
-    )
+//    @WithPermissions(
+//            permissions = {
+//                    Manifest.permission.ACCESS_NETWORK_STATE,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                    Manifest.permission.ACCESS_FINE_LOCATION,
+//                    Manifest.permission.ACCESS_COARSE_LOCATION,
+//                    Manifest.permission.BLUETOOTH
+//            }
+//    )
     public void startPermissionsFlow() {
         Logger.i(TAG, "onPermissionGranted..");
         setupUI();
