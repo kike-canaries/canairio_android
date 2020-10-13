@@ -5,28 +5,6 @@ package hpsaturn.pollutionreporter.models;
  */
 public class SensorConfig {
 
-    public String dname;
-
-    public String ssid;
-
-    public String pass;
-
-    public String apiusr;
-
-    public String apipss;
-
-    public String apisrv;
-
-    public String apiuri;
-
-    public int apiprt;
-
-    public String ifxdb;
-
-    public String ifxip;
-
-    public int stime;
-
     public int wmac;
 
     public boolean wenb;
@@ -35,15 +13,6 @@ public class SensorConfig {
 
     public boolean aenb;
 
-    public String cmd;
+    public String lskey;
 
-    public String act;
-
-    public double lat;
-
-    public double lon;
-
-    public double alt;
-
-    public float spd;
 }

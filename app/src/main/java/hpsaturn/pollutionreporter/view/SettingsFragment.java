@@ -11,18 +11,32 @@ import androidx.preference.SwitchPreference;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hpsaturn.tools.UITools;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import com.hpsaturn.tools.Logger;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.models.ApiConfig;
+import hpsaturn.pollutionreporter.models.CommandConfig;
+import hpsaturn.pollutionreporter.models.GeoConfig;
+import hpsaturn.pollutionreporter.models.InfluxdbConfig;
+import hpsaturn.pollutionreporter.models.ResponseConfig;
+import hpsaturn.pollutionreporter.models.SampleConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
+import hpsaturn.pollutionreporter.models.SensorName;
+import hpsaturn.pollutionreporter.models.SensorTrack;
+import hpsaturn.pollutionreporter.models.WifiConfig;
 import io.nlopez.smartlocation.SmartLocation;
 
 /**
@@ -145,9 +159,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private void saveSensorName(String name) {
         if(name.length() == 0 ) return;
         getMain().showSnackMessage(R.string.msg_save_config);
-        SensorConfig config = new SensorConfig();
+        SensorName config = new SensorName();
         config.dname = name;
-        getMain().getRecordTrackManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
     }
 
 
@@ -173,9 +187,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private void saveSensorSampleTime(int time) {
         getMain().showSnackMessage(R.string.msg_save_config);
-        SensorConfig config = new SensorConfig();
+        SampleConfig config = new SampleConfig();
         config.stime = time;
-        getMain().getRecordTrackManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
     }
 
     private int getCurrentStime() {
@@ -272,11 +286,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             String pass = getSharedPreference(getString(R.string.key_setting_pass));
             if(ssid.length()==0 || pass.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config_wfi);
-            SensorConfig config = new SensorConfig();
+            WifiConfig config = new WifiConfig();
             config.ssid = ssid;
             config.pass = pass;
             Logger.v(TAG, "[Config] writing wifi credentials..");
-            getMain().getRecordTrackManager().writeSensorConfig(config);
+            getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
         } else if (!onWifiConfigChanged) {
             enableWifiOnDevice(false);
         } else {
@@ -286,11 +300,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void enableWifiOnDevice(boolean enable) {
-        SensorConfig config = new SensorConfig();
+        CommandConfig config = new CommandConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "wst";
         config.wenb = enable;
-        getMain().getRecordTrackManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
     }
 
     private void saveApiConfig(String key) {
@@ -305,14 +319,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             String api_uri = getSharedPreference(getString(R.string.key_setting_apiuri));
             if(api_usr.length() == 0 || api_pss.length() == 0 || api_srv.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config_api);
-            SensorConfig config = new SensorConfig();
+            ApiConfig config = new ApiConfig();
             config.apiusr = api_usr;
             config.apipss = api_pss;
             config.apisrv = api_srv;
             config.apiuri = api_uri;
             config.apiprt = 80;  // TODO: sending via UI
             Logger.v(TAG, "[Config] writing API credentials..");
-            getMain().getRecordTrackManager().writeSensorConfig(config);
+            getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
         } else if (!onAPIConfigChanged) {
             disableApi();
         } else {
@@ -322,11 +336,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void disableApi() {
-        SensorConfig config = new SensorConfig();
+        CommandConfig config = new CommandConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "ast";
         config.aenb = false;
-        getMain().getRecordTrackManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
     }
 
     private void saveInfluxConfig(String key) {
@@ -338,11 +352,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
             if(ifxdb.length() == 0 || ifxip.length() == 0) return;
             getMain().showSnackMessage(R.string.msg_save_config_ifx);
-            SensorConfig config = new SensorConfig();
+            InfluxdbConfig config = new InfluxdbConfig();
             config.ifxdb = ifxdb;
             config.ifxip = ifxip;
             Logger.v(TAG, "[Config] writing InfluxDb settings..");
-            getMain().getRecordTrackManager().writeSensorConfig(config);
+            getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
         } else if (!onInfluxDBConfigChanged) {
             disableInfluxDB();
         } else {
@@ -352,11 +366,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void disableInfluxDB() {
-        SensorConfig config = new SensorConfig();
+        CommandConfig config = new CommandConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "ist";
         config.ienb = false;
-        getMain().getRecordTrackManager().writeSensorConfig(config);
+        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
     }
 
     /***********************************************************************************************
@@ -369,12 +383,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             if(locationSwitch.isChecked()) {
                 snackBar = getMain().getSnackBar(R.string.msg_set_current_location, R.string.bt_location_save_action, view -> {
                     getMain().showSnackMessage(R.string.msg_save_location);
-                    SensorConfig config = new SensorConfig();
+                    GeoConfig config = new GeoConfig();
                     config.lat = lastLocation.getLatitude();
                     config.lon = lastLocation.getLongitude();
                     config.alt = lastLocation.getAltitude();
                     config.spd = lastLocation.getSpeed();
-                    getMain().getRecordTrackManager().writeSensorConfig(config);
+                    getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
                     Handler handler = new Handler();
                     handler.postDelayed(() -> locationSwitch.setChecked(false), 2000);
                 });
@@ -409,11 +423,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         } else {
             snackBar = getMain().getSnackBar(R.string.bt_device_reboot, R.string.bt_device_reboot_action, view -> {
                 rebootSwitch.setChecked(false);
-                SensorConfig config = new SensorConfig();
+                CommandConfig config = new CommandConfig();
                 config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
                 config.act = "rbt";
                 getMain().showSnackMessageSlow(R.string.msg_device_reboot);
-                getMain().getRecordTrackManager().writeSensorConfig(config);
+                getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
                 Handler handler = new Handler();
                 handler.postDelayed(() -> getMain().finish(), 3000);
             });
@@ -428,11 +442,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         } else {
             snackBar = getMain().getSnackBar(R.string.bt_device_clear, R.string.bt_device_clear_action, view -> {
                 clearSwitch.setChecked(false);
-                SensorConfig config = new SensorConfig();
+                CommandConfig config = new CommandConfig();
                 config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
                 config.act = "cls";
                 getMain().showSnackMessageSlow(R.string.msg_device_clear);
-                getMain().getRecordTrackManager().writeSensorConfig(config);
+                getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
                 clearSharedPreferences();
                 Handler handler = new Handler();
                 handler.postDelayed(() -> getMain().finish(), 3000);
@@ -445,7 +459,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
      * Update methods
      **********************************************************************************************/
 
-    public void configCallBack(SensorConfig config) {
+    public void configCallBack(ResponseConfig config) {
         if (config != null) {
             Logger.i(TAG, "dname: " + config.dname);
             Logger.i(TAG, "ifxdb: " + config.ifxdb);
@@ -468,12 +482,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
             updatePreferencesSummmary(config);
             updateSwitches(config);
-            saveAllPreferences(config);
+//            saveAllPreferences(config);
             rebuildUI();
         }
     }
 
-    private void updatePreferencesSummmary(SensorConfig config) {
+    private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
         if(config.apiusr !=null)updateSummary(R.string.key_setting_apiusr,config.apiusr);
         if(config.apisrv !=null)updateSummary(R.string.key_setting_apisrv,config.apisrv);
@@ -539,7 +553,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
      * Update Preferences methods
      **********************************************************************************************/
 
-    private void saveAllPreferences(SensorConfig config) {
+    private void saveAllPreferences(ResponseConfig config) {
         saveSharedPreference(R.string.key_setting_dname, config.dname);
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
@@ -556,7 +570,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void saveSharedPreference(String key, String value) {
-        if(value.length()!=0) {
+        if(value!=null && value.length()!=0) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(key, value);

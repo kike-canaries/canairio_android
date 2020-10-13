@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
 import hpsaturn.pollutionreporter.api.AqicnDataResponse;
+import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
@@ -179,7 +180,7 @@ public class MainActivity extends BaseActivity implements
         }
 
         @Override
-        public void onSensorConfigRead(SensorConfig config) {
+        public void onSensorConfigRead(ResponseConfig config) {
             settingsFragment.configCallBack(config);
         }
 
@@ -189,7 +190,7 @@ public class MainActivity extends BaseActivity implements
         }
 
         @Override
-        public void onSensorConfigWrite(SensorConfig config) {
+        public void onSensorConfigWrite(String config) {
 
         }
     };

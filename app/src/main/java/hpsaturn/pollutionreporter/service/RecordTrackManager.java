@@ -8,6 +8,9 @@ import android.content.IntentFilter;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 
+import java.lang.reflect.Type;
+
+import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 
@@ -135,9 +138,9 @@ public class RecordTrackManager {
         ctx.sendBroadcast(intent);
     }
 
-    public void writeSensorConfig(SensorConfig config) {
+    public void writeSensorConfig(String config) {
         Intent intent = new Intent(action_sensor_write_config);
-        intent.putExtra(KEY_SENSOR_CONFIG_WRITE,new Gson().toJson(config));
+        intent.putExtra(KEY_SENSOR_CONFIG_WRITE,config);
         ctx.sendBroadcast(intent);
     }
 
@@ -193,7 +196,7 @@ public class RecordTrackManager {
             } else if(action.equals(response_sensor_config)) {
 
                 String config = intent.getExtras().getString(KEY_SENSOR_CONFIG_RESPONSE);
-                listener.onSensorConfigRead(new Gson().fromJson(config, SensorConfig.class));
+                listener.onSensorConfigRead(new Gson().fromJson(config, ResponseConfig.class));
 
             } else if(action.equals(action_sensor_read_data)) {
 
@@ -202,7 +205,7 @@ public class RecordTrackManager {
             } else if(action.equals(action_sensor_write_config)) {
 
                 String config = intent.getExtras().getString(KEY_SENSOR_CONFIG_WRITE);
-                listener.onSensorConfigWrite(new Gson().fromJson(config, SensorConfig.class));
+                listener.onSensorConfigWrite(config);
 
             }
 
