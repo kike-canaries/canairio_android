@@ -127,7 +127,7 @@ public class RecordTrackManager {
         ctx.sendBroadcast(intent);
     }
 
-    public void responseSensorConfig(SensorConfig config){
+    public void responseSensorConfig(ResponseConfig config){
         Intent intent = new Intent(response_sensor_config);
         intent.putExtra(KEY_SENSOR_CONFIG_RESPONSE,new Gson().toJson(config));
         ctx.sendBroadcast(intent);

@@ -13,6 +13,5 @@ public class SensorConfig {
 
     public boolean aenb;
 
-    public String lskey;
 
 }

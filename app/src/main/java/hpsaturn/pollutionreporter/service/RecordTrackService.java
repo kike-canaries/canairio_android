@@ -263,7 +263,7 @@ public class RecordTrackService extends Service {
         @Override
         public void onSensorConfigRead(byte[] bytes) {
             String strdata = new String(bytes);
-            SensorConfig config = new Gson().fromJson(strdata, SensorConfig.class);
+            ResponseConfig config = new Gson().fromJson(strdata, ResponseConfig.class);
             recordTrackManager.responseSensorConfig(config);
         }
 

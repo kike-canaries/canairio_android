@@ -461,19 +461,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     public void configCallBack(ResponseConfig config) {
         if (config != null) {
+            Logger.i(TAG, "[Config] callback values:");
             Logger.i(TAG, "dname: " + config.dname);
+            Logger.i(TAG, "stime: " + config.stime);
+            Logger.i(TAG, "stype: " + config.stype);
+            Logger.i(TAG, "ssid:  " + config.ssid);
+            Logger.i(TAG, "wifien:" + config.wenb);
             Logger.i(TAG, "ifxdb: " + config.ifxdb);
             Logger.i(TAG, "ifxip: " + config.ifxip);
-            Logger.i(TAG, "ssid:  " + config.ssid);
-            Logger.i(TAG, "stime: " + config.stime);
-            Logger.i(TAG, "wmac:  " + config.wmac);
-            Logger.i(TAG, "wifien:" + config.wenb);
-            Logger.i(TAG, "apien: " + config.aenb);
             Logger.i(TAG, "ifxen: " + config.ienb);
             Logger.i(TAG, "apiusr:" + config.apiusr);
             Logger.i(TAG, "apisrv:" + config.apisrv);
             Logger.i(TAG, "apiuri:" + config.apiuri);
             Logger.i(TAG, "apiprt:" + config.apiprt);
+            Logger.i(TAG, "apien: " + config.aenb);
+            Logger.i(TAG, "wmac:  " + config.wmac);
+            Logger.i(TAG, "lskey: " + config.lskey);
 
 
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_name),""+config.dname);
@@ -482,7 +485,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
             updatePreferencesSummmary(config);
             updateSwitches(config);
-//            saveAllPreferences(config);
+            saveAllPreferences(config);
             rebuildUI();
         }
     }
