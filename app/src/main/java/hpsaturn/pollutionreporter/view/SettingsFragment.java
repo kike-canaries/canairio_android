@@ -3,6 +3,11 @@ package hpsaturn.pollutionreporter.view;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
@@ -12,19 +17,11 @@ import androidx.preference.SwitchPreference;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.hpsaturn.tools.UITools;
-import com.takisoft.preferencex.PreferenceFragmentCompat;
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.lang.reflect.Type;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
 import com.hpsaturn.tools.Logger;
+import com.takisoft.preferencex.PreferenceFragmentCompat;
+
+import java.text.DecimalFormat;
+
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ApiConfig;
@@ -35,7 +32,6 @@ import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorName;
-import hpsaturn.pollutionreporter.models.SensorTrack;
 import hpsaturn.pollutionreporter.models.WifiConfig;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -48,12 +44,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
     private String sname, ssid, pass, ifxdb, ifxip, apiusr, apipss, apisrv, apiuri;
-    private int stime;
     private boolean onWifiConfigChanged;
     private boolean onInfluxDBConfigChanged;
     private boolean onAPIConfigChanged;
     private Location lastLocation;
     private Snackbar snackBar;
+    private ResponseConfig lastDeviceConfig;
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -68,7 +64,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         pass = getSharedPreference(getString(R.string.key_setting_pass));
         ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-        stime = getCurrentStime();
+//        stime = getCurrentStime();
 
         String feedback = getSharedPreference(getString(R.string.key_send_feedback));
 
@@ -139,7 +135,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveLocation();
         }
 
-        refreshUI();
+//        refreshUI();
     }
 
     /***********************************************************************************************
@@ -175,20 +171,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private void validateSensorSampleTime(SharedPreferences sharedPreferences, String key) {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_stime));
-        int old_stime = stime;
-        stime = getCurrentStime();
-        if (old_stime != stime && stime >= 5) {
-            saveSensorSampleTime(stime);
-        } else if (old_stime != stime) {
-            saveSharedPreference(key, "" + old_stime);
+        Logger.v(TAG, "[Config] "+getCurrentStime());
+        if (getCurrentStime() >= 5) {
+            saveSensorSampleTime(getCurrentStime());
+        }else if (lastDeviceConfig!=null) {
+            resetStimeValue(lastDeviceConfig.stime);
         }
-        updateStimeSummary();
     }
 
     private void saveSensorSampleTime(int time) {
-        getMain().showSnackMessage(R.string.msg_save_config);
+        Logger.v(TAG, "[Config] sending sensor time: "+time);
         SampleConfig config = new SampleConfig();
         config.stime = time;
+        updateSummary(R.string.key_setting_stime,getStimeFormat(config.stime));
         getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
     }
 
@@ -199,6 +194,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             e.printStackTrace();
         }
         return 0;
+    }
+
+    private void resetStimeValue(int stime) {
+        getMain().showSnackMessage(R.string.msg_stime_error);
+        saveSharedPreference(R.string.key_setting_stime, "" + stime);
+        rebuildUI();
+    }
+
+    String getStimeFormat(int time){
+        return "" + time + " seconds";
     }
 
     private void updateStimeSummary() {
@@ -478,17 +483,30 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Logger.i(TAG, "wmac:  " + config.wmac);
             Logger.i(TAG, "lskey: " + config.lskey);
 
+            lastDeviceConfig = config;
+
 
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_name),""+config.dname);
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_wmac),""+config.wmac);
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
 
-            updatePreferencesSummmary(config);
-            updateSwitches(config);
-            saveAllPreferences(config);
-            rebuildUI();
+            if (config.lskey.length()>0) {
+                if(config.lskey.equals("stime")){
+                    if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
+                       resetStimeValue(config.stime);
+                    }
+
+                }
+            }
+
+//            updatePreferencesSummmary(config);
+//            updateSwitches(config);
+//            saveAllPreferences(config);
+//            rebuildUI();
         }
     }
+
+
 
     private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
@@ -498,7 +516,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
         if(config.ifxdb !=null)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
         if(config.ifxip !=null)updateSummary(R.string.key_setting_ifxip,config.ifxip);
-        if(config.stime>0)updateSummary(R.string.key_setting_stime,"" + config.stime + " seconds");
+        if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
         updateLocationSummary();
     }
 

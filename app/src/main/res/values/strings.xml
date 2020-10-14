@@ -32,7 +32,7 @@
     <string name="msg_save_config_api">Saving CanAirio API setting…</string>
     <string name="msg_save_config_wfi">Saving WiFi setting…</string>
     <string name="msg_config_saved">Device settings updated!</string>
-    <string name="msg_stime_error">Wrong value, restoring default value…</string>
+    <string name="msg_stime_error">Wrong sample time! >=5 restoring value…</string>
     <string name="msg_save_location">Saving location…</string>
     <string name="msg_save_location_failed">Location is no ready…</string>
     <string name="key_setting_dname">key_setting_dname</string>
