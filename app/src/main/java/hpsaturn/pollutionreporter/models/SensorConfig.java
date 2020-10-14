@@ -13,5 +13,7 @@ public class SensorConfig {
 
     public boolean aenb;
 
+    public boolean wsta;
+
 
 }

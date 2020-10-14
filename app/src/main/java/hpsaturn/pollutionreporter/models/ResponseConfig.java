@@ -27,4 +27,6 @@ public class ResponseConfig extends SensorConfig {
 
     public String lskey;
 
+    
+
 }
