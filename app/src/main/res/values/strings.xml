@@ -82,4 +82,6 @@
     <string name="menu_feedback">Feedback</string>
     <string name="key_send_feedback">key_send_feedback</string>
     <string name="msg_sync_complete">Device sync complete</string>
+    <string name="msg_passw_seted">*********</string>
+    <string name="msg_passw_unseted" />
 </resources>
