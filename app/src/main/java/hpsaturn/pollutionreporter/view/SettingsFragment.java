@@ -43,8 +43,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
-    private boolean onInfluxDBConfigChanged;
-    private boolean onAPIConfigChanged;
     private Location lastLocation;
     private Snackbar snackBar;
     private ResponseConfig lastDeviceConfig;
@@ -52,17 +50,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-
-//        sname = getSharedPreference(getString(R.string.key_setting_dname));
-//        apiusr = getSharedPreference(getString(R.string.key_setting_apiusr));
-//        apipss = getSharedPreference(getString(R.string.key_setting_apipss));
-//        apisrv = getSharedPreference(getString(R.string.key_setting_apisrv));
-//        apiuri = getSharedPreference(getString(R.string.key_setting_apiuri));
-//        ssid = getSharedPreference(getString(R.string.key_setting_ssid));
-//        pass = getSharedPreference(getString(R.string.key_setting_pass));
-//        ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
-//        ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-//        stime = getCurrentStime();
 
         String feedback = getSharedPreference(getString(R.string.key_send_feedback));
 
@@ -100,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getMain().getRecordTrackManager().readSensorConfig();
+        readSensorConfig();
     }
 
     @Override
@@ -116,10 +103,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveWifiConfig();
         } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
             saveWifiConfig();
-        } else if (key.equals(getString(R.string.key_setting_apiusr))) {
-            saveApiConfig();
-        } else if (key.equals(getString(R.string.key_setting_apipss))) {
-            saveApiConfig();
         } else if (key.equals(getString(R.string.key_setting_enable_api))) {
             saveApiConfig();
         } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
@@ -132,7 +115,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveLocation();
         }
 
-//        refreshUI();
     }
 
     /***********************************************************************************************
@@ -144,7 +126,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveSharedPreference(R.string.key_setting_dname,name);
             SensorName config = new SensorName();
             config.dname = name;
-            getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+            sendSensorConfig(config);
         }else  {
             resetSensorName();
         }
@@ -161,7 +143,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             rebuildUI();
         }
     }
-
 
     private void updateSensorNameSummary() {
         updateSummary(R.string.key_setting_dname);
@@ -185,7 +166,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SampleConfig config = new SampleConfig();
         config.stime = time;
         updateSummary(R.string.key_setting_stime,getStimeFormat(config.stime));
-        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+        sendSensorConfig(config);
     }
 
     private int getCurrentStime() {
@@ -225,8 +206,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             config.ssid = ssid;
             config.pass = pass;
             config.wenb = true;
-            Logger.v(TAG, "[Config] writing wifi credentials..");
-            getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+            sendSensorConfig(config);
         }
         else
             setWifiSwitch(false);
@@ -251,7 +231,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "wst";
         config.wenb = enable;
-        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+        sendSensorConfig(config);
     }
 
     /***********************************************************************************************
@@ -266,7 +246,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             String api_pss = getSharedPreference(getString(R.string.key_setting_apipss));
             String api_srv = getSharedPreference(getString(R.string.key_setting_apisrv));
             String api_uri = getSharedPreference(getString(R.string.key_setting_apiuri));
-            if(api_usr.length() == 0 || api_pss.length() == 0 || api_srv.length() == 0) return;
+            Logger.v(TAG, "[Config] API values -> " + api_usr +  " " + api_pss + " " + api_srv);
+            if(api_usr.length() == 0 || api_pss.length() == 0 || api_srv.length() == 0) {
+                setApiSwitch(false);
+                return;
+            }
             ApiConfig config = new ApiConfig();
             config.apiusr = api_usr;
             config.apipss = api_pss;
@@ -274,13 +258,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             config.apiuri = api_uri;
             config.apiprt = 80;  // TODO: sending via UI
             config.aenb = true;
-            Logger.v(TAG, "[Config] writing API credentials..");
-            getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+            sendSensorConfig(config);
         } else
             setApiSwitch(false);
     }
 
     private void setApiSwitch(boolean checked) {
+        Logger.v(TAG, "[Config] API switch check -> " + checked);
         SwitchPreference apiSwitch = getApiSwitch();
         String apiusr = getSharedPreference(getString(R.string.key_setting_apiusr));
         String apipss = getSharedPreference(getString(R.string.key_setting_apipss));
@@ -303,12 +287,31 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "ast";
         config.aenb = enable;
-        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+        sendSensorConfig(config);
     }
 
     /***********************************************************************************************
      * InfluxDB switch
      **********************************************************************************************/
+
+    private void saveInfluxDbConfig() {
+        Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
+
+        if (getInfluxDbSwitch().isChecked()) {
+            String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
+            String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
+            if(ifxdb.length() == 0 || ifxip.length() == 0) {
+                setInfluxDbSwitch(false);
+                return;
+            }
+            InfluxdbConfig config = new InfluxdbConfig();
+            config.ifxdb = ifxdb;
+            config.ifxip = ifxip;
+            config.ienb = true;
+            sendSensorConfig(config);
+        } else
+            setInfluxDbSwitch(false);
+    }
 
     private void setInfluxDbSwitch(boolean checked) {
         SwitchPreference ifxdbSwitch = getInfluxDbSwitch();
@@ -323,43 +326,27 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         enableInfluxDbOnDevice(checked);
     }
 
-    private void saveInfluxDbConfig() {
-        Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
-
-        if (getInfluxDbSwitch().isChecked()) {
-            String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
-            String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-            if(ifxdb.length() == 0 || ifxip.length() == 0) return;
-            InfluxdbConfig config = new InfluxdbConfig();
-            config.ifxdb = ifxdb;
-            config.ifxip = ifxip;
-            config.ienb = true;
-            Logger.v(TAG, "[Config] writing InfluxDb settings..");
-            getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
-        } else
-            setInfluxDbSwitch(false);
-    }
-
     private void enableInfluxDbOnDevice(boolean enable) {
         CommandConfig config = new CommandConfig();
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "ist";
         config.ienb = enable;
-        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+        sendSensorConfig(config);
     }
 
     private SwitchPreference getInfluxDbSwitch() {
         return findPreference(getString(R.string.key_setting_enable_ifx));
     }
 
-    private void validateLocationSwitch() {
-        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
-        locationSwitch.setEnabled(lastLocation!=null);
-    }
 
     /***********************************************************************************************
      * Misc preferences section
      **********************************************************************************************/
+
+    private void validateLocationSwitch() {
+        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
+        locationSwitch.setEnabled(lastLocation!=null);
+    }
 
     private void saveLocation() {
         SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
@@ -372,7 +359,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     config.lon = lastLocation.getLongitude();
                     config.alt = lastLocation.getAltitude();
                     config.spd = lastLocation.getSpeed();
-                    getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+                    sendSensorConfig(config);
                     Handler handler = new Handler();
                     handler.postDelayed(() -> locationSwitch.setChecked(false), 2000);
                 });
@@ -411,7 +398,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
                 config.act = "rbt";
                 getMain().showSnackMessageSlow(R.string.msg_device_reboot);
-                getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+                sendSensorConfig(config);
                 Handler handler = new Handler();
                 handler.postDelayed(() -> getMain().finish(), 3000);
             });
@@ -430,7 +417,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
                 config.act = "cls";
                 getMain().showSnackMessageSlow(R.string.msg_device_clear);
-                getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+                sendSensorConfig(config);
                 clearSharedPreferences();
                 Handler handler = new Handler();
                 handler.postDelayed(() -> getMain().finish(), 3000);
@@ -442,6 +429,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     /***********************************************************************************************
      * Update methods
      **********************************************************************************************/
+
+    private void sendSensorConfig(SensorConfig config) {
+        Logger.v(TAG, "[Config] writing sensor config: "+config.getClass().getName());
+        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+    }
+
+    private void readSensorConfig(){
+        getMain().getRecordTrackManager().readSensorConfig();
+    }
 
     public void configCallBack(ResponseConfig config) {
         if (config != null) {
@@ -462,38 +458,50 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 saveSensorName(config.dname);
                 notify_sync = true;
             }
-            if (config.wenb != getWifiSwitch().isChecked()) setWifiSwitch(config.wenb);
-            if (config.ienb != getInfluxDbSwitch().isChecked()) setInfluxDbSwitch(config.wenb);
-            if (config.aenb != getApiSwitch().isChecked()) setApiSwitch(config.wenb);
+            if (config.wenb != getWifiSwitch().isChecked()) {
+                setWifiSwitch(config.wenb);
+                notify_sync = true;
+            }
+            if (config.ienb != getInfluxDbSwitch().isChecked()) {
+                setInfluxDbSwitch(config.ienb);
+                notify_sync = true;
+            }
+            if (config.aenb != getApiSwitch().isChecked()) {
+                setApiSwitch(config.aenb);
+                notify_sync = true;
+            }
+
+            updatePreferencesSummmary(config);
+            saveAllPreferences(config);
+            updateSwitches(config);
 
             if (notify_sync) {
                 getMain().showSnackMessage(R.string.msg_sync_complete);
                 rebuildUI();
             }
-            updatePreferencesSummmary(config);
-            updateSwitches(config);
-            saveAllPreferences(config);
         }
     }
 
     private void printResponseConfig(ResponseConfig config) {
-        Logger.i(TAG, "[Config] callback values:");
-        Logger.i(TAG, "dname: " + config.dname);
-        Logger.i(TAG, "stime: " + config.stime);
-        Logger.i(TAG, "stype: " + config.stype);
-        Logger.i(TAG, "ssid:  " + config.ssid);
-        Logger.i(TAG, "wifien:" + config.wenb);
-        Logger.i(TAG, "ifxdb: " + config.ifxdb);
-        Logger.i(TAG, "ifxip: " + config.ifxip);
-        Logger.i(TAG, "ifxen: " + config.ienb);
-        Logger.i(TAG, "apiusr:" + config.apiusr);
-        Logger.i(TAG, "apisrv:" + config.apisrv);
-        Logger.i(TAG, "apiuri:" + config.apiuri);
-        Logger.i(TAG, "apiprt:" + config.apiprt);
-        Logger.i(TAG, "apien: " + config.aenb);
-        Logger.i(TAG, "wmac:  " + config.wmac);
-        Logger.i(TAG, "lskey: " + config.lskey);
-        Logger.i(TAG, "wsta:  " + config.wsta);
+        Logger.i(TAG, "[Config] Callback values:");
+        Logger.i(TAG, "[Config] dname: " + config.dname);
+        Logger.i(TAG, "[Config] stime: " + config.stime);
+        Logger.i(TAG, "[Config] stype: " + config.stype);
+        Logger.i(TAG, "[Config] ssid:  " + config.ssid);
+        Logger.i(TAG, "[Config] ifxdb: " + config.ifxdb);
+        Logger.i(TAG, "[Config] ifxip: " + config.ifxip);
+        Logger.i(TAG, "[Config] apiusr:" + config.apiusr);
+        Logger.i(TAG, "[Config] apisrv:" + config.apisrv);
+        Logger.i(TAG, "[Config] apiuri:" + config.apiuri);
+        Logger.i(TAG, "[Config] apiprt:" + config.apiprt);
+        Logger.i(TAG, "[Config] -----------------------------");
+        Logger.i(TAG, "[Config] wifien:" + config.wenb);
+        Logger.i(TAG, "[Config] ifxen: " + config.ienb);
+        Logger.i(TAG, "[Config] apien: " + config.aenb);
+        Logger.i(TAG, "[Config] -----------------------------");
+        Logger.i(TAG, "[Config] wsta:  " + config.wsta);
+        Logger.i(TAG, "[Config] wmac:  " + config.wmac);
+        Logger.i(TAG, "[Config] lskey: " + config.lskey);
     }
 
 
@@ -558,15 +566,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
      **********************************************************************************************/
 
     private void saveAllPreferences(ResponseConfig config) {
-//        saveSharedPreference(R.string.key_setting_dname, config.dname);
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
-//        saveSharedPreference(R.string.key_setting_stime, "" + config.stime);
+        saveSharedPreference(R.string.key_setting_apiusr, config.apiusr);
+        saveSharedPreference(R.string.key_setting_apisrv, config.apisrv);
         saveSharedPreference(R.string.key_setting_wmac, "" + config.wmac);
-//        saveSharedPreference(R.string.key_setting_enable_wifi,config.wenb);
-//        saveSharedPreference(R.string.key_setting_enable_ifx,config.ienb);
-//        saveSharedPreference(R.string.key_setting_enable_api,config.aenb);
     }
 
     private void saveSharedPreference(int key, String value) {
