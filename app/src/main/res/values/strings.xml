@@ -84,4 +84,6 @@
     <string name="msg_sync_complete">Device sync complete</string>
     <string name="msg_passw_seted">*********</string>
     <string name="msg_passw_unseted" />
+    <string name="key_setting_dtype">key_setting_dtype</string>
+    <string name="msg_reboot_manually">Please manually reboot of CanAirIO device!</string>
 </resources>

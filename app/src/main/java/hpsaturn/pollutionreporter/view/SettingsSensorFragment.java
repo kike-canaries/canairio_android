@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
+//import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
@@ -32,6 +33,7 @@ import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorName;
+import hpsaturn.pollutionreporter.models.SensorType;
 import hpsaturn.pollutionreporter.models.WifiConfig;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -39,9 +41,9 @@ import io.nlopez.smartlocation.SmartLocation;
  * Created by Antonio Vanegas @hpsaturn on 2/17/19.
  */
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsSensorFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public static final String TAG = SettingsFragment.class.getSimpleName();
+    public static final String TAG = SettingsSensorFragment.class.getSimpleName();
 
     private Location lastLocation;
     private Snackbar snackBar;
@@ -80,6 +82,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -97,6 +104,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             saveSensorName(getSensorName());
         } else if (key.equals(getString(R.string.key_setting_stime))) {
             validateSensorSampleTime();
+        } else if (key.equals(getString(R.string.key_setting_dtype))) {
+            sendSensorTypeConfig();
         } else if (key.equals(getString(R.string.key_setting_ssid))) {
             getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
         } else if (key.equals(getString(R.string.key_setting_pass))) {
@@ -126,6 +135,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
 
     }
+
 
     /***********************************************************************************************
      * Sensor name section
@@ -157,6 +167,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private void updateSensorNameSummary() {
         updateSummary(R.string.key_setting_dname);
     }
+
+    private void sendSensorTypeConfig() {
+        Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_dtype));
+        getMain().showSnackMessage(R.string.msg_reboot_manually);
+        SensorType config = new SensorType();
+        config.stype = getSensorType();
+        sendSensorConfig(config);
+    }
+
+    private int getSensorType() {
+        try {
+            return Integer.parseInt(getSharedPreference(getString(R.string.key_setting_dtype)));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
     /***********************************************************************************************
      * Sample time handlers
@@ -416,16 +444,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         } else {
             snackBar = getMain().getSnackBar(R.string.bt_device_reboot, R.string.bt_device_reboot_action, view -> {
                 rebootSwitch.setChecked(false);
-                CommandConfig config = new CommandConfig();
-                config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
-                config.act = "rbt";
+                sendSensorReboot();
                 getMain().showSnackMessageSlow(R.string.msg_device_reboot);
-                sendSensorConfig(config);
                 Handler handler = new Handler();
                 handler.postDelayed(() -> getMain().finish(), 3000);
             });
             snackBar.show();
         }
+    }
+
+    private void sendSensorReboot() {
+        CommandConfig config = new CommandConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "rbt";
+        sendSensorConfig(config);
     }
 
     private void performClearDevice() {

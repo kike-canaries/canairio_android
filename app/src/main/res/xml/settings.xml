@@ -12,6 +12,15 @@
             app:summary="@string/summary_stime"
             app:title="Sample Time Interval" />
 
+        <ListPreference
+            android:key="@string/key_setting_dtype"
+            android:title="Sensor type"
+            app:useSimpleSummaryProvider="true"
+            android:entries="@array/pref_dtype_entries"
+            android:entryValues="@array/pref_dtype_values"
+            android:defaultValue="0"
+            />
+
         <EditTextPreference
             android:inputType="textUri"
             app:defaultValue="/sdcard/canairio"
