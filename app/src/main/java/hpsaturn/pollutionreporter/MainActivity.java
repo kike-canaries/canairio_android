@@ -10,12 +10,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+
 import android.view.View;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.iamhabib.easy_preference.EasyPreference;
 //import com.livinglifetechway.quickpermissions.annotations.WithPermissions;
@@ -31,15 +33,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import hpsaturn.pollutionreporter.api.AqicnApiManager;
-import hpsaturn.pollutionreporter.api.AqicnDataResponse;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
-import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
@@ -50,10 +49,7 @@ import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
-import hpsaturn.pollutionreporter.view.SettingsFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import hpsaturn.pollutionreporter.view.SettingsSensorFragment;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -61,7 +57,8 @@ import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements
         DiscreteScrollView.ScrollStateChangeListener<PickerFragmentAdapter.ViewHolder>,
-        DiscreteScrollView.OnItemChangedListener<PickerFragmentAdapter.ViewHolder> {
+        DiscreteScrollView.OnItemChangedListener<PickerFragmentAdapter.ViewHolder>,
+        PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -84,7 +81,7 @@ public class MainActivity extends BaseActivity implements
     private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
     private PostsFragment postsFragment;
-    private SettingsFragment settingsFragment;
+    private SettingsSensorFragment settingsSensorFragment;
     private DatabaseReference mDatabase;
 
 
@@ -107,20 +104,7 @@ public class MainActivity extends BaseActivity implements
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
         Logger.i(TAG,"[API] AQICN testing request");
-//        AqicnApiManager.getInstance().getDataFromHere(
-//                new Callback<AqicnDataResponse>() {
-//                    @Override
-//                    public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
-//                        if(response!=null) Logger.v(TAG,"[API] AQICN response: "+response.body().status);
-//                        else Logger.e(TAG,"[API] AQICN response: null");
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<AqicnDataResponse> call, Throwable t) {
-//                        Logger.e(TAG,"[API] AQICN response error: "+t.getMessage());
-//                        Logger.e(TAG,"[API] AQICN"+t.getLocalizedMessage());
-//                    }
-//                });
+
     }
 
     private void startDataBase(){
@@ -181,7 +165,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorConfigRead(ResponseConfig config) {
-            settingsFragment.configCallBack(config);
+            settingsSensorFragment.configCallBack(config);
         }
 
         @Override
@@ -270,7 +254,7 @@ public class MainActivity extends BaseActivity implements
                 fab.hide();
                 hideFragment(postsFragment);
                 hideFragment(recordsFragment);
-                hideFragment(settingsFragment);
+                hideFragment(settingsSensorFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(mapFragment);
@@ -279,7 +263,7 @@ public class MainActivity extends BaseActivity implements
                 fab.hide();
                 hideFragment(recordsFragment);
                 hideFragment(mapFragment);
-                hideFragment(settingsFragment);
+                hideFragment(settingsSensorFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
@@ -290,7 +274,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
-                hideFragment(settingsFragment);
+                hideFragment(settingsSensorFragment);
                 if(isPaired()) showFragment(chartFragment);
                 else showFragment(scanFragment);
                 break;
@@ -305,7 +289,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(recordsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
-                showFragment(settingsFragment);
+                showFragment(settingsSensorFragment);
                 fragmentPickerHide();
                 recordTrackManager.readSensorConfig();
                 break;
@@ -318,7 +302,7 @@ public class MainActivity extends BaseActivity implements
         fab.hide();
         hideFragment(postsFragment);
         hideFragment(mapFragment);
-        hideFragment(settingsFragment);
+        hideFragment(settingsSensorFragment);
         if(isPaired())hideFragment(chartFragment);
         else hideFragment(scanFragment);
         showFragment(recordsFragment);
@@ -374,9 +358,9 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void addSettingsFragment() {
-        if (settingsFragment == null) settingsFragment = new SettingsFragment();
-        if (settingsFragment.isAdded()) return;
-        addFragment(settingsFragment, SettingsFragment.TAG, false);
+        if (settingsSensorFragment == null) settingsSensorFragment = new SettingsSensorFragment();
+        if (settingsSensorFragment.isAdded()) return;
+        addFragment(settingsSensorFragment, SettingsSensorFragment.TAG, false);
     }
 
     private void addPostsFragment() {
@@ -484,7 +468,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        if(settingsFragment!=null && settingsFragment.isVisible()){
+        if(settingsSensorFragment !=null && settingsSensorFragment.isVisible()){
             fragmentPicker.setVisibility(View.VISIBLE);
             fragmentPicker.scrollToPosition(3);
             scrollToRecordsFragment();
@@ -515,5 +499,11 @@ public class MainActivity extends BaseActivity implements
 
     public RecordTrackManager getRecordTrackManager() {
         return recordTrackManager;
+    }
+
+    @Override
+    public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
+        Logger.d(TAG, "onPreferenceStartFragment");
+        return false;
     }
 }

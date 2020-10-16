@@ -13,6 +13,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+import com.hpsaturn.tools.Logger;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -22,8 +24,13 @@ import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import hpsaturn.pollutionreporter.BuildConfig;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.api.AqicnApiManager;
+import hpsaturn.pollutionreporter.api.AqicnDataResponse;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/13/18.
@@ -85,6 +92,24 @@ public class MapFragment extends Fragment {
         mapView.getOverlays().add(pointMarker);
         mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
     }
+
+    private void loadAqicnData() {
+        AqicnApiManager.getInstance().getDataFromHere(
+                new Callback<AqicnDataResponse>() {
+                    @Override
+                    public void onResponse(Call<AqicnDataResponse> call, Response<AqicnDataResponse> response) {
+                        if(response!=null) Logger.v(TAG,"[API] AQICN response: "+response.body().status);
+                        else Logger.e(TAG,"[API] AQICN response: null");
+                    }
+
+                    @Override
+                    public void onFailure(Call<AqicnDataResponse> call, Throwable t) {
+                        Logger.e(TAG,"[API] AQICN response error: "+t.getMessage());
+                        Logger.e(TAG,"[API] AQICN"+t.getLocalizedMessage());
+                    }
+                });
+    }
+
 
 
 }
