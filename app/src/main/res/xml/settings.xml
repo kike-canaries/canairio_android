@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Mobile Sensor Settings">
+    <PreferenceCategory app:title="Mobile Station Settings">
 
         <EditTextPreference
             android:inputType="number"
@@ -11,6 +11,15 @@
             app:key="@string/key_setting_stime"
             app:summary="@string/summary_stime"
             app:title="Sample Time Interval" />
+
+        <ListPreference
+            android:key="@string/key_setting_dtype"
+            android:title="Sensor type"
+            app:useSimpleSummaryProvider="true"
+            android:entries="@array/pref_dtype_entries"
+            android:entryValues="@array/pref_dtype_values"
+            android:defaultValue="0"
+            />
 
         <EditTextPreference
             android:inputType="textUri"
@@ -23,7 +32,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:title="Static Sensor Settings">
+        app:title="Fixed Station Settings">
 
         <EditTextPreference
             android:inputType="text"
@@ -56,7 +65,36 @@
 
     <PreferenceCategory
         app:dependency="@string/key_setting_enable_wifi"
-        app:title="CanAirIO Cloud">
+        app:title="InfluxDB Cloud">
+
+        <EditTextPreference
+            android:inputType="text"
+            app:icon="@android:drawable/ic_menu_upload"
+            app:key="@string/key_setting_ifxdb"
+            app:summary=""
+            app:title="Database Name" />
+
+        <EditTextPreference
+            android:inputType="textUri"
+            app:key="@string/key_setting_ifxip"
+            app:summary=""
+            app:title="Hostname" />
+
+        <!--<EditTextPreference-->
+        <!--app:inputType="text"-->
+        <!--app:key="@string/key_setting_ifxtg"-->
+        <!--app:summary=""-->
+        <!--app:title="Optional Data Tags" />-->
+
+        <SwitchPreference
+            app:key="@string/key_setting_enable_ifx"
+            app:title="Enable InfluxDB Cloud" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:dependency="@string/key_setting_enable_wifi"
+        app:title="Deprecated CanAirIO API">
 
         <EditTextPreference
             android:inputType="text"
@@ -85,40 +123,9 @@
             app:summary=""
             app:title="API target" />
 
-
         <SwitchPreference
             app:key="@string/key_setting_enable_api"
             app:title="Enable CanAirIO API" />
-
-    </PreferenceCategory>
-
-
-    <PreferenceCategory
-        app:dependency="@string/key_setting_enable_wifi"
-        app:title="Optional InfluxDB Cloud">
-
-        <EditTextPreference
-            android:inputType="text"
-            app:icon="@android:drawable/ic_menu_upload"
-            app:key="@string/key_setting_ifxdb"
-            app:summary=""
-            app:title="Database Name" />
-
-        <EditTextPreference
-            android:inputType="textUri"
-            app:key="@string/key_setting_ifxip"
-            app:summary=""
-            app:title="Hostname" />
-
-        <!--<EditTextPreference-->
-        <!--app:inputType="text"-->
-        <!--app:key="@string/key_setting_ifxtg"-->
-        <!--app:summary=""-->
-        <!--app:title="Optional Data Tags" />-->
-
-        <SwitchPreference
-            app:key="@string/key_setting_enable_ifx"
-            app:title="Enable InfluxDB Cloud" />
 
     </PreferenceCategory>
 

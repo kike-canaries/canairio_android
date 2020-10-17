@@ -28,6 +28,7 @@ import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.common.BLEHandler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
+import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
@@ -170,7 +171,7 @@ public class RecordTrackService extends Service {
         }
 
         @Override
-        public void onSensorConfigRead(SensorConfig config) {
+        public void onSensorConfigRead(ResponseConfig config) {
 
         }
 
@@ -180,9 +181,8 @@ public class RecordTrackService extends Service {
         }
 
         @Override
-        public void onSensorConfigWrite(SensorConfig config) {
-            String data = new Gson().toJson(config);
-            if (bleHandler != null) bleHandler.writeSensorConfig(data.getBytes());
+        public void onSensorConfigWrite(String config) {
+            if (bleHandler != null) bleHandler.writeSensorConfig(config.getBytes());
         }
 
     };
@@ -263,7 +263,7 @@ public class RecordTrackService extends Service {
         @Override
         public void onSensorConfigRead(byte[] bytes) {
             String strdata = new String(bytes);
-            SensorConfig config = new Gson().fromJson(strdata, SensorConfig.class);
+            ResponseConfig config = new Gson().fromJson(strdata, ResponseConfig.class);
             recordTrackManager.responseSensorConfig(config);
         }
 
