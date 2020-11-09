@@ -1,5 +1,5 @@
 
-[![Actions Status](https://github.com/kike-canaries/android-hpma115s0/workflows/Android%20CI/badge.svg)](https://github.com/kike-canaries/android-hpma115s0/actions) [![Liberapay Status](http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay)](https://liberapay.com/CanAirIO)
+[![Actions Status](https://github.com/kike-canaries/canairio_android/workflows/Android%20CI/badge.svg)](https://github.com/kike-canaries/android-hpma115s0/actions) ![ViewCount](https://views.whatilearened.today/views/github/kike-canaries/canairio_android.svg) [![Liberapay Status](http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay)](https://liberapay.com/CanAirIO)  
 
 # CanAir.io Air quality Reporter 
 
