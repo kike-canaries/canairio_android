@@ -50,5 +50,12 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="transwhite">#AAFFFFFF</color>
 
+    <!--    SCALE COLORS-->
+    <color name="scale_good">#388E3C</color>
+    <color name="scale_moderate">#FFE548</color>
+    <color name="scale_unhealthy_for_sensitive_groups">#ffb20f</color>
+    <color name="scale_unhealthy">#ff4b3e</color>
+    <color name="scale_very_unhealthy">#841B63</color>
+    <color name="scale_hazardous">#972d07</color>
 
 </resources>

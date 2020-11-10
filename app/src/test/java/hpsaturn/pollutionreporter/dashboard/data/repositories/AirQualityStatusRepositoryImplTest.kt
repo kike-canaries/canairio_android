@@ -1,7 +1,10 @@
 package hpsaturn.pollutionreporter.dashboard.data.repositories
 
+import android.content.Context
 import hpsaturn.pollutionreporter.core.data.mappers.Mapper
+import hpsaturn.pollutionreporter.core.domain.errors.ConnectionException
 import hpsaturn.pollutionreporter.core.domain.errors.ServerException
+import hpsaturn.pollutionreporter.core.domain.errors.UnexpectedException
 import hpsaturn.pollutionreporter.dashboard.data.models.AqicnFeedResponse
 import hpsaturn.pollutionreporter.dashboard.data.services.AqicnApiFeedService
 import hpsaturn.pollutionreporter.dashboard.domain.entities.AirQualityStatus
@@ -16,6 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okio.IOException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,6 +39,9 @@ internal class AirQualityStatusRepositoryImplTest {
     @MockK
     private lateinit var mockMapper: Mapper<AqicnFeedResponse, AirQualityStatus>
 
+    @MockK(relaxed = true)
+    private lateinit var mockContext: Context
+
     private val tLatitude = 4.645594
     private val tLongitude = -74.058881
     private val tErrorMessage = "Server Error"
@@ -49,7 +56,11 @@ internal class AirQualityStatusRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        repository = AirQualityStatusRepositoryImpl(mockAqicnApiFeedService, mockMapper)
+        repository = AirQualityStatusRepositoryImpl(
+            mockAqicnApiFeedService,
+            mockMapper,
+            mockContext
+        )
     }
 
     @Test
@@ -64,22 +75,23 @@ internal class AirQualityStatusRepositoryImplTest {
         } returns Response.success<AqicnFeedResponse>(tAqicnFeedResponse)
         // act
         val result = repository.getNearestAirQualityStatus(tLatitude, tLongitude)
-        repository.getNearestAirQualityStatus(tLatitude, tLongitude)
         // assert
         coVerify { mockAqicnApiFeedService.getGeolocationFeed(tLatitude, tLongitude) }
         assertEquals(tAirQualityStatus, result)
+
     }
 
     @Test
-    fun `should throw exception if response null`() {
+    fun `should return error if response null`() = runBlockingTest {
         // arrange
+        val response = Response.success<AqicnFeedResponse>(200, null)
         every { mockMapper(any()) } returns tAirQualityStatus
         coEvery {
             mockAqicnApiFeedService.getGeolocationFeed(
                 any(),
                 any()
             )
-        } returns Response.success<AqicnFeedResponse>(200, null)
+        } returns response
         // act
         assertThrows<ServerException> {
             runBlocking {
@@ -91,17 +103,56 @@ internal class AirQualityStatusRepositoryImplTest {
     }
 
     @Test
-    fun `should throw exception if response not successful`() {
+    fun `should throw exception if response not successful`() = runBlockingTest {
         // arrange
+        val response = Response.error<AqicnFeedResponse>(400, tErrorMessage.toResponseBody())
         every { mockMapper(any()) } returns tAirQualityStatus
         coEvery {
             mockAqicnApiFeedService.getGeolocationFeed(
                 any(),
                 any()
             )
-        } returns Response.error<AqicnFeedResponse>(400, tErrorMessage.toResponseBody())
+        } returns response
         // act
         assertThrows<ServerException> {
+            runBlocking {
+                repository.getNearestAirQualityStatus(tLatitude, tLongitude)
+            }
+        }
+        // assert
+        coVerify { mockAqicnApiFeedService.getGeolocationFeed(tLatitude, tLongitude) }
+    }
+
+    @Test
+    fun `should throw ConnectionException if service throws IOException`() = runBlockingTest {
+        // arrange
+        coEvery {
+            mockAqicnApiFeedService.getGeolocationFeed(
+                any(),
+                any()
+            )
+        } throws IOException()
+        // act
+        assertThrows<ConnectionException> {
+            runBlocking {
+                repository.getNearestAirQualityStatus(tLatitude, tLongitude)
+            }
+        }
+        // assert
+        coVerify { mockAqicnApiFeedService.getGeolocationFeed(tLatitude, tLongitude) }
+    }
+
+    @Test
+    fun `should throw UnexpectedException if service throws unknown exception`() = runBlockingTest {
+        // arrange
+        coEvery {
+            mockAqicnApiFeedService.getGeolocationFeed(
+                any(),
+                any()
+            )
+        } throws Exception()
+        // act
+        assertThrows<UnexpectedException> {
             runBlocking {
                 repository.getNearestAirQualityStatus(tLatitude, tLongitude)
             }

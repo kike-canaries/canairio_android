@@ -11,7 +11,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.karumi.dexter.DexterBuilder.Permission
+import com.karumi.dexter.DexterBuilder
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
@@ -24,33 +24,16 @@ import hpsaturn.pollutionreporter.core.domain.entities.Result
 import hpsaturn.pollutionreporter.core.domain.entities.Success
 import hpsaturn.pollutionreporter.core.domain.errors.PermissionException
 import hpsaturn.pollutionreporter.core.domain.errors.PermissionNotGrantedException
-import hpsaturn.pollutionreporter.dashboard.domain.entities.AirQualityStatus
-import hpsaturn.pollutionreporter.dashboard.domain.usecases.FindNearestAirQualityStatus
-import hpsaturn.pollutionreporter.di.DispatchersModule.IoDispatcher
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AirQualityStatusLiveData @Inject constructor(
-    private val findNearestAirQualityStatus: FindNearestAirQualityStatus,
+class CurrentLocationLiveData @Inject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val locationRequest: LocationRequest,
-    private val dexter: Permission,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val dexter: DexterBuilder.Permission,
     @ApplicationContext private val context: Context
-) : LiveData<Result<AirQualityStatus>>() {
+) : LiveData<Result<@JvmSuppressWildcards Location>>() {
 
-    private val scope = CoroutineScope(ioDispatcher)
-
-    private val setAirQualityStatusListener = { location: Location ->
-        scope.launch {
-            runCatching {
-                val aqi = findNearestAirQualityStatus(location.latitude, location.longitude)
-                postValue(Success(aqi))
-            }.onFailure { e -> postValue(ErrorResult(e)) }
-        }
-    }
+    private val setLocationListener = { location: Location -> value = Success(location) }
 
     @SuppressLint("MissingPermission")
     override fun onActive() {
@@ -61,7 +44,7 @@ class AirQualityStatusLiveData @Inject constructor(
             if (it == null) {
                 postValue(ErrorResult(PermissionNotGrantedException(context.getString(R.string.check_location_settings))))
             } else {
-                it.also { setAirQualityStatusListener(it) }
+                it.also { setLocationListener(it) }
             }
         }
     }
@@ -98,7 +81,7 @@ class AirQualityStatusLiveData @Inject constructor(
         override fun onLocationResult(locationResult: LocationResult?) {
             locationResult ?: return
             for (location in locationResult.locations) {
-                setAirQualityStatusListener(location)
+                setLocationListener(location)
             }
         }
     }

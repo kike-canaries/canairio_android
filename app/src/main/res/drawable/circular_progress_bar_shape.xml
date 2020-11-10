@@ -4,5 +4,5 @@
     android:shape= "ring"
     android:thickness= "@dimen/progress_circle_thickness"
     android:useLevel= "false" >
-    <solid android:color= "@color/colorLightGrayWeb" />
+<!--    <solid android:color= "@color/colorLightGrayWeb" />-->
 </shape>

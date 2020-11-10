@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="81dp"
-        android:text="Bogota, Colombia"
+        android:text="Distancia a estacion mas cercana"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.MaterialAppTheme.Headline6"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
         android:id="@+id/todayDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Junio 2, 2020"
+        android:text="Distancia a estacion mas cercana"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
         android:textColor="@color/colorLightGrayWeb"
@@ -54,7 +54,7 @@
         android:background="@drawable/circular_progress_bar_shape"
         android:indeterminate="false"
         android:max="100"
-        android:progress="65"
+        android:progress="100"
         android:progressDrawable="@drawable/circular_progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
 
     <TextView
-        android:id="@+id/airQualittyIdexText"
+        android:id="@+id/airQualityIndexText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="81dp"
@@ -74,8 +74,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
+
     <TextView
-        android:id="@+id/airQualityLableText"
+        android:id="@+id/airQualityLabelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/air_quality_index"
@@ -84,7 +95,7 @@
         android:textColor="@color/colorLightGrayWeb"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/airQualittyIdexText" />
+        app:layout_constraintTop_toBottomOf="@+id/airQualityIndexText" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
