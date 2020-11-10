@@ -21,28 +21,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar.Launcher">
+        <activity android:name=".dashboard.DashboardActivity" android:theme="@style/MaterialAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar.Launcher">
+        </activity>
+
         <service
             android:name=".service.RecordTrackService"
             android:enabled="true"
-            android:exported="true" />
-
-        <!--<receiver android:name=".bleservice.ServiceScheduler">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+            android:exported="true" /> <!-- <receiver android:name=".bleservice.ServiceScheduler"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <receiver android:name=".service.RecordTrackReceiver" />
-
     </application>
 
 </manifest>

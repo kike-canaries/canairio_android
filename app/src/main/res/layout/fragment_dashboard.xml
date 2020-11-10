@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".dashboard.DashboardFragment">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_large"
+        android:clickable="true"
+        android:layout_marginTop="@dimen/size_large"
+        android:src="@drawable/ic_settings_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/app_settings_description"
+        android:focusable="true" />
+
+    <TextView
+        android:id="@+id/currentLocationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="81dp"
+        android:text="Distancia a estacion mas cercana"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Headline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/todayDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distancia a estacion mas cercana"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+        android:textColor="@color/colorLightGrayWeb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentLocationText" />
+
+    <ProgressBar
+        android:id="@+id/airQualityIndexBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/circular_progress_bar_shape"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="100"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
+
+    <TextView
+        android:id="@+id/airQualityIndexText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="81dp"
+        android:text="@string/NoAQIFound"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Headline2"
+        android:textColor="@color/colorTextWeb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/todayDateText" />
+
+    <TextView
+        android:id="@+id/airQualityLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/air_quality_index"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+        android:textColor="@color/colorLightGrayWeb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/airQualityIndexText" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/airQualityIndexBar">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/size_small">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="@dimen/option_card_size"
+                android:layout_height="@dimen/option_card_size"
+                android:layout_marginHorizontal="@dimen/size_small"
+                android:background="@color/background"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardElevation="@dimen/size_x_small"
+                app:contentPadding="@dimen/size_x_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/illustration_diy_sensor"
+                        android:contentDescription="@string/diy_sensor_description" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/sensor_diy_guide"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+                        android:textColor="@color/colorAccentWeb" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="@dimen/option_card_size"
+                android:layout_height="@dimen/option_card_size"
+                android:layout_marginHorizontal="@dimen/size_small"
+                android:background="@color/background"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardElevation="@dimen/size_x_small"
+                app:contentPadding="@dimen/size_x_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/illustration_about_us"
+                        android:contentDescription="@string/about_canairio_description" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/about"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+                        android:textColor="@color/colorAccentWeb" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="@dimen/option_card_size"
+                android:layout_height="@dimen/option_card_size"
+                android:layout_marginHorizontal="@dimen/size_small"
+                android:background="@color/background"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardElevation="@dimen/size_x_small"
+                app:contentPadding="@dimen/size_x_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/illustration_feedback"
+                        android:contentDescription="@string/give_us_feedback_description" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/give_us_feedback"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+                        android:textColor="@color/colorAccentWeb" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="@dimen/option_card_size"
+                android:layout_height="@dimen/option_card_size"
+                android:layout_marginHorizontal="@dimen/size_small"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardElevation="@dimen/size_x_small"
+                app:contentPadding="@dimen/size_x_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginVertical="@dimen/size_small"
+                        android:layout_weight="1"
+                        android:src="@drawable/illustration_unpair_device"
+                        android:contentDescription="@string/upair_device_description" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/unpair_device"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+                        android:textColor="@color/colorAccentWeb" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
