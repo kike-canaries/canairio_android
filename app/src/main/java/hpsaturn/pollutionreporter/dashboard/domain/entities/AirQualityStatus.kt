@@ -8,7 +8,7 @@ package hpsaturn.pollutionreporter.dashboard.domain.entities
  * @property stationLatitude Latitude of the monitoring station.
  */
 
-data class AirQualityStatus(
+class AirQualityStatus(
     val airQualityIndex: Int,
     val stationName: String,
     val stationLatitude: Double,
