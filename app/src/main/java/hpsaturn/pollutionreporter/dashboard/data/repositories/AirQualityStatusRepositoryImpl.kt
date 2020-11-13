@@ -28,7 +28,6 @@ class AirQualityStatusRepositoryImpl @Inject constructor(
         val response = runCatching {
             aqicnApiFeedService.getGeolocationFeed(latitude, longitude)
         }.getOrElse {
-            context.getString(R.string.internet_connection_unavailable)
             if (it is IOException) throw ConnectionException(context.getString(R.string.internet_connection_unavailable))
             else throw UnexpectedException(context.getString(R.string.unexpected_error))
         }
