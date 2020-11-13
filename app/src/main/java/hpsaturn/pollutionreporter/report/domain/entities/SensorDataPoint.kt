@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 /**
  * Information of single data point of a report.
- * @property trackId ID of the data point.
+ * @property pointId ID of the data point.
  * @property p10 value of the P10 contaminant.
  * @property p25 value of the P2.5 contaminant.
  * @property spd value of SPD.
@@ -13,8 +13,8 @@ import java.time.LocalDateTime
  * @property timestamp Timestamp of the data point.
  */
 
-class SensorTrackData(
-    val trackId: String,
+class SensorDataPoint(
+    val pointId: String,
     val p10: Double,
     val p25: Double,
     val spd: Double,

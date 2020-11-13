@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.report.domain.usecases
 
+import hpsaturn.pollutionreporter.core.domain.entities.Success
 import hpsaturn.pollutionreporter.data.TestData
 import hpsaturn.pollutionreporter.report.domain.repositories.SensorReportRepository
 import io.mockk.coEvery
@@ -32,11 +33,11 @@ internal class LoadPublicSensorReportsTest {
         // arrange
         coEvery {
             mockSensorReportRepository.getPublicSensorReports()
-        } returns TestData.sensorReportInformationList
+        } returns Success(TestData.sensorReportInformationList)
         // act
         val result = useCase()
         // assert
-        assertEquals(TestData.sensorReportInformationList, result)
+        assertEquals(Success(TestData.sensorReportInformationList), result)
         coVerify { mockSensorReportRepository.getPublicSensorReports() }
     }
 
