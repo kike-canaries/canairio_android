@@ -12,7 +12,7 @@ import java.time.LocalDate
  * @property numberOfPoints Number of data points gathered.
  */
 
-class SensorReportInformation(
+data class SensorReportInformation(
     val deviceId: String,
     val date: LocalDate,
     val lastLatitude: Double,
