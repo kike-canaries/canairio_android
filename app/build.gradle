@@ -23,6 +23,7 @@ android {
             }
         }
     }
+    buildFeatures { dataBinding = true }
     buildTypes {
         release {
             minifyEnabled false
