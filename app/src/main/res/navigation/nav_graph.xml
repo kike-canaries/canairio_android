@@ -26,4 +26,9 @@
         android:id="@+id/postsFragment"
         android:name="hpsaturn.pollutionreporter.view.PostsFragment"
         android:label="PostsFragment" />
+    <fragment
+        android:id="@+id/sensorReportInformationListFragment"
+        android:name="hpsaturn.pollutionreporter.report.presentation.SensorReportInformationListFragment"
+        android:label="fragment_sensor_report_information_list"
+        tools:layout="@layout/fragment_sensor_report_information_list" />
 </navigation>
