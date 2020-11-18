@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_map_24dp"
         android:title="Reports" />
     <item
-        android:id="@+id/postsFragment"
+        android:id="@+id/sensorReportInformationListFragment"
         android:icon="@drawable/ic_public_24dp"
         android:title="Public" />
     <item
@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_home_24dp"
         android:title="Home" />
     <item
-        android:id="@+id/sensorReportInformationListFragment"
+        android:id="@+id/recordsFragment"
         android:icon="@drawable/ic_receipt_long_24dp"
         android:title="My Reports" />
     <item

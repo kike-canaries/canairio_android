@@ -13,19 +13,18 @@
     <fragment
         android:id="@+id/mapFragment"
         android:name="hpsaturn.pollutionreporter.view.MapFragment"
-        android:label="MapFragment" />
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_osmap" />
     <fragment
         android:id="@+id/recordsFragment"
         android:name="hpsaturn.pollutionreporter.view.RecordsFragment"
-        android:label="RecordsFragment" />
+        android:label="RecordsFragment"
+        tools:layout="@layout/fragment_records" />
     <fragment
         android:id="@+id/scanFragment"
         android:name="hpsaturn.pollutionreporter.view.ScanFragment"
-        android:label="ScanFragment" />
-    <fragment
-        android:id="@+id/postsFragment"
-        android:name="hpsaturn.pollutionreporter.view.PostsFragment"
-        android:label="PostsFragment" />
+        android:label="ScanFragment"
+        tools:layout="@layout/fragment_devices" />
     <fragment
         android:id="@+id/sensorReportInformationListFragment"
         android:name="hpsaturn.pollutionreporter.report.presentation.SensorReportInformationListFragment"
