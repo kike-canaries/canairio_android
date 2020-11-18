@@ -13,8 +13,7 @@ import javax.inject.Inject
 class SensorReportRepositoryImpl @Inject constructor(
     private val sensorReportService: PublicSensorReportService,
     private val mapper: Mapper<TracksInfo, SensorReportInformation>
-) :
-    SensorReportRepository {
+) : SensorReportRepository {
     override suspend fun getPublicSensorReports(): Result<List<SensorReportInformation>> =
         runCatching {
             Success(sensorReportService.getTracksInfo().map { mapper(it) })
