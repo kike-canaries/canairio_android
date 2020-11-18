@@ -33,10 +33,12 @@ class DashboardFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View? = inflater.inflate(R.layout.fragment_dashboard, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         displayAirQualityIndexOnView()
         displayStationDistance()
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
     private fun displayAirQualityIndexOnView() {
