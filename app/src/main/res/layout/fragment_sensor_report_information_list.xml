@@ -5,10 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".report.presentation.SensorReportInformationListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recordsListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+
+        tools:itemCount="5"
+        tools:listitem="@layout/item_record" />
 
 </FrameLayout>

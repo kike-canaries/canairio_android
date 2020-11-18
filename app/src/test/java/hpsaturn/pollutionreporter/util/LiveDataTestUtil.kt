@@ -58,3 +58,23 @@ fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
         removeObserver(observer)
     }
 }
+
+/**
+ * Gets the value of a [LiveData] safely.
+ */
+@Throws(InterruptedException::class)
+fun <T> LiveData<T>.getValueForTest(): T? {
+    var data: T? = null
+    val latch = CountDownLatch(1)
+    val observer = object : Observer<T> {
+        override fun onChanged(o: T?) {
+            data = o
+            latch.countDown()
+            this@getValueForTest.removeObserver(this)
+        }
+    }
+    this.observeForever(observer)
+    latch.await(2, TimeUnit.SECONDS)
+
+    return data
+}

@@ -15,7 +15,7 @@ class SensorReportAdapter @Inject constructor() :
     ListAdapter<SensorReportInformation, SensorReportViewHolder>(SensorReportDiff) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SensorReportViewHolder =
         SensorReportViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_record, parent)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_record, parent, false)
         )
 
     override fun onBindViewHolder(holder: SensorReportViewHolder, position: Int) =
@@ -26,7 +26,7 @@ class SensorReportViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
     fun bind(sensorReportInformation: SensorReportInformation) {
         itemView.tv_record_name.text = sensorReportInformation.deviceId
-        itemView.tv_record_date.text = sensorReportInformation.date.toString()
+        itemView.tv_record_date.text = sensorReportInformation.date
         itemView.tv_record_location.text = "${sensorReportInformation.numberOfPoints}"
     }
 }
