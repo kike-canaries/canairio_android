@@ -1,7 +1,5 @@
 package hpsaturn.pollutionreporter.report.domain.entities
 
-import java.time.LocalDate
-
 /**
  * Basic information of a sensor report.
  * @property deviceId ID of the device that gathered the data.
@@ -14,7 +12,7 @@ import java.time.LocalDate
 
 data class SensorReportInformation(
     val deviceId: String,
-    val date: LocalDate,
+    val date: String,
     val lastLatitude: Double,
     val lastLongitude: Double,
     val name: String,

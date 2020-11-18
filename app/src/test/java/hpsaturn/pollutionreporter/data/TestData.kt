@@ -4,16 +4,17 @@ import hpsaturn.pollutionreporter.report.data.models.TracksData
 import hpsaturn.pollutionreporter.report.data.models.TracksInfo
 import hpsaturn.pollutionreporter.report.domain.entities.SensorDataPoint
 import hpsaturn.pollutionreporter.report.domain.entities.SensorReportInformation
-import java.time.LocalDate
-import java.time.LocalDateTime
+import hpsaturn.pollutionreporter.util.toUnixTimeStamp
 
 object TestData {
 
     private const val latitude1 = 4.645594
     private const val longitude1 = -74.058881
 
-    private val localDate1 = LocalDate.of(2019, 4, 30)
-    private val localDateTime1 = LocalDateTime.of(2016, 4, 15, 3, 15)
+    private const val localDate1 = "Oct, Thu 03"
+
+    private const val unixTimeStamp = 1605631331L
+    private val timestamp = unixTimeStamp.toUnixTimeStamp()
 
     val sensorReportInformation1 = SensorReportInformation(
         "device1",
@@ -53,7 +54,7 @@ object TestData {
         5.1,
         latitude1,
         longitude1,
-        localDateTime1
+        timestamp
     )
 
     val trackData1 = TracksData(
@@ -64,7 +65,7 @@ object TestData {
         5.1,
         latitude1,
         longitude1,
-        localDateTime1
+        unixTimeStamp
     )
 
     val trackInformation1 = TracksInfo(

@@ -18,9 +18,12 @@ class PublicSensorReportServiceImp @Inject constructor(
     override suspend fun getTracksInfo(): List<TracksInfo> {
         val result = database
             .child(TRACKS_INFO_COLLECTION)
+            .limitToLast(20)
             .getSuspendValue()
-            .getValue(object : GenericTypeIndicator<List<@JvmSuppressWildcards TracksInfo>>() {})
-        return result ?: throw TracksInfoNotFoundException()
+            .getValue(object :
+                GenericTypeIndicator<Map<String, @JvmSuppressWildcards TracksInfo>>() {})
+
+        return result?.values?.toList() ?: throw TracksInfoNotFoundException()
     }
 
     companion object {

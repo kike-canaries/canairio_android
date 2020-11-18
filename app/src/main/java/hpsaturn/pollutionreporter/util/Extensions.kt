@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -30,7 +31,7 @@ fun Double.round(decimals: Int): Double {
     return round(this * multiplier) / multiplier
 }
 
-suspend fun DatabaseReference.getSuspendValue(): DataSnapshot = suspendCoroutine { continuation ->
+suspend fun Query.getSuspendValue(): DataSnapshot = suspendCoroutine { continuation ->
     addListenerForSingleValueEvent(ImpValueEventListener(
         onDataChange = { continuation.resume(it) },
         onError = { continuation.resumeWithException(it.toException()) }
@@ -44,3 +45,8 @@ class ImpValueEventListener(
     override fun onDataChange(data: DataSnapshot) = onDataChange.invoke(data)
     override fun onCancelled(error: DatabaseError) = onError.invoke(error)
 }
+
+/**
+ * Creates a [Date] from UNIX timestamp.
+ */
+fun Long.toUnixTimeStamp() = Date(this * 1000)

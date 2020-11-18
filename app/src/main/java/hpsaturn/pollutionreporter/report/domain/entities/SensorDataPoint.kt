@@ -1,6 +1,6 @@
 package hpsaturn.pollutionreporter.report.domain.entities
 
-import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Information of single data point of a report.
@@ -20,5 +20,5 @@ class SensorDataPoint(
     val spd: Double,
     val latitude: Double,
     val longitude: Double,
-    val timestamp: LocalDateTime
+    val timestamp: Date
 )

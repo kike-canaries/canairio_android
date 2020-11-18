@@ -1,7 +1,5 @@
 package hpsaturn.pollutionreporter.report.data.models
 
-import java.time.LocalDateTime
-
 /**
  * Information of single data point of a report.
  * @property altitude altitude of sea level of the data point.
@@ -21,5 +19,5 @@ class TracksData(
     val spd: Double,
     val latitude: Double,
     val longitude: Double,
-    val timestamp: LocalDateTime
+    val timestamp: Long
 )
