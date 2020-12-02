@@ -17,4 +17,7 @@
     <dimen name="size_large">16dp</dimen>
     <dimen name="size_x_large">20dp</dimen>
     <dimen name="size_x_x_large">24dp</dimen>
+
+    <!--  List Item  -->
+    <dimen name="list_item_two_line_height">64dp</dimen>
 </resources>
