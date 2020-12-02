@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="81dp"
-        android:text="Distancia a estacion mas cercana"
+        tools:text="12 Km"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.MaterialAppTheme.Headline6"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
         android:id="@+id/todayDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Distancia a estacion mas cercana"
+        android:text="@string/distance_to_closest_station"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
         android:textColor="@color/colorLightGrayWeb"
@@ -236,7 +236,7 @@
                         android:layout_marginVertical="@dimen/size_small"
                         android:layout_weight="1"
                         android:src="@drawable/illustration_unpair_device"
-                        android:contentDescription="@string/upair_device_description" />
+                        android:contentDescription="@string/unpair_device_description" />
 
                     <TextView
                         android:layout_width="match_parent"
