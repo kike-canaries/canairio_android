@@ -25,9 +25,9 @@ class SensorReportAdapter @Inject constructor() :
 class SensorReportViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
     fun bind(sensorReportInformation: SensorReportInformation) {
-        itemView.tv_record_name.text = sensorReportInformation.deviceId
-        itemView.tv_record_date.text = sensorReportInformation.date
-        itemView.tv_record_location.text = "${sensorReportInformation.numberOfPoints}"
+        itemView.stationName.text = sensorReportInformation.name
+        itemView.reportDate.text = sensorReportInformation.date
+        itemView.reportNumberOfPoints.text = "${sensorReportInformation.numberOfPoints}"
     }
 }
 
