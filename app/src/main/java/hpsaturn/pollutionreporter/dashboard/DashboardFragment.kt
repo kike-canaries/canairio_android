@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.dashboard
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RotateDrawable
 import android.os.Bundle
@@ -20,7 +21,6 @@ import hpsaturn.pollutionreporter.dashboard.domain.usecases.EvaluateAirQualitySt
 import hpsaturn.pollutionreporter.dashboard.presentation.DashboardViewModel
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -51,6 +51,7 @@ class DashboardFragment : Fragment() {
         })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun displayStationDistance() {
         dashboardViewModel.distanceToStation.observe(viewLifecycleOwner, Observer {
             currentLocationText.text = "$it Km"
