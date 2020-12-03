@@ -49,7 +49,7 @@
         <item name="colorError">@color/colorErrorWeb</item>
         <item name="colorOnError">@color/white</item>
 
-        <item name="android:background">@color/background</item>
+<!--        <item name="android:background">@color/background</item>-->
         <item name="colorOnBackground">@color/colorTextWeb</item>
 
         <item name="colorSurface">@color/background</item>
@@ -68,8 +68,7 @@
         <item name="textAppearanceBody2">@style/TextAppearance.MaterialAppTheme.Body2</item>
         <item name="textAppearanceCaption">@style/TextAppearance.MaterialAppTheme.Caption</item>
         <item name="textAppearanceButton">@style/TextAppearance.MaterialAppTheme.Button</item>
-        <item name="textAppearanceOverline">@style/TextAppearance.MaterialAppTheme.Overline
-        </item>
+        <item name="textAppearanceOverline">@style/TextAppearance.MaterialAppTheme.Overline</item>
 
         <!--  Shape  -->
         <item name="shapeAppearanceSmallComponent">
@@ -81,6 +80,10 @@
         <item name="shapeAppearanceLargeComponent">
             @style/ShapeAppearance.MaterialAppTheme.LargeComponent
         </item>
+    </style>
+
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="materialThemeOverlay">@style/MaterialAppTheme</item>
     </style>
 
 </resources>

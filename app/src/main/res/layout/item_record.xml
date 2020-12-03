@@ -1,80 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="72dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
-    android:background="@android:color/darker_gray"
-    android:elevation="15dp"
-    android:padding="2dp"
-    card_view:cardCornerRadius="6dp">
+    android:layout_height="@dimen/list_item_two_line_height">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="fill_parent"
-            android:layout_height="8dp"
-            android:background="@color/colorPrimaryDark" />
-
-        <ImageView
-            android:id="@+id/iv_device_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_stop_white_24dp" />
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_large"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/reportNumberOfPoints"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_record_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/stationName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_toRightOf="@+id/iv_device_icon"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:lines="1"
-            android:text="hpsaturn@gmail.com"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textAppearance="@style/TextAppearance.MaterialAppTheme.Subtitle1"
+            tools:text="Station name" />
 
         <TextView
-            android:id="@+id/tv_record_date"
-            android:layout_width="150dp"
+            android:id="@+id/reportDate"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tv_record_name"
-            android:layout_below="@+id/tv_record_name"
-            android:layout_marginTop="2dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:lines="1"
-            android:text="hpsaturn@gmail.com"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+            tools:text="Thursday" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/reportNumberOfPoints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_large"
+        android:textAppearance="@style/TextAppearance.MaterialAppTheme.Caption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="9 Points" />
 
 
-        <TextView
-            android:id="@+id/tv_record_location"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/tv_record_date"
-            android:layout_marginRight="5dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="right"
-            android:lines="1"
-            android:text="3014710000"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-    </RelativeLayout>
-
-</androidx.cardview.widget.CardView>
 

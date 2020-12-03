@@ -93,6 +93,7 @@
     <string name="server_unavailable">Server is currently unavailable.</string>
     <string name="unexpected_error">Unexpected error occurred.</string>
     <string name="error">Error</string>
+    <string name="public_reports">Public Reports</string>
 
     <!--    Scale Names-->
     <string name="scale_good">Good</string>
@@ -108,6 +109,7 @@
     <string name="diy_sensor_description">DIY sensor.</string>
     <string name="about_canairio_description">About CanAirIO.</string>
     <string name="give_us_feedback_description">Give us feedback.</string>
-    <string name="upair_device_description">Upair device.</string>
+    <string name="unpair_device_description">Upair device.</string>
     <string name="NoAQIFound">None</string>
+    <string name="distance_to_closest_station">Distance to closest station.</string>
 </resources>

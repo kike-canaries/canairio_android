@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_map_24dp"
         android:title="Reports" />
     <item
-        android:id="@+id/postsFragment"
+        android:id="@+id/sensorReportInformationListFragment"
         android:icon="@drawable/ic_public_24dp"
         android:title="Public" />
     <item

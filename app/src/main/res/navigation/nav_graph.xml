@@ -7,23 +7,27 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="hpsaturn.pollutionreporter.dashboard.DashboardFragment"
+        android:name="hpsaturn.pollutionreporter.dashboard.presentation.DashboardFragment"
         android:label="fragment_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
         android:id="@+id/mapFragment"
         android:name="hpsaturn.pollutionreporter.view.MapFragment"
-        android:label="MapFragment" />
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_osmap" />
     <fragment
         android:id="@+id/recordsFragment"
         android:name="hpsaturn.pollutionreporter.view.RecordsFragment"
-        android:label="RecordsFragment" />
+        android:label="RecordsFragment"
+        tools:layout="@layout/fragment_records" />
     <fragment
         android:id="@+id/scanFragment"
         android:name="hpsaturn.pollutionreporter.view.ScanFragment"
-        android:label="ScanFragment" />
+        android:label="ScanFragment"
+        tools:layout="@layout/fragment_devices" />
     <fragment
-        android:id="@+id/postsFragment"
-        android:name="hpsaturn.pollutionreporter.view.PostsFragment"
-        android:label="PostsFragment" />
+        android:id="@+id/sensorReportInformationListFragment"
+        android:name="hpsaturn.pollutionreporter.reports.open.presentation.OpenSensorReportsInformationListFragment"
+        android:label="fragment_sensor_report_information_list"
+        tools:layout="@layout/fragment_sensor_report_information_list" />
 </navigation>

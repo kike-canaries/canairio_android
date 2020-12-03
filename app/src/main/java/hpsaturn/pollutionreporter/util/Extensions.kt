@@ -1,8 +1,15 @@
 package hpsaturn.pollutionreporter.util
 
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
+import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import kotlin.math.round
 
 /**
@@ -16,16 +23,6 @@ fun <T, K, R> LiveData<T>.combineWith(liveData: LiveData<K>, block: (T?, K?) -> 
 }
 
 /**
- * Creates a new [Location] with the given [latitude] and [longitude].
- */
-fun Location.createWith(latitude: Double, longitude: Double): Location {
-    val location = Location("")
-    location.longitude = longitude
-    location.latitude = latitude
-    return location
-}
-
-/**
  * Rounds `this` to [decimals] numbers.
  */
 fun Double.round(decimals: Int): Double {
@@ -33,3 +30,23 @@ fun Double.round(decimals: Int): Double {
     repeat(decimals) { multiplier *= 10 }
     return round(this * multiplier) / multiplier
 }
+
+suspend fun Query.getSuspendValue(): DataSnapshot = suspendCoroutine { continuation ->
+    addListenerForSingleValueEvent(ImpValueEventListener(
+        onDataChange = { continuation.resume(it) },
+        onError = { continuation.resumeWithException(it.toException()) }
+    ))
+}
+
+class ImpValueEventListener(
+    val onDataChange: (DataSnapshot) -> Unit,
+    val onError: (DatabaseError) -> Unit
+) : ValueEventListener {
+    override fun onDataChange(data: DataSnapshot) = onDataChange.invoke(data)
+    override fun onCancelled(error: DatabaseError) = onError.invoke(error)
+}
+
+/**
+ * Creates a [Date] from UNIX timestamp.
+ */
+fun Long.toUnixTimeStamp() = Date(this * 1000)

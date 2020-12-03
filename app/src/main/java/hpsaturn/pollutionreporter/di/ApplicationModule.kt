@@ -1,6 +1,9 @@
 package hpsaturn.pollutionreporter.di
 
 import android.content.Context
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.DexterBuilder.Permission
 import dagger.Module
@@ -22,4 +25,8 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun provideCalendar(): Calendar = Calendar.getInstance()
+
+    @Singleton
+    @Provides
+    fun provideDatabaseReference(): DatabaseReference = Firebase.database.reference
 }
