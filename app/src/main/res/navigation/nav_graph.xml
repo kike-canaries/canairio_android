@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="hpsaturn.pollutionreporter.dashboard.DashboardFragment"
+        android:name="hpsaturn.pollutionreporter.dashboard.presentation.DashboardFragment"
         android:label="fragment_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_devices" />
     <fragment
         android:id="@+id/sensorReportInformationListFragment"
-        android:name="hpsaturn.pollutionreporter.report.presentation.SensorReportInformationListFragment"
+        android:name="hpsaturn.pollutionreporter.reports.open.presentation.OpenSensorReportsInformationListFragment"
         android:label="fragment_sensor_report_information_list"
         tools:layout="@layout/fragment_sensor_report_information_list" />
 </navigation>

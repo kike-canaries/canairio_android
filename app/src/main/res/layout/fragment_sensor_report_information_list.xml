@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".report.presentation.SensorReportInformationListFragment">
+    tools:context="hpsaturn.pollutionreporter.reports.open.presentation.OpenSensorReportsInformationListFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
