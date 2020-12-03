@@ -1,8 +1,9 @@
 package hpsaturn.pollutionreporter.view;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import hpsaturn.pollutionreporter.R;
 
@@ -21,10 +22,10 @@ public class RecordViewHolder extends RecyclerView.ViewHolder implements View.On
     public RecordViewHolder(View itemView, RecordsAdapter adapter) {
         super(itemView);
         itemView.setOnClickListener(this);
-        this.mAdapter=adapter;
-        record_name = itemView.findViewById(R.id.tv_record_name);
-        record_date = itemView.findViewById(R.id.tv_record_date);
-        record_location = itemView.findViewById(R.id.tv_record_location);
+        this.mAdapter = adapter;
+        record_name = itemView.findViewById(R.id.stationName);
+        record_date = itemView.findViewById(R.id.reportDate);
+        record_location = itemView.findViewById(R.id.reportNumberOfPoints);
     }
 
     @Override
