@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 //import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -174,6 +175,11 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         SensorType config = new SensorType();
         config.stype = getSensorType();
         sendSensorConfig(config);
+    }
+
+    private void updateSensorTypeSummary(int value) {
+        ListPreference sizePreference = findPreference(getString(R.string.key_setting_dtype));
+        sizePreference.setValueIndex(value);
     }
 
     private int getSensorType() {
@@ -522,6 +528,10 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             }
             if (config.aenb != getApiSwitch().isChecked()) {
                 setApiSwitch(config.aenb);
+                notify_sync = true;
+            }
+            if (config.stype != getSensorType()) {
+                updateSensorTypeSummary(config.stype);
                 notify_sync = true;
             }
 
