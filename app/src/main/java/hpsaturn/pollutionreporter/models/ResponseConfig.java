@@ -9,7 +9,7 @@ public class ResponseConfig extends SensorConfig {
 
     public int stime;
 
-    public int stype;
+    public int stype = -1;
 
     public String ssid;
 

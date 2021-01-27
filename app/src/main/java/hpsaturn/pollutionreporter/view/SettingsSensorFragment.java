@@ -532,7 +532,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             }
             if (config.stype != getSensorType()) {
                 updateSensorTypeSummary(config.stype);
-                notify_sync = true;
             }
 
             updatePreferencesSummmary(config);
@@ -578,6 +577,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
         if(config.ifxdb !=null)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
         if(config.ifxip !=null)updateSummary(R.string.key_setting_ifxip,config.ifxip);
+//        if(config.stype != -1)updateSummary(R.string.key_setting_dtype,);
         if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
         updatePasswSummary(R.string.key_setting_pass);
         updatePasswSummary(R.string.key_setting_apipss);
