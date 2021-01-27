@@ -93,6 +93,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:isPreferenceVisible="false"
         app:dependency="@string/key_setting_enable_wifi"
         app:title="Deprecated CanAirIO API">
 
@@ -150,7 +151,8 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="">
+    <PreferenceCategory app:title=""
+        app:isPreferenceVisible="false">
         <Preference
             app:icon="@android:drawable/ic_menu_send"
             app:key="@string/key_send_feedback"
