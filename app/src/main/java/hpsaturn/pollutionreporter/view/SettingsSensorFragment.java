@@ -531,7 +531,8 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
                 notify_sync = true;
             }
             if (config.stype != getSensorType()) {
-                updateSensorTypeSummary(config.stype);
+                if (config.stype < 0) updateSensorTypeSummary(0);
+                else updateSensorTypeSummary((config.stype));
             }
 
             updatePreferencesSummmary(config);
