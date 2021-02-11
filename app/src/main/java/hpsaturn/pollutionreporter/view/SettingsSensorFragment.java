@@ -53,14 +53,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-
-        String feedback = getSharedPreference(getString(R.string.key_send_feedback));
-
-//        feedback.(preference -> {
-//            UITools.viewLink(getMain(),getString(R.string.url_canairio_feedback));
-//            return true;
-//        });
-
         rebuildUI();
     }
 
@@ -68,7 +60,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     public void rebuildUI(){
         getPreferenceScreen().removeAll();
         addPreferencesFromResource(R.xml.settings);
-        refreshUI();
+//        refreshUI();
     }
 
     public void refreshUI(){

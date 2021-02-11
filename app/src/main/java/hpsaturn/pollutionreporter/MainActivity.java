@@ -84,6 +84,8 @@ public class MainActivity extends BaseActivity implements
     private SettingsSensorFragment settingsSensorFragment;
     private DatabaseReference mDatabase;
 
+    private boolean deviceConnected = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +118,11 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onServiceStatus(String status) {
             if (status.equals(RecordTrackManager.STATUS_BLE_START)) {
-//                showFragment(chartFragment);
+                deviceConnected = true;
             } else if (status.equals(RecordTrackManager.STATUS_SERVICE_OK)){
             } else if (status.equals(RecordTrackManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
+                deviceConnected = false;
             }
         }
 
@@ -464,6 +467,10 @@ public class MainActivity extends BaseActivity implements
 
     private boolean isPaired(){
         return prefBuilder.getBoolean(Keys.DEVICE_PAIR, false);
+    }
+
+    public boolean isDeviceConnected() {
+        return deviceConnected;
     }
 
     @Override
