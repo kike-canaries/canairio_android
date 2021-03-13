@@ -425,13 +425,11 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
     private void updateLocationSummary() {
         if (lastLocation != null) {
-            Preference pref;
-            pref = findPreference(getString(R.string.key_setting_enable_location));
             DecimalFormat precision = new DecimalFormat("0.000");
             String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
             String lat = "(" + precision.format(lastLocation.getLatitude());
             String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
-            pref.setSummary(accu + lat + lon);
+            updateSummary(R.string.key_setting_enable_location,accu + lat + lon);
         }
     }
 
