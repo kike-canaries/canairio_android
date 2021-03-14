@@ -2,7 +2,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Mobile Station Settings">
+    <PreferenceCategory app:title="Device Status">
+        <SwitchPreference
+            app:icon="@android:drawable/ic_lock_power_off"
+            app:key="@string/key_device_status"
+            android:enabled="false"
+            app:summary="Disconnected"
+            app:defaultValue="false"
+            app:title="Device Status:" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Mobile Station Settings"
+        android:dependency="@string/key_device_status">
 
         <EditTextPreference
             android:inputType="number"
@@ -32,7 +43,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:title="Fixed Station Settings">
+        app:title="Fixed Station Settings"
+        android:dependency="@string/key_device_status">
 
         <EditTextPreference
             android:inputType="text"
@@ -130,7 +142,8 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Optional Device Settings">
+    <PreferenceCategory app:title="Optional Device Settings"
+        android:dependency="@string/key_device_status">
 
         <SwitchPreference
             app:key="@string/key_setting_enable_location"

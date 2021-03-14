@@ -86,4 +86,5 @@
     <string name="msg_passw_unseted" />
     <string name="key_setting_dtype">key_setting_dtype</string>
     <string name="msg_reboot_manually">Please manually reboot of CanAirIO device!</string>
+    <string name="key_device_status">key_device_status</string>
 </resources>
