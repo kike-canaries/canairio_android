@@ -6,7 +6,6 @@
         <SwitchPreference
             app:icon="@android:drawable/ic_lock_power_off"
             app:key="@string/key_device_status"
-            android:enabled="false"
             app:summary="Disconnected"
             app:defaultValue="false"
             app:title="Device Status:" />
@@ -172,6 +171,15 @@
             app:summary="Report technical issues or suggest new features"
             app:title="Send Feedback" />
     </PreferenceCategory>
+
+    <PreferenceCategory app:title="">
+        <Preference
+            app:icon="@android:drawable/ic_popup_sync"
+            app:key="@string/key_device_info"
+            app:summary=""
+            app:title="Device info:" />
+    </PreferenceCategory>
+
 
 
 </PreferenceScreen>

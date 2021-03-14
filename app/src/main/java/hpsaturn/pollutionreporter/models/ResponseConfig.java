@@ -27,6 +27,12 @@ public class ResponseConfig extends SensorConfig {
 
     public String lskey;
 
-    
+    public String vmac;
+
+    public String vflv;
+
+    public String vtag;
+
+    public int vrev = 0;
 
 }
