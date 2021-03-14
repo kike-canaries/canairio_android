@@ -53,9 +53,8 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-        rebuildUI();
+//        rebuildUI();
     }
-
 
     public void rebuildUI(){
         getPreferenceScreen().removeAll();
@@ -65,6 +64,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     public void refreshUI(){
         updateSensorNameSummary();
         updateStimeSummary();
+        updateWifiSummary();
         updateLocationSummary();
         updateApiHostSummary();
         updateApiUriSummary();
@@ -128,7 +128,10 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
                 saveLocation();
             }
 
+//            readSensorConfig();
         }
+
+//        refreshUI();
 
     }
 
@@ -162,22 +165,12 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             config.dname = name;
             sendSensorConfig(config);
         }
-//        else  {
-//            resetSensorName();
-//        }
         updateSensorNameSummary();
     }
 
     String getSensorName() {
         return getSharedPreference(getString(R.string.key_setting_dname));
     }
-
-//    void resetSensorName() {
-//        if (lastDeviceConfig!=null && lastDeviceConfig.dname.length() > 0) {
-//            saveSensorName(lastDeviceConfig.dname);
-//            rebuildUI();
-//        }
-//    }
 
     private void updateSensorNameSummary() {
         updateSummary(R.string.key_setting_dname);
@@ -218,8 +211,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_stime));
         if (getCurrentStime() >= 5) {
             saveSensorSampleTime(getCurrentStime());
-        }else if (lastDeviceConfig!=null) {
-            resetStimeValue(lastDeviceConfig.stime);
         }
     }
 
@@ -242,7 +233,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
     private void resetStimeValue(int stime) {
         saveSharedPreference(R.string.key_setting_stime, "" + stime);
-        rebuildUI();
+        updateStimeSummary();
     }
 
     String getStimeFormat(int time){
@@ -264,6 +255,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             config.ssid = getSharedPreference(getString(R.string.key_setting_ssid));
             config.pass = getSharedPreference(getString(R.string.key_setting_pass));
             config.wenb = true;
+            updateWifiSummary();
             sendSensorConfig(config);
         }
         else
@@ -275,7 +267,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
         String pass = getSharedPreference(getString(R.string.key_setting_pass));
         Logger.v(TAG, "[Config] values -> " + ssid );
-        wifiSummaryUpdate();
+        updateWifiSummary();
         return !(ssid.length() == 0 || pass.length() == 0);
     }
 
@@ -283,11 +275,11 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         SwitchPreference wifiSwitch = getWifiSwitch();
         wifiSwitch.setEnabled(isWifiSwitchFieldsValid());
         wifiSwitch.setChecked(checked);
-        wifiSummaryUpdate();
+        updateWifiSummary();
         enableWifiOnDevice(checked);
     }
 
-    private void wifiSummaryUpdate(){
+    private void updateWifiSummary(){
         updateSummary(R.string.key_setting_ssid);
         updatePasswSummary(R.string.key_setting_pass);
     }
@@ -412,6 +404,10 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         return findPreference(getString(R.string.key_setting_enable_ifx));
     }
 
+    private String getInfluxDbDname() {
+        return getSharedPreference(getString(R.string.key_setting_ifxdb));
+    }
+
 
     /***********************************************************************************************
      * Misc preferences section
@@ -516,9 +512,13 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     }
 
     public void configCallBack(ResponseConfig config) {
+
         if (config != null) {
+
             onSensorReading = true;
+
             printResponseConfig(config);
+
             lastDeviceConfig = config;
 
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_name),""+config.dname);
@@ -526,25 +526,23 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
 
             boolean notify_sync = false;
-//
+
             if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
-                resetStimeValue(config.stime);
                 notify_sync = true;
             }
-            if (getSensorName().length() == 0){
-                saveSensorName(config.dname);
+            if (getSensorName().length() > 0 && !getSensorName().equals(config.dname)){
                 notify_sync = true;
             }
             if (config.wenb != getWifiSwitch().isChecked()) {
-                setWifiSwitch(config.wenb);
+                notify_sync = true;
+            }
+            if (!config.ifxdb.equals(getInfluxDbDname())){
                 notify_sync = true;
             }
             if (config.ienb != getInfluxDbSwitch().isChecked()) {
-                setInfluxDbSwitch(config.ienb);
                 notify_sync = true;
             }
             if (config.aenb != getApiSwitch().isChecked()) {
-                setApiSwitch(config.aenb);
                 notify_sync = true;
             }
             if (config.stype != getSensorType()) {
@@ -552,17 +550,24 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
                 else updateSensorTypeSummary((config.stype));
             }
 
-            updatePreferencesSummmary(config);
-            saveAllPreferences(config);
-            updateSwitches(config);
-
             if (notify_sync) {
-                Logger.v(TAG, "[Config] notify device sync complete");
+                saveAllPreferences(config);
+                updateSwitches(config);
                 rebuildUI();
+                updatePreferencesSummmary(config);
+                Logger.v(TAG, "[Config] notify device sync complete");
                 getMain().showSnackMessage(R.string.msg_sync_complete);
             }
+
+
+//            setStatusSwitch(true);
         }
         onSensorReading = false;
+    }
+
+
+    private String getDeviceInfoString(ResponseConfig config) {
+        return "wmac:"+config.wmac+" wifi:"+(config.wsta ? "connected" : "failed");
     }
 
     private void printResponseConfig(ResponseConfig config) {
@@ -662,6 +667,8 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
      **********************************************************************************************/
 
     private void saveAllPreferences(ResponseConfig config) {
+        resetStimeValue(config.stime);
+        saveSharedPreference(R.string.key_setting_dname, config.dname);
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
