@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
 
 if(project.hasProperty("canairio.signing") && new File(project.property("canairio.signing") + ".gradle").exists()) {
-    apply from: project.property("canairio.signing") + ".gradle";
+    apply from: project.property("canairio.signing") + ".gradle"
 }
 
 android {
