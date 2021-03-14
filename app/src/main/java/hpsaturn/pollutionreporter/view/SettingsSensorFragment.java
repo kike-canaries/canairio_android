@@ -409,7 +409,14 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
      **********************************************************************************************/
 
     private void saveDeviceInfoString(ResponseConfig config) {
-        String info = "wmac:"+config.wmac+" wifi:"+(config.wsta ? "connected" : "failed");
+        String info = "MAC:"
+                + config.vmac
+                +"\nFirmware: "+config.vflv+" rev"+config.vrev
+                +"\nChannel :\t"+config.vtag
+                +"\nWiFi:"+(config.wenb ? "enable" : "disable")
+                +" IFDB:"+(config.ienb ? "enable" : "disable")
+                +"\nGW:"+(config.wsta ? "connected" : "disconnected");
+        if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
     }
@@ -590,6 +597,10 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         Logger.i(TAG, "[Config] -----------------------------");
         Logger.i(TAG, "[Config] wifist: " + config.wsta);
         Logger.i(TAG, "[Config] wmac  : " + config.wmac);
+        Logger.i(TAG, "[Config] vrev  : " + config.vrev);
+        Logger.i(TAG, "[Config] vmac  : " + config.vmac);
+        Logger.i(TAG, "[Config] vflv  : " + config.vflv);
+        Logger.i(TAG, "[Config] vtag  : " + config.vtag);
         Logger.i(TAG, "[Config] lskey : " + config.lskey);
     }
 
