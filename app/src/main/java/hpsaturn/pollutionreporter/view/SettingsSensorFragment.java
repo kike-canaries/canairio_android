@@ -48,6 +48,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     private Location lastLocation;
     private Snackbar snackBar;
     private ResponseConfig lastDeviceConfig;
+    private boolean onSensorReading;
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -91,38 +92,42 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if (key.equals(getString(R.string.key_setting_dname))) {
-            saveSensorName(getSensorName());
-        } else if (key.equals(getString(R.string.key_setting_stime))) {
-            validateSensorSampleTime();
-        } else if (key.equals(getString(R.string.key_setting_dtype))) {
-            sendSensorTypeConfig();
-        } else if (key.equals(getString(R.string.key_setting_ssid))) {
-            getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
-        } else if (key.equals(getString(R.string.key_setting_pass))) {
-            getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
-        } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
-            saveWifiConfig();
-        } else if (key.equals(getString(R.string.key_setting_apiusr))) {
-            getApiSwitch().setEnabled(isApiSwitchFieldsValid());
-        } else if (key.equals(getString(R.string.key_setting_apipss))) {
-            getApiSwitch().setEnabled(isApiSwitchFieldsValid());
-        } else if (key.equals(getString(R.string.key_setting_apisrv))) {
-            getApiSwitch().setEnabled(isApiSwitchFieldsValid());
-        } else if (key.equals(getString(R.string.key_setting_enable_api))) {
-            saveApiConfig();
-        } else if (key.equals(getString(R.string.key_setting_ifxdb))) {
-            getInfluxDbSwitch().setEnabled(isInfluxDbSwitchFieldsValid());
-        } else if (key.equals(getString(R.string.key_setting_ifxip))) {
-            getInfluxDbSwitch().setEnabled(isInfluxDbSwitchFieldsValid());
-        } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
-            saveInfluxDbConfig();
-        } else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
-            performRebootDevice();
-        } else if (key.equals(getString(R.string.key_setting_enable_clear))) {
-            performClearDevice();
-        } else if (key.equals(getString(R.string.key_setting_enable_location))) {
-            saveLocation();
+        if (!onSensorReading) {
+
+            if (key.equals(getString(R.string.key_setting_dname))) {
+                saveSensorName(getSensorName());
+            } else if (key.equals(getString(R.string.key_setting_stime))) {
+                validateSensorSampleTime();
+            } else if (key.equals(getString(R.string.key_setting_dtype))) {
+                sendSensorTypeConfig();
+            } else if (key.equals(getString(R.string.key_setting_ssid))) {
+                getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
+            } else if (key.equals(getString(R.string.key_setting_pass))) {
+                getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
+            } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
+                saveWifiConfig();
+            } else if (key.equals(getString(R.string.key_setting_apiusr))) {
+                getApiSwitch().setEnabled(isApiSwitchFieldsValid());
+            } else if (key.equals(getString(R.string.key_setting_apipss))) {
+                getApiSwitch().setEnabled(isApiSwitchFieldsValid());
+            } else if (key.equals(getString(R.string.key_setting_apisrv))) {
+                getApiSwitch().setEnabled(isApiSwitchFieldsValid());
+            } else if (key.equals(getString(R.string.key_setting_enable_api))) {
+                saveApiConfig();
+            } else if (key.equals(getString(R.string.key_setting_ifxdb))) {
+                getInfluxDbSwitch().setEnabled(isInfluxDbSwitchFieldsValid());
+            } else if (key.equals(getString(R.string.key_setting_ifxip))) {
+                getInfluxDbSwitch().setEnabled(isInfluxDbSwitchFieldsValid());
+            } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
+                saveInfluxDbConfig();
+            } else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
+                performRebootDevice();
+            } else if (key.equals(getString(R.string.key_setting_enable_clear))) {
+                performClearDevice();
+            } else if (key.equals(getString(R.string.key_setting_enable_location))) {
+                saveLocation();
+            }
+
         }
 
     }
@@ -156,9 +161,10 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             SensorName config = new SensorName();
             config.dname = name;
             sendSensorConfig(config);
-        }else  {
-            resetSensorName();
         }
+//        else  {
+//            resetSensorName();
+//        }
         updateSensorNameSummary();
     }
 
@@ -166,16 +172,20 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         return getSharedPreference(getString(R.string.key_setting_dname));
     }
 
-    void resetSensorName() {
-        if (lastDeviceConfig!=null && lastDeviceConfig.dname.length() > 0) {
-            saveSensorName(lastDeviceConfig.dname);
-            rebuildUI();
-        }
-    }
+//    void resetSensorName() {
+//        if (lastDeviceConfig!=null && lastDeviceConfig.dname.length() > 0) {
+//            saveSensorName(lastDeviceConfig.dname);
+//            rebuildUI();
+//        }
+//    }
 
     private void updateSensorNameSummary() {
         updateSummary(R.string.key_setting_dname);
     }
+
+    /***********************************************************************************************
+     * Sensor type section
+     **********************************************************************************************/
 
     private void sendSensorTypeConfig() {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_dtype));
@@ -507,6 +517,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
     public void configCallBack(ResponseConfig config) {
         if (config != null) {
+            onSensorReading = true;
             printResponseConfig(config);
             lastDeviceConfig = config;
 
@@ -514,44 +525,44 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_wmac),""+config.wmac);
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
 
+            boolean notify_sync = false;
 //
-//            boolean notify_sync = false;
-//
-//            if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
-//                resetStimeValue(config.stime);
-//                notify_sync = true;
-//            }
-//            if (!config.dname.equals(getSensorName())){
-//                saveSensorName(config.dname);
-//                notify_sync = true;
-//            }
-//            if (config.wenb != getWifiSwitch().isChecked()) {
-//                setWifiSwitch(config.wenb);
-//                notify_sync = true;
-//            }
-//            if (config.ienb != getInfluxDbSwitch().isChecked()) {
-//                setInfluxDbSwitch(config.ienb);
-//                notify_sync = true;
-//            }
-//            if (config.aenb != getApiSwitch().isChecked()) {
-//                setApiSwitch(config.aenb);
-//                notify_sync = true;
-//            }
-//            if (config.stype != getSensorType()) {
-//                if (config.stype < 0) updateSensorTypeSummary(0);
-//                else updateSensorTypeSummary((config.stype));
-//            }
-//
-//            updatePreferencesSummmary(config);
-//            saveAllPreferences(config);
-//            updateSwitches(config);
-//
-//            if (notify_sync) {
-//                Logger.v(TAG, "[Config] notify device sync complete");
-//                getMain().showSnackMessage(R.string.msg_sync_complete);
-//                rebuildUI();
-//            }
+            if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
+                resetStimeValue(config.stime);
+                notify_sync = true;
+            }
+            if (getSensorName().length() == 0){
+                saveSensorName(config.dname);
+                notify_sync = true;
+            }
+            if (config.wenb != getWifiSwitch().isChecked()) {
+                setWifiSwitch(config.wenb);
+                notify_sync = true;
+            }
+            if (config.ienb != getInfluxDbSwitch().isChecked()) {
+                setInfluxDbSwitch(config.ienb);
+                notify_sync = true;
+            }
+            if (config.aenb != getApiSwitch().isChecked()) {
+                setApiSwitch(config.aenb);
+                notify_sync = true;
+            }
+            if (config.stype != getSensorType()) {
+                if (config.stype < 0) updateSensorTypeSummary(0);
+                else updateSensorTypeSummary((config.stype));
+            }
+
+            updatePreferencesSummmary(config);
+            saveAllPreferences(config);
+            updateSwitches(config);
+
+            if (notify_sync) {
+                Logger.v(TAG, "[Config] notify device sync complete");
+                rebuildUI();
+                getMain().showSnackMessage(R.string.msg_sync_complete);
+            }
         }
+        onSensorReading = false;
     }
 
     private void printResponseConfig(ResponseConfig config) {
@@ -585,7 +596,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
         if(config.ifxdb !=null)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
         if(config.ifxip !=null)updateSummary(R.string.key_setting_ifxip,config.ifxip);
-//        if(config.stype != -1)updateSummary(R.string.key_setting_dtype,);
         if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
         updatePasswSummary(R.string.key_setting_pass);
         updatePasswSummary(R.string.key_setting_apipss);
