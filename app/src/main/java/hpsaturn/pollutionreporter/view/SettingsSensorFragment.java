@@ -59,7 +59,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     public void rebuildUI(){
         getPreferenceScreen().removeAll();
         addPreferencesFromResource(R.xml.settings);
-//        refreshUI();
     }
 
     public void refreshUI(){
@@ -128,6 +127,24 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
     }
 
+    /***********************************************************************************************
+     * Sensor status section
+     **********************************************************************************************/
+
+    public void setStatusSwitch(boolean checked) {
+        SwitchPreference statusSwitch = getStatusSwitch();
+        statusSwitch.setEnabled(checked);
+        statusSwitch.setChecked(checked);
+        statusSummaryUpdate(checked);
+    }
+
+    private SwitchPreference getStatusSwitch() {
+        return findPreference(getString(R.string.key_device_status));
+    }
+
+    private void statusSummaryUpdate(boolean status){
+        updateSummary(R.string.key_device_status, status ? "Connected":"Disconnected");
+    }
 
     /***********************************************************************************************
      * Sensor name section
@@ -497,42 +514,43 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_wmac),""+config.wmac);
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
 
-            boolean notify_sync = false;
-
-            if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
-                resetStimeValue(config.stime);
-                notify_sync = true;
-            }
-            if (!config.dname.equals(getSensorName())){
-                saveSensorName(config.dname);
-                notify_sync = true;
-            }
-            if (config.wenb != getWifiSwitch().isChecked()) {
-                setWifiSwitch(config.wenb);
-                notify_sync = true;
-            }
-            if (config.ienb != getInfluxDbSwitch().isChecked()) {
-                setInfluxDbSwitch(config.ienb);
-                notify_sync = true;
-            }
-            if (config.aenb != getApiSwitch().isChecked()) {
-                setApiSwitch(config.aenb);
-                notify_sync = true;
-            }
-            if (config.stype != getSensorType()) {
-                if (config.stype < 0) updateSensorTypeSummary(0);
-                else updateSensorTypeSummary((config.stype));
-            }
-
-            updatePreferencesSummmary(config);
-            saveAllPreferences(config);
-            updateSwitches(config);
-
-            if (notify_sync) {
-                Logger.v(TAG, "[Config] notify device sync complete");
-                getMain().showSnackMessage(R.string.msg_sync_complete);
-                rebuildUI();
-            }
+//
+//            boolean notify_sync = false;
+//
+//            if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
+//                resetStimeValue(config.stime);
+//                notify_sync = true;
+//            }
+//            if (!config.dname.equals(getSensorName())){
+//                saveSensorName(config.dname);
+//                notify_sync = true;
+//            }
+//            if (config.wenb != getWifiSwitch().isChecked()) {
+//                setWifiSwitch(config.wenb);
+//                notify_sync = true;
+//            }
+//            if (config.ienb != getInfluxDbSwitch().isChecked()) {
+//                setInfluxDbSwitch(config.ienb);
+//                notify_sync = true;
+//            }
+//            if (config.aenb != getApiSwitch().isChecked()) {
+//                setApiSwitch(config.aenb);
+//                notify_sync = true;
+//            }
+//            if (config.stype != getSensorType()) {
+//                if (config.stype < 0) updateSensorTypeSummary(0);
+//                else updateSensorTypeSummary((config.stype));
+//            }
+//
+//            updatePreferencesSummmary(config);
+//            saveAllPreferences(config);
+//            updateSwitches(config);
+//
+//            if (notify_sync) {
+//                Logger.v(TAG, "[Config] notify device sync complete");
+//                getMain().showSnackMessage(R.string.msg_sync_complete);
+//                rebuildUI();
+//            }
         }
     }
 

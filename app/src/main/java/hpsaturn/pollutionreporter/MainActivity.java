@@ -124,6 +124,7 @@ public class MainActivity extends BaseActivity implements
                 showSnackMessage(R.string.msg_device_reconnecting);
                 deviceConnected = false;
             }
+            if(settingsSensorFragment !=null)  settingsSensorFragment.setStatusSwitch(deviceConnected);
         }
 
         @Override
