@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
 
+if(project.hasProperty("canairio.signing") && new File(project.property("canairio.signing") + ".gradle").exists()) {
+    apply from: project.property("canairio.signing") + ".gradle";
+}
+
 android {
     compileSdkVersion project.mCompileSdkVersion.toInteger()
     defaultConfig {
@@ -21,6 +25,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
+            signingConfig signingConfigs.release
         }
         debug {
             testCoverageEnabled true
