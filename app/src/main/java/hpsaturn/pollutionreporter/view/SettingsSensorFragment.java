@@ -23,6 +23,7 @@ import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import java.text.DecimalFormat;
 
+import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ApiConfig;
@@ -47,13 +48,11 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
     private Location lastLocation;
     private Snackbar snackBar;
-    private ResponseConfig lastDeviceConfig;
     private boolean onSensorReading;
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-//        rebuildUI();
     }
 
     public void rebuildUI(){
@@ -128,10 +127,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
                 saveLocation();
             }
 
-//            readSensorConfig();
         }
-
-//        refreshUI();
 
     }
 
@@ -143,14 +139,14 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         SwitchPreference statusSwitch = getStatusSwitch();
         statusSwitch.setEnabled(checked);
         statusSwitch.setChecked(checked);
-        statusSummaryUpdate(checked);
+        updateStatusSummary(checked);
     }
 
     private SwitchPreference getStatusSwitch() {
         return findPreference(getString(R.string.key_device_status));
     }
 
-    private void statusSummaryUpdate(boolean status){
+    private void updateStatusSummary(boolean status){
         updateSummary(R.string.key_device_status, status ? "Connected":"Disconnected");
     }
 
@@ -408,6 +404,15 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         return getSharedPreference(getString(R.string.key_setting_ifxdb));
     }
 
+    /***********************************************************************************************
+     * Device info
+     **********************************************************************************************/
+
+    private void saveDeviceInfoString(ResponseConfig config) {
+        String info = "wmac:"+config.wmac+" wifi:"+(config.wsta ? "connected" : "failed");
+        updateSummary(R.string.key_device_info,info);
+        saveSharedPreference(R.string.key_device_info,info);
+    }
 
     /***********************************************************************************************
      * Misc preferences section
@@ -519,8 +524,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
             printResponseConfig(config);
 
-            lastDeviceConfig = config;
-
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_name),""+config.dname);
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_wmac),""+config.wmac);
             FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
@@ -550,24 +553,22 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
                 else updateSensorTypeSummary((config.stype));
             }
 
+            saveDeviceInfoString(config);
+
             if (notify_sync) {
                 saveAllPreferences(config);
                 updateSwitches(config);
+                setStatusSwitch(true);
                 rebuildUI();
+                updateStatusSummary(true);
                 updatePreferencesSummmary(config);
                 Logger.v(TAG, "[Config] notify device sync complete");
                 getMain().showSnackMessage(R.string.msg_sync_complete);
             }
 
 
-//            setStatusSwitch(true);
         }
         onSensorReading = false;
-    }
-
-
-    private String getDeviceInfoString(ResponseConfig config) {
-        return "wmac:"+config.wmac+" wifi:"+(config.wsta ? "connected" : "failed");
     }
 
     private void printResponseConfig(ResponseConfig config) {
@@ -605,6 +606,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         updatePasswSummary(R.string.key_setting_pass);
         updatePasswSummary(R.string.key_setting_apipss);
         updateLocationSummary();
+
     }
 
     private void updateSummary(int key){
@@ -675,6 +677,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         saveSharedPreference(R.string.key_setting_apiusr, config.apiusr);
         saveSharedPreference(R.string.key_setting_apisrv, config.apisrv);
         saveSharedPreference(R.string.key_setting_wmac, "" + config.wmac);
+        saveDeviceInfoString(config);
     }
 
     private void saveSharedPreference(int key, String value) {
