@@ -285,6 +285,14 @@ public class RecordTrackService extends Service {
     private SensorData getSensorData(byte[] bytes) {
         String strdata = new String(bytes);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
+        if(strdata.contains("P25")){
+            data.lbl="PM2.5";
+            data.main=data.P25;
+        }
+        else if(strdata.contains("CO2")){
+            data.lbl="CO2";
+            data.main=data.CO2;
+        }
         data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
         data.lat = lastLocation.getLatitude();

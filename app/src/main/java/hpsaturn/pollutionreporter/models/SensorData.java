@@ -8,7 +8,13 @@ public class SensorData {
 
     public Long timestamp;
 
+    public String lbl;
+
+    public int main;
+
     public int P25;
+
+    public int CO2;
 
     public int P10;
 

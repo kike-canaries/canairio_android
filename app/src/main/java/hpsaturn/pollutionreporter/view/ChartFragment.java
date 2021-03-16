@@ -24,11 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +66,6 @@ public class ChartFragment extends Fragment {
 
     private List<Entry> entries = new ArrayList<Entry>();
     private LineDataSet dataSet;
-    private int i;
     private long referenceTimestamp;
     private boolean loadingData = true;
 
@@ -108,7 +105,7 @@ public class ChartFragment extends Fragment {
 
         calculateReferenceTime();
 
-        dataSet = new LineDataSet(entries, getString(R.string.label_pm25));
+        dataSet = new LineDataSet(entries,"");
         dataSet.setColor(R.color.colorPrimary);
         dataSet.setHighlightEnabled(true);
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
@@ -205,11 +202,12 @@ public class ChartFragment extends Fragment {
             while (it.hasNext()) {
                 SensorData value = it.next();
                 Long time = value.timestamp - referenceTimestamp;
-                dataSet.addEntry(new Entry(time, value.P25));
+                dataSet.addEntry(new Entry(time, value.main));
             }
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
             chart.invalidate();
+            dataSet.setLabel(data.get(data.size()-1).lbl);
         }
         loadingData = false;
     }
@@ -230,7 +228,7 @@ public class ChartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        calculateReferenceTime();
+//        calculateReferenceTime();
     }
 
     public void clearData() {
@@ -256,4 +254,7 @@ public class ChartFragment extends Fragment {
         return (MainActivity)getActivity();
     }
 
+    public void setLabel(String lbl) {
+        dataSet.setLabel(lbl);
+    }
 }
