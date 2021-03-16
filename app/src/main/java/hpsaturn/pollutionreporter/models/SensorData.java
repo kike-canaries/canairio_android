@@ -26,7 +26,9 @@ public class SensorData {
 
     public float spd;
 
-    public float temp;
+    public float tmp;
 
-    public float humi;
+    public float hum;
+
+    public String dsl;
 }

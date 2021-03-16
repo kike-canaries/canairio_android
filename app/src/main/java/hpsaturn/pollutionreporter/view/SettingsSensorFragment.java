@@ -23,7 +23,6 @@ import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import java.text.DecimalFormat;
 
-import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ApiConfig;
@@ -409,27 +408,32 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         Preference infoPreference = findPreference(getString(R.string.key_device_info));
 
         infoPreference.setOnPreferenceClickListener(preference -> {
-            getMain().readSensorData();
+            readSensorConfig();
             return false;
         });
     }
 
     public void onReadSensorData(SensorData data) {
         Logger.i(TAG,"[Config] SensorData:");
+        Logger.i(TAG,"[Config] dsl:"+data.dsl);
         Logger.i(TAG,"[Config] PM2.5:"+data.P25);
         Logger.i(TAG,"[Config] CO2:"+data.CO2);
-        Logger.i(TAG,"[Config] Temp:"+data.temp);
-        Logger.i(TAG,"[Config] Humi:"+data.humi);
+        Logger.i(TAG,"[Config] Temp:"+data.tmp);
+        Logger.i(TAG,"[Config] Humi:"+data.hum);
+
+        String info = getSharedPreference(getString(R.string.key_device_info));
+        info = info + "\nDSEL:"+data.dsl+ "\nDATA:PM2.5:"+data.P25+" TMP:"+data.tmp+" HUM:"+data.hum;
+
+        updateSummary(R.string.key_device_info,info);
+        saveSharedPreference(R.string.key_device_info,info);
     }
 
     private void saveDeviceInfoString(ResponseConfig config) {
         String info = "MAC:"
                 + config.vmac
-                +"\nFirmware: "+config.vflv+" rev"+config.vrev
-                +"\nChannel :\t"+config.vtag
-                +"\nWiFi:"+(config.wenb ? "enable" : "disable")
-                +" IFDB:"+(config.ienb ? "enable" : "disable")
-                +"\nGW:"+(config.wsta ? "connected" : "disconnected");
+                +"\nFirmware: "+config.vflv+" rev"+config.vrev+" ("+config.vtag+")"
+                +"\n[WiFi:"+(config.wenb ? "On" : "Off")+"][IFDB:"+(config.ienb ? "On" : "Off")
+                +"][GW:"+(config.wsta ? "On" : "Off")+"]";
         if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
@@ -578,6 +582,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
             saveDeviceInfoString(config);
             setStatusSwitch(true);
+            getMain().readSensorData();
 
             if (notify_sync) {
                 saveAllPreferences(config);
