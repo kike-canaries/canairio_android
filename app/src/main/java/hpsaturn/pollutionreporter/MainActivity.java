@@ -177,6 +177,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorDataRead(SensorData data) {
+            settingsSensorFragment.onReadSensorData(data);
 
         }
 

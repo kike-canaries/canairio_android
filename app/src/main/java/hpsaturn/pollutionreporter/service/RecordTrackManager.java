@@ -34,11 +34,13 @@ public class RecordTrackManager {
     private String action_sensor_write_config;
     private String action_tracks_updated;
     private String response_sensor_config;
+    private String response_sensor_data;
 
     private static final String KEY_SERVICE_DATA = "KEY_SERVICE_DATA";
     private static final String KEY_SERVICE_STATUS = "KEY_SERVICE_STATUS";
     private static final String KEY_SENSOR_CONFIG_WRITE = "KEY_SENSOR_CONFIG_WRITE";
     private static final String KEY_SENSOR_CONFIG_RESPONSE = "KEY_SENSOR_CONFIG_RESPONSE";
+    private static final String KEY_SENSOR_DATA_RESPONSE = "KEY_SENSOR_DATA_RESPONSE";
 
     public static final String STATUS_BLE_START   = "STATUS_BLE_START";
     public static final String STATUS_BLE_STOP    = "STATUS_BLE_STOP";
@@ -64,6 +66,7 @@ public class RecordTrackManager {
             action_sensor_read_data    = "ACTION_SENSOR_READ_DATA";
             action_sensor_write_config = "ACTION_SENSOR_WRITE_CONFIG";
             response_sensor_config  = "RESPONSE_SENSOR_CONFIG";
+            response_sensor_data  = "RESPONSE_SENSOR_DATA";
 
             intentFilter.addAction(action_start);
             intentFilter.addAction(action_stop);
@@ -76,6 +79,7 @@ public class RecordTrackManager {
             intentFilter.addAction(action_sensor_read_data);
             intentFilter.addAction(action_sensor_write_config);
             intentFilter.addAction(response_sensor_config);
+            intentFilter.addAction(response_sensor_data);
 
             ctx.registerReceiver(mReceiver,intentFilter);
 
@@ -130,6 +134,12 @@ public class RecordTrackManager {
     public void responseSensorConfig(ResponseConfig config){
         Intent intent = new Intent(response_sensor_config);
         intent.putExtra(KEY_SENSOR_CONFIG_RESPONSE,new Gson().toJson(config));
+        ctx.sendBroadcast(intent);
+    }
+
+    public void responseSensorData(SensorData data) {
+        Intent intent = new Intent(response_sensor_data);
+        intent.putExtra(KEY_SENSOR_DATA_RESPONSE,new Gson().toJson(data));
         ctx.sendBroadcast(intent);
     }
 
@@ -198,6 +208,11 @@ public class RecordTrackManager {
                 String config = intent.getExtras().getString(KEY_SENSOR_CONFIG_RESPONSE);
                 listener.onSensorConfigRead(new Gson().fromJson(config, ResponseConfig.class));
 
+            } else if(action.equals(response_sensor_data)) {
+
+                String config = intent.getExtras().getString(KEY_SENSOR_DATA_RESPONSE);
+                listener.onSensorDataRead(new Gson().fromJson(config, SensorData.class));
+
             } else if(action.equals(action_sensor_read_data)) {
 
                 listener.requestSensorDataRead();
@@ -211,5 +226,6 @@ public class RecordTrackManager {
 
         }
     };
+
 
 }

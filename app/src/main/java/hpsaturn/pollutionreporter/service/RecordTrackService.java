@@ -268,7 +268,9 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onSensorDataRead(byte[] bytes) {
-
+            String strdata = new String(bytes);
+            SensorData data = new Gson().fromJson(strdata, SensorData.class);
+            recordTrackManager.responseSensorData(data);
         }
 
         @Override
