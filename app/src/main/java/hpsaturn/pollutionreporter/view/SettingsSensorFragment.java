@@ -561,11 +561,11 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             }
 
             saveDeviceInfoString(config);
+            setStatusSwitch(true);
 
             if (notify_sync) {
                 saveAllPreferences(config);
                 updateSwitches(config);
-                setStatusSwitch(true);
                 rebuildUI();
                 updateStatusSummary(true);
                 updatePreferencesSummmary(config);
