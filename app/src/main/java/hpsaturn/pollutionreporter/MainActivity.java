@@ -139,7 +139,10 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onSensorNotificationData(SensorData data) {
 //            if (recordsFragment!=null && !recordsFragment.isShowingData()) fabUpdateLayout();
-            if (chartFragment != null) chartFragment.addData(data.P25);
+            if (chartFragment != null) {
+                chartFragment.addData(data.main);
+                chartFragment.setLabel(data.lbl);
+            }
         }
 
         @Override
@@ -211,6 +214,10 @@ public class MainActivity extends BaseActivity implements
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, true).save();
         recordTrackManager.serviceRecord();
         fabUpdateLayout();
+    }
+
+    public void readSensorData() {
+        recordTrackManager.readSensorData();
     }
 
 
