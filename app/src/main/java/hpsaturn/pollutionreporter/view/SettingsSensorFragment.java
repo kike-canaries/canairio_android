@@ -414,13 +414,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     }
 
     public void onReadSensorData(SensorData data) {
-        Logger.i(TAG,"[Config] SensorData:");
-        Logger.i(TAG,"[Config] dsl:"+data.dsl);
-        Logger.i(TAG,"[Config] PM2.5:"+data.P25);
-        Logger.i(TAG,"[Config] CO2:"+data.CO2);
-        Logger.i(TAG,"[Config] Temp:"+data.tmp);
-        Logger.i(TAG,"[Config] Humi:"+data.hum);
-
         String info = getSharedPreference(getString(R.string.key_device_info));
         info = info + "\n-----------------------"
                 +"\n"+data.dsl+"->PM2.5:"+data.P25+" PM1:"+data.P1+" CO2:"+data.CO2
@@ -584,7 +577,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
             saveDeviceInfoString(config);
             setStatusSwitch(true);
-            getMain().readSensorData();
+//            getMain().readSensorData();
 
             if (notify_sync) {
                 saveAllPreferences(config);

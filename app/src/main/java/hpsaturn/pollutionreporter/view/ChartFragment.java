@@ -1,8 +1,10 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,7 +108,11 @@ public class ChartFragment extends Fragment {
         calculateReferenceTime();
 
         dataSet = new LineDataSet(entries,"");
-        dataSet.setColor(R.color.colorPrimary);
+        dataSet.setColor(R.color.green);
+
+        dataSet.setDrawFilled(true);
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.aqi_gradient_fill);
+        dataSet.setFillDrawable(drawable);
         dataSet.setHighlightEnabled(true);
         dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
@@ -138,6 +144,19 @@ public class ChartFragment extends Fragment {
         xAxis.setValueFormatter(xAxisFormatter);
     }
 
+    public void setLabel(String lbl) {
+        dataSet.setLabel(lbl);
+    }
+
+    public void addData(SensorData data) {
+        Logger.i(TAG,"[Config] SensorData:");
+        Logger.i(TAG,"[Config] dsl:"+data.dsl);
+        Logger.i(TAG,"[Config] PM2.5:"+data.P25);
+        Logger.i(TAG,"[Config] CO2:"+data.CO2);
+        Logger.i(TAG,"[Config] Temp:"+data.tmp);
+        Logger.i(TAG,"[Config] Humi:"+data.hum);
+    }
+
     public void addData(int value) {
         if (!loadingData) {
             Long currentTime = System.currentTimeMillis() / 1000;
@@ -146,6 +165,7 @@ public class ChartFragment extends Fragment {
             dataSet.notifyDataSetChanged();
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
+
             chart.notifyDataSetChanged();
             chart.invalidate();
         }
@@ -216,11 +236,12 @@ public class ChartFragment extends Fragment {
 
             }
             LineData lineData = new LineData(dataSet);
-            chart.setData(lineData);
-            chart.invalidate();
             String label = data.get(data.size()-1).lbl;
             if (label == null ) label = "PM2.5";   // backward compatibility
             dataSet.setLabel(label);
+            chart.setData(lineData);
+            chart.invalidate();
+
         }
         loadingData = false;
     }
@@ -266,7 +287,5 @@ public class ChartFragment extends Fragment {
         return (MainActivity)getActivity();
     }
 
-    public void setLabel(String lbl) {
-        dataSet.setLabel(lbl);
-    }
+
 }
