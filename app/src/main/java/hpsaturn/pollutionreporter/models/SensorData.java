@@ -18,6 +18,8 @@ public class SensorData {
 
     public int P10;
 
+    public int P1;
+
     public double lat;
 
     public double lon;

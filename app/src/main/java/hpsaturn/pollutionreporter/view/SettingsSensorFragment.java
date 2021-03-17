@@ -422,7 +422,9 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         Logger.i(TAG,"[Config] Humi:"+data.hum);
 
         String info = getSharedPreference(getString(R.string.key_device_info));
-        info = info + "\nDSEL:"+data.dsl+ "\nDATA:PM2.5:"+data.P25+" TMP:"+data.tmp+" HUM:"+data.hum;
+        info = info + "\n-----------------------"
+                +"\n"+data.dsl+"->PM2.5:"+data.P25+" PM1:"+data.P1+" CO2:"+data.CO2
+                + "\n T:"+data.tmp+" H:"+data.hum;
 
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
