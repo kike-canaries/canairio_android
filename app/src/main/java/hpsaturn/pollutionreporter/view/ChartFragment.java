@@ -200,14 +200,27 @@ public class ChartFragment extends Fragment {
         else {
             Iterator<SensorData> it = data.iterator();
             while (it.hasNext()) {
+
                 SensorData value = it.next();
-                Long time = value.timestamp - referenceTimestamp;
-                dataSet.addEntry(new Entry(time, value.main));
+
+                long time = value.timestamp - referenceTimestamp;
+
+                if (value.lbl != null && value.lbl.contains("PM2.5"))
+                    dataSet.addEntry(new Entry(time, value.P25));
+
+                else if (value.lbl != null && value.lbl.contains("CO2"))
+                    dataSet.addEntry(new Entry(time, value.CO2));
+
+                else
+                    dataSet.addEntry(new Entry(time, value.P25)); // backward compatibility
+
             }
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
             chart.invalidate();
-            dataSet.setLabel(data.get(data.size()-1).lbl);
+            String label = data.get(data.size()-1).lbl;
+            if (label == null ) label = "PM2.5";   // backward compatibility
+            dataSet.setLabel(label);
         }
         loadingData = false;
     }
@@ -228,7 +241,6 @@ public class ChartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        calculateReferenceTime();
     }
 
     public void clearData() {
