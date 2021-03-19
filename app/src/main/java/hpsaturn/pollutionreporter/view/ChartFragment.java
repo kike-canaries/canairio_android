@@ -1,10 +1,8 @@
 package hpsaturn.pollutionreporter.view;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +13,11 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,15 +65,25 @@ public class ChartFragment extends Fragment {
     @BindView(R.id.rl_separator)
     RelativeLayout rl_separator;
 
+    LineDataSet PM25line;
+    LineDataSet Templine;
+    LineDataSet Humiline;
+    LineDataSet CO2line;
 
-    private List<Entry> entries = new ArrayList<Entry>();
-    private LineDataSet dataSet;
+    List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+
+    private List<Entry> entriesPM25 = new ArrayList<Entry>();
+    private List<Entry> entriesTemp = new ArrayList<Entry>();
+    private List<Entry> entriesHumi = new ArrayList<Entry>();
+    private List<Entry> entriesCO2  = new ArrayList<Entry>();
+
     private long referenceTimestamp;
     private boolean loadingData = true;
 
     private static final String KEY_RECORD_ID = "key_record_id";
     private String recordId;
     private SensorTrack track;
+
 
     public static ChartFragment newInstance() {
         return new ChartFragment();
@@ -107,14 +117,11 @@ public class ChartFragment extends Fragment {
 
         calculateReferenceTime();
 
-        dataSet = new LineDataSet(entries,"");
-        dataSet.setColor(R.color.green);
+        PM25line = getPM25LineDataSet(entriesPM25);
+        Templine = getGenericLineDataSet(entriesTemp,R.color.red,"T");
+        Humiline = getGenericLineDataSet(entriesHumi,R.color.blue,"H");
+        CO2line = getGenericLineDataSet(entriesCO2,R.color.brown,"CO2");
 
-        dataSet.setDrawFilled(true);
-        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.aqi_gradient_fill);
-        dataSet.setFillDrawable(drawable);
-        dataSet.setHighlightEnabled(true);
-        dataSet.setValueTextColor(R.color.colorPrimaryDark);
 
         Bundle args = getArguments();
         if(args!=null){
@@ -124,6 +131,32 @@ public class ChartFragment extends Fragment {
 
         return view;
     }
+
+    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label) {
+
+        LineDataSet dataSet = new LineDataSet(entry,label);
+        dataSet.setColor(color);
+        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        return dataSet;
+    }
+
+    private LineDataSet getPM25LineDataSet(List<Entry> entry) {
+
+        LineDataSet dataSet = new LineDataSet(entry,"PM2.5");
+        dataSet.setColor(R.color.green);
+        dataSet.setDrawFilled(true);
+//        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.aqi_gradient_fill);
+//        dataSet.setFillDrawable(drawable);
+        dataSet.setHighlightEnabled(true);
+        dataSet.setCircleColor(R.color.green);
+        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+//        dataSet.setValueTextSize(11.0f);
+        dataSet.setValueTextColor(R.color.colorPrimaryDark);
+
+        return dataSet;
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -144,9 +177,6 @@ public class ChartFragment extends Fragment {
         xAxis.setValueFormatter(xAxisFormatter);
     }
 
-    public void setLabel(String lbl) {
-        dataSet.setLabel(lbl);
-    }
 
     public void addData(SensorData data) {
         Logger.i(TAG,"[Config] SensorData:");
@@ -155,20 +185,42 @@ public class ChartFragment extends Fragment {
         Logger.i(TAG,"[Config] CO2:"+data.CO2);
         Logger.i(TAG,"[Config] Temp:"+data.tmp);
         Logger.i(TAG,"[Config] Humi:"+data.hum);
-    }
 
-    public void addData(int value) {
         if (!loadingData) {
             Long currentTime = System.currentTimeMillis() / 1000;
             long time = currentTime - referenceTimestamp;
-            dataSet.addEntry(new Entry(time, value));
-            dataSet.notifyDataSetChanged();
-            LineData lineData = new LineData(dataSet);
-            chart.setData(lineData);
 
+            PM25line.addEntry(new Entry(time, data.P25));
+            Templine.addEntry(new Entry(time, data.tmp));
+            Humiline.addEntry(new Entry(time, data.hum));
+            CO2line.addEntry(new Entry(time, data.CO2));
+
+            PM25line.notifyDataSetChanged();
+            Templine.notifyDataSetChanged();
+            Humiline.notifyDataSetChanged();
+            CO2line.notifyDataSetChanged();
+
+            dataSets.clear();
+
+            dataSets.add(PM25line);
+            dataSets.add(Templine);
+            dataSets.add(Humiline);
+            dataSets.add(CO2line);
+
+            LineData linedata = new LineData(dataSets);
+
+            chart.setData(linedata);
             chart.notifyDataSetChanged();
             chart.invalidate();
         }
+    }
+
+    public void addData(int value) {
+
+    }
+
+    private MainActivity getMain(){
+        return (MainActivity)getActivity();
     }
 
     private void loadData() {
@@ -215,34 +267,34 @@ public class ChartFragment extends Fragment {
     }
 
     private void loadChart(ArrayList<SensorData> data){
-        if(data==null)return;
-        if (data.isEmpty()) addData(0);
-        else {
-            Iterator<SensorData> it = data.iterator();
-            while (it.hasNext()) {
-
-                SensorData value = it.next();
-
-                long time = value.timestamp - referenceTimestamp;
-
-                if (value.lbl != null && value.lbl.contains("PM2.5"))
-                    dataSet.addEntry(new Entry(time, value.P25));
-
-                else if (value.lbl != null && value.lbl.contains("CO2"))
-                    dataSet.addEntry(new Entry(time, value.CO2));
-
-                else
-                    dataSet.addEntry(new Entry(time, value.P25)); // backward compatibility
-
-            }
-            LineData lineData = new LineData(dataSet);
-            String label = data.get(data.size()-1).lbl;
-            if (label == null ) label = "PM2.5";   // backward compatibility
-            dataSet.setLabel(label);
-            chart.setData(lineData);
-            chart.invalidate();
-
-        }
+//        if(data==null)return;
+//        if (data.isEmpty()) addData(0);
+//        else {
+//            Iterator<SensorData> it = data.iterator();
+//            while (it.hasNext()) {
+//
+//                SensorData value = it.next();
+//
+//                long time = value.timestamp - referenceTimestamp;
+//
+//                if (value.lbl != null && value.lbl.contains("PM2.5"))
+//                    dataSet.addEntry(new Entry(time, value.P25));
+//
+//                else if (value.lbl != null && value.lbl.contains("CO2"))
+//                    dataSet.addEntry(new Entry(time, value.CO2));
+//
+//                else
+//                    dataSet.addEntry(new Entry(time, value.P25)); // backward compatibility
+//
+//            }
+//            LineData lineData = new LineData(dataSet);
+//            String label = data.get(data.size()-1).lbl;
+//            if (label == null ) label = "PM2.5";   // backward compatibility
+//            dataSet.setLabel(label);
+//            chart.setData(lineData);
+//            chart.invalidate();
+//
+//        }
         loadingData = false;
     }
 
@@ -266,8 +318,8 @@ public class ChartFragment extends Fragment {
 
     public void clearData() {
         Logger.w(TAG, "[CHART] clear recorded data and chart..");
-        entries.clear();
-        dataSet.clear();
+        entriesPM25.clear();
+//        dataSet.clear();
         chart.clear();
         Storage.setSensorData(getActivity(), new ArrayList<>());
         calculateReferenceTime();
@@ -282,10 +334,5 @@ public class ChartFragment extends Fragment {
             getMain().popBackLastFragment();
         }
     }
-
-    private MainActivity getMain(){
-        return (MainActivity)getActivity();
-    }
-
 
 }

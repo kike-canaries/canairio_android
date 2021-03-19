@@ -139,9 +139,7 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onSensorNotificationData(SensorData data) {
             if (chartFragment != null) {
-                chartFragment.addData(data.main);
-                chartFragment.setLabel(data.lbl);
-//                readSensorData();
+                readSensorData();
             }
         }
 
@@ -177,8 +175,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorDataRead(SensorData data) {
-//            settingsSensorFragment.onReadSensorData(data);A
-//            if (chartFragment != null)chartFragment.addData(data);
+            if (chartFragment != null)chartFragment.addData(data);
         }
 
         @Override
