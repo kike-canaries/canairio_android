@@ -252,8 +252,8 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            SensorData data = getSensorData(bytes);
-            if (isRecording) record(data);
+            String strdata = new String(bytes);
+            SensorData data = new Gson().fromJson(strdata, SensorData.class);
             Logger.d(TAG, "[BLE] pushing notification data to GUI..");
             recordTrackManager.sensorNotificationData(data);
             retry_notify_setup = 0;
@@ -268,8 +268,8 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onSensorDataRead(byte[] bytes) {
-            String strdata = new String(bytes);
-            SensorData data = new Gson().fromJson(strdata, SensorData.class);
+            SensorData data = getSensorData(bytes);
+            if (isRecording) record(data);
             recordTrackManager.responseSensorData(data);
         }
 
@@ -287,16 +287,9 @@ public class RecordTrackService extends Service {
     private SensorData getSensorData(byte[] bytes) {
         String strdata = new String(bytes);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
-        if(strdata.contains("P25")){
-            data.lbl="PM2.5";
-            data.main=data.P25;
-        }
-        else if(strdata.contains("CO2")){
-            data.lbl="CO2";
-            data.main=data.CO2;
-        }
         data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
+        assert lastLocation != null;
         data.lat = lastLocation.getLatitude();
         data.lon = lastLocation.getLongitude();
         return data;

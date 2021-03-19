@@ -1,8 +1,11 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +74,7 @@ public class ChartFragment extends Fragment {
     LineDataSet CO2line;
 
     List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+    ArrayList<Integer> colors = new ArrayList<Integer>();
 
     private List<Entry> entriesPM25 = new ArrayList<Entry>();
     private List<Entry> entriesTemp = new ArrayList<Entry>();
@@ -104,8 +108,10 @@ public class ChartFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         Description description = new Description();
-        description.setTextColor(ColorTemplate.VORDIPLOM_COLORS[2]);
+        description.setTextColor(getResources().getColor(R.color.black));
         description.setText(getString(R.string.app_name));
+        description.setTextSize(12f);
+        description.setTextAlign(Paint.Align.RIGHT);
 
         chart.setDescription(description);
         chart.setNoDataText(getString(R.string.msg_chart_loading));
@@ -118,9 +124,9 @@ public class ChartFragment extends Fragment {
         calculateReferenceTime();
 
         PM25line = getPM25LineDataSet(entriesPM25);
-        Templine = getGenericLineDataSet(entriesTemp,R.color.red,"T");
-        Humiline = getGenericLineDataSet(entriesHumi,R.color.blue,"H");
-        CO2line = getGenericLineDataSet(entriesCO2,R.color.brown,"CO2");
+        Templine = getGenericLineDataSet(entriesTemp,R.color.red,"T",false);
+        Humiline = getGenericLineDataSet(entriesHumi,R.color.blue,"H",false);
+        CO2line = getGenericLineDataSet(entriesCO2,R.color.brown,"CO2",true);
 
 
         Bundle args = getArguments();
@@ -132,11 +138,14 @@ public class ChartFragment extends Fragment {
         return view;
     }
 
-    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label) {
+    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label,boolean fill) {
 
         LineDataSet dataSet = new LineDataSet(entry,label);
-        dataSet.setColor(color);
-        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        dataSet.setColor(getResources().getColor(color));
+        dataSet.setDrawValues(false);
+        dataSet.setDrawCircles(false);
+        dataSet.setDrawFilled(fill);
+        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
         return dataSet;
     }
@@ -144,15 +153,21 @@ public class ChartFragment extends Fragment {
     private LineDataSet getPM25LineDataSet(List<Entry> entry) {
 
         LineDataSet dataSet = new LineDataSet(entry,"PM2.5");
-        dataSet.setColor(R.color.green);
-        dataSet.setDrawFilled(true);
+        dataSet.setColor(getResources().getColor(R.color.green));
+//        dataSet.setDrawFilled(true);
 //        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.aqi_gradient_fill);
 //        dataSet.setFillDrawable(drawable);
         dataSet.setHighlightEnabled(true);
-        dataSet.setCircleColor(R.color.green);
-        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+//        dataSet.setCircleRadius(3.5f);
+//        dataSet.setDrawCircleHole(false);
+//        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
 //        dataSet.setValueTextSize(11.0f);
-        dataSet.setValueTextColor(R.color.colorPrimaryDark);
+//        dataSet.setValueTextColor(R.color.green);
+        dataSet.setCircleRadius(4.0f);
+        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        dataSet.setLineWidth(1.5f);
+//        dataSet.setValueTextSize(20f);
+//        dataSet.enableDashedLine(6f, 18f, 0);
 
         return dataSet;
     }
@@ -179,48 +194,56 @@ public class ChartFragment extends Fragment {
 
 
     public void addData(SensorData data) {
-        Logger.i(TAG,"[Config] SensorData:");
-        Logger.i(TAG,"[Config] dsl:"+data.dsl);
-        Logger.i(TAG,"[Config] PM2.5:"+data.P25);
-        Logger.i(TAG,"[Config] CO2:"+data.CO2);
-        Logger.i(TAG,"[Config] Temp:"+data.tmp);
-        Logger.i(TAG,"[Config] Humi:"+data.hum);
-
         if (!loadingData) {
             Long currentTime = System.currentTimeMillis() / 1000;
             long time = currentTime - referenceTimestamp;
-
-            PM25line.addEntry(new Entry(time, data.P25));
-            Templine.addEntry(new Entry(time, data.tmp));
-            Humiline.addEntry(new Entry(time, data.hum));
-            CO2line.addEntry(new Entry(time, data.CO2));
-
-            PM25line.notifyDataSetChanged();
-            Templine.notifyDataSetChanged();
-            Humiline.notifyDataSetChanged();
-            CO2line.notifyDataSetChanged();
-
-            dataSets.clear();
-
-            dataSets.add(PM25line);
-            dataSets.add(Templine);
-            dataSets.add(Humiline);
-            dataSets.add(CO2line);
-
-            LineData linedata = new LineData(dataSets);
-
-            chart.setData(linedata);
-            chart.notifyDataSetChanged();
-            chart.invalidate();
+            addValue(time,data);
+            refreshDataSets();
         }
     }
 
-    public void addData(int value) {
+    private void addData(ArrayList<SensorData> data){
+        if(data==null)return;
+        else if (!data.isEmpty()) {
+            Iterator<SensorData> it = data.iterator();
+            while (it.hasNext()) {
+                SensorData d = it.next();
+                long time = d.timestamp - referenceTimestamp;
+                addValue(time,d);
+            }
 
+            refreshDataSets();
+        }
+        loadingData = false;
     }
 
-    private MainActivity getMain(){
-        return (MainActivity)getActivity();
+    private void addValue(long time, SensorData data) {
+        PM25line.addEntry(new Entry(time, data.P25));
+        Templine.addEntry(new Entry(time, data.tmp));
+        Humiline.addEntry(new Entry(time, data.hum));
+        CO2line.addEntry(new Entry(time, data.CO2));
+
+        if (data.P25 <= 20) colors.add(getResources().getColor(R.color.green));
+        if (data.P25 > 20 && data.P25 <= 90) colors.add(getResources().getColor(R.color.yellow));
+        if (data.P25 > 90 && data.P25 <= 120) colors.add(getResources().getColor(R.color.orange));
+        if (data.P25 > 120 ) colors.add(getResources().getColor(R.color.red));
+    }
+
+    private void refreshDataSets() {
+        dataSets.clear();
+
+        PM25line.setCircleColors(colors);
+
+        dataSets.add(PM25line);
+        dataSets.add(Templine);
+        dataSets.add(Humiline);
+        dataSets.add(CO2line);
+
+        LineData linedata = new LineData(dataSets);
+
+        chart.setData(linedata);
+        chart.notifyDataSetChanged();
+        chart.invalidate();
     }
 
     private void loadData() {
@@ -248,7 +271,7 @@ public class ChartFragment extends Fragment {
                         SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
                         if(track!=null){
                             Logger.i(TAG,"[CHART] loading track on chart..");
-                            loadChart(track.data);
+                            addData(track.data);
                             setTrackDescription(track);
                         }
                         else{
@@ -263,39 +286,7 @@ public class ChartFragment extends Fragment {
                 });
             }
         }
-        loadChart(data);
-    }
-
-    private void loadChart(ArrayList<SensorData> data){
-//        if(data==null)return;
-//        if (data.isEmpty()) addData(0);
-//        else {
-//            Iterator<SensorData> it = data.iterator();
-//            while (it.hasNext()) {
-//
-//                SensorData value = it.next();
-//
-//                long time = value.timestamp - referenceTimestamp;
-//
-//                if (value.lbl != null && value.lbl.contains("PM2.5"))
-//                    dataSet.addEntry(new Entry(time, value.P25));
-//
-//                else if (value.lbl != null && value.lbl.contains("CO2"))
-//                    dataSet.addEntry(new Entry(time, value.CO2));
-//
-//                else
-//                    dataSet.addEntry(new Entry(time, value.P25)); // backward compatibility
-//
-//            }
-//            LineData lineData = new LineData(dataSet);
-//            String label = data.get(data.size()-1).lbl;
-//            if (label == null ) label = "PM2.5";   // backward compatibility
-//            dataSet.setLabel(label);
-//            chart.setData(lineData);
-//            chart.invalidate();
-//
-//        }
-        loadingData = false;
+        addData(data);
     }
 
     private void setTrackDescription(SensorTrack track){
@@ -318,8 +309,11 @@ public class ChartFragment extends Fragment {
 
     public void clearData() {
         Logger.w(TAG, "[CHART] clear recorded data and chart..");
-        entriesPM25.clear();
-//        dataSet.clear();
+        colors.clear();
+        PM25line.clear();
+        Templine.clear();
+        Humiline.clear();
+        CO2line.clear();
         chart.clear();
         Storage.setSensorData(getActivity(), new ArrayList<>());
         calculateReferenceTime();
@@ -333,6 +327,10 @@ public class ChartFragment extends Fragment {
             getMain().getDatabase().child(Config.FB_TRACKS_INFO).child(track.name).setValue(new SensorTrackInfo(track));
             getMain().popBackLastFragment();
         }
+    }
+
+    private MainActivity getMain(){
+        return (MainActivity)getActivity();
     }
 
 }
