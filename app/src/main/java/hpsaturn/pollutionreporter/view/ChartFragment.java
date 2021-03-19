@@ -1,11 +1,9 @@
 package hpsaturn.pollutionreporter.view;
 
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,7 +71,8 @@ public class ChartFragment extends Fragment {
     LineDataSet CO2line;
 
     List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-    ArrayList<Integer> colors = new ArrayList<Integer>();
+    ArrayList<Integer> colorsP25 = new ArrayList<Integer>();
+    ArrayList<Integer> colorsCO2 = new ArrayList<Integer>();
 
     private List<Entry> entriesPM25 = new ArrayList<Entry>();
     private List<Entry> entriesTemp = new ArrayList<Entry>();
@@ -110,7 +108,7 @@ public class ChartFragment extends Fragment {
         Description description = new Description();
         description.setTextColor(getResources().getColor(R.color.black));
         description.setText(getString(R.string.app_name));
-        description.setTextSize(12f);
+        description.setTextSize(16f);
         description.setTextAlign(Paint.Align.RIGHT);
 
         chart.setDescription(description);
@@ -124,10 +122,9 @@ public class ChartFragment extends Fragment {
         calculateReferenceTime();
 
         PM25line = getPM25LineDataSet(entriesPM25);
-        Templine = getGenericLineDataSet(entriesTemp,R.color.red,"T",false);
-        Humiline = getGenericLineDataSet(entriesHumi,R.color.blue,"H",false);
-        CO2line = getGenericLineDataSet(entriesCO2,R.color.brown,"CO2",true);
-
+        Templine = getGenericLineDataSet(entriesTemp,R.color.red,"T",0.5f);
+        Humiline = getGenericLineDataSet(entriesHumi,R.color.blue,"H",0.5f);
+        CO2line = getGenericLineDataSet(entriesCO2,R.color.brown,"CO2",1f);
 
         Bundle args = getArguments();
         if(args!=null){
@@ -138,14 +135,14 @@ public class ChartFragment extends Fragment {
         return view;
     }
 
-    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label,boolean fill) {
+    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label,float width) {
 
         LineDataSet dataSet = new LineDataSet(entry,label);
         dataSet.setColor(getResources().getColor(color));
         dataSet.setDrawValues(false);
         dataSet.setDrawCircles(false);
-        dataSet.setDrawFilled(fill);
         dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        dataSet.setLineWidth(width);
 
         return dataSet;
     }
@@ -153,7 +150,7 @@ public class ChartFragment extends Fragment {
     private LineDataSet getPM25LineDataSet(List<Entry> entry) {
 
         LineDataSet dataSet = new LineDataSet(entry,"PM2.5");
-        dataSet.setColor(getResources().getColor(R.color.green));
+        dataSet.setColor(getResources().getColor(R.color.black));
 //        dataSet.setDrawFilled(true);
 //        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.aqi_gradient_fill);
 //        dataSet.setFillDrawable(drawable);
@@ -165,7 +162,7 @@ public class ChartFragment extends Fragment {
 //        dataSet.setValueTextColor(R.color.green);
         dataSet.setCircleRadius(4.0f);
         dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-        dataSet.setLineWidth(1.5f);
+        dataSet.setLineWidth(1.2f);
 //        dataSet.setValueTextSize(20f);
 //        dataSet.enableDashedLine(6f, 18f, 0);
 
@@ -223,16 +220,26 @@ public class ChartFragment extends Fragment {
         Humiline.addEntry(new Entry(time, data.hum));
         CO2line.addEntry(new Entry(time, data.CO2));
 
-        if (data.P25 <= 20) colors.add(getResources().getColor(R.color.green));
-        if (data.P25 > 20 && data.P25 <= 90) colors.add(getResources().getColor(R.color.yellow));
-        if (data.P25 > 90 && data.P25 <= 120) colors.add(getResources().getColor(R.color.orange));
-        if (data.P25 > 120 ) colors.add(getResources().getColor(R.color.red));
+        if (data.P25 <= 13) colorsP25.add(getResources().getColor(R.color.green));
+        else if (data.P25 <= 35) colorsP25.add(getResources().getColor(R.color.yellow));
+        else if (data.P25 <= 55) colorsP25.add(getResources().getColor(R.color.orange));
+        else if (data.P25 <= 150) colorsP25.add(getResources().getColor(R.color.red));
+        else if (data.P25 <= 250) colorsP25.add(getResources().getColor(R.color.purple));
+        else colorsP25.add(getResources().getColor(R.color.brown));
+
+        if (data.CO2 <= 600) colorsCO2.add(getResources().getColor(R.color.green));
+        else if (data.CO2 <= 800) colorsCO2.add(getResources().getColor(R.color.yellow));
+        else if (data.CO2 <= 1000) colorsCO2.add(getResources().getColor(R.color.orange));
+        else if (data.CO2 <= 1500) colorsCO2.add(getResources().getColor(R.color.red));
+        else if (data.CO2 <= 2000) colorsCO2.add(getResources().getColor(R.color.purple));
+        else colorsCO2.add(getResources().getColor(R.color.brown));
     }
 
     private void refreshDataSets() {
         dataSets.clear();
 
-        PM25line.setCircleColors(colors);
+        PM25line.setCircleColors(colorsP25);
+        CO2line.setCircleColors(colorsCO2);
 
         dataSets.add(PM25line);
         dataSets.add(Templine);
@@ -309,7 +316,7 @@ public class ChartFragment extends Fragment {
 
     public void clearData() {
         Logger.w(TAG, "[CHART] clear recorded data and chart..");
-        colors.clear();
+        colorsP25.clear();
         PM25line.clear();
         Templine.clear();
         Humiline.clear();
