@@ -20,8 +20,9 @@
     <!-- GENERIC COLORS -->
     <color name="red">#f00</color>
     <color name="blue">#0080ff</color>
-    <color name="green">#f0f0</color>
-    <color name="yellow">#ffffff00</color>
+    <color name="light_green">#1CAB1C</color>
+    <color name="green">#187218</color>
+    <color name="yellow">#DEDE16</color>
     <color name="grey">#ffa0a0a0</color>
     <color name="grey_dark">#797373</color>
     <color name="black">#ff000000</color>

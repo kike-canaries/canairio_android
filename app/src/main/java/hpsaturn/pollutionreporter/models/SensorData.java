@@ -18,6 +18,8 @@ public class SensorData {
 
     public int P10;
 
+    public int P1;
+
     public double lat;
 
     public double lon;
@@ -26,4 +28,9 @@ public class SensorData {
 
     public float spd;
 
+    public float tmp;
+
+    public float hum;
+
+    public String dsl;
 }

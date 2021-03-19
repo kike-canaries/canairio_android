@@ -49,6 +49,8 @@ public class RecordTrackService extends Service {
     private RecordTrackManager recordTrackManager;
 
     private final int RETRY_POLICY = 5;
+    private final int MAX_POINTS_SAVING = 3000;
+
     private int retry_connect = 0;
     private int retry_notify_setup = 0;
 
@@ -252,8 +254,8 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            SensorData data = getSensorData(bytes);
-            if (isRecording) record(data);
+            String strdata = new String(bytes);
+            SensorData data = new Gson().fromJson(strdata, SensorData.class);
             Logger.d(TAG, "[BLE] pushing notification data to GUI..");
             recordTrackManager.sensorNotificationData(data);
             retry_notify_setup = 0;
@@ -268,7 +270,9 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onSensorDataRead(byte[] bytes) {
-
+            SensorData data = getSensorData(bytes);
+            if (isRecording) record(data);
+            recordTrackManager.responseSensorData(data);
         }
 
         @Override
@@ -285,16 +289,9 @@ public class RecordTrackService extends Service {
     private SensorData getSensorData(byte[] bytes) {
         String strdata = new String(bytes);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
-        if(strdata.contains("P25")){
-            data.lbl="PM2.5";
-            data.main=data.P25;
-        }
-        else if(strdata.contains("CO2")){
-            data.lbl="CO2";
-            data.main=data.CO2;
-        }
         data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
+        assert lastLocation != null;
         data.lat = lastLocation.getLatitude();
         data.lon = lastLocation.getLongitude();
         return data;
@@ -306,6 +303,10 @@ public class RecordTrackService extends Service {
         Logger.d(TAG, "[BLE] data size: " + data.size());
         Storage.setSensorData(this, data);
         Logger.d(TAG, "[BLE] saving sensor data done.");
+        if (data.size()==MAX_POINTS_SAVING){
+            Logger.d(TAG, "[BLE] saving partial track..");
+            saveTrack();
+        }
     }
 
     private void saveTrack() {

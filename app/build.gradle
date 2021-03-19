@@ -83,15 +83,15 @@ dependencies {
     implementation 'io.nlopez.smartlocation:library:3.3.3'
     implementation 'org.osmdroid:osmdroid-android:6.1.5'
 
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.yarolegovich:discrete-scrollview:1.4.8'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
     implementation 'com.google.firebase:firebase-core:18.0.2'
-    implementation 'com.google.firebase:firebase-database:19.6.0'
+    implementation 'com.google.firebase:firebase-database:19.7.0'
     implementation 'com.firebaseui:firebase-ui-database:4.2.0'
     implementation 'com.google.firebase:firebase-analytics:18.0.2'
-    implementation 'com.google.firebase:firebase-crashlytics:17.3.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.4.0'
 
     implementation 'com.github.vic797:prowebview:2.2.1'
 

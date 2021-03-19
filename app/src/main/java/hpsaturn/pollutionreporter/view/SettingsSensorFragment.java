@@ -23,7 +23,6 @@ import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import java.text.DecimalFormat;
 
-import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ApiConfig;
@@ -33,6 +32,7 @@ import hpsaturn.pollutionreporter.models.InfluxdbConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
+import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorName;
 import hpsaturn.pollutionreporter.models.SensorType;
 import hpsaturn.pollutionreporter.models.WifiConfig;
@@ -73,11 +73,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     }
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -86,6 +81,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         readSensorConfig();
+        infoPreferenceInit();
     }
 
     @Override
@@ -408,18 +404,37 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
      * Device info
      **********************************************************************************************/
 
+    private void infoPreferenceInit() {
+        Preference infoPreference = findPreference(getString(R.string.key_device_info));
+
+        infoPreference.setOnPreferenceClickListener(preference -> {
+            readSensorConfig();
+            return false;
+        });
+    }
+
+    public void onReadSensorData(SensorData data) {
+        String info = getSharedPreference(getString(R.string.key_device_info));
+        info = info + "\n-----------------------"
+                +"\n"+data.dsl+"->PM2.5:"+data.P25+" PM1:"+data.P1+" CO2:"+data.CO2
+                + "\n T:"+data.tmp+" H:"+data.hum;
+
+        updateSummary(R.string.key_device_info,info);
+        saveSharedPreference(R.string.key_device_info,info);
+    }
+
     private void saveDeviceInfoString(ResponseConfig config) {
         String info = "MAC:"
                 + config.vmac
-                +"\nFirmware: "+config.vflv+" rev"+config.vrev
-                +"\nChannel :\t"+config.vtag
-                +"\nWiFi:"+(config.wenb ? "enable" : "disable")
-                +" IFDB:"+(config.ienb ? "enable" : "disable")
-                +"\nGW:"+(config.wsta ? "connected" : "disconnected");
+                +"\nFirmware: "+config.vflv+" rev"+config.vrev+" ("+config.vtag+")"
+                +"\n[WiFi:"+(config.wenb ? "On" : "Off")+"][IFDB:"+(config.ienb ? "On" : "Off")
+                +"][GW:"+(config.wsta ? "On" : "Off")+"]";
         if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
     }
+
+
 
     /***********************************************************************************************
      * Misc preferences section
