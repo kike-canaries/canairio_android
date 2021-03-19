@@ -577,7 +577,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
 
             saveDeviceInfoString(config);
             setStatusSwitch(true);
-//            getMain().readSensorData();
 
             if (notify_sync) {
                 saveAllPreferences(config);
