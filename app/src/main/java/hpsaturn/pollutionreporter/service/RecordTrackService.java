@@ -49,6 +49,8 @@ public class RecordTrackService extends Service {
     private RecordTrackManager recordTrackManager;
 
     private final int RETRY_POLICY = 5;
+    private final int MAX_POINTS_SAVING = 3000;
+
     private int retry_connect = 0;
     private int retry_notify_setup = 0;
 
@@ -301,6 +303,10 @@ public class RecordTrackService extends Service {
         Logger.d(TAG, "[BLE] data size: " + data.size());
         Storage.setSensorData(this, data);
         Logger.d(TAG, "[BLE] saving sensor data done.");
+        if (data.size()==MAX_POINTS_SAVING){
+            Logger.d(TAG, "[BLE] saving partial track..");
+            saveTrack();
+        }
     }
 
     private void saveTrack() {
