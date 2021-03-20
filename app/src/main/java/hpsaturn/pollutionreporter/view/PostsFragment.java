@@ -112,7 +112,7 @@ public class PostsFragment extends Fragment {
     private UpdateTimeTask mUpdateTimeTask = new UpdateTimeTask();
 
     class UpdateTimeTask extends TimerTask {
-        private int retries = 5;
+        private int retries = 3;
         private int counter = 0;
         public void run() {
             Logger.i(TAG,"[FB][POST] UpdateTimeTask, force refresh data..");

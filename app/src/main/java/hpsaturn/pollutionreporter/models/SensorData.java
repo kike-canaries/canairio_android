@@ -8,9 +8,17 @@ public class SensorData {
 
     public Long timestamp;
 
+    public String lbl;
+
+    public int main;
+
     public int P25;
 
+    public int CO2;
+
     public int P10;
+
+    public int P1;
 
     public double lat;
 
@@ -20,4 +28,9 @@ public class SensorData {
 
     public float spd;
 
+    public float tmp;
+
+    public float hum;
+
+    public String dsl;
 }
