@@ -121,10 +121,10 @@ public class ChartFragment extends Fragment {
 
         calculateReferenceTime();
 
-        PM25line = getPM25LineDataSet(entriesPM25);
+        PM25line = getMainLineDataSet(entriesPM25, "PM2.5");
         Templine = getGenericLineDataSet(entriesTemp,R.color.red,"T",0.5f);
         Humiline = getGenericLineDataSet(entriesHumi,R.color.blue,"H",0.5f);
-        CO2line = getGenericLineDataSet(entriesCO2,R.color.brown,"CO2",1f);
+        CO2line = getMainLineDataSet(entriesCO2, "CO2");
 
         Bundle args = getArguments();
         if(args!=null){
@@ -147,9 +147,9 @@ public class ChartFragment extends Fragment {
         return dataSet;
     }
 
-    private LineDataSet getPM25LineDataSet(List<Entry> entry) {
+    private LineDataSet getMainLineDataSet(List<Entry> entry, String label) {
 
-        LineDataSet dataSet = new LineDataSet(entry,"PM2.5");
+        LineDataSet dataSet = new LineDataSet(entry,label);
         dataSet.setColor(getResources().getColor(R.color.black));
 //        dataSet.setDrawFilled(true);
 //        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.aqi_gradient_fill);
