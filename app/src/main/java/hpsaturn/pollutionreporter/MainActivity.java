@@ -138,9 +138,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorNotificationData(SensorData data) {
-            if (chartFragment != null) {
-                readSensorData();
-            }
+
         }
 
         @Override
