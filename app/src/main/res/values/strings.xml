@@ -88,4 +88,5 @@
     <string name="msg_reboot_manually">Please manually reboot of CanAirIO device!</string>
     <string name="key_device_status">key_device_status</string>
     <string name="key_device_info">key_device_info</string>
+    <string name="key_setting_vars">key_settings_vars</string>
 </resources>

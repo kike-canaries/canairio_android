@@ -121,6 +121,8 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
                 performClearDevice();
             } else if (key.equals(getString(R.string.key_setting_enable_location))) {
                 saveLocation();
+            } else if (key.equals(getString(R.string.key_setting_vars))) {
+                getMain().selectedVarsUpdated();
             }
 
         }

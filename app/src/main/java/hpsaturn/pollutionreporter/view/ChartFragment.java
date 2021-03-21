@@ -1,10 +1,15 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.MultiSelectListPreference;
+import androidx.preference.PreferenceManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +19,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,8 +29,12 @@ import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,20 +71,6 @@ public class ChartFragment extends Fragment {
     @BindView(R.id.rl_separator)
     RelativeLayout rl_separator;
 
-    LineDataSet PM25line;
-    LineDataSet Templine;
-    LineDataSet Humiline;
-    LineDataSet CO2line;
-
-    List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-    ArrayList<Integer> colorsP25 = new ArrayList<Integer>();
-    ArrayList<Integer> colorsCO2 = new ArrayList<Integer>();
-
-    private List<Entry> entriesPM25 = new ArrayList<Entry>();
-    private List<Entry> entriesTemp = new ArrayList<Entry>();
-    private List<Entry> entriesHumi = new ArrayList<Entry>();
-    private List<Entry> entriesCO2  = new ArrayList<Entry>();
-
     private long referenceTimestamp;
     private boolean loadingData = true;
 
@@ -86,6 +78,11 @@ public class ChartFragment extends Fragment {
     private String recordId;
     private SensorTrack track;
 
+    private List<ChartVar> variables = new ArrayList<>();
+
+    private List<ILineDataSet> dataSets = new ArrayList<>();
+
+    private Map<String,String> map = new HashMap<>();
 
     public static ChartFragment newInstance() {
         return new ChartFragment();
@@ -114,17 +111,21 @@ public class ChartFragment extends Fragment {
         chart.setDescription(description);
         chart.setNoDataText(getString(R.string.msg_chart_loading));
 
-        //Display the axis on the left (contains the labels 1*, 2* and so on)
+        // Display the axis on the left (contains the labels 1*, 2* and so on)
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setEnabled(true);
-
+        // Time reference for XAxis
         calculateReferenceTime();
+        // Current variables supported
+        String[] labels = getResources().getStringArray(R.array.pref_vars_entries);
+        String[] types = getResources().getStringArray(R.array.pref_vars_values);
+        // Hash map of types and labels (it will not change)
+        for (int i = 0; i < labels.length ; i++){
+            map.put(types[i],labels[i]);
+        }
 
-        PM25line = getMainLineDataSet(entriesPM25, "PM2.5");
-        Templine = getGenericLineDataSet(entriesTemp,R.color.red,"T",0.5f);
-        Humiline = getGenericLineDataSet(entriesHumi,R.color.blue,"H",0.5f);
-        CO2line = getMainLineDataSet(entriesCO2, "CO2");
+        loadSelectedVariables();
 
         Bundle args = getArguments();
         if(args!=null){
@@ -135,40 +136,20 @@ public class ChartFragment extends Fragment {
         return view;
     }
 
-    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label,float width) {
+    public void loadSelectedVariables(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
 
-        LineDataSet dataSet = new LineDataSet(entry,label);
-        dataSet.setColor(getResources().getColor(color));
-        dataSet.setDrawValues(false);
-        dataSet.setDrawCircles(false);
-        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-        dataSet.setLineWidth(width);
+        variables.clear();
 
-        return dataSet;
+        Logger.i(TAG, "[CHART] selected values:");
+
+        for (String type : values) {
+            ChartVar var = new ChartVar(getContext(), type, map.get(type));
+            variables.add(var);
+            Logger.i(TAG, "[CHART]"+type);
+        }
     }
-
-    private LineDataSet getMainLineDataSet(List<Entry> entry, String label) {
-
-        LineDataSet dataSet = new LineDataSet(entry,label);
-        dataSet.setColor(getResources().getColor(R.color.black));
-//        dataSet.setDrawFilled(true);
-//        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.aqi_gradient_fill);
-//        dataSet.setFillDrawable(drawable);
-        dataSet.setHighlightEnabled(true);
-//        dataSet.setCircleRadius(3.5f);
-//        dataSet.setDrawCircleHole(false);
-//        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-//        dataSet.setValueTextSize(11.0f);
-//        dataSet.setValueTextColor(R.color.green);
-        dataSet.setCircleRadius(4.0f);
-        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-        dataSet.setLineWidth(1.2f);
-//        dataSet.setValueTextSize(20f);
-//        dataSet.enableDashedLine(6f, 18f, 0);
-
-        return dataSet;
-    }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -215,36 +196,22 @@ public class ChartFragment extends Fragment {
     }
 
     private void addValue(long time, SensorData data) {
-        PM25line.addEntry(new Entry(time, data.P25));
-        Templine.addEntry(new Entry(time, data.tmp));
-        Humiline.addEntry(new Entry(time, data.hum));
-        CO2line.addEntry(new Entry(time, data.CO2));
-
-        if (data.P25 <= 13) colorsP25.add(getResources().getColor(R.color.green));
-        else if (data.P25 <= 35) colorsP25.add(getResources().getColor(R.color.yellow));
-        else if (data.P25 <= 55) colorsP25.add(getResources().getColor(R.color.orange));
-        else if (data.P25 <= 150) colorsP25.add(getResources().getColor(R.color.red));
-        else if (data.P25 <= 250) colorsP25.add(getResources().getColor(R.color.purple));
-        else colorsP25.add(getResources().getColor(R.color.brown));
-
-        if (data.CO2 <= 600) colorsCO2.add(getResources().getColor(R.color.green));
-        else if (data.CO2 <= 800) colorsCO2.add(getResources().getColor(R.color.yellow));
-        else if (data.CO2 <= 1000) colorsCO2.add(getResources().getColor(R.color.orange));
-        else if (data.CO2 <= 1500) colorsCO2.add(getResources().getColor(R.color.red));
-        else if (data.CO2 <= 2000) colorsCO2.add(getResources().getColor(R.color.purple));
-        else colorsCO2.add(getResources().getColor(R.color.brown));
+        Iterator<ChartVar> it = variables.iterator();
+        while (it.hasNext()){
+            it.next().addValue(time,data);
+        }
     }
 
     private void refreshDataSets() {
         dataSets.clear();
 
-        PM25line.setCircleColors(colorsP25);
-        CO2line.setCircleColors(colorsCO2);
+        Iterator<ChartVar> it = variables.iterator();
 
-        dataSets.add(PM25line);
-        dataSets.add(Templine);
-        dataSets.add(Humiline);
-        dataSets.add(CO2line);
+        while (it.hasNext()){
+            ChartVar var = it.next();
+            var.refresh();
+            dataSets.add(var.dataSet);
+        }
 
         LineData linedata = new LineData(dataSets);
 
@@ -316,11 +283,10 @@ public class ChartFragment extends Fragment {
 
     public void clearData() {
         Logger.w(TAG, "[CHART] clear recorded data and chart..");
-        colorsP25.clear();
-        PM25line.clear();
-        Templine.clear();
-        Humiline.clear();
-        CO2line.clear();
+        Iterator<ChartVar> it = variables.iterator();
+        while (it.hasNext()){
+            it.next().clear();
+        }
         chart.clear();
         Storage.setSensorData(getActivity(), new ArrayList<>());
         calculateReferenceTime();
