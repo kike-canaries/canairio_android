@@ -519,4 +519,8 @@ public class MainActivity extends BaseActivity implements
         Logger.d(TAG, "onPreferenceStartFragment");
         return false;
     }
+
+    public void selectedVarsUpdated() {
+        if (chartFragment!=null)chartFragment.loadSelectedVariables();
+    }
 }

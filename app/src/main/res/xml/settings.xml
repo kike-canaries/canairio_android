@@ -31,6 +31,16 @@
             android:defaultValue="0"
             />
 
+        <MultiSelectListPreference
+            android:key="@string/key_setting_vars"
+            android:title="Variables"
+            app:useSimpleSummaryProvider="true"
+            android:entries="@array/pref_vars_entries"
+            android:entryValues="@array/pref_vars_values"
+            android:defaultValue="@array/pref_vars_stores"
+            />
+
+
         <EditTextPreference
             android:inputType="textUri"
             app:defaultValue="/sdcard/canairio"
