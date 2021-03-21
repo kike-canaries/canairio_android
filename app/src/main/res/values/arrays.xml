@@ -37,8 +37,8 @@
         <item>CO2</item>
         <item>CO2T</item>
         <item>CO2H</item>
-        <item>T</item>
-        <item>H</item>
+        <item>Temp</item>
+        <item>Humi</item>
         <item>Alt</item>
         <item>Pre</item>
     </string-array>
@@ -57,5 +57,12 @@
         <item>pre</item>
     </string-array>
 
-
+    <string-array name="pref_vars_stores">
+        <item>P25</item>
+        <item>CO2</item>
+        <item>CO2T</item>
+        <item>CO2H</item>
+        <item>tmp</item>
+        <item>hum</item>
+    </string-array>
 </resources>

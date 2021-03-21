@@ -1,10 +1,15 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.MultiSelectListPreference;
+import androidx.preference.PreferenceManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +29,12 @@ import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,13 +78,13 @@ public class ChartFragment extends Fragment {
     private String recordId;
     private SensorTrack track;
 
-    private ChartVar PM1;
-    private ChartVar PM25;
-    private ChartVar PM4;
-    private ChartVar PM10;
-    private ChartVar Temp;
-    private ChartVar Humi;
-    private ChartVar CO2;
+//    private ChartVar PM1;
+//    private ChartVar PM25;
+//    private ChartVar PM4;
+//    private ChartVar PM10;
+//    private ChartVar Temp;
+//    private ChartVar Humi;
+//    private ChartVar CO2;
 
     List<ChartVar> variables = new ArrayList<>();
 
@@ -115,20 +124,40 @@ public class ChartFragment extends Fragment {
 
         calculateReferenceTime();
 
-        PM1 = new ChartVar(getContext(), "P1", "PM1.0", R.color.light_green, 1F, false);
-        PM25 = new ChartVar(getContext(), "P25", "PM2.5", R.color.black, 1.5F, true);
-        PM4 = new ChartVar(getContext(), "P4", "PM4", R.color.orange, 1F, false);
-        PM10 = new ChartVar(getContext(), "P10", "PM10", R.color.yellow, 1F, false);
-        Temp = new ChartVar(getContext(),"tmp","T", R.color.red, 1F, false);
-        Humi = new ChartVar(getContext(),"hum","H", R.color.blue, 1F, false);
-        CO2 = new ChartVar(getContext(), "CO2" , "CO2", R.color.black, 1.5F, true);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
 
-        variables.add(PM1);
-        variables.add(PM25);
+        Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
+
+        String[] labels = getResources().getStringArray(R.array.pref_vars_entries);
+        String[] types = getResources().getStringArray(R.array.pref_vars_values);
+
+        Map<String,String> map = new HashMap<>();
+
+        for (int i = 0; i < labels.length ; i++){
+           map.put(types[i],labels[i]);
+        }
+
+        Iterator<String> it = values.iterator();
+        while (it.hasNext()) {
+            String type = it.next();
+            ChartVar var = new ChartVar(getContext(), type, map.get(type), R.color.light_green, 1F, false);
+            variables.add(var);
+            Logger.i(TAG,"values:"+type);
+        }
+
+//        PM1 = new ChartVar(getContext(), "P1", "PM1.0", R.color.light_green, 1F, false);
+//        PM25 = new ChartVar(getContext(), "P25", "PM2.5", R.color.black, 1.5F, true);
+//        PM4 = new ChartVar(getContext(), "P4", "PM4", R.color.orange, 1F, false);
+//        PM10 = new ChartVar(getContext(), "P10", "PM10", R.color.yellow, 1F, false);
+//        Temp = new ChartVar(getContext(),"tmp","T", R.color.red, 1F, false);
+//        Humi = new ChartVar(getContext(),"hum","H", R.color.blue, 1F, false);
+//        CO2 = new ChartVar(getContext(), "CO2" , "CO2", R.color.black, 1.5F, true);
+
+//        variables.add(PM25);
 //        variables.add(PM4);
-        variables.add(PM10);
-        variables.add(Temp);
-        variables.add(Humi);
+//        variables.add(PM10);
+//        variables.add(Temp);
+//        variables.add(Humi);
 //        variables.add(CO2);
 
         Bundle args = getArguments();
@@ -139,10 +168,6 @@ public class ChartFragment extends Fragment {
 
         return view;
     }
-
-
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
