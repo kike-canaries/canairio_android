@@ -1,6 +1,5 @@
 package hpsaturn.pollutionreporter.view;
 
-import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -15,10 +14,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,8 +62,6 @@ public class ChartFragment extends Fragment {
     @BindView(R.id.rl_separator)
     RelativeLayout rl_separator;
 
-
-
     private long referenceTimestamp;
     private boolean loadingData = true;
 
@@ -75,12 +69,15 @@ public class ChartFragment extends Fragment {
     private String recordId;
     private SensorTrack track;
 
-    private PM25Var PM25;
-    private TempVar Temp;
-    private HumiVar Humi;
-    private CO2Var CO2;
+    private ChartVar PM1;
+    private ChartVar PM25;
+    private ChartVar PM4;
+    private ChartVar PM10;
+    private ChartVar Temp;
+    private ChartVar Humi;
+    private ChartVar CO2;
 
-    List<ChartVariable> variables = new ArrayList<>();
+    List<ChartVar> variables = new ArrayList<>();
 
     List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
 
@@ -118,15 +115,21 @@ public class ChartFragment extends Fragment {
 
         calculateReferenceTime();
 
-        PM25 = new PM25Var(getContext(),"PM2.5", R.color.black, 1.5F, true);
-        Temp = new TempVar(getContext(),"T", R.color.red, 1F, false);
-        Humi = new HumiVar(getContext(),"H", R.color.blue, 1F, false);
-        CO2 = new CO2Var(getContext(),"CO2", R.color.black, 1.5F, true);
+        PM1 = new ChartVar(getContext(), "P1", "PM1.0", R.color.light_green, 1F, false);
+        PM25 = new ChartVar(getContext(), "P25", "PM2.5", R.color.black, 1.5F, true);
+        PM4 = new ChartVar(getContext(), "P4", "PM4", R.color.orange, 1F, false);
+        PM10 = new ChartVar(getContext(), "P10", "PM10", R.color.yellow, 1F, false);
+        Temp = new ChartVar(getContext(),"tmp","T", R.color.red, 1F, false);
+        Humi = new ChartVar(getContext(),"hum","H", R.color.blue, 1F, false);
+        CO2 = new ChartVar(getContext(), "CO2" , "CO2", R.color.black, 1.5F, true);
 
+        variables.add(PM1);
         variables.add(PM25);
+//        variables.add(PM4);
+        variables.add(PM10);
         variables.add(Temp);
         variables.add(Humi);
-        variables.add(CO2);
+//        variables.add(CO2);
 
         Bundle args = getArguments();
         if(args!=null){
@@ -137,65 +140,9 @@ public class ChartFragment extends Fragment {
         return view;
     }
 
-    private class PM25Var extends ChartVariable {
 
-        public PM25Var(Context context, String label, int color, float width, boolean isMainValue) {
-            super(context,label, color, width, isMainValue);
-        }
 
-        @Override
-        public void addValue(float time,SensorData data) {
-            dataSet.addEntry(new Entry(time, data.P25));
-            if (data.P25 <= 13) colors.add(getResources().getColor(R.color.green));
-            else if (data.P25 <= 35) colors.add(getResources().getColor(R.color.yellow));
-            else if (data.P25 <= 55) colors.add(getResources().getColor(R.color.orange));
-            else if (data.P25 <= 150)colors.add(getResources().getColor(R.color.red));
-            else if (data.P25 <= 250)colors.add(getResources().getColor(R.color.purple));
-            else colors.add(getResources().getColor(R.color.brown));
-        }
-    }
 
-    private class CO2Var extends ChartVariable {
-
-        public CO2Var(Context context, String label, int color, float width, boolean isMainValue) {
-            super(context,label, color, width, isMainValue);
-        }
-
-        @Override
-        public void addValue(float time, SensorData data) {
-            dataSet.addEntry(new Entry(time, data.CO2));
-            if (data.CO2 <= 600) colors.add(getResources().getColor(R.color.green));
-            else if (data.CO2 <= 800)  colors.add(getResources().getColor(R.color.yellow));
-            else if (data.CO2 <= 1000) colors.add(getResources().getColor(R.color.orange));
-            else if (data.CO2 <= 1500) colors.add(getResources().getColor(R.color.red));
-            else if (data.CO2 <= 2000) colors.add(getResources().getColor(R.color.purple));
-            else colors.add(getResources().getColor(R.color.brown));
-        }
-    }
-
-    private class TempVar extends ChartVariable {
-
-        public TempVar(Context context, String label, int color, float width, boolean isMainValue) {
-            super(context,label, color, width, isMainValue);
-        }
-
-        @Override
-        public void addValue(float time, SensorData data) {
-            dataSet.addEntry(new Entry(time,data.tmp));
-        }
-    }
-
-    private class HumiVar extends ChartVariable {
-
-        public HumiVar(Context context, String label, int color, float width, boolean isMainValue) {
-            super(context,label, color, width, isMainValue);
-        }
-
-        @Override
-        public void addValue(float time, SensorData data) {
-            dataSet.addEntry(new Entry(time,data.hum));
-        }
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -242,7 +189,7 @@ public class ChartFragment extends Fragment {
     }
 
     private void addValue(long time, SensorData data) {
-        Iterator<ChartVariable> it = variables.iterator();
+        Iterator<ChartVar> it = variables.iterator();
         while (it.hasNext()){
             it.next().addValue(time,data);
         }
@@ -251,10 +198,10 @@ public class ChartFragment extends Fragment {
     private void refreshDataSets() {
         dataSets.clear();
 
-        Iterator<ChartVariable> it = variables.iterator();
+        Iterator<ChartVar> it = variables.iterator();
 
         while (it.hasNext()){
-            ChartVariable var = it.next();
+            ChartVar var = it.next();
             var.refresh();
             dataSets.add(var.dataSet);
         }
@@ -329,7 +276,7 @@ public class ChartFragment extends Fragment {
 
     public void clearData() {
         Logger.w(TAG, "[CHART] clear recorded data and chart..");
-        Iterator<ChartVariable> it = variables.iterator();
+        Iterator<ChartVar> it = variables.iterator();
         while (it.hasNext()){
             it.next().clear();
         }

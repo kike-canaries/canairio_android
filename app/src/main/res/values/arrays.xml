@@ -28,5 +28,34 @@
         <item>4</item>
         <item>5</item>
     </string-array>
-    
+
+    <string-array name="pref_vars_entries">
+        <item>PM1.0</item>
+        <item>PM2.5</item>
+        <item>PM4</item>
+        <item>PM10</item>
+        <item>CO2</item>
+        <item>CO2T</item>
+        <item>CO2H</item>
+        <item>T</item>
+        <item>H</item>
+        <item>Alt</item>
+        <item>Pre</item>
+    </string-array>
+
+    <string-array name="pref_vars_values">
+        <item>P1</item>
+        <item>P25</item>
+        <item>P4</item>
+        <item>P10</item>
+        <item>CO2</item>
+        <item>CO2T</item>
+        <item>CO2H</item>
+        <item>tmp</item>
+        <item>hum</item>
+        <item>alt</item>
+        <item>pre</item>
+    </string-array>
+
+
 </resources>

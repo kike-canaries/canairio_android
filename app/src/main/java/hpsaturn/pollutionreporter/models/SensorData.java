@@ -20,11 +20,15 @@ public class SensorData {
 
     public int P1;
 
+    public int P4;
+
     public double lat;
 
     public double lon;
 
     public float alt;
+
+    public float pre;
 
     public float spd;
 
