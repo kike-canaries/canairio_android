@@ -87,21 +87,8 @@ public class ChartVar {
                     Logger.e(TAG,"Bad variable type compilation");
                     break;
 
-
         }
 
-    }
-
-    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label,float width) {
-
-        LineDataSet dataSet = new LineDataSet(entry,label);
-        dataSet.setColor(ctx.getResources().getColor(color));
-        dataSet.setDrawValues(false);
-        dataSet.setDrawCircles(false);
-        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-        dataSet.setLineWidth(width);
-
-        return dataSet;
     }
 
     private LineDataSet getMainLineDataSet(List<Entry> entry, int color, String label,float width) {
@@ -116,6 +103,19 @@ public class ChartVar {
 
         return dataSet;
     }
+
+    private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label,float width) {
+
+        LineDataSet dataSet = new LineDataSet(entry,label);
+        dataSet.setColor(ctx.getResources().getColor(color));
+        dataSet.setDrawValues(false);
+        dataSet.setDrawCircles(false);
+        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        dataSet.setLineWidth(width);
+
+        return dataSet;
+    }
+
 
     public void addValue(float time,SensorData data){
         switch (type) {

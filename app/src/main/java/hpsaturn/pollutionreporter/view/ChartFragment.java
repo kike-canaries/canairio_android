@@ -78,17 +78,11 @@ public class ChartFragment extends Fragment {
     private String recordId;
     private SensorTrack track;
 
-//    private ChartVar PM1;
-//    private ChartVar PM25;
-//    private ChartVar PM4;
-//    private ChartVar PM10;
-//    private ChartVar Temp;
-//    private ChartVar Humi;
-//    private ChartVar CO2;
+    private List<ChartVar> variables = new ArrayList<>();
 
-    List<ChartVar> variables = new ArrayList<>();
+    private List<ILineDataSet> dataSets = new ArrayList<>();
 
-    List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+    private Map<String,String> map = new HashMap<>();
 
     public static ChartFragment newInstance() {
         return new ChartFragment();
@@ -117,47 +111,21 @@ public class ChartFragment extends Fragment {
         chart.setDescription(description);
         chart.setNoDataText(getString(R.string.msg_chart_loading));
 
-        //Display the axis on the left (contains the labels 1*, 2* and so on)
+        // Display the axis on the left (contains the labels 1*, 2* and so on)
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setEnabled(true);
-
+        // Time reference for XAxis
         calculateReferenceTime();
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-
-        Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
-
+        // Current variables supported
         String[] labels = getResources().getStringArray(R.array.pref_vars_entries);
         String[] types = getResources().getStringArray(R.array.pref_vars_values);
-
-        Map<String,String> map = new HashMap<>();
-
+        // Hash map of types and labels (it will not change)
         for (int i = 0; i < labels.length ; i++){
-           map.put(types[i],labels[i]);
+            map.put(types[i],labels[i]);
         }
 
-        Iterator<String> it = values.iterator();
-        while (it.hasNext()) {
-            String type = it.next();
-            ChartVar var = new ChartVar(getContext(), type, map.get(type));
-            variables.add(var);
-            Logger.i(TAG,"values:"+type);
-        }
-
-//        PM1 = new ChartVar(getContext(), "P1", "PM1.0", R.color.light_green, 1F, false);
-//        PM4 = new ChartVar(getContext(), "P4", "PM4", R.color.orange, 1F, false);
-//        PM10 = new ChartVar(getContext(), "P10", "PM10", R.color.yellow, 1F, false);
-//        Temp = new ChartVar(getContext(),"tmp","T", R.color.red, 1F, false);
-//        Humi = new ChartVar(getContext(),"hum","H", R.color.blue, 1F, false);
-//        CO2 = new ChartVar(getContext(), "CO2" , "CO2", R.color.black, 1.5F, true);
-
-//        variables.add(PM25);
-//        variables.add(PM4);
-//        variables.add(PM10);
-//        variables.add(Temp);
-//        variables.add(Humi);
-//        variables.add(CO2);
+        loadSelectedVariables();
 
         Bundle args = getArguments();
         if(args!=null){
@@ -166,6 +134,21 @@ public class ChartFragment extends Fragment {
         }
 
         return view;
+    }
+
+    public void loadSelectedVariables(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
+
+        variables.clear();
+
+        Logger.i(TAG, "[CHART] selected values:");
+
+        for (String type : values) {
+            ChartVar var = new ChartVar(getContext(), type, map.get(type));
+            variables.add(var);
+            Logger.i(TAG, "[CHART]"+type);
+        }
     }
 
     @Override
