@@ -81,7 +81,10 @@ public class RecordTrackService extends Service {
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
             if (bleHandler == null) {
                 connect();
-            } else if (bleHandler.isConnected()) Logger.i(TAG, "[BLE] already connected!");
+            } else if (bleHandler.isConnected()) {
+                Logger.i(TAG, "[BLE] already connected!");
+                recordTrackManager.status(RecordTrackManager.STATUS_BLE_START);
+            }
             else connect();
         } else Logger.w(TAG, "[BLE] not BLE connection (not MAC register)");
     }
