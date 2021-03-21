@@ -254,10 +254,13 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            String strdata = new String(bytes);
-            SensorData data = new Gson().fromJson(strdata, SensorData.class);
-            Logger.d(TAG, "[BLE] pushing notification data to GUI..");
-            recordTrackManager.sensorNotificationData(data);
+//            String strdata = new String(bytes);
+//            SensorData data = new Gson().fromJson(strdata, SensorData.class);
+//            Logger.d(TAG, "[BLE] pushing notification data to GUI..");
+//            recordTrackManager.sensorNotificationData(data);
+
+            if (bleHandler != null) bleHandler.readSensorData();
+
             retry_notify_setup = 0;
         }
 

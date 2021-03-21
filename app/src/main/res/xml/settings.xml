@@ -35,6 +35,7 @@
             android:key="@string/key_setting_vars"
             android:title="Variables"
             app:useSimpleSummaryProvider="true"
+            android:summary="Variables  on chart"
             android:entries="@array/pref_vars_entries"
             android:entryValues="@array/pref_vars_values"
             android:defaultValue="@array/pref_vars_stores"
