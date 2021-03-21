@@ -33,6 +33,8 @@
     <color name="cyan">#00b1ff</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="transwhite">#AAFFFFFF</color>
+    <color name="light_red">#F0857D</color>
+    <color name="light_blue">#C3DDF8</color>
 
 
 </resources>

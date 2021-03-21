@@ -5,6 +5,7 @@ import android.content.Context;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.hpsaturn.tools.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,66 @@ public class ChartVar {
 
     public ArrayList<Integer> colors = new ArrayList<Integer>();
 
-    public ChartVar(Context ctx, String type, String label, int color, float width, boolean isMainValue) {
+    public ChartVar(Context ctx, String type,String label) {
+
         this.ctx = ctx;
+
         this.type = type;
-        if (isMainValue) dataSet = getMainLineDataSet(entries,color,label,width);
-        else dataSet = getGenericLineDataSet(entries,color,label,width);
+
+        switch (type) {
+
+            case "P25":
+                dataSet = getMainLineDataSet(entries, R.color.grey, label,1.5F);
+                break;
+
+            case "CO2":
+                dataSet = getMainLineDataSet(entries, R.color.black, label,1.5F);
+                break;
+
+
+            case "P1":
+                dataSet = getGenericLineDataSet(entries, R.color.brown, label,1F);
+                break;
+
+            case "P4":
+                dataSet = getGenericLineDataSet(entries, R.color.colorAccent, label,1F);
+                break;
+
+            case "P10":
+                dataSet = getGenericLineDataSet(entries, R.color.colorAccentWeb, label,1F);
+                break;
+
+            case "CO2T":
+                dataSet = getGenericLineDataSet(entries, R.color.light_red, label,1F);
+                break;
+
+            case "CO2H":
+                dataSet = getGenericLineDataSet(entries, R.color.light_blue, label,1F);
+                break;
+
+            case "tmp":
+                dataSet = getGenericLineDataSet(entries, R.color.red, label,1F);
+                break;
+
+            case "hum":
+                dataSet = getGenericLineDataSet(entries, R.color.blue, label,1F);
+                break;
+
+            case "alt":
+                dataSet = getGenericLineDataSet(entries, R.color.purple, label,1F);
+                break;
+
+            case "pre":
+                dataSet = getGenericLineDataSet(entries, R.color.yellow, label,1F);
+                break;
+
+                default:
+                    Logger.e(TAG,"Bad variable type compilation");
+                    break;
+
+
+        }
+
     }
 
     private LineDataSet getGenericLineDataSet(List<Entry> entry, int color, String label,float width) {

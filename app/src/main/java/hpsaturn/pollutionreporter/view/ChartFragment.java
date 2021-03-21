@@ -140,13 +140,12 @@ public class ChartFragment extends Fragment {
         Iterator<String> it = values.iterator();
         while (it.hasNext()) {
             String type = it.next();
-            ChartVar var = new ChartVar(getContext(), type, map.get(type), R.color.light_green, 1F, false);
+            ChartVar var = new ChartVar(getContext(), type, map.get(type));
             variables.add(var);
             Logger.i(TAG,"values:"+type);
         }
 
 //        PM1 = new ChartVar(getContext(), "P1", "PM1.0", R.color.light_green, 1F, false);
-//        PM25 = new ChartVar(getContext(), "P25", "PM2.5", R.color.black, 1.5F, true);
 //        PM4 = new ChartVar(getContext(), "P4", "PM4", R.color.orange, 1F, false);
 //        PM10 = new ChartVar(getContext(), "P10", "PM10", R.color.yellow, 1F, false);
 //        Temp = new ChartVar(getContext(),"tmp","T", R.color.red, 1F, false);
