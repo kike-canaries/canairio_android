@@ -81,7 +81,10 @@ public class RecordTrackService extends Service {
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
             if (bleHandler == null) {
                 connect();
-            } else if (bleHandler.isConnected()) Logger.i(TAG, "[BLE] already connected!");
+            } else if (bleHandler.isConnected()) {
+                Logger.i(TAG, "[BLE] already connected!");
+                recordTrackManager.status(RecordTrackManager.STATUS_BLE_START);
+            }
             else connect();
         } else Logger.w(TAG, "[BLE] not BLE connection (not MAC register)");
     }
@@ -254,10 +257,13 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-            String strdata = new String(bytes);
-            SensorData data = new Gson().fromJson(strdata, SensorData.class);
-            Logger.d(TAG, "[BLE] pushing notification data to GUI..");
-            recordTrackManager.sensorNotificationData(data);
+//            String strdata = new String(bytes);
+//            SensorData data = new Gson().fromJson(strdata, SensorData.class);
+//            Logger.d(TAG, "[BLE] pushing notification data to GUI..");
+//            recordTrackManager.sensorNotificationData(data);
+
+            if (bleHandler != null) bleHandler.readSensorData();
+
             retry_notify_setup = 0;
         }
 

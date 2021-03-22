@@ -134,6 +134,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
      **********************************************************************************************/
 
     public void setStatusSwitch(boolean checked) {
+        Logger.i(TAG,"setStatusSwitch: "+checked);
         SwitchPreference statusSwitch = getStatusSwitch();
         statusSwitch.setEnabled(checked);
         statusSwitch.setChecked(checked);
