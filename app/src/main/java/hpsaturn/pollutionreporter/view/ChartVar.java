@@ -138,8 +138,9 @@ public class ChartVar {
         }
 
         try {
-//            Logger.e(TAG,"ChartVal:"+type);
-            dataSet.addEntry(new Entry(time,data.getClass().getField(type).getFloat(data)));
+            float value = data.getClass().getField(type).getFloat(data);
+            Logger.i(TAG,"--> "+type+ ":"+value);
+            dataSet.addEntry(new Entry(time,value));
 
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
