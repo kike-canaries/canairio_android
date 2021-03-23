@@ -19,7 +19,7 @@
 
     <!-- GENERIC COLORS -->
     <color name="red">#f00</color>
-    <color name="blue">#0080ff</color>
+    <color name="blue">#031B71</color>
     <color name="light_green">#1CAB1C</color>
     <color name="green">#187218</color>
     <color name="yellow">#DEDE16</color>
@@ -34,7 +34,7 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="transwhite">#AAFFFFFF</color>
     <color name="light_red">#F0857D</color>
-    <color name="light_blue">#C3DDF8</color>
+    <color name="light_blue">#338FEF</color>
 
 
 </resources>
