@@ -2,6 +2,7 @@ package hpsaturn.pollutionreporter.view;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.hpsaturn.tools.Logger;
+
+import java.util.TimerTask;
 
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
@@ -81,9 +84,6 @@ public class PostsFragment extends Fragment {
 
             @Override
             protected void onBindViewHolder(@NonNull PostsViewHolder viewHolder, int position, @NonNull SensorTrackInfo trackInfo) {
-                final DatabaseReference postRef = getRef(position);
-                final String recordKey = postRef.getKey();
-//                Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
                 viewHolder.itemView.setOnClickListener(v -> {
                     String recordId = trackInfo.getName();
                     Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);
@@ -120,30 +120,15 @@ public class PostsFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (mAdapter != null) {
-            mAdapter.startListening();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
         if (mAdapter != null) {
             mAdapter.stopListening();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
+        super.onDestroy();
     }
 
     private MainActivity getMain() {
         return ((MainActivity) getActivity());
     }
-
 
 }
