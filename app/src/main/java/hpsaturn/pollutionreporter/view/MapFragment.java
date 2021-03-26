@@ -20,13 +20,18 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import hpsaturn.pollutionreporter.BuildConfig;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
 import hpsaturn.pollutionreporter.api.AqicnDataResponse;
 import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrack;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import retrofit2.Call;
 import retrofit2.Callback;

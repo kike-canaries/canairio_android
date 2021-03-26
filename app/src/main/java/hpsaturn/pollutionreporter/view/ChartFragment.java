@@ -28,6 +28,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +42,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.BuildConfig;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
@@ -70,6 +75,10 @@ public class ChartFragment extends Fragment {
 
     @BindView(R.id.rl_separator)
     RelativeLayout rl_separator;
+
+    @BindView(R.id.mapview)
+    MapView mapView;
+
 
     private long referenceTimestamp;
     private boolean loadingData = true;
@@ -127,14 +136,46 @@ public class ChartFragment extends Fragment {
 
         loadSelectedVariables();
 
+
         Bundle args = getArguments();
         if(args!=null){
             recordId = args.getString(KEY_RECORD_ID) ;
             Logger.i(TAG,"[CHART] recordId: "+recordId);
+            requireActivity().runOnUiThread(() -> setupMap(recordId));
         }
 
         return view;
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Context ctx = getContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+    }
+
+    private void setupMap(String recordId) {
+        mapView.setVisibility(View.VISIBLE);
+        mapView.setClickable(true);
+        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+
+        mapView.setMultiTouchControls(true);
+        mapView.setMaxZoomLevel((double) 19);
+
+        mapView.getController().setZoom((double) 17); //set initial zoom-level, depends on your need
+        mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
+        mapView.setEnabled(true);
+        (mapView.getTileProvider().getTileCache()).getProtectedTileComputers().clear();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Logger.i(TAG,"[CHART] starting load data thread..");
+        requireActivity().runOnUiThread(this::loadData);
+    }
+
 
     public void loadSelectedVariables(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
@@ -151,12 +192,6 @@ public class ChartFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Logger.i(TAG,"[CHART] starting load data thread..");
-        requireActivity().runOnUiThread(this::loadData);
-    }
 
     private void calculateReferenceTime(){
         ArrayList<SensorData> data = Storage.getSensorData(getActivity());
