@@ -98,6 +98,21 @@ public class MapFragment extends Fragment {
         mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
     }
 
+
+    public void addTrack(SensorTrack track){
+        List<GeoPoint> geoPoints = new ArrayList<>();
+        //add your points here
+        Polyline line = new Polyline();   //see note below!
+        line.setPoints(geoPoints);
+        line.setOnClickListener((polyline, mapView, eventPos) -> {
+//            Toast.makeText(mapView.getContext(), "polyline with " + polyline.getPoints().size() + "pts was tapped", Toast.LENGTH_LONG).show();
+            Logger.i(TAG,"polyline with " + polyline.getPoints().size() + "pts was tapped");
+            return false;
+        });
+        mapView.getOverlayManager().add(line);
+    }
+
+
     private void loadAqicnData() {
         AqicnApiManager.getInstance().getDataFromHere(
                 new Callback<AqicnDataResponse>() {

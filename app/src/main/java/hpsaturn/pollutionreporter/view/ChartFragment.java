@@ -2,6 +2,7 @@ package hpsaturn.pollutionreporter.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -30,7 +31,9 @@ import com.hpsaturn.tools.Logger;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Polyline;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,6 +95,8 @@ public class ChartFragment extends Fragment {
     private List<ILineDataSet> dataSets = new ArrayList<>();
 
     private Map<String,String> map = new HashMap<>();
+
+    private List<GeoPoint> geoPoints = new ArrayList<>();
 
     public static ChartFragment newInstance() {
         return new ChartFragment();
@@ -169,6 +174,8 @@ public class ChartFragment extends Fragment {
         (mapView.getTileProvider().getTileCache()).getProtectedTileComputers().clear();
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -223,11 +230,35 @@ public class ChartFragment extends Fragment {
                 SensorData d = it.next();
                 long time = d.timestamp - referenceTimestamp;
                 addValue(time,d);
+                if(recordId!=null)addMapSegment(d);
             }
 
             refreshDataSets();
         }
         loadingData = false;
+    }
+
+    private void addMapSegment(SensorData d) {
+        geoPoints.add(new GeoPoint(d.lat,d.lon));
+
+//        Polyline line = new Polyline();   //see note below!
+//        line.setPoints(geoPoints);
+//        line.addPoint(new GeoPoint(d.lat,d.lon));
+
+    }
+
+
+    private void updateMap() {
+        Polyline line = new Polyline();   //see note below!
+        line.setPoints(geoPoints);
+        ColorFilter filter = line.getOutlinePaint().getColorFilter();
+        line.setOnClickListener((polyline, mapView, eventPos) -> {
+//            Toast.makeText(mapView.getContext(), "polyline with " + polyline.getPoints().size() + "pts was tapped", Toast.LENGTH_LONG).show();
+            Logger.i(TAG,"polyline with " + polyline.getPoints().size() + "pts was tapped");
+            return false;
+        });
+        mapView.getOverlayManager().add(line);
+        mapView.getController().setCenter(geoPoints.get(0));
     }
 
     private void addValue(long time, SensorData data) {
@@ -253,7 +284,10 @@ public class ChartFragment extends Fragment {
         chart.setData(linedata);
         chart.notifyDataSetChanged();
         chart.invalidate();
+
+        if(recordId!=null)updateMap();
     }
+
 
     private void loadData() {
         Logger.i(TAG,"[CHART] loading data..");
