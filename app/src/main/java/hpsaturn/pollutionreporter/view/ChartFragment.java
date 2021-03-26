@@ -175,12 +175,54 @@ public class ChartFragment extends Fragment {
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG,"[CHART] starting load data thread..");
         requireActivity().runOnUiThread(this::loadData);
+    }
+
+    private void loadData() {
+        Logger.i(TAG,"[CHART] loading data..");
+        loadingData = true;
+        ArrayList<SensorData> data = new ArrayList<>();
+        if(recordId==null) {
+            Logger.i(TAG,"[CHART] loading current data in storage..");
+            data = Storage.getSensorData(getActivity());
+        }
+        else {
+            track = Storage.getTrack(getActivity(), recordId);
+            if(track!=null) {
+                Logger.i(TAG,"[CHART] loading track data from storage..");
+                data = track.data;
+                setTrackDescription(track);
+                getMain().enableShareButton();
+            }
+            else{
+                Logger.i(TAG,"[CHART] loading track from firebase..");
+                DatabaseReference trackRef = getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(recordId);
+                trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
+                        if(track!=null){
+                            Logger.i(TAG,"[CHART] loading track on chart..");
+                            addData(track.data);
+                            setTrackDescription(track);
+                        }
+                        else{
+                            Logger.e(TAG,"[CHART] onDataChange getValue is null");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Logger.e(TAG,"[CHART] onCancelled, databaseError: "+databaseError.getDetails());
+                    }
+                });
+            }
+        }
+        addData(data);
     }
 
 
@@ -230,7 +272,6 @@ public class ChartFragment extends Fragment {
                 SensorData d = it.next();
                 long time = d.timestamp - referenceTimestamp;
                 addValue(time,d);
-                if(recordId!=null)addMapSegment(d);
             }
 
             refreshDataSets();
@@ -238,33 +279,12 @@ public class ChartFragment extends Fragment {
         loadingData = false;
     }
 
-    private void addMapSegment(SensorData d) {
-        geoPoints.add(new GeoPoint(d.lat,d.lon));
-
-//        Polyline line = new Polyline();   //see note below!
-//        line.setPoints(geoPoints);
-//        line.addPoint(new GeoPoint(d.lat,d.lon));
-
-    }
-
-
-    private void updateMap() {
-        Polyline line = new Polyline();   //see note below!
-        line.setPoints(geoPoints);
-        ColorFilter filter = line.getOutlinePaint().getColorFilter();
-        line.setOnClickListener((polyline, mapView, eventPos) -> {
-//            Toast.makeText(mapView.getContext(), "polyline with " + polyline.getPoints().size() + "pts was tapped", Toast.LENGTH_LONG).show();
-            Logger.i(TAG,"polyline with " + polyline.getPoints().size() + "pts was tapped");
-            return false;
-        });
-        mapView.getOverlayManager().add(line);
-        mapView.getController().setCenter(geoPoints.get(0));
-    }
-
     private void addValue(long time, SensorData data) {
         Iterator<ChartVar> it = variables.iterator();
         while (it.hasNext()){
-            it.next().addValue(time,data);
+            ChartVar var = it.next();
+            var.addValue(time,data);
+            if(recordId!=null && var.type.equals("P25"))addMapSegment(var,data);
         }
     }
 
@@ -289,47 +309,27 @@ public class ChartFragment extends Fragment {
     }
 
 
-    private void loadData() {
-        Logger.i(TAG,"[CHART] loading data..");
-        loadingData = true;
-        ArrayList<SensorData> data = new ArrayList<>();
-        if(recordId==null) {
-            Logger.i(TAG,"[CHART] loading current data in storage..");
-            data = Storage.getSensorData(getActivity());
-        }
-        else {
-            track = Storage.getTrack(getActivity(), recordId);
-            if(track!=null) {
-                Logger.i(TAG,"[CHART] loading track data from storage..");
-                data = track.data;
-                setTrackDescription(track);
-                getMain().enableShareButton();
-            }
-            else{
-                Logger.i(TAG,"[CHART] loading track from firebase..");
-                DatabaseReference trackRef = getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(recordId);
-                trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
-                        if(track!=null){
-                            Logger.i(TAG,"[CHART] loading track on chart..");
-                            addData(track.data);
-                            setTrackDescription(track);
-                        }
-                        else{
-                            Logger.e(TAG,"[CHART] onDataChange getValue is null");
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Logger.e(TAG,"[CHART] onCancelled, databaseError: "+databaseError.getDetails());
-                    }
-                });
-            }
+
+    private void addMapSegment(ChartVar var, SensorData data) {
+        geoPoints.add(new GeoPoint(data.lat,data.lon));
+        if(geoPoints.size()>1){
+            Polyline line = new Polyline();   //see note below!
+            List<GeoPoint> segment = new ArrayList<>();
+            segment.add(geoPoints.get(geoPoints.size()-2));
+            segment.add(geoPoints.get(geoPoints.size()-1));
+            line.setPoints(segment);
+            line.getOutlinePaint().setColor(var.colors.get(var.colors.size()-1));
+
+            line.getOutlinePaint().setStrokeWidth(15F);
+            line.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            line.getOutlinePaint().setAntiAlias(true);
+            mapView.getOverlayManager().add(line);
         }
-        addData(data);
+    }
+
+    private void updateMap() {
+        mapView.getController().setCenter(geoPoints.get(0));
     }
 
     private void setTrackDescription(SensorTrack track){

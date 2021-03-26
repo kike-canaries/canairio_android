@@ -22,7 +22,7 @@ public class ChartVar {
 
     private Context ctx;
 
-    private final String type;
+    public String type;
 
     public List<Entry> entries = new ArrayList<Entry>();
 
@@ -121,7 +121,7 @@ public class ChartVar {
         switch (type) {
             case "CO2":
                 if (data.CO2 <= 600) colors.add(ctx.getResources().getColor(R.color.green));
-                else if (data.CO2 <= 800)  colors.add(ctx.getResources().getColor(R.color.yellow));
+                else if (data.CO2 <= 800)  colors.add(ctx.getResources().getColor(R.color.yellow_dark));
                 else if (data.CO2 <= 1000) colors.add(ctx.getResources().getColor(R.color.orange));
                 else if (data.CO2 <= 1500) colors.add(ctx.getResources().getColor(R.color.red));
                 else if (data.CO2 <= 2000) colors.add(ctx.getResources().getColor(R.color.purple));
@@ -129,7 +129,7 @@ public class ChartVar {
                 break;
             case "P25":
                 if (data.P25 <= 13) colors.add(ctx.getResources().getColor(R.color.green));
-                else if (data.P25 <= 35) colors.add(ctx.getResources().getColor(R.color.yellow));
+                else if (data.P25 <= 35) colors.add(ctx.getResources().getColor(R.color.yellow_dark));
                 else if (data.P25 <= 55) colors.add(ctx.getResources().getColor(R.color.orange));
                 else if (data.P25 <= 150)colors.add(ctx.getResources().getColor(R.color.red));
                 else if (data.P25 <= 250)colors.add(ctx.getResources().getColor(R.color.purple));
