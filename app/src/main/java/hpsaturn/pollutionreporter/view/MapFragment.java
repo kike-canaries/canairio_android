@@ -2,7 +2,6 @@ package hpsaturn.pollutionreporter.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 import com.hpsaturn.tools.Logger;
@@ -25,12 +22,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import hpsaturn.pollutionreporter.BuildConfig;
 import hpsaturn.pollutionreporter.Config;
@@ -39,7 +33,6 @@ import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
 import hpsaturn.pollutionreporter.api.AqicnDataResponse;
 import hpsaturn.pollutionreporter.models.SensorData;
-import hpsaturn.pollutionreporter.models.SensorTrack;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import retrofit2.Call;
 import retrofit2.Callback;
