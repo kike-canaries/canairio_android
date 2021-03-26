@@ -115,7 +115,17 @@ public class ChartFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_chart, container, false);
+        // Try to load old track (records view)
+        View view;
+        Bundle args = getArguments();
+        if(args!=null){
+            recordId = args.getString(KEY_RECORD_ID) ;
+            Logger.i(TAG,"[CHART] recordId: "+recordId);
+            view = inflater.inflate(R.layout.fragment_chart, container, false);
+        }else{
+            view = inflater.inflate(R.layout.fragment_chart_realtime, container, false);
+        }
+
         ButterKnife.bind(this, view);
 
         Description description = new Description();
@@ -143,13 +153,7 @@ public class ChartFragment extends Fragment {
 
         loadSelectedVariables();
 
-        // Try to load old track (records view)
-        Bundle args = getArguments();
-        if(args!=null){
-            recordId = args.getString(KEY_RECORD_ID) ;
-            Logger.i(TAG,"[CHART] recordId: "+recordId);
-            requireActivity().runOnUiThread(this::setupMap);
-        }
+
 
         return view;
     }
@@ -180,6 +184,7 @@ public class ChartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG,"[CHART] starting load data thread..");
         requireActivity().runOnUiThread(this::loadData);
+        if(recordId!=null) requireActivity().runOnUiThread(this::setupMap);
     }
 
     /**

@@ -94,19 +94,17 @@ public class MapFragment extends Fragment {
 
     private void loadLastTracks() {
         Query query = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(100);
-        query.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
+        query.get().addOnCompleteListener(task -> {
 
-                if (task.isSuccessful()) {
-                    Iterable<DataSnapshot> data = task.getResult().getChildren();
-                    Iterator<DataSnapshot> it = data.iterator();
-                    while(it.hasNext()){
-                        SensorTrackInfo track = it.next().getValue(SensorTrackInfo.class);
+            if (task.isSuccessful()) {
+                Iterable<DataSnapshot> data = task.getResult().getChildren();
+                Iterator<DataSnapshot> it = data.iterator();
+                while(it.hasNext()){
+                    SensorTrackInfo track = it.next().getValue(SensorTrackInfo.class);
+                    if(track.getSize()>100 && track.getSize()<1000){
                         addMarker(track);
                     }
                 }
-
             }
         });
 
@@ -114,7 +112,7 @@ public class MapFragment extends Fragment {
 
     public void addMarker(SensorTrackInfo trackInfo) {
         Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
-//        MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
+        MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
         Marker pointMarker = new Marker(mapView);
         pointMarker.setOnMarkerClickListener((marker, mapView) -> {
             Logger.d(TAG, "OnMarkerClickListener => " + trackInfo.getName());
@@ -129,25 +127,10 @@ public class MapFragment extends Fragment {
         pointMarker.setPosition(new GeoPoint(trackInfo.getLastLat(), trackInfo.getLastLon()));
         pointMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         pointMarker.setIcon(icon);
-//        pointMarker.setInfoWindow(infoWindow);
+        pointMarker.setInfoWindow(infoWindow);
         mapView.getOverlays().add(pointMarker);
         mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
     }
-
-
-    public void addTrack(SensorTrack track){
-        List<GeoPoint> geoPoints = new ArrayList<>();
-        //add your points here
-        Polyline line = new Polyline();   //see note below!
-        line.setPoints(geoPoints);
-        line.setOnClickListener((polyline, mapView, eventPos) -> {
-//            Toast.makeText(mapView.getContext(), "polyline with " + polyline.getPoints().size() + "pts was tapped", Toast.LENGTH_LONG).show();
-            Logger.i(TAG,"polyline with " + polyline.getPoints().size() + "pts was tapped");
-            return false;
-        });
-        mapView.getOverlayManager().add(line);
-    }
-
 
     private void loadAqicnData() {
         AqicnApiManager.getInstance().getDataFromHere(
