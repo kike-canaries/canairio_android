@@ -66,7 +66,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(20);
+        Query postsQuery = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(50);
         Logger.d(TAG,"[FB][POSTS] Query: "+postsQuery.toString());
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)
@@ -86,7 +86,6 @@ public class PostsFragment extends Fragment {
                 final DatabaseReference postRef = getRef(position);
                 final String recordKey = postRef.getKey();
                 Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
-//                getMain().addTrackToMap(trackInfo);
                 viewHolder.itemView.setOnClickListener(v -> {
                     String recordId = trackInfo.getName();
                     Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);

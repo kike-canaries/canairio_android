@@ -8,24 +8,17 @@
         android:id="@+id/lc_measures"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/mapview"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="30dp" />
-
-    <org.osmdroid.views.MapView
-        android:id="@+id/mapview"
-        android:visibility="gone"
-        android:layout_width="match_parent"
         android:layout_above="@+id/rl_separator"
-        android:layout_height="200dp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="5dp" />
 
     <RelativeLayout
         android:id="@+id/rl_separator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_picker_card_height"
-        android:layout_marginLeft="10dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
         android:visibility="invisible">
 
         <TextView
@@ -33,9 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="20180816.201344"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_chart_date"
@@ -43,8 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_chart_name"
             android:text="20180816.201344"
-            android:textSize="18sp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_chart_desc"
@@ -52,9 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_chart_date"
             android:text="18 points"
-            android:textSize="18sp"
-            android:textColor="@color/black" />
-
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_chart_loc"
@@ -62,10 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_chart_desc"
             android:text=""
-            android:textSize="18sp"
-            android:textColor="@color/black" />
-
-
+            android:textColor="@color/black"
+            android:textSize="18sp" />
     </RelativeLayout>
 
 </RelativeLayout>

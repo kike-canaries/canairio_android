@@ -81,10 +81,6 @@ public class ChartFragment extends Fragment {
     @BindView(R.id.rl_separator)
     RelativeLayout rl_separator;
 
-    @BindView(R.id.mapview)
-    MapView mapView;
-
-
     private long referenceTimestamp;
     private boolean loadingData = true;
 
@@ -99,6 +95,7 @@ public class ChartFragment extends Fragment {
     private Map<String,String> map = new HashMap<>();
 
     private List<GeoPoint> geoPoints = new ArrayList<>();
+    private MapView mapView;
 
     public static ChartFragment newInstance() {
         return new ChartFragment();
@@ -122,6 +119,7 @@ public class ChartFragment extends Fragment {
             recordId = args.getString(KEY_RECORD_ID) ;
             Logger.i(TAG,"[CHART] recordId: "+recordId);
             view = inflater.inflate(R.layout.fragment_chart, container, false);
+            mapView = view.findViewById(R.id.mapview);
         }else{
             view = inflater.inflate(R.layout.fragment_chart_realtime, container, false);
         }
@@ -153,17 +151,7 @@ public class ChartFragment extends Fragment {
 
         loadSelectedVariables();
 
-
-
         return view;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Context ctx = getContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
     }
 
     private void setupMap() {
@@ -177,7 +165,6 @@ public class ChartFragment extends Fragment {
         mapView.setEnabled(true);
         (mapView.getTileProvider().getTileCache()).getProtectedTileComputers().clear();
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -271,7 +258,8 @@ public class ChartFragment extends Fragment {
         if(data==null)return;
         else if (!data.isEmpty()) {
             Iterator<SensorData> it = data.iterator();
-            while (it.hasNext()) {
+            int count = 0;
+            while (it.hasNext() && count++ <3000) {
                 SensorData d = it.next();
                 long time = d.timestamp - referenceTimestamp;
                 addValue(time,d);
