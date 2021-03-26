@@ -85,7 +85,7 @@ public class PostsFragment extends Fragment {
             protected void onBindViewHolder(@NonNull PostsViewHolder viewHolder, int position, @NonNull SensorTrackInfo trackInfo) {
                 final DatabaseReference postRef = getRef(position);
                 final String recordKey = postRef.getKey();
-                Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
+//                Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
                 viewHolder.itemView.setOnClickListener(v -> {
                     String recordId = trackInfo.getName();
                     Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);
@@ -100,22 +100,7 @@ public class PostsFragment extends Fragment {
         mRecordsList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         mAdapter.startListening();
-        mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in fist time
 
-    }
-
-    private Handler mHandler = new Handler();
-    private UpdateTimeTask mUpdateTimeTask = new UpdateTimeTask();
-
-    class UpdateTimeTask extends TimerTask {
-        private int retries = 3;
-        private int counter = 0;
-        public void run() {
-            Logger.i(TAG,"[FB][POST] UpdateTimeTask, force refresh data..");
-            refresh();
-            if(counter++>retries)this.cancel();
-            else mHandler.postDelayed(this,3000);
-        }
     }
 
     private void updateUI() {
@@ -149,11 +134,6 @@ public class PostsFragment extends Fragment {
         super.onStop();
         if (mAdapter != null) {
             mAdapter.stopListening();
-        }
-        try {
-            mHandler.removeCallbacks(mUpdateTimeTask);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
