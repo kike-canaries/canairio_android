@@ -86,15 +86,12 @@ public class PostsFragment extends Fragment {
                 final DatabaseReference postRef = getRef(position);
                 final String recordKey = postRef.getKey();
                 Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
-                getMain().addTrackToMap(trackInfo);
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String recordId = trackInfo.getName();
-                        Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);
-                        chart = ChartFragment.newInstance(recordId);
-                        getMain().addFragmentPopup(chart,ChartFragment.TAG);
-                    }
+//                getMain().addTrackToMap(trackInfo);
+                viewHolder.itemView.setOnClickListener(v -> {
+                    String recordId = trackInfo.getName();
+                    Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);
+                    chart = ChartFragment.newInstance(recordId);
+                    getMain().addFragmentPopup(chart,ChartFragment.TAG);
                 });
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
                 viewHolder.bindToPost(trackInfo);
