@@ -1,21 +1,18 @@
 package hpsaturn.pollutionreporter.view;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.preference.MultiSelectListPreference;
-import androidx.preference.PreferenceManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
@@ -29,17 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 
-import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +41,6 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import hpsaturn.pollutionreporter.BuildConfig;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
@@ -149,8 +142,6 @@ public class ChartFragment extends Fragment {
             map.put(types[i],labels[i]);
         }
 
-        loadSelectedVariables();
-
         return view;
     }
 
@@ -170,7 +161,7 @@ public class ChartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG,"[CHART] starting load data thread..");
-        requireActivity().runOnUiThread(this::loadData);
+        loadSelectedVariables();
         if(recordId!=null) requireActivity().runOnUiThread(this::setupMap);
     }
 
@@ -234,6 +225,8 @@ public class ChartFragment extends Fragment {
             variables.add(var);
             Logger.i(TAG, "[CHART]"+type);
         }
+
+        requireActivity().runOnUiThread(this::loadData);
     }
 
 
