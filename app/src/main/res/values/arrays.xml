@@ -59,10 +59,5 @@
 
     <string-array name="pref_vars_stores">
         <item>P25</item>
-        <item>CO2</item>
-        <item>CO2T</item>
-        <item>CO2H</item>
-        <item>tmp</item>
-        <item>hum</item>
     </string-array>
 </resources>
