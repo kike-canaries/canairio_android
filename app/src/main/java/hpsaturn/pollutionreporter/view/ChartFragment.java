@@ -141,12 +141,12 @@ public class ChartFragment extends Fragment {
 
         loadSelectedVariables();
 
-
+        // Try to load old track (records view)
         Bundle args = getArguments();
         if(args!=null){
             recordId = args.getString(KEY_RECORD_ID) ;
             Logger.i(TAG,"[CHART] recordId: "+recordId);
-            requireActivity().runOnUiThread(() -> setupMap(recordId));
+            requireActivity().runOnUiThread(this::setupMap);
         }
 
         return view;
@@ -160,14 +160,12 @@ public class ChartFragment extends Fragment {
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
     }
 
-    private void setupMap(String recordId) {
+    private void setupMap() {
         mapView.setVisibility(View.VISIBLE);
         mapView.setClickable(true);
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-
         mapView.setMultiTouchControls(true);
         mapView.setMaxZoomLevel((double) 19);
-
         mapView.getController().setZoom((double) 17); //set initial zoom-level, depends on your need
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
         mapView.setEnabled(true);
@@ -182,6 +180,10 @@ public class ChartFragment extends Fragment {
         requireActivity().runOnUiThread(this::loadData);
     }
 
+    /**
+     * initialization of data for chart and map
+     * load data of current recording track or old recorded track
+     */
     private void loadData() {
         Logger.i(TAG,"[CHART] loading data..");
         loadingData = true;
@@ -225,7 +227,6 @@ public class ChartFragment extends Fragment {
         addData(data);
     }
 
-
     public void loadSelectedVariables(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
@@ -255,15 +256,10 @@ public class ChartFragment extends Fragment {
     }
 
 
-    public void addData(SensorData data) {
-        if (!loadingData) {
-            Long currentTime = System.currentTimeMillis() / 1000;
-            long time = currentTime - referenceTimestamp;
-            addValue(time,data);
-            refreshDataSets();
-        }
-    }
-
+    /**
+     *  Add data from previous data (recorded track for example)
+      * @param data
+     */
     private void addData(ArrayList<SensorData> data){
         if(data==null)return;
         else if (!data.isEmpty()) {
@@ -308,8 +304,18 @@ public class ChartFragment extends Fragment {
         if(recordId!=null)updateMap();
     }
 
-
-
+    /**
+     * Add external data to fragment (real time visualization)
+     * @param data
+     */
+    public void addData(SensorData data) {
+        if (!loadingData) {
+            Long currentTime = System.currentTimeMillis() / 1000;
+            long time = currentTime - referenceTimestamp;
+            addValue(time,data);
+            refreshDataSets();
+        }
+    }
 
     private void addMapSegment(ChartVar var, SensorData data) {
         geoPoints.add(new GeoPoint(data.lat,data.lon));
@@ -320,8 +326,7 @@ public class ChartFragment extends Fragment {
             segment.add(geoPoints.get(geoPoints.size()-1));
             line.setPoints(segment);
             line.getOutlinePaint().setColor(var.colors.get(var.colors.size()-1));
-
-            line.getOutlinePaint().setStrokeWidth(15F);
+            line.getOutlinePaint().setStrokeWidth(18F);
             line.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
             line.getOutlinePaint().setAntiAlias(true);
             mapView.getOverlayManager().add(line);
@@ -329,7 +334,7 @@ public class ChartFragment extends Fragment {
     }
 
     private void updateMap() {
-        mapView.getController().setCenter(geoPoints.get(0));
+        if(geoPoints.size()>0) mapView.getController().setCenter(geoPoints.get(0));
     }
 
     private void setTrackDescription(SensorTrack track){
