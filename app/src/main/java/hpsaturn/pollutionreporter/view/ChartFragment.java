@@ -31,7 +31,9 @@ import com.hpsaturn.tools.Logger;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
 
@@ -334,7 +336,10 @@ public class ChartFragment extends Fragment {
     }
 
     private void updateMap() {
-        if(geoPoints.size()>0) mapView.getController().setCenter(geoPoints.get(0));
+        if(geoPoints.size()>1) {
+            BoundingBox center = BoundingBox.fromGeoPoints(geoPoints);
+            mapView.zoomToBoundingBox(center, false);
+        }
     }
 
     private void setTrackDescription(SensorTrack track){
