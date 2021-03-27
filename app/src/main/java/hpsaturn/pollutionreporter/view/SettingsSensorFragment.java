@@ -265,7 +265,7 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
         String pass = getSharedPreference(getString(R.string.key_setting_pass));
         Logger.v(TAG, "[Config] values -> " + ssid );
         updateWifiSummary();
-        return !(ssid.length() == 0 || pass.length() == 0);
+        return ssid.length() != 0;
     }
 
     private void setWifiSwitch(boolean checked) {
