@@ -126,6 +126,8 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
             }
 
         }
+        else
+            Logger.i(TAG,"skyp onSharedPreferenceChanged because is in reading mode!");
 
     }
 
@@ -590,7 +592,6 @@ public class SettingsSensorFragment extends PreferenceFragmentCompat implements 
                 Logger.v(TAG, "[Config] notify device sync complete");
                 getMain().showSnackMessage(R.string.msg_sync_complete);
             }
-
 
         }
         onSensorReading = false;

@@ -49,7 +49,7 @@ public class RecordTrackService extends Service {
     private RecordTrackManager recordTrackManager;
 
     private final int RETRY_POLICY = 5;
-    private final int MAX_POINTS_SAVING = 3000;
+    private final int MAX_POINTS_SAVING = 1500;
 
     private int retry_connect = 0;
     private int retry_notify_setup = 0;
@@ -135,8 +135,6 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onServiceStart() {
-//            Logger.d(TAG, "[BLE] request service start..");
-//            startConnection();
         }
 
         @Override
@@ -257,13 +255,7 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
-//            String strdata = new String(bytes);
-//            SensorData data = new Gson().fromJson(strdata, SensorData.class);
-//            Logger.d(TAG, "[BLE] pushing notification data to GUI..");
-//            recordTrackManager.sensorNotificationData(data);
-
             if (bleHandler != null) bleHandler.readSensorData();
-
             retry_notify_setup = 0;
         }
 
