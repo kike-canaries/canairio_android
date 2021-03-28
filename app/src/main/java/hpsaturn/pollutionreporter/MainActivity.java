@@ -520,4 +520,9 @@ public class MainActivity extends BaseActivity implements
     public void selectedVarsUpdated() {
         if (chartFragment!=null)chartFragment.loadSelectedVariables();
     }
+
+    public void showTrackInfoFragment(String trackId) {
+        ChartFragment chart = ChartFragment.newInstance(trackId);
+        addInfoFragment(chart,ChartFragment.TAG_INFO);
+    }
 }
