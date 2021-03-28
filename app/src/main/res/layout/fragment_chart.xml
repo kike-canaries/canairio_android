@@ -39,7 +39,7 @@
             android:id="@+id/tv_chart_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="20180816.201344"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_chart_name"
-            android:text="20180816.201344"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="14sp" />
 
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_chart_date"
-            android:text="18 points"
+            android:text="Loading.."
             android:textColor="@color/black"
             android:textSize="14sp" />
 
@@ -67,7 +67,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_chart_desc"
-            android:text=""
             android:textColor="@color/black"
             android:textSize="14sp"
             android:visibility="gone" />

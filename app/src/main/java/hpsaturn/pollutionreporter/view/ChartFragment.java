@@ -56,6 +56,8 @@ public class ChartFragment extends Fragment {
 
     public static String TAG = ChartFragment.class.getSimpleName();
 
+    public static String TAG_INFO = "INFO"+ChartFragment.class.getSimpleName();
+
     @BindView(R.id.lc_measures)
     LineChart chart;
 
