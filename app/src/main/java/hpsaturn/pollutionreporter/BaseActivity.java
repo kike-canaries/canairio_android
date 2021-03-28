@@ -18,6 +18,10 @@ import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import java.util.List;
+
+import hpsaturn.pollutionreporter.view.ChartFragment;
+
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/1/18.
  */
@@ -75,6 +79,20 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     public void addFragmentPopup(Fragment fragment, String fragmentTag) {
         try {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
+            ft.add(R.id.content_subwindows, fragment, fragmentTag);
+            ft.addToBackStack(fragmentTag);
+            ft.commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addInfoFragment(Fragment fragment, String fragmentTag) {
+        try {
+            Fragment frag = getSupportFragmentManager().findFragmentByTag(fragmentTag);
+            if (frag != null)return;
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
             ft.add(R.id.content_subwindows, fragment, fragmentTag);

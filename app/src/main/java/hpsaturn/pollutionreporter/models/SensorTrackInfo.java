@@ -1,9 +1,5 @@
 package hpsaturn.pollutionreporter.models;
 
-import android.location.Location;
-
-import java.util.ArrayList;
-
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.
  */
