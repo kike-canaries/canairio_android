@@ -250,7 +250,11 @@ public class ChartFragment extends Fragment {
       * @param data
      */
     private void addData(ArrayList<SensorData> data){
-        if(data==null)return;
+        if(data==null){
+            chart.setNoDataText("No data.");
+            loadingData = false;
+            return;
+        }
         else if (!data.isEmpty()) {
             Iterator<SensorData> it = data.iterator();
             int count = 0;
@@ -305,6 +309,8 @@ public class ChartFragment extends Fragment {
             addValue(time,data);
             refreshDataSets();
         }
+        else
+            Logger.v(TAG,"addData skip, in loading data.");
     }
 
     private void addMapSegment(ChartVar var, SensorData data) {
