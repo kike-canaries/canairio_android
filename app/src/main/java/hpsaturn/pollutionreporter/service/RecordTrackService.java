@@ -49,7 +49,7 @@ public class RecordTrackService extends Service {
     private RecordTrackManager recordTrackManager;
 
     private final int RETRY_POLICY = 5;
-    private final int MAX_POINTS_SAVING = 1500;
+    private final int MAX_POINTS_SAVING = 3000;
 
     private int retry_connect = 0;
     private int retry_notify_setup = 0;
