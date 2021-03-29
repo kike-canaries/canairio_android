@@ -67,7 +67,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(50);
+        Query postsQuery = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(100);
         Logger.d(TAG,"[FB][POSTS] Query: "+postsQuery.toString());
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)

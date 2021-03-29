@@ -77,7 +77,7 @@ public class ChartFragment extends Fragment {
     RelativeLayout rl_separator;
 
     private long referenceTimestamp;
-    private boolean loadingData = true;
+    private boolean loadingData = true;  // it's true for block data from real time chart
 
     private static final String KEY_RECORD_ID = "key_record_id";
     private String recordId;
@@ -254,7 +254,7 @@ public class ChartFragment extends Fragment {
         else if (!data.isEmpty()) {
             Iterator<SensorData> it = data.iterator();
             int count = 0;
-            while (it.hasNext() && count++ <3000) {
+            while (it.hasNext() && count++ <=5000) {
                 SensorData d = it.next();
                 long time = d.timestamp - referenceTimestamp;
                 addValue(time,d);
