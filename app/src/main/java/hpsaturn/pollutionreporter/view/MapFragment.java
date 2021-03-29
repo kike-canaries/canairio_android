@@ -63,7 +63,8 @@ public class MapFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        requireActivity().runOnUiThread(() -> setupMap(view));
+        setupMap(view);
+        requireActivity().runOnUiThread(this::loadLastTracks);
     }
 
     private void setupMap(View view) {
@@ -78,11 +79,10 @@ public class MapFragment extends Fragment {
         mapView.setUseDataConnection(true); //keeps the mapView from loading online tiles using network connection.
         mapView.setEnabled(true);
         (mapView.getTileProvider().getTileCache()).getProtectedTileComputers().clear();
-        loadLastTracks();
     }
 
     private void loadLastTracks() {
-        Query query = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(500);
+        Query query = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(150);
         query.get().addOnCompleteListener(task -> {
 
             if (task.isSuccessful()) {
@@ -91,33 +91,35 @@ public class MapFragment extends Fragment {
                     SensorTrackInfo track = datum.getValue(SensorTrackInfo.class);
                     if (track.getSize() > 0 && track.getSize() < 3000) addMarker(track);
                 }
-                Logger.i(TAG,"markers count:"+mapView.getOverlays().size());
+                Logger.v(TAG,"markers count:"+mapView.getOverlays().size());
             }
         });
 
     }
 
     public void addMarker(SensorTrackInfo trackInfo) {
-        Marker pointMarker = new Marker(mapView);
-        pointMarker.setOnMarkerClickListener((marker, mapView) -> {
-            Logger.d(TAG, "OnMarkerClickListener => " + trackInfo.getName());
-            getMain().showTrackInfoFragment(trackInfo.getName());
-            return true;
-        });
+        if(mapView!=null){
+            Marker pointMarker = new Marker(mapView);
+            pointMarker.setOnMarkerClickListener((marker, mapView) -> {
+                Logger.d(TAG, "OnMarkerClickListener => " + trackInfo.getName());
+                getMain().showTrackInfoFragment(trackInfo.getName());
+                return true;
+            });
 
-        SensorData lastSensorData = trackInfo.getLastSensorData();
+            SensorData lastSensorData = trackInfo.getLastSensorData();
 
-        Drawable icon;
-        if(lastSensorData!=null && lastSensorData.P25 > 20)
-            icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_red, null);
-        else
-            icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
+            Drawable icon;
+            if(lastSensorData!=null && lastSensorData.P25 > 20)
+                icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_red, null);
+            else
+                icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
 
-        pointMarker.setPosition(new GeoPoint(trackInfo.getLastLat(), trackInfo.getLastLon()));
-        pointMarker.setIcon(icon);
+            pointMarker.setPosition(new GeoPoint(trackInfo.getLastLat(), trackInfo.getLastLon()));
+            pointMarker.setIcon(icon);
 
-        mapView.getOverlays().add(pointMarker);
-        mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
+            mapView.getOverlays().add(pointMarker);
+            mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
+        }
     }
 
     private void loadAqicnData() {
