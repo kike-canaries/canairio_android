@@ -1,7 +1,6 @@
 package hpsaturn.pollutionreporter.view;
 
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -15,11 +14,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
-import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import java.text.DecimalFormat;
 
@@ -42,13 +39,10 @@ import io.nlopez.smartlocation.SmartLocation;
  * Created by Antonio Vanegas @hpsaturn on 2/17/19.
  */
 
-public class SettingsSensorFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFixedStation extends SettingsBaseFragment {
 
-    public static final String TAG = SettingsSensorFragment.class.getSimpleName();
+    public static final String TAG = SettingsFixedStation.class.getSimpleName();
 
-    private Location lastLocation;
-    private Snackbar snackBar;
-    private boolean onSensorReading;
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {

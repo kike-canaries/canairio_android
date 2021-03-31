@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:title="Fixed Station Settings"
+        android:dependency="@string/key_device_status">
+
+        <EditTextPreference
+            android:inputType="text"
+            app:icon="@android:drawable/ic_menu_edit"
+            app:key="@string/key_setting_dname"
+            app:summary=""
+            app:title="Station Name" />
+
+        <EditTextPreference
+            app:dependency="@string/key_setting_dname"
+            android:inputType="text"
+            app:key="@string/key_setting_ssid"
+            app:summary=""
+            app:title="WiFi Name" />
+
+        <EditTextPreference
+            app:dependency="@string/key_setting_dname"
+            android:inputType="textPassword"
+            app:key="@string/key_setting_pass"
+            app:summary="WiFi password"
+            app:title="Password" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_wifi"
+            app:summary="@string/summary_wifi"
+            app:title="Enable WiFi Connection" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:dependency="@string/key_setting_enable_wifi"
+        app:title="InfluxDB Cloud">
+
+        <EditTextPreference
+            android:inputType="text"
+            app:icon="@android:drawable/ic_menu_upload"
+            app:key="@string/key_setting_ifxdb"
+            app:summary=""
+            app:title="Database Name" />
+
+        <EditTextPreference
+            android:inputType="textUri"
+            app:key="@string/key_setting_ifxip"
+            app:summary=""
+            app:title="Hostname" />
+
+        <!--<EditTextPreference-->
+        <!--app:inputType="text"-->
+        <!--app:key="@string/key_setting_ifxtg"-->
+        <!--app:summary=""-->
+        <!--app:title="Optional Data Tags" />-->
+
+        <SwitchPreference
+            app:key="@string/key_setting_enable_ifx"
+            app:title="Enable InfluxDB Cloud" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:isPreferenceVisible="false"
+        app:dependency="@string/key_setting_enable_wifi"
+        app:title="Deprecated CanAirIO API">
+
+        <EditTextPreference
+            android:inputType="text"
+            app:icon="@android:drawable/ic_menu_upload"
+            app:key="@string/key_setting_apiusr"
+            app:summary=""
+            app:title="Username" />
+
+        <EditTextPreference
+            android:inputType="textPassword"
+            app:key="@string/key_setting_apipss"
+            app:summary="CanAirIO API Password"
+            app:title="Password" />
+
+        <EditTextPreference
+            android:inputType="text"
+            app:key="@string/key_setting_apisrv"
+            android:defaultValue="@string/value_apisrv_default"
+            app:summary=""
+            app:title="Hostname" />
+
+        <EditTextPreference
+            android:inputType="text"
+            app:key="@string/key_setting_apiuri"
+            android:defaultValue="@string/value_apiuri_default"
+            app:summary=""
+            app:title="API target" />
+
+        <SwitchPreference
+            app:key="@string/key_setting_enable_api"
+            app:title="Enable CanAirIO API" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Optional Device Settings"
+        android:dependency="@string/key_device_status">
+
+        <SwitchPreference
+            app:key="@string/key_setting_enable_location"
+            app:title="Save Current Location" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_reboot"
+            app:summary="@string/summary_reboot"
+            app:title="Reboot Device" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_clear"
+            app:summary="@string/summary_clear"
+            app:title="Factory Reset" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title=""
+        app:isPreferenceVisible="false">
+        <Preference
+            app:icon="@android:drawable/ic_menu_send"
+            app:key="@string/key_send_feedback"
+            app:summary="Report technical issues or suggest new features"
+            app:title="Send Feedback" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="">
+        <Preference
+            app:icon="@android:drawable/ic_popup_sync"
+            app:key="@string/key_device_info"
+            app:summary=""
+            app:title="Device info:" />
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>

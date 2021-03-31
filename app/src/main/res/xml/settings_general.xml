@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="App settings">
+
+        <MultiSelectListPreference
+            android:defaultValue="@array/pref_vars_stores"
+            android:entries="@array/pref_vars_entries"
+            android:entryValues="@array/pref_vars_values"
+            android:key="@string/key_setting_vars"
+            android:summary="Variables  on chart"
+            android:title="Variables"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:inputType="textUri"
+            app:defaultValue="/sdcard/canairio"
+            app:enabled="false"
+            app:key="@string/key_setting_sdpath"
+            app:summary="/sdcard/canairio"
+            app:title="Auto Save Directory" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Device Status">
+        <SwitchPreference
+            app:defaultValue="false"
+            app:icon="@android:drawable/ic_lock_power_off"
+            app:key="@string/key_device_status"
+            app:summary="Disconnected"
+            app:title="Device Status:" />
+        <Preference
+            android:fragment="hpsaturn.pollutionreporter.view.SettingsFixedStation"
+            app:summary="WiFi fixed station settings"
+            app:title="Fixed Station">
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -48,7 +48,8 @@ import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
-import hpsaturn.pollutionreporter.view.SettingsSensorFragment;
+import hpsaturn.pollutionreporter.view.SettingsFixedStation;
+import hpsaturn.pollutionreporter.view.SettingsFragment;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -80,7 +81,7 @@ public class MainActivity extends BaseActivity implements
     private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
     private PostsFragment postsFragment;
-    private SettingsSensorFragment settingsSensorFragment;
+    private SettingsFragment settingsFixedStation;
     private DatabaseReference mDatabase;
 
     private boolean deviceConnected = false;
@@ -123,7 +124,7 @@ public class MainActivity extends BaseActivity implements
                 showSnackMessage(R.string.msg_device_reconnecting);
                 deviceConnected = false;
             }
-            if(settingsSensorFragment !=null)  settingsSensorFragment.setStatusSwitch(deviceConnected);
+//            if(settingsFixedStation !=null)  settingsFixedStation.setStatusSwitch(deviceConnected);
         }
 
         @Override
@@ -167,7 +168,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorConfigRead(ResponseConfig config) {
-            settingsSensorFragment.configCallBack(config);
+//            settingsFixedStation.configCallBack(config);
         }
 
         @Override
@@ -260,7 +261,7 @@ public class MainActivity extends BaseActivity implements
                 fab.hide();
                 hideFragment(postsFragment);
                 hideFragment(recordsFragment);
-                hideFragment(settingsSensorFragment);
+                hideFragment(settingsFixedStation);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(mapFragment);
@@ -269,7 +270,7 @@ public class MainActivity extends BaseActivity implements
                 fab.hide();
                 hideFragment(recordsFragment);
                 hideFragment(mapFragment);
-                hideFragment(settingsSensorFragment);
+                hideFragment(settingsFixedStation);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
@@ -280,7 +281,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
-                hideFragment(settingsSensorFragment);
+                hideFragment(settingsFixedStation);
                 if(isPaired()) showFragment(chartFragment);
                 else showFragment(scanFragment);
                 break;
@@ -295,7 +296,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(recordsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
-                showFragment(settingsSensorFragment);
+                showFragment(settingsFixedStation);
                 fragmentPickerHide();
                 recordTrackManager.readSensorConfig();
                 break;
@@ -308,7 +309,7 @@ public class MainActivity extends BaseActivity implements
         fab.hide();
         hideFragment(postsFragment);
         hideFragment(mapFragment);
-        hideFragment(settingsSensorFragment);
+        hideFragment(settingsFixedStation);
         if(isPaired())hideFragment(chartFragment);
         else hideFragment(scanFragment);
         showFragment(recordsFragment);
@@ -364,9 +365,9 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void addSettingsFragment() {
-        if (settingsSensorFragment == null) settingsSensorFragment = new SettingsSensorFragment();
-        if (settingsSensorFragment.isAdded()) return;
-        addFragment(settingsSensorFragment, SettingsSensorFragment.TAG, false);
+        if (settingsFixedStation == null) settingsFixedStation = new SettingsFragment();
+        if (settingsFixedStation.isAdded()) return;
+        addFragment(settingsFixedStation, SettingsFixedStation.TAG, false);
     }
 
     private void addPostsFragment() {
@@ -478,7 +479,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        if(settingsSensorFragment !=null && settingsSensorFragment.isVisible()){
+        if(settingsFixedStation !=null && settingsFixedStation.isVisible()){
             fragmentPicker.setVisibility(View.VISIBLE);
             fragmentPicker.scrollToPosition(3);
             scrollToRecordsFragment();
