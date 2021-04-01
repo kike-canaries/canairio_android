@@ -2,15 +2,19 @@ package hpsaturn.pollutionreporter.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 
 import com.hpsaturn.tools.Logger;
 
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
+import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorType;
 
 /**
@@ -26,6 +30,12 @@ public class SettingsFragment extends SettingsBaseFragment {
     @Override
     protected void refreshUI() {
         updateStimeSummary();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        infoPreferenceInit();
     }
 
     @Override
@@ -45,6 +55,7 @@ public class SettingsFragment extends SettingsBaseFragment {
             else updateSensorTypeSummary((config.stype));
         }
 
+        saveDeviceInfoString(config);
         setStatusSwitch(true);
 
         if (notify_sync) {
@@ -149,6 +160,39 @@ public class SettingsFragment extends SettingsBaseFragment {
         if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
     }
 
+    /***********************************************************************************************
+     * Device info
+     **********************************************************************************************/
+
+    private void infoPreferenceInit() {
+        Preference infoPreference = findPreference(getString(R.string.key_device_info));
+
+        infoPreference.setOnPreferenceClickListener(preference -> {
+            readSensorConfig();
+            return false;
+        });
+    }
+
+    public void onReadSensorData(SensorData data) {
+        String info = getSharedPreference(getString(R.string.key_device_info));
+        info = info + "\n-----------------------"
+                +"\n"+data.dsl+"->PM2.5:"+data.P25+" PM1:"+data.P1+" CO2:"+data.CO2
+                + "\n T:"+data.tmp+" H:"+data.hum;
+
+        updateSummary(R.string.key_device_info,info);
+        saveSharedPreference(R.string.key_device_info,info);
+    }
+
+    private void saveDeviceInfoString(ResponseConfig config) {
+        String info = "MAC:"
+                + config.vmac
+                +"\nFirmware: "+config.vflv+" rev"+config.vrev+" ("+config.vtag+")"
+                +"\n[WiFi:"+(config.wenb ? "On" : "Off")+"][IFDB:"+(config.ienb ? "On" : "Off")
+                +"][GW:"+(config.wsta ? "On" : "Off")+"]";
+        if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
+        updateSummary(R.string.key_device_info,info);
+        saveSharedPreference(R.string.key_device_info,info);
+    }
 
     /***********************************************************************************************
      * Update Preferences methods
@@ -156,6 +200,7 @@ public class SettingsFragment extends SettingsBaseFragment {
 
     private void saveAllPreferences(ResponseConfig config) {
         resetStimeValue(config.stime);
+        saveDeviceInfoString(config);
     }
 
 }

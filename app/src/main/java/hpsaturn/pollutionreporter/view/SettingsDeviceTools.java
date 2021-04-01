@@ -34,10 +34,7 @@ public class SettingsDeviceTools extends SettingsBaseFragment{
                 performRebootDevice();
             } else if (key.equals(getString(R.string.key_setting_enable_clear))) {
                 performClearDevice();
-            } else if (key.equals(getString(R.string.key_setting_enable_location))) {
-                saveLocation();
             }
-
         }
         else
             Logger.i(TAG,"skyp onSharedPreferenceChanged because is in reading mode!");
@@ -47,65 +44,18 @@ public class SettingsDeviceTools extends SettingsBaseFragment{
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_device_tools, rootKey);
-
     }
 
     @Override
     protected void refreshUI() {
-        Logger.i(TAG,"[Settings Tools] refreshUI");
-        updateLocationSummary();
-        lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
-        validateLocationSwitch();
+
     }
 
     @Override
     protected void onConfigRead(ResponseConfig config) {
-        updateLocationSummary();
-        validateLocationSwitch();
+
     }
 
-
-    private void validateLocationSwitch() {
-        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
-        locationSwitch.setEnabled(lastLocation!=null);
-    }
-
-    private void saveLocation() {
-        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
-        if(lastLocation != null) {
-            if(locationSwitch.isChecked()) {
-                snackBar = getMain().getSnackBar(R.string.msg_set_current_location, R.string.bt_location_save_action, view -> {
-                    getMain().showSnackMessage(R.string.msg_save_location);
-                    GeoConfig config = new GeoConfig();
-                    config.lat = lastLocation.getLatitude();
-                    config.lon = lastLocation.getLongitude();
-                    config.alt = lastLocation.getAltitude();
-                    config.spd = lastLocation.getSpeed();
-                    sendSensorConfig(config);
-                    Handler handler = new Handler();
-                    handler.postDelayed(() -> locationSwitch.setChecked(false), 2000);
-                });
-                snackBar.show();
-            }
-            else{
-                snackBar.dismiss();
-            }
-        }
-        else {
-            getMain().showSnackMessage(R.string.msg_save_location_failed);
-        }
-        updateLocationSummary();
-    }
-
-    private void updateLocationSummary() {
-        if (lastLocation != null) {
-            DecimalFormat precision = new DecimalFormat("0.000");
-            String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
-            String lat = "(" + precision.format(lastLocation.getLatitude());
-            String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
-            updateSummary(R.string.key_setting_enable_location,accu + lat + lon);
-        }
-    }
 
     private void performRebootDevice() {
         SwitchPreference rebootSwitch = findPreference(getString(R.string.key_setting_enable_reboot));
