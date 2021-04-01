@@ -13,6 +13,7 @@
 
     <PreferenceCategory
         android:dependency="@string/key_device_status"
+        android:summary="Optional for fixed stations (WiFi)"
         app:title="Fixed Station Settings">
 
         <EditTextPreference
@@ -75,8 +76,7 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory
-        app:title="Save current location">
+    <PreferenceCategory app:title="Save current location">
 
         <SwitchPreference
             app:key="@string/key_setting_enable_location"
