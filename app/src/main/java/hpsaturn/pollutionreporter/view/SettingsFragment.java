@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
 import com.hpsaturn.tools.Logger;
+import com.hpsaturn.tools.UITools;
 
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
@@ -31,6 +32,7 @@ public class SettingsFragment extends SettingsBaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         infoPreferenceInit();
+        sendFeedbackInit();
     }
 
     @Override
@@ -77,9 +79,10 @@ public class SettingsFragment extends SettingsBaseFragment {
     private void infoPreferenceInit() {
         Preference infoPreference = findPreference(getString(R.string.key_device_info));
 
+        assert infoPreference != null;
         infoPreference.setOnPreferenceClickListener(preference -> {
             readSensorConfig();
-            return false;
+            return true;
         });
     }
 
@@ -92,6 +95,20 @@ public class SettingsFragment extends SettingsBaseFragment {
         if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
+    }
+
+    /***********************************************************************************************
+     * Send feedback section
+     **********************************************************************************************/
+
+    private void sendFeedbackInit() {
+        Preference sendFeedback = findPreference(getString(R.string.key_send_feedback));
+
+        assert sendFeedback != null;
+        sendFeedback.setOnPreferenceClickListener(preference -> {
+            UITools.viewLink(getActivity(),getString(R.string.url_github_android_app_issues));
+            return true;
+        });
     }
 
     /***********************************************************************************************
