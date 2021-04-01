@@ -2,7 +2,6 @@ package hpsaturn.pollutionreporter.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 
-import java.text.DecimalFormat;
-
-import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ApiConfig;
 import hpsaturn.pollutionreporter.models.CommandConfig;
-import hpsaturn.pollutionreporter.models.GeoConfig;
 import hpsaturn.pollutionreporter.models.InfluxdbConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
@@ -33,7 +25,6 @@ import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorName;
 import hpsaturn.pollutionreporter.models.SensorType;
 import hpsaturn.pollutionreporter.models.WifiConfig;
-import io.nlopez.smartlocation.SmartLocation;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 2/17/19.
@@ -57,12 +48,10 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         updateSensorNameSummary();
         updateStimeSummary();
         updateWifiSummary();
-        updateLocationSummary();
         updateApiHostSummary();
         updateApiUriSummary();
         updateInfluxDbSummmary();
         updateInfluxPortSummary();
-        validateLocationSwitch();
     }
 
     @Override
@@ -152,12 +141,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                 getInfluxDbSwitch().setEnabled(isInfluxDbSwitchFieldsValid());
             } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
                 saveInfluxDbConfig();
-            } else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
-                performRebootDevice();
-            } else if (key.equals(getString(R.string.key_setting_enable_clear))) {
-                performClearDevice();
-            } else if (key.equals(getString(R.string.key_setting_enable_location))) {
-                saveLocation();
             } else if (key.equals(getString(R.string.key_setting_vars))) {
                 getMain().selectedVarsUpdated();
             }
@@ -463,99 +446,10 @@ public class SettingsFixedStation extends SettingsBaseFragment {
      * Misc preferences section
      **********************************************************************************************/
 
-    private void validateLocationSwitch() {
-        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
-        locationSwitch.setEnabled(lastLocation!=null);
-    }
-
-    private void saveLocation() {
-        SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
-        if(lastLocation != null) {
-            if(locationSwitch.isChecked()) {
-                snackBar = getMain().getSnackBar(R.string.msg_set_current_location, R.string.bt_location_save_action, view -> {
-                    getMain().showSnackMessage(R.string.msg_save_location);
-                    GeoConfig config = new GeoConfig();
-                    config.lat = lastLocation.getLatitude();
-                    config.lon = lastLocation.getLongitude();
-                    config.alt = lastLocation.getAltitude();
-                    config.spd = lastLocation.getSpeed();
-                    sendSensorConfig(config);
-                    Handler handler = new Handler();
-                    handler.postDelayed(() -> locationSwitch.setChecked(false), 2000);
-                });
-                snackBar.show();
-            }
-            else{
-                snackBar.dismiss();
-            }
-        }
-        else {
-            getMain().showSnackMessage(R.string.msg_save_location_failed);
-        }
-        updateLocationSummary();
-    }
-
-    private void updateLocationSummary() {
-        if (lastLocation != null) {
-            DecimalFormat precision = new DecimalFormat("0.000");
-            String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
-            String lat = "(" + precision.format(lastLocation.getLatitude());
-            String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
-            updateSummary(R.string.key_setting_enable_location,accu + lat + lon);
-        }
-    }
-
-    private void performRebootDevice() {
-        SwitchPreference rebootSwitch = findPreference(getString(R.string.key_setting_enable_reboot));
-        if (!rebootSwitch.isChecked()) {
-            if(snackBar!=null)snackBar.dismiss();
-        } else {
-            snackBar = getMain().getSnackBar(R.string.bt_device_reboot, R.string.bt_device_reboot_action, view -> {
-                rebootSwitch.setChecked(false);
-                sendSensorReboot();
-                getMain().showSnackMessageSlow(R.string.msg_device_reboot);
-                Handler handler = new Handler();
-                handler.postDelayed(() -> getMain().finish(), 3000);
-            });
-            snackBar.show();
-        }
-    }
-
-    private void sendSensorReboot() {
-        CommandConfig config = new CommandConfig();
-        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
-        config.act = "rbt";
-        sendSensorConfig(config);
-    }
-
-    private void performClearDevice() {
-        SwitchPreference clearSwitch = findPreference(getString(R.string.key_setting_enable_clear));
-        if (!clearSwitch.isChecked()) {
-            if(snackBar!=null)snackBar.dismiss();
-        } else {
-            snackBar = getMain().getSnackBar(R.string.bt_device_clear, R.string.bt_device_clear_action, view -> {
-                clearSwitch.setChecked(false);
-                CommandConfig config = new CommandConfig();
-                config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
-                config.act = "cls";
-                getMain().showSnackMessageSlow(R.string.msg_device_clear);
-                sendSensorConfig(config);
-                clearSharedPreferences();
-                Handler handler = new Handler();
-                handler.postDelayed(() -> getMain().finish(), 3000);
-            });
-            snackBar.show();
-        }
-    }
-
     /***********************************************************************************************
      * Update methods
      **********************************************************************************************/
 
-    private void sendSensorConfig(SensorConfig config) {
-        Logger.v(TAG, "[Config] writing sensor config: "+config.getClass().getName());
-        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
-    }
 
     private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
@@ -568,7 +462,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
         updatePasswSummary(R.string.key_setting_pass);
         updatePasswSummary(R.string.key_setting_apipss);
-        updateLocationSummary();
 
     }
 
@@ -625,53 +518,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         saveDeviceInfoString(config);
     }
 
-    private void saveSharedPreference(int key, String value) {
-        saveSharedPreference(getString(key), value);
-    }
 
-    private void saveSharedPreference(String key, String value) {
-        if(value!=null && value.length()!=0) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(key, value);
-            editor.apply();
-        }
-    }
-
-    private void saveSharedPreference(int key, boolean enable) {
-        String skey = getString(key);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(skey, enable);
-        editor.apply();
-    }
-
-    private String getSharedPreference(String key) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-        return preferences.getString(key, "");
-    }
-
-    private void clearSharedPreferences(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-        preferences.edit().clear().apply();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-        refreshUI();
-    }
-
-    @Override
-    public void onPause() {
-        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
-    }
-
-    private MainActivity getMain() {
-        return ((MainActivity) getActivity());
-    }
 
 }

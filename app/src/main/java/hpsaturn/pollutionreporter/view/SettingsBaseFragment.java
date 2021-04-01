@@ -13,12 +13,14 @@ import androidx.preference.SwitchPreference;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
+import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
@@ -84,7 +86,7 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         pref.setSummary(getString(msg));
     }
 
-    private MainActivity getMain() {
+    MainActivity getMain() {
         return ((MainActivity) getActivity());
     }
 
@@ -112,6 +114,44 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         Logger.i(TAG, "[Config] vflv  : " + config.vflv);
         Logger.i(TAG, "[Config] vtag  : " + config.vtag);
         Logger.i(TAG, "[Config] lskey : " + config.lskey);
+    }
+
+
+    public void sendSensorConfig(SensorConfig config) {
+        Logger.v(TAG, "[Config] writing sensor config: "+config.getClass().getName());
+        getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
+    }
+
+
+    void saveSharedPreference(int key, String value) {
+        saveSharedPreference(getString(key), value);
+    }
+
+    private void saveSharedPreference(String key, String value) {
+        if(value!=null && value.length()!=0) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(key, value);
+            editor.apply();
+        }
+    }
+
+    private void saveSharedPreference(int key, boolean enable) {
+        String skey = getString(key);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(skey, enable);
+        editor.apply();
+    }
+
+    String getSharedPreference(String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        return preferences.getString(key, "");
+    }
+
+    void clearSharedPreferences(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        preferences.edit().clear().apply();
     }
 
 
@@ -194,5 +234,18 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     public void onDestroy() {
         if(trackManager!=null)trackManager.unregister();
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshUI();
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
     }
 }

@@ -132,28 +132,6 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:dependency="@string/key_device_status"
-        app:title="Optional Device Settings">
-
-        <SwitchPreference
-            app:key="@string/key_setting_enable_location"
-            app:title="Save Current Location" />
-
-        <SwitchPreference
-            app:defaultValue="false"
-            app:key="@string/key_setting_enable_reboot"
-            app:summary="@string/summary_reboot"
-            app:title="Reboot Device" />
-
-        <SwitchPreference
-            app:defaultValue="false"
-            app:key="@string/key_setting_enable_clear"
-            app:summary="@string/summary_clear"
-            app:title="Factory Reset" />
-
-
-    </PreferenceCategory>
 
     <PreferenceCategory
         app:isPreferenceVisible="false"
