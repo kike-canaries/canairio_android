@@ -41,12 +41,11 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     public void rebuildUI(){
         getPreferenceScreen().removeAll();
-        addPreferencesFromResource(R.xml.settings);
+        addPreferencesFromResource(R.xml.settings_fixed_station);
     }
 
     public void refreshUI(){
         updateSensorNameSummary();
-        updateStimeSummary();
         updateWifiSummary();
         updateApiHostSummary();
         updateApiUriSummary();
@@ -62,9 +61,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         boolean notify_sync = false;
 
-        if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
-            notify_sync = true;
-        }
         if (getSensorName().length() > 0 && !getSensorName().equals(config.dname)){
             notify_sync = true;
         }
@@ -79,10 +75,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         }
         if (config.aenb != getApiSwitch().isChecked()) {
             notify_sync = true;
-        }
-        if (config.stype != getSensorType()) {
-            if (config.stype < 0) updateSensorTypeSummary(0);
-            else updateSensorTypeSummary((config.stype));
         }
 
         saveDeviceInfoString(config);
@@ -117,10 +109,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
             if (key.equals(getString(R.string.key_setting_dname))) {
                 saveSensorName(getSensorName());
-            } else if (key.equals(getString(R.string.key_setting_stime))) {
-                validateSensorSampleTime();
-            } else if (key.equals(getString(R.string.key_setting_dtype))) {
-                sendSensorTypeConfig();
             } else if (key.equals(getString(R.string.key_setting_ssid))) {
                 getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
             } else if (key.equals(getString(R.string.key_setting_pass))) {
@@ -174,73 +162,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         updateSummary(R.string.key_setting_dname);
     }
 
-    /***********************************************************************************************
-     * Sensor type section
-     **********************************************************************************************/
 
-    private void sendSensorTypeConfig() {
-        Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_dtype));
-        getMain().showSnackMessage(R.string.msg_reboot_manually);
-        SensorType config = new SensorType();
-        config.stype = getSensorType();
-        sendSensorConfig(config);
-    }
-
-    private void updateSensorTypeSummary(int value) {
-        ListPreference sizePreference = findPreference(getString(R.string.key_setting_dtype));
-        sizePreference.setValueIndex(value);
-    }
-
-    private int getSensorType() {
-        try {
-            return Integer.parseInt(getSharedPreference(getString(R.string.key_setting_dtype)));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-
-    /***********************************************************************************************
-     * Sample time handlers
-     **********************************************************************************************/
-
-    private void validateSensorSampleTime() {
-        Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_stime));
-        if (getCurrentStime() >= 5) {
-            saveSensorSampleTime(getCurrentStime());
-        }
-    }
-
-    private void saveSensorSampleTime(int time) {
-        Logger.v(TAG, "[Config] sending sensor time: "+time);
-        SampleConfig config = new SampleConfig();
-        config.stime = time;
-        updateSummary(R.string.key_setting_stime,getStimeFormat(config.stime));
-        sendSensorConfig(config);
-    }
-
-    private int getCurrentStime() {
-        try {
-            return Integer.parseInt(getSharedPreference(getString(R.string.key_setting_stime)));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    private void resetStimeValue(int stime) {
-        saveSharedPreference(R.string.key_setting_stime, "" + stime);
-        updateStimeSummary();
-    }
-
-    String getStimeFormat(int time){
-        return "" + time + " seconds";
-    }
-
-    private void updateStimeSummary() {
-        updateSummary(R.string.key_setting_stime,getStimeFormat(getCurrentStime()));
-    }
 
     /***********************************************************************************************
      * Wifi switch
@@ -459,7 +381,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
         if(config.ifxdb !=null)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
         if(config.ifxip !=null)updateSummary(R.string.key_setting_ifxip,config.ifxip);
-        if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
         updatePasswSummary(R.string.key_setting_pass);
         updatePasswSummary(R.string.key_setting_apipss);
 
@@ -507,7 +428,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
      **********************************************************************************************/
 
     private void saveAllPreferences(ResponseConfig config) {
-        resetStimeValue(config.stime);
         saveSharedPreference(R.string.key_setting_dname, config.dname);
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);

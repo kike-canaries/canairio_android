@@ -13,27 +13,6 @@
 
     <PreferenceCategory
         android:dependency="@string/key_device_status"
-        app:title="Mobile Station Settings">
-
-        <EditTextPreference
-            android:inputType="number"
-            app:defaultValue="5"
-            app:icon="@android:drawable/ic_menu_save"
-            app:key="@string/key_setting_stime"
-            app:summary="@string/summary_stime"
-            app:title="Sample Time Interval" />
-
-        <ListPreference
-            android:defaultValue="0"
-            android:entries="@array/pref_dtype_entries"
-            android:entryValues="@array/pref_dtype_values"
-            android:key="@string/key_setting_dtype"
-            android:title="Sensor type"
-            app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:dependency="@string/key_device_status"
         app:title="Fixed Station Settings">
 
         <EditTextPreference
