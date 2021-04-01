@@ -9,8 +9,8 @@
             android:entries="@array/pref_vars_entries"
             android:entryValues="@array/pref_vars_values"
             android:key="@string/key_setting_vars"
-            android:summary="Variables  on chart"
-            android:title="Variables"
+            android:summary="What variable is shown in each chart"
+            android:title="Variables filter"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
@@ -23,18 +23,28 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Device Status">
+    <PreferenceCategory app:title="Device Settings">
         <SwitchPreference
             app:defaultValue="false"
             app:icon="@android:drawable/ic_lock_power_off"
             app:key="@string/key_device_status"
             app:summary="Disconnected"
             app:title="Device Status:" />
+
         <Preference
+            android:dependency="@string/key_device_status"
             android:fragment="hpsaturn.pollutionreporter.view.SettingsFixedStation"
             app:summary="WiFi fixed station settings"
             app:title="Fixed Station">
         </Preference>
+
+        <Preference
+            android:dependency="@string/key_device_status"
+            android:fragment="hpsaturn.pollutionreporter.view.SettingsDeviceTools"
+            app:summary="Some device actions and settings"
+            app:title="CanAirIO device tools">
+        </Preference>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

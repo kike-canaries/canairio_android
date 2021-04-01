@@ -43,10 +43,9 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     public static final String TAG = SettingsFixedStation.class.getSimpleName();
 
-
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.settings, rootKey);
+        setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
     }
 
     public void rebuildUI(){
@@ -67,6 +66,51 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     }
 
     @Override
+    protected void onConfigRead(ResponseConfig config) {
+        Logger.d(TAG, "[Config] onConfigCallBack");
+
+        printResponseConfig(config);
+
+        boolean notify_sync = false;
+
+        if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
+            notify_sync = true;
+        }
+        if (getSensorName().length() > 0 && !getSensorName().equals(config.dname)){
+            notify_sync = true;
+        }
+        if (config.wenb != getWifiSwitch().isChecked()) {
+            notify_sync = true;
+        }
+        if (!config.ifxdb.equals(getInfluxDbDname())){
+            notify_sync = true;
+        }
+        if (config.ienb != getInfluxDbSwitch().isChecked()) {
+            notify_sync = true;
+        }
+        if (config.aenb != getApiSwitch().isChecked()) {
+            notify_sync = true;
+        }
+        if (config.stype != getSensorType()) {
+            if (config.stype < 0) updateSensorTypeSummary(0);
+            else updateSensorTypeSummary((config.stype));
+        }
+
+        saveDeviceInfoString(config);
+        setStatusSwitch(true);
+
+        if (notify_sync) {
+            saveAllPreferences(config);
+            updateSwitches(config);
+            rebuildUI();
+            updateStatusSummary(true);
+            updatePreferencesSummmary(config);
+            Logger.v(TAG, "[Config] notify device sync complete");
+            getMain().showSnackMessage(R.string.msg_sync_complete);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -74,7 +118,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        readSensorConfig();
         infoPreferenceInit();
     }
 
@@ -125,25 +168,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     }
 
-    /***********************************************************************************************
-     * Sensor status section
-     **********************************************************************************************/
-
-    public void setStatusSwitch(boolean checked) {
-        Logger.i(TAG,"setStatusSwitch: "+checked);
-        SwitchPreference statusSwitch = getStatusSwitch();
-        statusSwitch.setEnabled(checked);
-        statusSwitch.setChecked(checked);
-        updateStatusSummary(checked);
-    }
-
-    private SwitchPreference getStatusSwitch() {
-        return findPreference(getString(R.string.key_device_status));
-    }
-
-    private void updateStatusSummary(boolean status){
-        updateSummary(R.string.key_device_status, status ? "Connected":"Disconnected");
-    }
 
     /***********************************************************************************************
      * Sensor name section
@@ -533,91 +557,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         getMain().getRecordTrackManager().writeSensorConfig(new Gson().toJson(config));
     }
 
-    private void readSensorConfig(){
-        getMain().getRecordTrackManager().readSensorConfig();
-    }
-
-    public void configCallBack(ResponseConfig config) {
-
-        if (config != null) {
-
-            onSensorReading = true;
-
-            printResponseConfig(config);
-
-            FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_name),""+config.dname);
-            FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_wmac),""+config.wmac);
-            FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
-
-            boolean notify_sync = false;
-
-            if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
-                notify_sync = true;
-            }
-            if (getSensorName().length() > 0 && !getSensorName().equals(config.dname)){
-                notify_sync = true;
-            }
-            if (config.wenb != getWifiSwitch().isChecked()) {
-                notify_sync = true;
-            }
-            if (!config.ifxdb.equals(getInfluxDbDname())){
-                notify_sync = true;
-            }
-            if (config.ienb != getInfluxDbSwitch().isChecked()) {
-                notify_sync = true;
-            }
-            if (config.aenb != getApiSwitch().isChecked()) {
-                notify_sync = true;
-            }
-            if (config.stype != getSensorType()) {
-                if (config.stype < 0) updateSensorTypeSummary(0);
-                else updateSensorTypeSummary((config.stype));
-            }
-
-            saveDeviceInfoString(config);
-            setStatusSwitch(true);
-
-            if (notify_sync) {
-                saveAllPreferences(config);
-                updateSwitches(config);
-                rebuildUI();
-                updateStatusSummary(true);
-                updatePreferencesSummmary(config);
-                Logger.v(TAG, "[Config] notify device sync complete");
-                getMain().showSnackMessage(R.string.msg_sync_complete);
-            }
-
-        }
-        onSensorReading = false;
-    }
-
-    private void printResponseConfig(ResponseConfig config) {
-        Logger.i(TAG, "[Config] Callback values:");
-        Logger.i(TAG, "[Config] dname:  " + config.dname);
-        Logger.i(TAG, "[Config] stime:  " + config.stime);
-        Logger.i(TAG, "[Config] stype:  " + config.stype);
-        Logger.i(TAG, "[Config] ssid:   " + config.ssid);
-        Logger.i(TAG, "[Config] ifxdb:  " + config.ifxdb);
-        Logger.i(TAG, "[Config] ifxip:  " + config.ifxip);
-        Logger.i(TAG, "[Config] apiusr: " + config.apiusr);
-        Logger.i(TAG, "[Config] apisrv: " + config.apisrv);
-        Logger.i(TAG, "[Config] apiuri: " + config.apiuri);
-        Logger.i(TAG, "[Config] apiprt: " + config.apiprt);
-        Logger.i(TAG, "[Config] -----------------------------");
-        Logger.i(TAG, "[Config] wifien: " + config.wenb);
-        Logger.i(TAG, "[Config] ifdben: " + config.ienb);
-        Logger.i(TAG, "[Config] apien : " + config.aenb);
-        Logger.i(TAG, "[Config] -----------------------------");
-        Logger.i(TAG, "[Config] wifist: " + config.wsta);
-        Logger.i(TAG, "[Config] wmac  : " + config.wmac);
-        Logger.i(TAG, "[Config] vrev  : " + config.vrev);
-        Logger.i(TAG, "[Config] vmac  : " + config.vmac);
-        Logger.i(TAG, "[Config] vflv  : " + config.vflv);
-        Logger.i(TAG, "[Config] vtag  : " + config.vtag);
-        Logger.i(TAG, "[Config] lskey : " + config.lskey);
-    }
-
-
     private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
         if(config.apiusr !=null)updateSummary(R.string.key_setting_apiusr,config.apiusr);
@@ -631,24 +570,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         updatePasswSummary(R.string.key_setting_apipss);
         updateLocationSummary();
 
-    }
-
-    private void updateSummary(int key){
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getMain());
-        String skey = getString(key);
-        Preference pref = findPreference(skey);
-        String value = sharedPref.getString(skey, "");
-        pref.setSummary(value);
-    }
-
-    private void updateSummary(int key, String msg){
-        Preference pref = findPreference(getString(key));
-        pref.setSummary(msg);
-    }
-
-    private void updateSummary(int key, int msg){
-        Preference pref = findPreference(getString(key));
-        pref.setSummary(getString(msg));
     }
 
     private void updatePasswSummary(int key) {

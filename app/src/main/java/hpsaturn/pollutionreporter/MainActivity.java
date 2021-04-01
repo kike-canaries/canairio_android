@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements
     private MapFragment mapFragment;
     private RecordsFragment recordsFragment;
     private PostsFragment postsFragment;
-    private SettingsFragment settingsFixedStation;
+    private SettingsFragment settingsFragment;
     private DatabaseReference mDatabase;
 
     private boolean deviceConnected = false;
@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity implements
                 showSnackMessage(R.string.msg_device_reconnecting);
                 deviceConnected = false;
             }
-//            if(settingsFixedStation !=null)  settingsFixedStation.setStatusSwitch(deviceConnected);
+            if(settingsFragment !=null) settingsFragment.setStatusSwitch(deviceConnected);
         }
 
         @Override
@@ -168,7 +168,7 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorConfigRead(ResponseConfig config) {
-//            settingsFixedStation.configCallBack(config);
+//            settingsFragment.configCallBack(config);
         }
 
         @Override
@@ -261,7 +261,7 @@ public class MainActivity extends BaseActivity implements
                 fab.hide();
                 hideFragment(postsFragment);
                 hideFragment(recordsFragment);
-                hideFragment(settingsFixedStation);
+                hideFragment(settingsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(mapFragment);
@@ -270,7 +270,7 @@ public class MainActivity extends BaseActivity implements
                 fab.hide();
                 hideFragment(recordsFragment);
                 hideFragment(mapFragment);
-                hideFragment(settingsFixedStation);
+                hideFragment(settingsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
                 showFragment(postsFragment);
@@ -281,7 +281,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
                 hideFragment(recordsFragment);
-                hideFragment(settingsFixedStation);
+                hideFragment(settingsFragment);
                 if(isPaired()) showFragment(chartFragment);
                 else showFragment(scanFragment);
                 break;
@@ -296,7 +296,7 @@ public class MainActivity extends BaseActivity implements
                 hideFragment(recordsFragment);
                 if(isPaired())hideFragment(chartFragment);
                 else hideFragment(scanFragment);
-                showFragment(settingsFixedStation);
+                showFragment(settingsFragment);
                 fragmentPickerHide();
                 recordTrackManager.readSensorConfig();
                 break;
@@ -309,7 +309,7 @@ public class MainActivity extends BaseActivity implements
         fab.hide();
         hideFragment(postsFragment);
         hideFragment(mapFragment);
-        hideFragment(settingsFixedStation);
+        hideFragment(settingsFragment);
         if(isPaired())hideFragment(chartFragment);
         else hideFragment(scanFragment);
         showFragment(recordsFragment);
@@ -365,9 +365,9 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void addSettingsFragment() {
-        if (settingsFixedStation == null) settingsFixedStation = new SettingsFragment();
-        if (settingsFixedStation.isAdded()) return;
-        addFragment(settingsFixedStation, SettingsFixedStation.TAG, false);
+        if (settingsFragment == null) settingsFragment = new SettingsFragment();
+        if (settingsFragment.isAdded()) return;
+        addFragment(settingsFragment, SettingsFixedStation.TAG, false);
     }
 
     private void addPostsFragment() {
@@ -479,7 +479,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        if(settingsFixedStation !=null && settingsFixedStation.isVisible()){
+        if(settingsFragment !=null && settingsFragment.isVisible()){
             fragmentPicker.setVisibility(View.VISIBLE);
             fragmentPicker.scrollToPosition(3);
             scrollToRecordsFragment();
