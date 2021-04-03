@@ -8,7 +8,7 @@
             app:icon="@android:drawable/ic_lock_power_off"
             app:key="@string/key_device_status"
             app:summary="Disconnected"
-            app:title="Device Status:" />
+            app:title="@string/msg_ble_status_title" />
     </PreferenceCategory>
 
     <PreferenceCategory

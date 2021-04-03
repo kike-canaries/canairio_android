@@ -44,6 +44,7 @@ public class SettingsFragment extends SettingsBaseFragment {
 
         if (notify_sync) {
             saveAllPreferences(config);
+            printResponseConfig(config);
             updateStatusSummary(true);
             Logger.v(TAG, "[Config] notify device sync complete");
             getMain().showSnackMessage(R.string.msg_sync_complete);
@@ -62,7 +63,7 @@ public class SettingsFragment extends SettingsBaseFragment {
 
         }
         else
-            Logger.i(TAG,"skyp onSharedPreferenceChanged because is in reading mode!");
+            Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
     }
 

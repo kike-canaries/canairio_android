@@ -23,30 +23,6 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     public static final String TAG = SettingsMobileStation.class.getSimpleName();
 
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        if (!onSensorReading) {
-
-            if (key.equals(getString(R.string.key_setting_stime))) {
-                validateSensorSampleTime();
-            }
-            else if (key.equals(getString(R.string.key_setting_dtype))) {
-                sendSensorTypeConfig();
-            }
-            else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
-                performRebootDevice();
-            }
-            else if (key.equals(getString(R.string.key_setting_enable_clear))) {
-                performClearDevice();
-            }
-        }
-        else
-            Logger.i(TAG,"skyp onSharedPreferenceChanged because is in reading mode!");
-
-    }
-
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_mobile_station, rootKey);
@@ -73,11 +49,35 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
         if (notify_sync) {
             saveAllPreferences(config);
+            printResponseConfig(config);
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
             getMain().showSnackMessage(R.string.msg_sync_complete);
         }
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (!onSensorReading) {
+
+            if (key.equals(getString(R.string.key_setting_stime))) {
+                validateSensorSampleTime();
+            }
+            else if (key.equals(getString(R.string.key_setting_dtype))) {
+                sendSensorTypeConfig();
+            }
+            else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
+                performRebootDevice();
+            }
+            else if (key.equals(getString(R.string.key_setting_enable_clear))) {
+                performClearDevice();
+            }
+        }
+        else
+            Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
     }
 

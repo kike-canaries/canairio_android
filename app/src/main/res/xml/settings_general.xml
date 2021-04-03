@@ -8,6 +8,7 @@
             android:defaultValue="@array/pref_vars_stores"
             android:entries="@array/pref_vars_entries"
             android:entryValues="@array/pref_vars_values"
+            android:icon="@android:drawable/ic_menu_gallery"
             android:key="@string/key_setting_vars"
             android:summary="What variable is shown in each chart"
             android:title="Variables filter"
@@ -20,7 +21,7 @@
             app:icon="@android:drawable/ic_lock_power_off"
             app:key="@string/key_device_status"
             app:summary="Disconnected"
-            app:title="Device Status:" />
+            app:title="@string/msg_ble_status_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:dependency="@string/key_device_status"
@@ -30,12 +31,14 @@
             android:dependency="@string/key_device_status"
             android:fragment="hpsaturn.pollutionreporter.view.SettingsMobileStation"
             app:summary="Bluetooth mobile station settings"
+            android:icon="@android:drawable/ic_menu_directions"
             app:title="Mobile Station"></Preference>
 
         <Preference
             android:dependency="@string/key_device_status"
             android:fragment="hpsaturn.pollutionreporter.view.SettingsFixedStation"
             app:summary="WiFi fixed station settings"
+            android:icon="@android:drawable/ic_menu_mapmode"
             app:title="Fixed Station"></Preference>
 
     </PreferenceCategory>
@@ -44,7 +47,7 @@
         android:dependency="@string/key_device_status"
         app:title="">
         <Preference
-            app:icon="@android:drawable/ic_popup_sync"
+            app:icon="@android:drawable/ic_menu_info_details"
             app:key="@string/key_device_info"
             app:summary=""
             app:title="Device info:" />

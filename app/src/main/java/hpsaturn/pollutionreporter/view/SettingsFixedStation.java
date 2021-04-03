@@ -3,11 +3,7 @@ package hpsaturn.pollutionreporter.view;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.SwitchPreference;
 
@@ -77,6 +73,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         if (notify_sync) {
             saveAllPreferences(config);
+            printResponseConfig(config);
             updateSwitches(config);
             rebuildUI();
             updateStatusSummary(true);
@@ -84,16 +81,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             Logger.v(TAG, "[Config] notify device sync complete");
             getMain().showSnackMessage(R.string.msg_sync_complete);
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -121,10 +108,9 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         }
         else
-            Logger.i(TAG,"skyp onSharedPreferenceChanged because is in reading mode!");
+            Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
     }
-
 
     /***********************************************************************************************
      * Sensor name section
@@ -140,15 +126,13 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         updateSensorNameSummary();
     }
 
-    String getSensorName() {
+    private String getSensorName() {
         return getSharedPreference(getString(R.string.key_setting_dname));
     }
 
     private void updateSensorNameSummary() {
         updateSummary(R.string.key_setting_dname);
     }
-
-
 
     /***********************************************************************************************
      * Wifi switch
@@ -201,7 +185,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         config.wenb = enable;
         sendSensorConfig(config);
     }
-
 
     /***********************************************************************************************
      * InfluxDB switch
