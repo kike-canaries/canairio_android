@@ -75,7 +75,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             notify_sync = true;
         }
 
-        setStatusSwitch(true);
         updateLocationSummary();
         validateLocationSwitch();
 

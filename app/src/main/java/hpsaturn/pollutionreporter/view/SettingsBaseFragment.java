@@ -36,6 +36,7 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     public Snackbar snackBar;
     public boolean onSensorReading;
     private RecordTrackManager trackManager;
+    private boolean deviceConnected;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -159,7 +160,13 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     private RecordTrackInterface recordTrackListener = new RecordTrackInterface() {
         @Override
         public void onServiceStatus(String status) {
-
+            if (status.equals(RecordTrackManager.STATUS_BLE_START)) {
+                deviceConnected = true;
+            } else if (status.equals(RecordTrackManager.STATUS_SERVICE_OK)){
+            } else if (status.equals(RecordTrackManager.STATUS_BLE_FAILURE)) {
+                deviceConnected = false;
+            }
+            setStatusSwitch(deviceConnected);
         }
 
         @Override
@@ -206,10 +213,10 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         public void onSensorConfigRead(ResponseConfig config) {
             if (config != null) {
                 onSensorReading = true;
-//                printResponseConfig(config);
                 FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_name),""+config.dname);
                 FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_wmac),""+config.wmac);
                 FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
+                setStatusSwitch(true);
                 onConfigRead(config);
             }
             onSensorReading = false;

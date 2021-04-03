@@ -124,7 +124,6 @@ public class MainActivity extends BaseActivity implements
                 showSnackMessage(R.string.msg_device_reconnecting);
                 deviceConnected = false;
             }
-            if(settingsFragment !=null) settingsFragment.setStatusSwitch(deviceConnected);
         }
 
         @Override
@@ -168,7 +167,6 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorConfigRead(ResponseConfig config) {
-//            settingsFragment.configCallBack(config);
         }
 
         @Override

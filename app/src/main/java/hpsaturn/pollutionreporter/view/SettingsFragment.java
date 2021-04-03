@@ -45,7 +45,6 @@ public class SettingsFragment extends SettingsBaseFragment {
         boolean notify_sync = false;
 
         saveDeviceInfoString(config);
-        setStatusSwitch(true);
 
         if (notify_sync) {
             saveAllPreferences(config);

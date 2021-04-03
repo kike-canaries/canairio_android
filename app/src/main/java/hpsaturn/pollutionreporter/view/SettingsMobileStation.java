@@ -72,8 +72,6 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else updateSensorTypeSummary((config.stype));
         }
 
-        setStatusSwitch(true);
-
         if (notify_sync) {
             saveAllPreferences(config);
             updateStatusSummary(true);
