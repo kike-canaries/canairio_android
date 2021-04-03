@@ -38,10 +38,6 @@ public class SettingsFragment extends SettingsBaseFragment {
     @Override
     protected void onConfigRead(ResponseConfig config) {
 
-        Logger.d(TAG, "[Config] onConfigCallBack");
-
-        printResponseConfig(config);
-
         boolean notify_sync = false;
 
         saveDeviceInfoString(config);

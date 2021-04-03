@@ -56,9 +56,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     @Override
     protected void onConfigRead(ResponseConfig config) {
-        Logger.d(TAG, "[Config] onConfigCallBack");
-
-        printResponseConfig(config);
 
         boolean notify_sync = false;
 
@@ -354,7 +351,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
-        saveSharedPreference(R.string.key_setting_wmac, "" + config.wmac);
     }
 
 }

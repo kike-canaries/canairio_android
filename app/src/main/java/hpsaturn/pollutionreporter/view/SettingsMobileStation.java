@@ -60,7 +60,6 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     @Override
     protected void onConfigRead(ResponseConfig config) {
-        Logger.d(TAG, "[Config] onConfigCallBack");
 
         boolean notify_sync = false;
 

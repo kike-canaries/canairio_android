@@ -91,7 +91,7 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         return ((MainActivity) getActivity());
     }
 
-    public void printResponseConfig(ResponseConfig config) {
+    private void printResponseConfig(ResponseConfig config) {
         Logger.i(TAG, "[Config] Callback values:");
         Logger.i(TAG, "[Config] dname:  " + config.dname);
         Logger.i(TAG, "[Config] stime:  " + config.stime);
@@ -213,6 +213,8 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         public void onSensorConfigRead(ResponseConfig config) {
             if (config != null) {
                 onSensorReading = true;
+                printResponseConfig(config);
+                saveSharedPreference(R.string.key_setting_wmac, "" + config.wmac);
                 FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_name),""+config.dname);
                 FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_device_wmac),""+config.wmac);
                 FirebaseCrashlytics.getInstance().setCustomKey(getString(R.string.crashkey_api_usr),""+config.apiusr);
