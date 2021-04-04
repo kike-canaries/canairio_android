@@ -64,6 +64,7 @@
     <string name="bt_device_build">build your own device</string>
     <string name="url_oficial_guide_en">https://github.com/kike-canaries/esp32-hpma115s0/wiki</string>
     <string name="url_oficial_guide_es">https://github.com/kike-canaries/esp32-hpma115s0/wiki</string>
+    <string name="url_github_android_app_issues">https://github.com/kike-canaries/canairio_android/issues</string>
     <string name="menu_guide">Sensor DIY Guide</string>
     <string name="url_canairio_page">https://canair.io</string>
     <string name="url_canairio_feedback">https://canair.io/#three</string>
@@ -89,4 +90,5 @@
     <string name="key_device_status">key_device_status</string>
     <string name="key_device_info">key_device_info</string>
     <string name="key_setting_vars">key_settings_vars</string>
+    <string name="msg_ble_status_title">Bluetooth Status:</string>
 </resources>

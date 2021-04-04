@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory>
+        <SwitchPreference
+            app:defaultValue="false"
+            app:icon="@android:drawable/ic_lock_power_off"
+            app:key="@string/key_device_status"
+            app:summary="Disconnected"
+            app:title="@string/msg_ble_status_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:dependency="@string/key_device_status"
+        android:summary="Optional for fixed stations (WiFi)"
+        app:title="Fixed Station Settings">
+
+        <EditTextPreference
+            android:inputType="text"
+            app:icon="@android:drawable/ic_menu_edit"
+            app:key="@string/key_setting_dname"
+            app:summary=""
+            app:title="Station Name" />
+
+        <EditTextPreference
+            android:inputType="text"
+            app:dependency="@string/key_setting_dname"
+            app:key="@string/key_setting_ssid"
+            app:summary=""
+            app:title="WiFi Name" />
+
+        <EditTextPreference
+            android:inputType="textPassword"
+            app:dependency="@string/key_setting_dname"
+            app:key="@string/key_setting_pass"
+            app:summary="WiFi password"
+            app:title="Password" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_enable_wifi"
+            app:summary="@string/summary_wifi"
+            app:title="Enable WiFi Connection" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:dependency="@string/key_setting_enable_wifi"
+        app:title="CanAirIO influxDB">
+
+        <EditTextPreference
+            android:inputType="text"
+            app:icon="@android:drawable/ic_menu_upload"
+            app:key="@string/key_setting_ifxdb"
+            app:summary=""
+            app:title="Database Name" />
+
+        <EditTextPreference
+            android:inputType="textUri"
+            app:key="@string/key_setting_ifxip"
+            app:summary=""
+            app:title="Hostname" />
+
+        <!--<EditTextPreference-->
+        <!--app:inputType="text"-->
+        <!--app:key="@string/key_setting_ifxtg"-->
+        <!--app:summary=""-->
+        <!--app:title="Optional Data Tags" />-->
+
+        <SwitchPreference
+            app:key="@string/key_setting_enable_ifx"
+            app:summary="Publish to CanAirIO or custom server"
+            app:title="Enable InfluxDB" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="Save current location">
+
+        <SwitchPreference
+            app:key="@string/key_setting_enable_location"
+            app:title="Send Lat/Long to device" />
+    </PreferenceCategory>
+</PreferenceScreen>
