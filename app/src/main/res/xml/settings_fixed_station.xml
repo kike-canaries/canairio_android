@@ -55,7 +55,7 @@
             app:title="Enable publication" />
 
         <Preference
-            app:dependency="@string/key_setting_enable_ifx"
+            app:key="@string/key_setting_ifx_advanced"
             android:fragment="hpsaturn.pollutionreporter.view.SettingsCustomInfluxDB"
             app:summary="Custom InfluxDB settings"
             app:title="Advanced Settings" />

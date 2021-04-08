@@ -70,11 +70,8 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     }
 
     void updateSummary(int key){
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getMain());
-        String skey = getString(key);
-        Preference pref = findPreference(skey);
-        String value = sharedPref.getString(skey, "");
-        pref.setSummary(value);
+        String value = getSharedPreference(getString(key));
+        updateSummary(key,value);
     }
 
     void updateSummary(int key, String msg){
@@ -85,6 +82,10 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     void updateSummary(int key, int msg){
         Preference pref = findPreference(getString(key));
         pref.setSummary(getString(msg));
+    }
+
+    Preference findPreference(int key) {
+        return findPreference(getString(key));
     }
 
     MainActivity getMain() {
@@ -155,8 +156,6 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         preferences.edit().clear().apply();
     }
-
-
 
     private RecordTrackInterface recordTrackListener = new RecordTrackInterface() {
         @Override

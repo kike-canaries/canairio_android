@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
 import com.hpsaturn.tools.Logger;
@@ -190,8 +191,11 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             config.ifxpt = Integer.parseInt(getSharedPreference(getString(R.string.key_setting_ifxpt)));
             config.ienb = true;
             sendSensorConfig(config);
-        } else
+            findPreference(R.string.key_setting_ifx_advanced).setEnabled(false);
+        } else {
+            findPreference(R.string.key_setting_ifx_advanced).setEnabled(true);
             setInfluxDbSwitch(false);
+        }
     }
 
     private boolean isInfluxDbSwitchFieldsValid(){
@@ -221,8 +225,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     private SwitchPreference getInfluxDbSwitch() {
         return findPreference(getString(R.string.key_setting_enable_ifx));
     }
-
-
 
     /***********************************************************************************************
      * Misc preferences section
