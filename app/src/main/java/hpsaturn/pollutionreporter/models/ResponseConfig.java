@@ -25,6 +25,8 @@ public class ResponseConfig extends SensorConfig {
 
     public String ifxip;
 
+    public int ifxpt;
+
     public String lskey;
 
     public String vmac;

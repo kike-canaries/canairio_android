@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
 import com.hpsaturn.tools.Logger;
@@ -43,8 +44,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         Logger.i(TAG,"[Config] refreshUI");
         updateSensorNameSummary();
         updateWifiSummary();
-        updateInfluxDbSummmary();
-        updateInfluxPortSummary();
         updateLocationSummary();
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         validateLocationSwitch();
@@ -59,9 +58,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             notify_sync = true;
         }
         if (config.wenb != getWifiSwitch().isChecked()) {
-            notify_sync = true;
-        }
-        if (!config.ifxdb.equals(getInfluxDbDname())){
             notify_sync = true;
         }
         if (config.ienb != getInfluxDbSwitch().isChecked()) {
@@ -96,10 +92,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                 getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
             } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
                 saveWifiConfig();
-            } else if (key.equals(getString(R.string.key_setting_ifxdb))) {
-                getInfluxDbSwitch().setEnabled(isInfluxDbSwitchFieldsValid());
-            } else if (key.equals(getString(R.string.key_setting_ifxip))) {
-                getInfluxDbSwitch().setEnabled(isInfluxDbSwitchFieldsValid());
             } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
                 saveInfluxDbConfig();
             } else if (key.equals(getString(R.string.key_setting_enable_location))) {
@@ -196,17 +188,20 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             InfluxdbConfig config = new InfluxdbConfig();
             config.ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
             config.ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
+            config.ifxpt = Integer.parseInt(getSharedPreference(getString(R.string.key_setting_ifxpt)));
             config.ienb = true;
             sendSensorConfig(config);
-        } else
+            findPreference(R.string.key_setting_ifx_advanced).setEnabled(false);
+        } else {
+            findPreference(R.string.key_setting_ifx_advanced).setEnabled(true);
             setInfluxDbSwitch(false);
+        }
     }
 
     private boolean isInfluxDbSwitchFieldsValid(){
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
         String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
         String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-        updateInfluxSummary();
         Logger.v(TAG, "[Config] values -> " + ifxdb +  " " + ifxip);
         return !(ifxdb.length() == 0 || ifxip.length() == 0);
     }
@@ -216,13 +211,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         SwitchPreference ifxdbSwitch = getInfluxDbSwitch();
         ifxdbSwitch.setEnabled(isInfluxDbSwitchFieldsValid());
         ifxdbSwitch.setChecked(checked);
-        updateInfluxSummary();
         enableInfluxDbOnDevice(checked);
-    }
-
-    private void updateInfluxSummary(){
-        updateInfluxDbSummmary();
-        updateInfluxPortSummary();
     }
 
     private void enableInfluxDbOnDevice(boolean enable) {
@@ -235,10 +224,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private SwitchPreference getInfluxDbSwitch() {
         return findPreference(getString(R.string.key_setting_enable_ifx));
-    }
-
-    private String getInfluxDbDname() {
-        return getSharedPreference(getString(R.string.key_setting_ifxdb));
     }
 
     /***********************************************************************************************
@@ -295,8 +280,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
         if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
-        if(config.ifxdb !=null)updateSummary(R.string.key_setting_ifxdb,config.ifxdb);
-        if(config.ifxip !=null)updateSummary(R.string.key_setting_ifxip,config.ifxip);
         updatePasswSummary(R.string.key_setting_pass);
 
     }
@@ -305,14 +288,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         String passw = getSharedPreference(getString(key));
         if(passw.length()>0) updateSummary(key,R.string.msg_passw_seted);
         else updateSummary(key,R.string.msg_passw_unseted);
-    }
-
-    private void updateInfluxDbSummmary() {
-        updateSummary(R.string.key_setting_ifxdb);
-    }
-
-    private void updateInfluxPortSummary() {
-        updateSummary(R.string.key_setting_ifxip);
     }
 
     private void updateSwitch(int key,boolean enable){

@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.FileTools;
 import com.hpsaturn.tools.Logger;
+import com.hpsaturn.tools.UITools;
 import com.iamhabib.easy_preference.EasyPreference;
 
 import java.text.SimpleDateFormat;
@@ -81,7 +82,8 @@ public class RecordTrackService extends Service {
         if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
             if (bleHandler == null) {
                 connect();
-            } else if (bleHandler.isConnected()) {
+            }
+            else if (bleHandler.isConnected()) {
                 Logger.i(TAG, "[BLE] already connected!");
                 recordTrackManager.status(RecordTrackManager.STATUS_BLE_START);
             }
@@ -230,6 +232,7 @@ public class RecordTrackService extends Service {
             recordTrackManager.status(RecordTrackManager.STATUS_BLE_FAILURE);
             if (retry_connect++ < RETRY_POLICY) {
                 Logger.w(TAG, "[BLE] retry connection on failure.." + retry_connect);
+                retry_connect=0;
                 startConnection();
             }
         }
