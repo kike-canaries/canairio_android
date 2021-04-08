@@ -9,4 +9,6 @@ public class InfluxdbConfig extends SensorConfig{
 
     public String ifxip;
 
+    public int ifxpt;
+
 }
