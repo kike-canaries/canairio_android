@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:icon="@android:drawable/ic_lock_power_off"
+        app:key="@string/key_device_status"
+        app:summary="Disconnected"
+        app:title="@string/msg_ble_status_title" />
+
+    <PreferenceCategory app:title="InfluxDB Settings">
+
+        <EditTextPreference
+            android:inputType="text"
+            app:defaultValue="canairio"
+            app:icon="@android:drawable/ic_menu_upload"
+            app:key="@string/key_setting_ifxdb"
+            app:summary=""
+            app:title="Database Name" />
+
+        <EditTextPreference
+            android:inputType="textUri"
+            app:defaultValue="influxdb.canair.io"
+            app:key="@string/key_setting_ifxip"
+            app:summary=""
+            app:title="Hostname" />
+
+        <EditTextPreference
+            android:inputType="number"
+            app:defaultValue="8086"
+            app:key="@string/key_setting_ifxpt"
+            app:summary=""
+            app:title="Port" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

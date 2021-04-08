@@ -47,31 +47,18 @@
 
     <PreferenceCategory
         app:dependency="@string/key_setting_enable_wifi"
-        app:title="CanAirIO influxDB">
-
-        <EditTextPreference
-            android:inputType="text"
-            app:icon="@android:drawable/ic_menu_upload"
-            app:key="@string/key_setting_ifxdb"
-            app:summary=""
-            app:title="Database Name" />
-
-        <EditTextPreference
-            android:inputType="textUri"
-            app:key="@string/key_setting_ifxip"
-            app:summary=""
-            app:title="Hostname" />
-
-        <!--<EditTextPreference-->
-        <!--app:inputType="text"-->
-        <!--app:key="@string/key_setting_ifxtg"-->
-        <!--app:summary=""-->
-        <!--app:title="Optional Data Tags" />-->
+        app:title="Share CanAirIO station">
 
         <SwitchPreference
             app:key="@string/key_setting_enable_ifx"
             app:summary="Publish to CanAirIO or custom server"
-            app:title="Enable InfluxDB" />
+            app:title="Enable publication" />
+
+        <Preference
+            app:dependency="@string/key_setting_enable_ifx"
+            android:fragment="hpsaturn.pollutionreporter.view.SettingsCustomInfluxDB"
+            app:summary="Custom InfluxDB settings"
+            app:title="Advanced Settings" />
 
     </PreferenceCategory>
 

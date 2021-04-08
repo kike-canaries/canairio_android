@@ -99,6 +99,7 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         Logger.i(TAG, "[Config] ssid:   " + config.ssid);
         Logger.i(TAG, "[Config] ifxdb:  " + config.ifxdb);
         Logger.i(TAG, "[Config] ifxip:  " + config.ifxip);
+        Logger.i(TAG, "[Config] ifxpt:  " + config.ifxpt);
         Logger.i(TAG, "[Config] apiusr: " + config.apiusr);
         Logger.i(TAG, "[Config] apisrv: " + config.apisrv);
         Logger.i(TAG, "[Config] apiuri: " + config.apiuri);

@@ -48,6 +48,7 @@
     <string name="key_setting_ifxdb">key_setting_ifxdb</string>
     <string name="key_setting_ifxip">key_setting_ifxip</string>
     <string name="key_setting_ifxtg">key_setting_ifxtg</string>
+    <string name="key_setting_ifxpt">key_setting_ifxpt</string>
     <string name="key_setting_enable_wifi">key_setting_wifi_enable</string>
     <string name="key_setting_enable_api">key_setting_api_enable</string>
     <string name="key_setting_enable_ifx">key_setting_ifx_enable</string>

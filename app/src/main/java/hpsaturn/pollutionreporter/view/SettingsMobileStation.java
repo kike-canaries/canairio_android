@@ -114,6 +114,18 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         updateStimeSummary();
     }
 
+    String getStimeFormat(int time){
+        return "" + time + " seconds";
+    }
+
+    private void updateStimeSummary() {
+        updateSummary(R.string.key_setting_stime,getStimeFormat(getCurrentStime()));
+    }
+
+    private void updatePreferencesSummmary(ResponseConfig config) {
+        if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
+    }
+
     /***********************************************************************************************
      * Sensor type section
      **********************************************************************************************/
@@ -140,17 +152,6 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         return 0;
     }
 
-    String getStimeFormat(int time){
-        return "" + time + " seconds";
-    }
-
-    private void updateStimeSummary() {
-        updateSummary(R.string.key_setting_stime,getStimeFormat(getCurrentStime()));
-    }
-
-    private void updatePreferencesSummmary(ResponseConfig config) {
-        if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
-    }
 
     /***********************************************************************************************
      * Sensor tools
