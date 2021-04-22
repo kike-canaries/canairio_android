@@ -1,6 +1,7 @@
 package hpsaturn.pollutionreporter.view;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -99,26 +100,30 @@ public class MapFragment extends Fragment {
 
     public void addMarker(SensorTrackInfo trackInfo) {
         if(mapView!=null){
-            Marker pointMarker = new Marker(mapView);
-            pointMarker.setOnMarkerClickListener((marker, mapView) -> {
-                Logger.d(TAG, "OnMarkerClickListener => " + trackInfo.getName());
-                getMain().showTrackInfoFragment(trackInfo.getName());
-                return true;
-            });
+            try {
+                Marker pointMarker = new Marker(mapView);
+                pointMarker.setOnMarkerClickListener((marker, mapView) -> {
+                    Logger.d(TAG, "OnMarkerClickListener => " + trackInfo.getName());
+                    getMain().showTrackInfoFragment(trackInfo.getName());
+                    return true;
+                });
 
-            SensorData lastSensorData = trackInfo.getLastSensorData();
+                SensorData lastSensorData = trackInfo.getLastSensorData();
 
-            Drawable icon;
-            if(lastSensorData!=null && lastSensorData.P25 > 20)
-                icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_red, null);
-            else
-                icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
+                Drawable icon;
+                if(lastSensorData!=null && lastSensorData.P25 > 20)
+                    icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_red, null);
+                else
+                    icon = ResourcesCompat.getDrawable(getResources(), R.drawable.map_mark_yellow, null);
 
-            pointMarker.setPosition(new GeoPoint(trackInfo.getLastLat(), trackInfo.getLastLon()));
-            pointMarker.setIcon(icon);
+                pointMarker.setPosition(new GeoPoint(trackInfo.getLastLat(), trackInfo.getLastLon()));
+                pointMarker.setIcon(icon);
 
-            mapView.getOverlays().add(pointMarker);
-            mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
+                mapView.getOverlays().add(pointMarker);
+                mapView.getController().setCenter(new GeoPoint(trackInfo.getLastLat(),trackInfo.getLastLon()));
+            } catch (Resources.NotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
