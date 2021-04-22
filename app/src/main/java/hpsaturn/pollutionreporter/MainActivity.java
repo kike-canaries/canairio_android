@@ -423,6 +423,7 @@ public class MainActivity extends BaseActivity implements
                 .withPermissions(
                         Manifest.permission.BLUETOOTH,
                         Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
                 .withListener(new MultiplePermissionsListener() {
