@@ -162,7 +162,7 @@ public class BLEHandler {
         return bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
     }
 
-    public void triggerDisconnect() {
+    public synchronized void triggerDisconnect() {
         try {
             Logger.w(TAG, "[BLE] triggerDisconnect..");
             compositeDisposable.clear();

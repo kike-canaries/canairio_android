@@ -97,6 +97,10 @@ public class RecordTrackService extends Service {
         Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
         bleHandler = new BLEHandler(this, macAddress, bleListener);
         bleHandler.connect();
+        localitationConfig();
+    }
+
+    private void localitationConfig () {
         SmartLocation.with(this)
                 .location()
                 .config(LocationParams.NAVIGATION)
@@ -229,12 +233,8 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onConectionFailure() {
+            Logger.e(TAG, "[BLE] onConectionFailure");
             recordTrackManager.status(RecordTrackManager.STATUS_BLE_FAILURE);
-            if (retry_connect++ < RETRY_POLICY) {
-                Logger.w(TAG, "[BLE] retry connection on failure.." + retry_connect);
-                retry_connect=0;
-                startConnection();
-            }
         }
 
         @Override
@@ -250,15 +250,12 @@ public class RecordTrackService extends Service {
         @Override
         public void onNotificationSetupFailure() {
             Logger.e(TAG, "[BLE] onNotificationSetupFailure");
-            if (retry_notify_setup++ < RETRY_POLICY) {
-                Logger.w(TAG, "[BLE] retry notify setup.." + retry_notify_setup);
-                if(bleHandler!=null)bleHandler.setupNotification();
-            }
         }
 
         @Override
         public void onNotificationReceived(byte[] bytes) {
             if (bleHandler != null) bleHandler.readSensorData();
+            else Logger.w(TAG, "[BLE] bleHandeler is null");
             retry_notify_setup = 0;
         }
 
@@ -278,7 +275,7 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onReadFailure() {
-
+            Logger.e(TAG, "[BLE] onReadFailure");
         }
 
         @Override
@@ -292,18 +289,25 @@ public class RecordTrackService extends Service {
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
         data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
-        assert lastLocation != null;
-        data.lat = lastLocation.getLatitude();
-        data.lon = lastLocation.getLongitude();
+        if (lastLocation != null) {
+            data.lat = lastLocation.getLatitude();
+            data.lon = lastLocation.getLongitude();
+        }
+        else {
+            Logger.w(TAG, "[BLE] failed on getLastLocation!i");
+            UITools.showToast(this,"Getting GPS localization failed!" );
+        }
+
         return data;
     }
 
     private void record(SensorData point) {
         ArrayList<SensorData> data = Storage.getSensorData(this);
+        Logger.d(TAG, "[BLE] saving point with coords: " + point.lat + "," + point.lon);
         data.add(point);
-        Logger.d(TAG, "[BLE] data size: " + data.size());
+        Logger.d(TAG, "[BLE] track data size: " + data.size());
         Storage.setSensorData(this, data);
-        Logger.d(TAG, "[BLE] saving sensor data done.");
+        Logger.d(TAG, "[BLE] saving track data done.");
         if (data.size()==MAX_POINTS_SAVING){
             Logger.d(TAG, "[BLE] saving partial track..");
             saveTrack();
