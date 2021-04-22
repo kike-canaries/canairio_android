@@ -206,7 +206,7 @@ public class RecordTrackManager {
             } else if(action.equals(response_sensor_config)) {
 
                 String config = intent.getExtras().getString(KEY_SENSOR_CONFIG_RESPONSE);
-                listener.onSensorConfigRead(new Gson().fromJson(config, ResponseConfig.class));
+                if(config!=null) listener.onSensorConfigRead(new Gson().fromJson(config, ResponseConfig.class));
 
             } else if(action.equals(response_sensor_data)) {
 
