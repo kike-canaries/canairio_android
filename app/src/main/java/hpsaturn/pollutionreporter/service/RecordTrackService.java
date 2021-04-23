@@ -362,7 +362,10 @@ public class RecordTrackService extends Service {
 
     @Override
     public void onDestroy() {
-        if (bleHandler != null) bleHandler.triggerDisconnect();
+        if (bleHandler != null) {
+            bleHandler.triggerDisconnect();
+            bleHandler = null;
+        }
         recordTrackManager.unregister();
         super.onDestroy();
     }
