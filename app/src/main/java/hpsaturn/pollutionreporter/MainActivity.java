@@ -2,6 +2,7 @@ package hpsaturn.pollutionreporter;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -419,28 +420,53 @@ public class MainActivity extends BaseActivity implements
 
 
     public void startPermissionsFlow() {
-        Dexter.withContext(this)
-                .withPermissions(
-                        Manifest.permission.BLUETOOTH,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                        if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                            Logger.i(TAG, "AllPermissionsGranted..showing UI");
-                            setupUI();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.BLUETOOTH,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                                Logger.i(TAG, "AllPermissionsGranted..showing UI");
+                                setupUI();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                        permissionToken.continuePermissionRequest();
-                    }
-                })
-                .check();
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
+                        }
+                    })
+                    .check();
+        }
+        else {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.BLUETOOTH,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                                Logger.i(TAG, "AllPermissionsGranted..showing UI");
+                                setupUI();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
+                        }
+                    })
+                    .check();
+        }
     }
 
     @Override

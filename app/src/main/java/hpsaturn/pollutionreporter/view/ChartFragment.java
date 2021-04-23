@@ -218,8 +218,9 @@ public class ChartFragment extends Fragment {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
 
-        variables.clear();
 
+        if(values == null ) return;
+        variables.clear();
         Logger.i(TAG, "[CHART] selected values:");
 
         for (String type : values) {
