@@ -211,11 +211,6 @@ public class MainActivity extends BaseActivity implements
         fabUpdateLayout();
     }
 
-    public void readSensorData() {
-        recordTrackManager.readSensorData();
-    }
-
-
     private void setupUI() {
         fab.setOnClickListener(onFabClickListener);
         setupAppFragments();

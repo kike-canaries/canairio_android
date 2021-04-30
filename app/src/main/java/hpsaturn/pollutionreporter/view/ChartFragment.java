@@ -218,8 +218,8 @@ public class ChartFragment extends Fragment {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
 
-
         if(values == null ) return;
+        Logger.i(TAG,"[CHART] loadSelectedVariables");
         variables.clear();
         Logger.i(TAG, "[CHART] selected values:");
 
@@ -346,6 +346,7 @@ public class ChartFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        Logger.w(TAG, "[CHART] onDestroyView");
         getMain().disableShareButton();
         super.onDestroyView();
     }

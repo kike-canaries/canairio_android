@@ -240,6 +240,7 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
 
     @Override
     public void onDestroy() {
+        Logger.i(TAG, "[Config] onDestroy");
         if(trackManager!=null)trackManager.unregister();
         super.onDestroy();
     }

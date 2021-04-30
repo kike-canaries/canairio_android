@@ -244,7 +244,7 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onNotificationSetup() {
-
+            if (bleHandler != null) bleHandler.readSensorData();
         }
 
         @Override

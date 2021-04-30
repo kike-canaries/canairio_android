@@ -53,7 +53,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
-            getMain().showSnackMessage(R.string.msg_sync_complete);
+//            getMain().showSnackMessage(R.string.msg_sync_complete);
         }
 
     }
