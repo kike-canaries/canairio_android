@@ -10,6 +10,8 @@ import androidx.preference.SwitchPreference;
 
 import com.hpsaturn.tools.Logger;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.text.DecimalFormat;
 
 import hpsaturn.pollutionreporter.R;
@@ -75,7 +77,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
-            getMain().showSnackMessage(R.string.msg_sync_complete);
+//            getMain().showSnackMessage(R.string.msg_sync_complete);
         }
     }
 
@@ -188,7 +190,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             InfluxdbConfig config = new InfluxdbConfig();
             config.ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
             config.ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
-            config.ifxpt = Integer.parseInt(getSharedPreference(getString(R.string.key_setting_ifxpt)));
+            config.ifxpt = NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_ifxpt)),8086);
             config.ienb = true;
             sendSensorConfig(config);
             findPreference(R.string.key_setting_ifx_advanced).setEnabled(false);

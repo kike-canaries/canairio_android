@@ -19,7 +19,7 @@
     <string name="bt_device_scanning">Scanning…</string>
     <string name="bt_device_scan">Scan</string>
     <string name="msg_device_connecting">Connecting…</string>
-    <string name="msg_record_stop">Stop recording…</string>
+    <string name="msg_record_stop">Saving track…</string>
     <string name="msg_record">Start recording…</string>
     <string name="bt_map">Map</string>
     <string name="msg_records_empty_list">No records for now</string>
