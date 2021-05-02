@@ -32,6 +32,7 @@ import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
+import hpsaturn.pollutionreporter.models.TrackStatus;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 import io.nlopez.smartlocation.location.config.LocationParams;
@@ -54,6 +55,8 @@ public class RecordTrackService extends Service {
 
     private int retry_connect = 0;
     private int retry_notify_setup = 0;
+
+    private float trackDistance = 0;
 
     @Override
     public void onCreate() {
@@ -155,6 +158,7 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onServiceRecord() {
+            trackDistance = 0;
             isRecording = true;
         }
 
@@ -292,6 +296,7 @@ public class RecordTrackService extends Service {
         if (lastLocation != null) {
             data.lat = lastLocation.getLatitude();
             data.lon = lastLocation.getLongitude();
+            bleHandler.writeTrackStatus(getTrackStatus(lastLocation,data));
         }
         else {
             Logger.w(TAG, "[BLE] failed on getLastLocation!i");
@@ -299,6 +304,22 @@ public class RecordTrackService extends Service {
         }
 
         return data;
+    }
+
+    private byte[] getTrackStatus(Location lastLocation,SensorData point) {
+        TrackStatus status = new TrackStatus();
+        status.speed = lastLocation.getSpeed();
+        status.altitud = lastLocation.getAltitude();
+        status.bearing = lastLocation.getBearing();
+        if (isRecording) {
+            ArrayList<SensorData> data = Storage.getSensorData(this); // TODO: better using memory?
+            SensorData previousPoint = data.get(data.size() - 1);
+            float[] results = new float[3];
+            Location.distanceBetween(previousPoint.lat,previousPoint.lon,point.lat,point.lon,results);
+            status.distance = trackDistance + results[0];
+        }
+        return new Gson().toJson(status).getBytes();
+
     }
 
     private void record(SensorData point) {
