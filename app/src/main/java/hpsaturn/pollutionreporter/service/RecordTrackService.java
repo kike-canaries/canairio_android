@@ -57,6 +57,7 @@ public class RecordTrackService extends Service {
     private int retry_notify_setup = 0;
 
     private float trackDistance = 0;
+    private SensorData previousPoint;
 
     @Override
     public void onCreate() {
@@ -158,13 +159,13 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onServiceRecord() {
-            trackDistance = 0;
             isRecording = true;
         }
 
         @Override
         public void onServiceRecordStop() {
             isRecording = false;
+            trackDistance = 0;
             saveTrack();
         }
 
@@ -289,11 +290,13 @@ public class RecordTrackService extends Service {
     };
 
     private SensorData getSensorData(byte[] bytes) {
+        Logger.v(TAG, "[TRACK] getSensorData");
         String strdata = new String(bytes);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
         data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
         if (lastLocation != null) {
+            Logger.i(TAG, "[TRACK] set lastLocation");
             data.lat = lastLocation.getLatitude();
             data.lon = lastLocation.getLongitude();
             bleHandler.writeTrackStatus(getTrackStatus(lastLocation,data));
@@ -307,22 +310,23 @@ public class RecordTrackService extends Service {
     }
 
     private byte[] getTrackStatus(Location lastLocation,SensorData point) {
+        Logger.v(TAG, "[TRACK] getTrackStatus");
         TrackStatus status = new TrackStatus();
         status.speed = lastLocation.getSpeed();
         status.altitud = lastLocation.getAltitude();
         status.bearing = lastLocation.getBearing();
-        if (isRecording) {
-            ArrayList<SensorData> data = Storage.getSensorData(this); // TODO: better using memory?
-            SensorData previousPoint = data.get(data.size() - 1);
+        if (isRecording && previousPoint != null) {
             float[] results = new float[3];
             Location.distanceBetween(previousPoint.lat,previousPoint.lon,point.lat,point.lon,results);
-            status.distance = trackDistance + results[0];
+            trackDistance = trackDistance + results[0];
+            status.distance = trackDistance;
         }
         return new Gson().toJson(status).getBytes();
 
     }
 
     private void record(SensorData point) {
+        previousPoint = point;
         ArrayList<SensorData> data = Storage.getSensorData(this);
         Logger.d(TAG, "[BLE] saving point with coords: " + point.lat + "," + point.lon);
         data.add(point);

@@ -244,6 +244,7 @@ public class BLEHandler {
 
     private void onSetStatusFailure(Throwable throwable) {
         Logger.e(TAG,"[BLE] onWriteFailure: " + throwable.getMessage());
+        Logger.e(TAG,"[BLE] Maybe you need upgrade the CanAirIO device");
     }
 
 }
