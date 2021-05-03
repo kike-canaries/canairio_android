@@ -6,11 +6,14 @@ package hpsaturn.pollutionreporter.models;
 public class TrackStatus {
 
 
-    public float speed;
+    public float spd;
 
-    public double altitud;
+    public float kms;
 
-    public float bearing;
+    public int hrs;
 
-    public float distance;
+    public int min;
+
+    public int seg;
+
 }

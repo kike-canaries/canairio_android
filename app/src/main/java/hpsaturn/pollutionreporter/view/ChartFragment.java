@@ -77,6 +77,7 @@ public class ChartFragment extends Fragment {
     RelativeLayout rl_separator;
 
     private long referenceTimestamp;
+
     private boolean loadingData = true;  // it's true for block data from real time chart
 
     private static final String KEY_RECORD_ID = "key_record_id";

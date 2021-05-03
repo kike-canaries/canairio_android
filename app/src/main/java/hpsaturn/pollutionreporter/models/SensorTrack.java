@@ -15,6 +15,7 @@ public class SensorTrack {
     public String desc;
     public String name;
     public int size;
+    public float kms;
     public double lastLat;
     public double lastLon;
     public SensorData lastSensorData;
@@ -46,6 +47,7 @@ public class SensorTrack {
     public String getDesc() {
         return desc;
     }
+
 
     @Override
     public String toString() {

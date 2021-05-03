@@ -312,14 +312,12 @@ public class RecordTrackService extends Service {
     private byte[] getTrackStatus(Location lastLocation,SensorData point) {
         Logger.v(TAG, "[TRACK] getTrackStatus");
         TrackStatus status = new TrackStatus();
-        status.speed = lastLocation.getSpeed();
-        status.altitud = lastLocation.getAltitude();
-        status.bearing = lastLocation.getBearing();
+        status.spd = ((int)((lastLocation.getSpeed()*18000)/5))/1000; // m/s to km/h (removed extra)
         if (isRecording && previousPoint != null) {
             float[] results = new float[3];
             Location.distanceBetween(previousPoint.lat,previousPoint.lon,point.lat,point.lon,results);
-            trackDistance = trackDistance + results[0];
-            status.distance = trackDistance;
+            trackDistance = trackDistance + ((int)(results[0]*1000))/1000; // remove extra precision
+            status.kms = trackDistance/1000;
         }
         return new Gson().toJson(status).getBytes();
 
@@ -370,6 +368,7 @@ public class RecordTrackService extends Service {
         track.setName(nameDate);
         track.size = data.size();
         track.date = date;
+        track.kms = trackDistance;
         track.data = data;
         if (data.size() > 0) {
             SensorData lastSensorData = data.get(data.size() - 1);
