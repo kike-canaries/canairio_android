@@ -327,6 +327,7 @@ public class RecordTrackService extends Service {
     private void record(SensorData point) {
         previousPoint = point;
         ArrayList<SensorData> data = Storage.getSensorData(this);
+        if(trackStartTime==0) trackStartTime = data.get(0).timestamp; // restore after service crash
         Logger.i(TAG, "[TRACK] saving point with coords: " + point.lat + "," + point.lon);
         data.add(point);
         Logger.i(TAG, "[TRACK] track data size: " + data.size());
@@ -360,10 +361,12 @@ public class RecordTrackService extends Service {
         track.size = data.size();
         track.date = date;
         track.kms = trackDistance/1000;
-        int[] ints = getTrackTime(previousPoint.timestamp);
-        track.hours = ints[0];
-        track.mins  = ints[1];
-        track.secs  = ints[2];
+        if(previousPoint!=null){
+            int[] ints = getTrackTime(previousPoint.timestamp);
+            track.hours = ints[0];
+            track.mins  = ints[1];
+            track.secs  = ints[2];
+        }
         track.data = data;
         if (data.size() > 0) {
             SensorData lastSensorData = data.get(data.size() - 1);
