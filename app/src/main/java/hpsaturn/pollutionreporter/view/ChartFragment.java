@@ -339,9 +339,16 @@ public class ChartFragment extends Fragment {
     }
 
     private void setTrackDescription(SensorTrack track){
-        chart_name.setText(track.getName());
+        chart_name.setText("ID:"+track.getName());
         chart_date.setText(track.getDate());
-        chart_desc.setText(""+track.size+" points");
+        chart_desc.setText("Points: "+track.size);
+        if (track.kms != 0) {
+            String time = String.format("%02d:%02d:%02d",track.hours,track.mins,track.secs);
+            chart_loc.setText("Track: "+track.kms+" Kms ("+time+")");
+        }
+        else
+            chart_loc.setVisibility(View.GONE);
+
         rl_separator.setVisibility(View.VISIBLE);
     }
 
