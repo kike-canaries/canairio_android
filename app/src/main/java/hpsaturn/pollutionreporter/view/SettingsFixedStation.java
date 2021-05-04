@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
-import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
 import com.hpsaturn.tools.Logger;
@@ -149,7 +148,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     private boolean isWifiSwitchFieldsValid() {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_enable_wifi));
         String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
-        String pass = getSharedPreference(getString(R.string.key_setting_pass));
         Logger.v(TAG, "[Config] values -> " + ssid );
         updateWifiSummary();
         return ssid.length() != 0;

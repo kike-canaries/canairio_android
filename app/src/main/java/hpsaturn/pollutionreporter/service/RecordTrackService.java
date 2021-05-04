@@ -50,14 +50,11 @@ public class RecordTrackService extends Service {
     private boolean isRecording;
     private RecordTrackManager recordTrackManager;
 
-    private final int RETRY_POLICY = 5;
     private final int MAX_POINTS_SAVING = 3000;
-
-    private int retry_connect = 0;
-    private int retry_notify_setup = 0;
-
     private float trackDistance = 0;
     private SensorData previousPoint;
+    private long trackStartTime;
+    private long trackEndTime;
 
     @Override
     public void onCreate() {
@@ -159,14 +156,18 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onServiceRecord() {
+            Logger.v(TAG, "[TRACK] starting recording");
+            trackStartTime = System.currentTimeMillis()/1000;
             isRecording = true;
         }
 
         @Override
         public void onServiceRecordStop() {
             isRecording = false;
-            trackDistance = 0;
             saveTrack();
+            trackDistance = 0;
+            previousPoint = null;
+            Logger.v(TAG, "[TRACK] recording stop");
         }
 
         @Override
@@ -233,7 +234,6 @@ public class RecordTrackService extends Service {
         @Override
         public void onConnectionSuccess() {
             recordTrackManager.status(RecordTrackManager.STATUS_BLE_START);
-            retry_connect = 0;
         }
 
         @Override
@@ -261,7 +261,6 @@ public class RecordTrackService extends Service {
         public void onNotificationReceived(byte[] bytes) {
             if (bleHandler != null) bleHandler.readSensorData();
             else Logger.w(TAG, "[BLE] bleHandeler is null");
-            retry_notify_setup = 0;
         }
 
         @Override
@@ -290,34 +289,36 @@ public class RecordTrackService extends Service {
     };
 
     private SensorData getSensorData(byte[] bytes) {
-        Logger.v(TAG, "[TRACK] getSensorData");
         String strdata = new String(bytes);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
         data.timestamp = System.currentTimeMillis() / 1000;
         Location lastLocation = SmartLocation.with(this).location().getLastLocation();
         if (lastLocation != null) {
-            Logger.i(TAG, "[TRACK] set lastLocation");
             data.lat = lastLocation.getLatitude();
             data.lon = lastLocation.getLongitude();
-            bleHandler.writeTrackStatus(getTrackStatus(lastLocation,data));
+            data.spd = ((int)((lastLocation.getSpeed()*18000)/5))/1000; // m/s to km/h (removed extra)
+            bleHandler.writeTrackStatus(getTrackStatus(data));
         }
         else {
-            Logger.w(TAG, "[BLE] failed on getLastLocation!i");
+            Logger.w(TAG, "[TRACK] failed on getLastLocation!i");
             UITools.showToast(this,"Getting GPS localization failed!" );
         }
 
         return data;
     }
 
-    private byte[] getTrackStatus(Location lastLocation,SensorData point) {
-        Logger.v(TAG, "[TRACK] getTrackStatus");
+    private byte[] getTrackStatus(SensorData point) {
         TrackStatus status = new TrackStatus();
-        status.spd = ((int)((lastLocation.getSpeed()*18000)/5))/1000; // m/s to km/h (removed extra)
+        status.spd = point.spd;
         if (isRecording && previousPoint != null) {
             float[] results = new float[3];
             Location.distanceBetween(previousPoint.lat,previousPoint.lon,point.lat,point.lon,results);
             trackDistance = trackDistance + ((int)(results[0]*1000))/1000; // remove extra precision
             status.kms = trackDistance/1000;
+            int[] time = getTrackTime(System.currentTimeMillis()/1000);
+            status.hrs = time[0];
+            status.min = time[1];
+            status.seg = time[2];
         }
         return new Gson().toJson(status).getBytes();
 
@@ -326,35 +327,25 @@ public class RecordTrackService extends Service {
     private void record(SensorData point) {
         previousPoint = point;
         ArrayList<SensorData> data = Storage.getSensorData(this);
-        Logger.d(TAG, "[BLE] saving point with coords: " + point.lat + "," + point.lon);
+        Logger.i(TAG, "[TRACK] saving point with coords: " + point.lat + "," + point.lon);
         data.add(point);
-        Logger.d(TAG, "[BLE] track data size: " + data.size());
+        Logger.i(TAG, "[TRACK] track data size: " + data.size());
         Storage.setSensorData(this, data);
-        Logger.d(TAG, "[BLE] saving track data done.");
+        Logger.i(TAG, "[TRACK] saving track data done.");
         if (data.size()==MAX_POINTS_SAVING){
-            Logger.d(TAG, "[BLE] saving partial track..");
+            Logger.v(TAG, "[TRACK] saving partial track..");
             saveTrack();
         }
     }
 
     private void saveTrack() {
-        Logger.i(TAG, "[BLE] saving record track..");
+        Logger.i(TAG, "[TRACK] saving record track..");
         SensorTrack lastTrack = getLastTrack();
         Storage.saveTrack(this, lastTrack);
         saveTrackOnSD(lastTrack);
         Storage.setSensorData(this, new ArrayList<>()); // clear sensor data
         recordTrackManager.tracksUpdated();
-        Logger.i(TAG, "[BLE] record track done.");
-    }
-
-    private void saveTrackOnSD(SensorTrack track) {
-        Logger.i(TAG, "[BLE] saving track on SD..");
-        String data = new Gson().toJson(track);
-        new FileTools.saveDownloadFile(
-                data.getBytes(),
-                "canairio",
-                track.name + ".json"
-        ).execute();
+        Logger.i(TAG, "[TRACK] record track done.");
     }
 
     private SensorTrack getLastTrack() {
@@ -368,7 +359,11 @@ public class RecordTrackService extends Service {
         track.setName(nameDate);
         track.size = data.size();
         track.date = date;
-        track.kms = trackDistance;
+        track.kms = trackDistance/1000;
+        int[] ints = getTrackTime(previousPoint.timestamp);
+        track.hours = ints[0];
+        track.mins  = ints[1];
+        track.secs  = ints[2];
         track.data = data;
         if (data.size() > 0) {
             SensorData lastSensorData = data.get(data.size() - 1);
@@ -376,7 +371,43 @@ public class RecordTrackService extends Service {
             track.lastLat = lastSensorData.lat;
             track.lastLon = lastSensorData.lon;
         }
+        printTrack(track);
         return track;
+    }
+
+    private void printTrack(SensorTrack track) {
+        Logger.i(TAG, "[TRACK] name: "+track.name);
+        Logger.i(TAG, "[TRACK] date: "+track.date);
+        Logger.i(TAG, "[TRACK] size: "+track.size);
+        Logger.i(TAG, "[TRACK] kms: "+track.kms);
+        Logger.i(TAG, "[TRACK] hrs: "+track.hours);
+        Logger.i(TAG, "[TRACK] min: "+track.mins);
+        Logger.i(TAG, "[TRACK] seg: "+track.secs);
+    }
+
+
+    private void saveTrackOnSD(SensorTrack track) {
+        Logger.i(TAG, "[TRACK] saving track on SD..");
+        String data = new Gson().toJson(track);
+        new FileTools.saveDownloadFile(
+                data.getBytes(),
+                "canairio",
+                track.name + ".json"
+        ).execute();
+    }
+
+    private int [] getTrackTime(long ts) {
+        long diffTime = ts - trackStartTime;
+
+        int hours = (int) diffTime / 3600;
+        int remainder = (int) diffTime - hours * 3600;
+        int mins = remainder / 60;
+        remainder = remainder - mins * 60;
+        int secs = remainder;
+
+        int[] ints = {hours , mins , secs};
+        Logger.v(TAG,"[TRACK] track time: "+ints[0]+":"+ints[1]+":"+ints[2]);
+        return ints;
     }
 
     @Override

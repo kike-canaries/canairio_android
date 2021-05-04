@@ -21,6 +21,9 @@ public class SensorTrack {
     public SensorData lastSensorData;
     public ArrayList<SensorData> data;
     public String deviceId;
+    public int hours;
+    public int mins;
+    public int secs;
 
     public SensorTrack() { }
 
