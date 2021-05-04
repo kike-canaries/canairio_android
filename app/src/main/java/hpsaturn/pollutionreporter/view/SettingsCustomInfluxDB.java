@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 
 import com.hpsaturn.tools.Logger;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 
@@ -81,8 +83,7 @@ public class SettingsCustomInfluxDB extends SettingsBaseFragment {
     }
 
     private int getInfluxDbPort() {
-        int port = Integer.parseInt(getSharedPreference(getString(R.string.key_setting_ifxpt)));
-        return port;
+        return NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_ifxpt)),8086);
     }
 
     private void updateInfluxSummary(){

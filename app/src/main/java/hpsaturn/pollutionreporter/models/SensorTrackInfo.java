@@ -13,6 +13,7 @@ public class SensorTrackInfo {
     private double lastLon;
     private SensorData lastSensorData;
     private int size;
+    private float kms;
 
     public SensorTrackInfo() {
     }
@@ -22,6 +23,7 @@ public class SensorTrackInfo {
        this.desc = track.desc;
        this.date = track.date;
        this.size = track.size;
+       this.kms  = track.kms;
        this.deviceId = track.deviceId;
        this.lastLat = track.lastLat;
        this.lastLon = track.lastLon;
@@ -70,5 +72,9 @@ public class SensorTrackInfo {
 
     public SensorData getLastSensorData() {
         return lastSensorData;
+    }
+
+    public float getDistance() {
+        return kms;
     }
 }
