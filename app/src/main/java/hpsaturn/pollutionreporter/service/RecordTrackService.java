@@ -163,11 +163,16 @@ public class RecordTrackService extends Service {
 
         @Override
         public void onServiceRecordStop() {
-            isRecording = false;
-            saveTrack();
-            trackDistance = 0;
-            previousPoint = null;
-            Logger.v(TAG, "[TRACK] recording stop");
+            if(isRecording){
+                saveTrack();
+                isRecording = false;
+                trackDistance = 0;
+                previousPoint = null;
+                Logger.v(TAG, "[TRACK] recording stop");
+            }
+            else
+                Logger.w(TAG, "[TRACK] skipping stop recording because is not recording");
+
         }
 
         @Override
