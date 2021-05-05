@@ -41,4 +41,5 @@ public class SensorData {
     public float hum;
 
     public String dsl;
+
 }

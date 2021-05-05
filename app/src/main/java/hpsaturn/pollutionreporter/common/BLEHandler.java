@@ -34,6 +34,7 @@ public class BLEHandler {
     private UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
     private UUID charactSensorDataUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
     private UUID charactConfigUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae02");
+    private UUID charactStatusUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae03");
 
     private PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
     private Subscription connectionSubscription;
@@ -158,6 +159,19 @@ public class BLEHandler {
         }
     }
 
+    public void writeTrackStatus(byte[] bytes){
+        Logger.v(TAG,"[BLE] writing track status -> "+new String(bytes));
+        if (isConnected()) {
+            final Disposable disposable = connectionObservable
+                    .firstOrError()
+                    .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(charactStatusUuid, bytes))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onSetStatusSuccess, this::onSetStatusFailure);
+
+            compositeDisposable.add(disposable);
+        }
+    }
+
     public boolean isConnected() {
         return bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
     }
@@ -216,12 +230,21 @@ public class BLEHandler {
     private void onWriteSuccess(byte[] bytes) {
         Logger.v(TAG,"[BLE] onWriteSuccess->"+new String(bytes));
         Logger.i(TAG,"[BLE] reading new config..");
-        readSensorConfig();
+        readSensorConfig();  // TODO: we need it?
     }
 
     private void onWriteFailure(Throwable throwable) {
         Logger.e(TAG,"[BLE] onWriteFailure: " + throwable.getMessage());
         listener.onWriteFailure();
+    }
+
+    private void onSetStatusSuccess(byte[] bytes) {
+        Logger.v(TAG,"[BLE] onSetStatusSuccess->"+new String(bytes));
+    }
+
+    private void onSetStatusFailure(Throwable throwable) {
+        Logger.e(TAG,"[BLE] onWriteFailure: " + throwable.getMessage());
+        Logger.e(TAG,"[BLE] Maybe you need upgrade the CanAirIO device");
     }
 
 }

@@ -15,11 +15,15 @@ public class SensorTrack {
     public String desc;
     public String name;
     public int size;
+    public float kms;
     public double lastLat;
     public double lastLon;
     public SensorData lastSensorData;
     public ArrayList<SensorData> data;
     public String deviceId;
+    public int hours;
+    public int mins;
+    public int secs;
 
     public SensorTrack() { }
 
@@ -46,6 +50,7 @@ public class SensorTrack {
     public String getDesc() {
         return desc;
     }
+
 
     @Override
     public String toString() {
