@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
+import com.hpsaturn.tools.UITools;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
@@ -145,6 +146,8 @@ public class ChartFragment extends Fragment {
             map.put(types[i],labels[i]);
         }
 
+        chart_name.setOnClickListener(onChartIdClickListener);
+
         return view;
     }
 
@@ -185,7 +188,7 @@ public class ChartFragment extends Fragment {
             if(track!=null) {
                 Logger.i(TAG,"[CHART] loading track data from storage..");
                 data = track.data;
-                setTrackDescription(track);
+                setTrackDescription(track,false);
                 getMain().enableShareButton();
             }
             else{
@@ -198,7 +201,7 @@ public class ChartFragment extends Fragment {
                         if(track!=null){
                             Logger.i(TAG,"[CHART] loading track on chart..");
                             addData(track.data);
-                            setTrackDescription(track);
+                            setTrackDescription(track, true);
                         }
                         else{
                             Logger.e(TAG,"[CHART] onDataChange getValue is null");
@@ -276,7 +279,7 @@ public class ChartFragment extends Fragment {
         while (it.hasNext()){
             ChartVar var = it.next();
             var.addValue(time,data);
-            if(recordId!=null && var.type.equals("P25"))addMapSegment(var,data);
+            if(recordId!=null)addMapSegment(var,data);
         }
     }
 
@@ -338,11 +341,15 @@ public class ChartFragment extends Fragment {
         }
     }
 
-    private void setTrackDescription(SensorTrack track){
+    private void setTrackDescription(SensorTrack track, boolean isPublishedData){
         chart_name.setText("ID:"+track.getName());
+        if(!isPublishedData) {
+            chart_name.setClickable(false);
+            chart_name.setTextColor(getResources().getColor(R.color.black));
+        }
         chart_date.setText(track.getDate());
         chart_desc.setText("Points: "+track.size);
-        if (track.kms != 0) {
+        if (track.kms != 0 || track.hours !=0 || track.mins !=0) {
             String time = String.format("%02d:%02d:%02d",track.hours,track.mins,track.secs);
             chart_loc.setText("Track: "+track.kms+" Kms ("+time+")");
         }
@@ -351,6 +358,17 @@ public class ChartFragment extends Fragment {
 
         rl_separator.setVisibility(View.VISIBLE);
     }
+
+
+    private View.OnClickListener onChartIdClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(recordId!=null) UITools.viewLink(
+                    getActivity(),
+                    getString(R.string.url_chart_get_data)+recordId+"?output=json"
+            );
+        }
+    };
 
     @Override
     public void onDestroyView() {
@@ -378,6 +396,7 @@ public class ChartFragment extends Fragment {
     public void shareAction(){
         if(recordId!=null && track!=null) {
             Logger.i(TAG,"publis track..");
+            getMain().showSnackMessage(R.string.msg_chart_sharing);
             track.deviceId = DeviceUtil.getDeviceId(getActivity());
             getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(track.name).setValue(track);
             getMain().getDatabase().child(Config.FB_TRACKS_INFO).child(track.name).setValue(new SensorTrackInfo(track));

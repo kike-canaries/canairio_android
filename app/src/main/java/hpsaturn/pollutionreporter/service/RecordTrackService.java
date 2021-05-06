@@ -333,7 +333,10 @@ public class RecordTrackService extends Service {
         previousPoint = point;
         ArrayList<SensorData> data = Storage.getSensorData(this);
         if(trackStartTime==0) trackStartTime = data.get(0).timestamp; // restore after service crash
-        Logger.i(TAG, "[TRACK] saving point with coords: " + point.lat + "," + point.lon);
+        Logger.i(TAG, "[TRACK] saving point sensor: " + point.dsl);
+        Logger.i(TAG, "[TRACK] saving point coords: " + point.lat + "," + point.lon);
+        Logger.i(TAG, "[TRACK] saving point P25: " + point.P25);
+        Logger.i(TAG, "[TRACK] saving point CO2: " + point.CO2);
         data.add(point);
         Logger.i(TAG, "[TRACK] track data size: " + data.size());
         Storage.setSensorData(this, data);

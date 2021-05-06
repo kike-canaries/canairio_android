@@ -72,6 +72,7 @@
     <string name="url_canairio_page">https://canair.io</string>
     <string name="url_canairio_feedback">https://canair.io/#three</string>
     <string name="msg_chart_loading">Loading data, please wait…</string>
+    <string name="msg_loading">loading…</string>
     <string name="bt_device_clear">Please restart the app after this</string>
     <string name="bt_device_clear_action">CLEAR</string>
     <string name="msg_device_clear">Cleaning CanAirio device…</string>
@@ -94,4 +95,7 @@
     <string name="key_device_info">key_device_info</string>
     <string name="key_setting_vars">key_settings_vars</string>
     <string name="msg_ble_status_title">Bluetooth Status:</string>
+    <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
+    <string name="msg_chart_sharing">Sharing data to public tab..</string>
+
 </resources>
