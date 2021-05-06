@@ -276,7 +276,7 @@ public class ChartFragment extends Fragment {
         while (it.hasNext()){
             ChartVar var = it.next();
             var.addValue(time,data);
-            if(recordId!=null && var.type.equals("P25"))addMapSegment(var,data);
+            if(recordId!=null)addMapSegment(var,data);
         }
     }
 
