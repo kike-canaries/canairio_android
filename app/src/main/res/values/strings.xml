@@ -94,4 +94,7 @@
     <string name="key_device_info">key_device_info</string>
     <string name="key_setting_vars">key_settings_vars</string>
     <string name="msg_ble_status_title">Bluetooth Status:</string>
+    <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
+    <string name="msg_chart_sharing">Sharing data to public tab..</string>
+
 </resources>
