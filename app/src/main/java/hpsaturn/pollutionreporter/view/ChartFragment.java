@@ -89,7 +89,7 @@ public class ChartFragment extends Fragment {
 
     private List<ILineDataSet> dataSets = new ArrayList<>();
 
-    private Map<String,String> map = new HashMap<>();
+    private Map<String,String> maplabels = new HashMap<>();
 
     private List<GeoPoint> geoPoints = new ArrayList<>();
     private MapView mapView;
@@ -143,7 +143,7 @@ public class ChartFragment extends Fragment {
         String[] types = getResources().getStringArray(R.array.pref_vars_values);
         // Hash map of types and labels (it will not change)
         for (int i = 0; i < labels.length ; i++){
-            map.put(types[i],labels[i]);
+            maplabels.put(types[i],labels[i]);
         }
 
         chart_name.setOnClickListener(onChartIdClickListener);
@@ -228,7 +228,7 @@ public class ChartFragment extends Fragment {
         Logger.i(TAG, "[CHART] selected values:");
 
         for (String type : values) {
-            ChartVar var = new ChartVar(getContext(), type, map.get(type));
+            ChartVar var = new ChartVar(getContext(), type, maplabels.get(type));
             variables.add(var);
             Logger.i(TAG, "[CHART]"+type);
         }
@@ -279,8 +279,10 @@ public class ChartFragment extends Fragment {
         while (it.hasNext()){
             ChartVar var = it.next();
             var.addValue(time,data);
-            if(recordId!=null)addMapSegment(var,data);
+            boolean loadMap = recordId != null && (var.type.equals("P25") || var.type.equals("CO2"));
+            if(loadMap)addMapSegment(var,data);
         }
+
     }
 
     private void refreshDataSets() {
