@@ -40,7 +40,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <!--<receiver android:name=".bleservice.ServiceScheduler">-->
+<!--        <receiver android:name=".service.RecordTrackScheduler"/>-->
         <!--<intent-filter>-->
         <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
         <!--</intent-filter>-->
