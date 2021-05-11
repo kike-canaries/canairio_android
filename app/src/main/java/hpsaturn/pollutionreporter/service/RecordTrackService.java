@@ -54,7 +54,6 @@ public class RecordTrackService extends Service {
     private float trackDistance = 0;
     private SensorData previousPoint;
     private long trackStartTime;
-    private long trackEndTime;
 
     @Override
     public void onCreate() {
@@ -62,6 +61,7 @@ public class RecordTrackService extends Service {
         Logger.i(TAG, "[BLE] Creating Service container..");
         prefBuilder = AppData.getPrefBuilder(this);
         isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
+        if (isRecording) restoreValues();
         recordTrackManager = new RecordTrackManager(this, managerListener);
         noticationChannelAPI26issue();
     }
@@ -303,6 +303,7 @@ public class RecordTrackService extends Service {
             data.lon = lastLocation.getLongitude();
             data.spd = ((int)((lastLocation.getSpeed()*18000)/5))/1000; // m/s to km/h (removed extra)
             bleHandler.writeTrackStatus(getTrackStatus(data));
+            data.pdist = trackDistance;
         }
         else {
             Logger.w(TAG, "[TRACK] failed on getLastLocation!i");
@@ -332,7 +333,6 @@ public class RecordTrackService extends Service {
     private void record(SensorData point) {
         previousPoint = point;
         ArrayList<SensorData> data = Storage.getSensorData(this);
-        if(trackStartTime==0) trackStartTime = data.get(0).timestamp; // restore after service crash
         Logger.i(TAG, "[TRACK] saving point sensor: " + point.dsl);
         Logger.i(TAG, "[TRACK] saving point coords: " + point.lat + "," + point.lon);
         Logger.i(TAG, "[TRACK] saving point P25: " + point.P25);
@@ -345,6 +345,13 @@ public class RecordTrackService extends Service {
             Logger.v(TAG, "[TRACK] saving partial track..");
             saveTrack();
         }
+    }
+
+    private void restoreValues() {
+        ArrayList<SensorData> data = Storage.getSensorData(this);
+        if(data.isEmpty()) return;
+        if(trackStartTime==0) trackStartTime = data.get(0).timestamp; // restore after service crash
+        if(trackDistance==0) trackDistance = data.get(data.size()-1).pdist;
     }
 
     private void saveTrack() {
