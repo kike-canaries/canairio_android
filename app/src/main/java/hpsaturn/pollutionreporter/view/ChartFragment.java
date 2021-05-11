@@ -234,6 +234,7 @@ public class ChartFragment extends Fragment {
         }
 
         requireActivity().runOnUiThread(this::loadData);
+        if (recordId==null) getMain().readSensorData();
     }
 
 
