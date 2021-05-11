@@ -3,6 +3,7 @@ package hpsaturn.pollutionreporter.service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,8 @@ import java.util.Locale;
 
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
+import hpsaturn.pollutionreporter.MainActivity;
+import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.BLEHandler;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
@@ -63,20 +66,7 @@ public class RecordTrackService extends Service {
         isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
         if (isRecording) restoreValues();
         recordTrackManager = new RecordTrackManager(this, managerListener);
-        noticationChannelAPI26issue();
-    }
-
-    private void noticationChannelAPI26issue() {
-        if (Build.VERSION.SDK_INT >= 26) {
-            String CHANNEL_ID = "preporter";
-            String CHANNEL_NAME = "PollutionReporter";
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("")
-                    .setContentText("").build();
-            startForeground(1, notification);
-        }
+        notificationSetup();
     }
 
     private void startConnection() {
@@ -98,17 +88,17 @@ public class RecordTrackService extends Service {
         Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
         bleHandler = new BLEHandler(this, macAddress, bleListener);
         bleHandler.connect();
-        localitationConfig();
+        locationConfig();
     }
 
-    private void localitationConfig () {
+    private void locationConfig() {
         SmartLocation.with(this)
                 .location()
                 .config(LocationParams.NAVIGATION)
                 .start(onLocationListener);
     }
 
-    private OnLocationUpdatedListener onLocationListener = location -> {
+    private final OnLocationUpdatedListener onLocationListener = location -> {
         if (VERBOSE) {
             Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
             Logger.i(TAG, "[BLE][LOC] accuracy: " + location.getAccuracy());
@@ -159,6 +149,7 @@ public class RecordTrackService extends Service {
             Logger.v(TAG, "[TRACK] starting recording");
             trackStartTime = System.currentTimeMillis()/1000;
             isRecording = true;
+            notificationSetup();
         }
 
         @Override
@@ -168,6 +159,7 @@ public class RecordTrackService extends Service {
                 isRecording = false;
                 trackDistance = 0;
                 previousPoint = null;
+                notificationSetup();
                 Logger.v(TAG, "[TRACK] recording stop");
             }
             else
@@ -426,6 +418,33 @@ public class RecordTrackService extends Service {
         int[] ints = {hours , mins , secs};
         Logger.v(TAG,"[TRACK] track time: "+ints[0]+":"+ints[1]+":"+ints[2]);
         return ints;
+    }
+
+    private void notificationSetup() {
+        if (Build.VERSION.SDK_INT >= 26) {
+
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+            String CHANNEL_ID = "canairio";
+            String CHANNEL_NAME = "CanAirIO service";
+
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    isRecording ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_LOW
+            );
+
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle("CanAirIO")
+                    .setContentText("Device is " + (isRecording ? "recording" : "connected"))
+                    .setSmallIcon(R.drawable.ic_stat_name)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(isRecording ? NotificationCompat.PRIORITY_MAX : NotificationCompat.PRIORITY_LOW)
+                    .build();
+            startForeground(15, notification);
+        }
     }
 
     @Override
