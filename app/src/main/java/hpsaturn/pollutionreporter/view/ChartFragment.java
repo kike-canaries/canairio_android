@@ -271,6 +271,8 @@ public class ChartFragment extends Fragment {
 
             refreshDataSets();
         }
+        else if (recordId==null) getMain().readSensorData(); // refresh after settings issue #97
+
         loadingData = false;
     }
 

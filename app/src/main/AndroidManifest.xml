@@ -28,6 +28,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +41,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <!--<receiver android:name=".bleservice.ServiceScheduler">-->
+<!--        <receiver android:name=".service.RecordTrackScheduler"/>-->
         <!--<intent-filter>-->
         <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
         <!--</intent-filter>-->
