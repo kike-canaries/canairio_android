@@ -106,8 +106,6 @@ public class MainActivity extends BaseActivity implements
 
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
-        Logger.i(TAG,"[API] AQICN testing request");
-
     }
 
     private void startDataBase(){
@@ -407,6 +405,10 @@ public class MainActivity extends BaseActivity implements
             startRecordTrackService();
             showSnackMessage(R.string.msg_device_connecting);
         }
+    }
+
+    public void  readSensorData() {
+       if(recordTrackManager!=null)recordTrackManager.readSensorData();
     }
 
     public DatabaseReference getDatabase() {
