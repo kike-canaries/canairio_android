@@ -5,22 +5,18 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-
-import java.util.List;
-
-import hpsaturn.pollutionreporter.view.ChartFragment;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/1/18.
@@ -141,6 +137,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(fragment, fragmentTag);
         ft.show(fragment);
+        ft.commitAllowingStateLoss();
+    }
+
+    public void showDialogFragment(DialogFragment dialog, String TAG) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialog, TAG);
+        ft.show(dialog);
         ft.commitAllowingStateLoss();
     }
 

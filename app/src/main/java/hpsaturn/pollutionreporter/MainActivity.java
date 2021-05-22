@@ -42,6 +42,7 @@ import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
+import hpsaturn.pollutionreporter.view.DisclosureFragment;
 import hpsaturn.pollutionreporter.view.PickerFragmentAdapter;
 import hpsaturn.pollutionreporter.view.PickerFragmentData;
 import hpsaturn.pollutionreporter.view.PickerFragmentInfo;
@@ -101,15 +102,17 @@ public class MainActivity extends BaseActivity implements
         startDataBase();
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
-        startPermissionsFlow();
+        setupUI();
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
 
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
     }
 
-    private void startDataBase(){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+    private void setupUI() {
+        fab.setOnClickListener(onFabClickListener);
+        setupAppFragments();
+        if(isPaired())fab.show();
     }
 
     private RecordTrackInterface recordTrackListener = new RecordTrackInterface() {
@@ -183,13 +186,14 @@ public class MainActivity extends BaseActivity implements
         return prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
     }
 
-    private View.OnClickListener onFabClickListener = view -> {
+    private void buttonRecordingAction () {
         if (isRecording()) {
             stopRecord();
         } else {
             startRecord();
         }
-    };
+
+    }
 
     private View.OnClickListener onFabShareClickListener = view -> {
         if(recordsFragment!=null)recordsFragment.shareAction();
@@ -207,12 +211,6 @@ public class MainActivity extends BaseActivity implements
         prefBuilder.addBoolean(Keys.SENSOR_RECORD, true).save();
         recordTrackManager.serviceRecord();
         fabUpdateLayout();
-    }
-
-    private void setupUI() {
-        fab.setOnClickListener(onFabClickListener);
-        setupAppFragments();
-        if(isPaired())fab.show();
     }
 
     public void setupAppFragments(){
@@ -415,56 +413,91 @@ public class MainActivity extends BaseActivity implements
         return mDatabase;
     }
 
+    private void startDataBase(){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
 
-    public void startPermissionsFlow() {
+    private View.OnClickListener onFabClickListener = view -> {
+        if(!isGPSGranted()) showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
+        else startPermissionsGPSFlow();
+    };
+
+    public void showDisclosureFragment(int title, int desc, int img) {
+        DisclosureFragment dialog = DisclosureFragment.newInstance(title,desc,img);
+        showDialogFragment(dialog,DisclosureFragment.TAG);
+    }
+
+    public boolean isGPSGranted(){
+        return prefBuilder.getBoolean(Keys.PERMISSION_GPS,false);
+    }
+
+    public boolean isBLEGranted(){
+        return prefBuilder.getBoolean(Keys.PERMISSION_BLE,false);
+    }
+
+    public void startPermissionsBLEFlow() {
+        Dexter.withContext(this)
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.BLUETOOTH
+                )
+                .withListener(blePermissionListener)
+                .check();
+
+    }
+
+    private final MultiplePermissionsListener blePermissionListener =  new MultiplePermissionsListener() {
+        @Override
+        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                Logger.i(TAG, "AllPermissionsGranted..");
+                if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+                if(scanFragment!=null)scanFragment.executeScan();
+            }
+        }
+
+        @Override
+        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+            permissionToken.continuePermissionRequest();
+        }
+    };
+
+    public void startPermissionsGPSFlow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Dexter.withContext(this)
                     .withPermissions(
-                            Manifest.permission.BLUETOOTH,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                     )
-                    .withListener(new MultiplePermissionsListener() {
-                        @Override
-                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                            if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                                Logger.i(TAG, "AllPermissionsGranted..showing UI");
-                                setupUI();
-                            }
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                            permissionToken.continuePermissionRequest();
-                        }
-                    })
+                    .withListener(gpsPermissionListener)
                     .check();
         }
         else {
             Dexter.withContext(this)
                     .withPermissions(
-                            Manifest.permission.BLUETOOTH,
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                     )
-                    .withListener(new MultiplePermissionsListener() {
-                        @Override
-                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                            if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                                Logger.i(TAG, "AllPermissionsGranted..showing UI");
-                                setupUI();
-                            }
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                            permissionToken.continuePermissionRequest();
-                        }
-                    })
+                    .withListener(gpsPermissionListener)
                     .check();
         }
     }
+
+    private final MultiplePermissionsListener gpsPermissionListener = new MultiplePermissionsListener() {
+        @Override
+        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                Logger.i(TAG, "AllPermissionsGranted..");
+                if(!isGPSGranted())prefBuilder.addBoolean(Keys.PERMISSION_GPS, true).save();
+                buttonRecordingAction();
+            }
+        }
+
+        @Override
+        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+            permissionToken.continuePermissionRequest();
+        }
+    };
 
     @Override
     void actionUnPair() {
@@ -474,7 +507,8 @@ public class MainActivity extends BaseActivity implements
             Logger.i(TAG, "[BLE] unpaired..");
             stopRecord();
             recordTrackManager.stop();
-            prefBuilder.clearAll().save();
+            prefBuilder.addString(Keys.DEVICE_ADDRESS,"").save();
+            prefBuilder.addBoolean(Keys.DEVICE_PAIR, false).save();
             fab.hide();
             if (chartFragment != null) chartFragment.clearData();
             removeFragment(chartFragment);
