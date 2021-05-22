@@ -87,7 +87,7 @@ public class ScanFragment extends Fragment {
     }
 
     private void actionRequestBLEPermission(){
-        if(!getMain().isBLEGranted()) getMain().showDisclosureFragment(R.string.msg_disclosure_ble,R.drawable.ic_cpu);
+        if(!getMain().isBLEGranted()) getMain().showDisclosureFragment(R.string.msg_ble_title,R.string.msg_ble_desc,R.drawable.ic_cpu);
         else getMain().startPermissionsBLEFlow();
     }
 

@@ -11,8 +11,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -420,12 +418,12 @@ public class MainActivity extends BaseActivity implements
     }
 
     private View.OnClickListener onFabClickListener = view -> {
-        if(!isGPSGranted()) showDisclosureFragment(R.string.msg_disclosure_gps,R.drawable.ic_bicycle);
+        if(!isGPSGranted()) showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
         else startPermissionsGPSFlow();
     };
 
-    public void showDisclosureFragment(int disclosureText, int disclosureImg) {
-        DisclosureFragment dialog = DisclosureFragment.newInstance(disclosureText,disclosureImg);
+    public void showDisclosureFragment(int title, int desc, int img) {
+        DisclosureFragment dialog = DisclosureFragment.newInstance(title,desc,img);
         showDialogFragment(dialog,DisclosureFragment.TAG);
     }
 

@@ -4,43 +4,41 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tv_disclosure_text"
+        android:id="@+id/tv_disclosure_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_disclosure_desc"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_disclosure_title"
         android:layout_margin="20dp"
-        android:text="@string/about" />
+        android:text="@string/msg_ble_desc" />
 
     <ImageView
         android:id="@+id/img_disclosure"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_below="@+id/tv_disclosure_text"
+        android:layout_below="@+id/tv_disclosure_desc"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_picker_chart" />
-
-    <Button
-        android:id="@+id/bt_alias_cancel"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/img_disclosure"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/bt_dialog_cancel"
-        android:textColor="@color/white" />
+        android:src="@drawable/ic_cpu" />
 
     <Button
         android:id="@+id/bt_alias_continue"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/img_disclosure"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
         android:layout_marginBottom="20dp"
-        android:text="@string/bt_dialog_agree"
-        android:textColor="@color/colorPrimary" />
+        android:text="@string/bt_dialog_agree" />
 
 
 </RelativeLayout>
