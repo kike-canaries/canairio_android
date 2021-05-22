@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -136,6 +137,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(fragment, fragmentTag);
         ft.show(fragment);
+        ft.commitAllowingStateLoss();
+    }
+
+    public void showDialogFragment(DialogFragment dialog, String TAG) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialog, TAG);
+        ft.show(dialog);
         ft.commitAllowingStateLoss();
     }
 
