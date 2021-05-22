@@ -97,5 +97,9 @@
     <string name="msg_ble_status_title">Bluetooth Status:</string>
     <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
     <string name="msg_chart_sharing">Sharing data to public tab..</string>
+    <string name="bt_dialog_cancel">cancel</string>
+    <string name="bt_dialog_agree">I agree</string>
+    <string name="msg_disclosure_gps">Text disclosure description of permissions</string>
+    <string name="msg_disclosure_ble">Permission bluettoth</string>
 
 </resources>

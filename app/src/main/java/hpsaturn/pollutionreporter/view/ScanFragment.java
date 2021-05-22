@@ -74,11 +74,24 @@ public class ScanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Logger.i(TAG, "[BLE] configureResultList..");
+
         configureResultList();
         rxBleClient = AppData.getRxBleClient(requireActivity());
-        btnScanning.setOnClickListener(view1 -> actionScan());
+        btnScanning.setOnClickListener(view1 -> actionRequestBLEPermission());
         btnBuilding.setOnClickListener(view1 -> actionViewGuide());
+
+        btnScanning.setText(R.string.bt_device_scan);
+        btnScanning.setVisibility(View.VISIBLE);
+
         Logger.i(TAG, "[BLE] starting btnScanning..");
+    }
+
+    private void actionRequestBLEPermission(){
+        if(!getMain().isBLEGranted()) getMain().showDisclosureFragment(R.string.msg_disclosure_ble,R.drawable.ic_cpu);
+        else getMain().startPermissionsBLEFlow();
+    }
+
+    public void executeScan(){
         getActivity().runOnUiThread(this::actionScan);
     }
 

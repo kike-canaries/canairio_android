@@ -11,6 +11,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -42,6 +44,7 @@ import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
+import hpsaturn.pollutionreporter.view.DisclosureFragment;
 import hpsaturn.pollutionreporter.view.PickerFragmentAdapter;
 import hpsaturn.pollutionreporter.view.PickerFragmentData;
 import hpsaturn.pollutionreporter.view.PickerFragmentInfo;
@@ -101,7 +104,7 @@ public class MainActivity extends BaseActivity implements
         startDataBase();
         setSupportActionBar(toolbar);
         checkBluetoohtBle();
-        startPermissionsFlow();
+        setupUI();
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
 
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
@@ -184,12 +187,26 @@ public class MainActivity extends BaseActivity implements
     }
 
     private View.OnClickListener onFabClickListener = view -> {
+        if(!isGPSGranted()) showDisclosureFragment(R.string.msg_disclosure_gps,R.drawable.ic_picker_map);
+        else startPermissionsGPSFlow();
+    };
+
+    public boolean isGPSGranted(){
+        return prefBuilder.getBoolean(Keys.PERMISSION_GPS,false);
+    }
+
+    public boolean isBLEGranted(){
+        return prefBuilder.getBoolean(Keys.PERMISSION_BLE,false);
+    }
+
+    private void buttonRecordingAction () {
         if (isRecording()) {
             stopRecord();
         } else {
             startRecord();
         }
-    };
+
+    }
 
     private View.OnClickListener onFabShareClickListener = view -> {
         if(recordsFragment!=null)recordsFragment.shareAction();
@@ -415,22 +432,20 @@ public class MainActivity extends BaseActivity implements
         return mDatabase;
     }
 
-
-    public void startPermissionsFlow() {
+    public void startPermissionsBLEFlow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Dexter.withContext(this)
                     .withPermissions(
-                            Manifest.permission.BLUETOOTH,
                             Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            Manifest.permission.BLUETOOTH
                     )
                     .withListener(new MultiplePermissionsListener() {
                         @Override
                         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                             if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                                Logger.i(TAG, "AllPermissionsGranted..showing UI");
-                                setupUI();
+                                Logger.i(TAG, "AllPermissionsGranted..");
+                                if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+                                if(scanFragment!=null)scanFragment.executeScan();
                             }
                         }
 
@@ -444,7 +459,68 @@ public class MainActivity extends BaseActivity implements
         else {
             Dexter.withContext(this)
                     .withPermissions(
-                            Manifest.permission.BLUETOOTH,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.BLUETOOTH
+                    )
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                                Logger.i(TAG, "AllPermissionsGranted..");
+                                if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+                                if(scanFragment!=null)scanFragment.executeScan();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
+                        }
+                    })
+                    .check();
+        }
+    }
+
+    public void showDisclosureFragment(int disclosureText, int disclosureImg) {
+        DisclosureFragment dialog = DisclosureFragment.newInstance(disclosureText,disclosureImg);
+        showDialogFragment(dialog,DisclosureFragment.TAG);
+    }
+
+    public void showDialogFragment(DialogFragment dialog, String TAG) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialog, TAG);
+        ft.show(dialog);
+        ft.commitAllowingStateLoss();
+    }
+
+
+    public void startPermissionsGPSFlow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                                Logger.i(TAG, "AllPermissionsGranted..");
+                                if(!isGPSGranted())prefBuilder.addBoolean(Keys.PERMISSION_GPS, true).save();
+                                buttonRecordingAction();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
+                        }
+                    })
+                    .check();
+        }
+        else {
+            Dexter.withContext(this)
+                    .withPermissions(
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                     )
@@ -452,8 +528,9 @@ public class MainActivity extends BaseActivity implements
                         @Override
                         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                             if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                                Logger.i(TAG, "AllPermissionsGranted..showing UI");
-                                setupUI();
+                                Logger.i(TAG, "AllPermissionsGranted..");
+                                if(!isGPSGranted())prefBuilder.addBoolean(Keys.PERMISSION_GPS, true).save();
+                                buttonRecordingAction();
                             }
                         }
 
@@ -474,7 +551,8 @@ public class MainActivity extends BaseActivity implements
             Logger.i(TAG, "[BLE] unpaired..");
             stopRecord();
             recordTrackManager.stop();
-            prefBuilder.clearAll().save();
+            prefBuilder.addString(Keys.DEVICE_ADDRESS,"").save();
+            prefBuilder.addBoolean(Keys.DEVICE_PAIR, false).save();
             fab.hide();
             if (chartFragment != null) chartFragment.clearData();
             removeFragment(chartFragment);
