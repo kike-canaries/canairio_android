@@ -233,6 +233,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 UITools.viewLink(this,getString(R.string.url_canairio_feedback));
                 break;
 
+            case R.id.action_privacy:
+                UITools.viewLink(this,getString(R.string.url_canairio_privacy));
+                break;
 
             case R.id.action_guide:
                 UITools.viewLink(this,getString(R.string.url_oficial_guide_en));
