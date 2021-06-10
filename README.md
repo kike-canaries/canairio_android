@@ -1,39 +1,19 @@
 
 [![Actions Status](https://github.com/kike-canaries/canairio_android/workflows/Android%20CI/badge.svg)](https://github.com/kike-canaries/android-hpma115s0/actions) ![ViewCount](https://views.whatilearened.today/views/github/kike-canaries/canairio_android.svg) [![Liberapay Status](http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay)](https://liberapay.com/CanAirIO)  
 
-# CanAir.io Air quality Reporter 
+# CanAirIO Air quality Reporter
 
-<a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
+<a href="images/main.jpg"><img src="images/main.jpg" align="right" width="220" ></a>
+
 
 [CanAirIO](https://canair.io) is a citizen science initiative for air quality tracking, visualization and dissemination by using PM2.5 particulate material sensors paired with your smartphone via bluetooth.
 
 This code is for [CanAir.io](https://canair.io) Android app that using a [DIY device](https://github.com/kike-canaries/canairio_firmware#canairio-firmware) that handle a pollution sensor (Honeywell, Sensirion, Plantower, Panasonic) or others air quality sensors.
 
----
-<a href="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/screenshots/main.jpg" align="right" width="512" ></a>
----
-
-## TODO
-
-- [X] BLE scanning and connecting 
-- [X] BLE auto connect and reconnect
-- [X] Receive data via BLE notification
-- [X] Basic chart for PM 2.5 data
-- [X] BLE persist connection on background service
-- [X] Recoding data in the phone
-- [X] List recorded tracks fragment
-- [X] Open Street map fragment
-- [X] Connect list records to record track
-- [X] Connect Open Street Maps to pollution data
-- [X] Firebase connection for publish reports
-- [ ] Osmdroid clusters (for static points)
-- [ ] Osmdroid routes (for line or dinamic points)
-- [ ] Export data to json or others
-
 
 # Installation
 
-<a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://github.com/kike-canaries/android-hpma115s0/blob/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
+<a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://raw.githubusercontent.com/kike-canaries/android-hpma115s0/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
 You can install it from the [release section](https://github.com/kike-canaries/esp32-hpma115s0/releases) downloading the last signed apk or installing from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter)
 
@@ -49,7 +29,7 @@ You can install it from the [release section](https://github.com/kike-canaries/e
 Please first clone the project with all submodules:
 
 ```bash
-git clone --recursive https://github.com/kike-canaries/android-hpma115s0.git
+git clone --recursive https://github.com/kike-canaries/canairio_firmware.git
 ```
 
 ### Firebase
@@ -108,13 +88,13 @@ For record tracks on your device (Sdcard) or publish it to the cloud (share), pl
 
 ## Fixed Station Mode
 
-<img width="640" src="screenshots/influxdb_grafana.jpg">
+<img width="640" src="images/influxdb_grafana.jpg">
 
 Also, you can connect your CanAirIO device to the WiFi and leave this like a fixed station. In this mode you only need the Android app only for initial settings, after that the device could be publish data without the phone. For this you need configure it in `settings` section:
 
 ### Settings
 
-<img align="right" width="400" src="screenshots/canairio_app_settings.png">
+<img align="right" width="400" src="images/canairio_app_settings.png">
 
 
 - **Station Name**: for example: `PM25_Berlin_Pankow`
@@ -154,6 +134,21 @@ Also you can make a donation, be a patreon or buy a device:
 - **Buy a device**: [CanAirIO Bike in Tindie](https://www.tindie.com/products/hpsaturn/canairio-bike/)
 - [Inviting us **a coffee**](https://www.buymeacoffee.com/hpsaturn) 
 
+
+## TODO
+
+- [X] BLE scanning and connecting 
+- [X] Receive data via BLE notification
+- [X] Basic chart for PM 2.5 data
+- [X] BLE persist connection on background service
+- [X] List recorded tracks fragment
+- [X] Firebase connection for publish reports
+- [X] Open Street map fragment
+- [x] Export data to json on external storage (SD)
+- [x] Osmdroid routes (for line or dinamic points)
+- [ ] Add other air quality APIs to map (AQICN ie)
+- [ ] Flutter migration for have to iOS app
+- [ ] Osmdroid clusters (for static points)
 
 # Credits
 
