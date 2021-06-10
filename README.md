@@ -29,7 +29,7 @@ You can install it from the [release section](https://github.com/kike-canaries/e
 Please first clone the project with all submodules:
 
 ```bash
-git clone --recursive https://github.com/kike-canaries/canairio_firmware.git
+git clone --recursive https://github.com/kike-canaries/canairio_android.git
 ```
 
 ### Firebase
@@ -41,7 +41,7 @@ For local development, you will need to create a database in the [Firebase Conso
 After that copy this file into the project:
 
 ```bash
-cd android-hpma115s0.git && cp ~/google-services.json app/
+cd canairio_android && cp ~/google-services.json app/
 ```
 
 ### Aqicn API key
@@ -62,7 +62,7 @@ Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or crea
 
 # CanAirIO Device firmare
 
-Please see the firmware [documentation](https://github.com/kike-canaries/esp32-hpma115s0/wiki/) for using and configure your device.
+Please see the firmware [documentation](https://github.com/kike-canaries/canairio_firmware#canairio-firmware) for using and configure your device.
 
 # Usage
 
