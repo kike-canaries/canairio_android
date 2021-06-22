@@ -14,6 +14,7 @@ import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.CommandConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
+import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorType;
 
 /**
@@ -47,10 +48,15 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else updateSensorTypeSummary((config.stype));
         }
 
+        if (config.denb != getDebugEnableSwitch().isChecked()) {
+            notify_sync = true;
+        }
+
         if (notify_sync) {
             saveAllPreferences(config);
             printResponseConfig(config);
             updateStatusSummary(true);
+            updateSwitches(config);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
 //            getMain().showSnackMessage(R.string.msg_sync_complete);
@@ -75,11 +81,15 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else if (key.equals(getString(R.string.key_setting_enable_clear))) {
                 performClearDevice();
             }
+            else if (key.equals(getString(R.string.key_setting_debug_enable))) {
+                performEnableDebugMode();
+            }
         }
         else
             Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
     }
+
 
     /***********************************************************************************************
      * Sample time handlers
@@ -200,12 +210,40 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         }
     }
 
+    private void performEnableDebugMode() {
+        SwitchPreference debugEnableSwitch = getDebugEnableSwitch();
+        enableDebugMode(debugEnableSwitch.isChecked());
+        snackBar = getMain().getSnackBar(R.string.bt_device_clear, R.string.bt_device_reboot_action, view -> {
+            sendSensorReboot();
+            getMain().showSnackMessageSlow(R.string.msg_device_reboot);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> getMain().finish(), 3000);
+        });
+        snackBar.show();
+    }
+
+    private void enableDebugMode(boolean enable) {
+        CommandConfig config = new CommandConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "dst";
+        config.denb = enable;
+        sendSensorConfig(config);
+    }
+
     /***********************************************************************************************
      * Update Preferences methods
      **********************************************************************************************/
 
     private void saveAllPreferences(ResponseConfig config) {
         resetStimeValue(config.stime);
+    }
+
+    private void updateSwitches(SensorConfig config){
+        updateSwitch(R.string.key_setting_debug_enable,config.denb);
+    }
+
+    private SwitchPreference getDebugEnableSwitch() {
+        return findPreference(getString(R.string.key_setting_debug_enable));
     }
 
 

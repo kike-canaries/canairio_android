@@ -290,11 +290,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         else updateSummary(key,R.string.msg_passw_unseted);
     }
 
-    private void updateSwitch(int key,boolean enable){
-        SwitchPreference mSwitch = findPreference(getString(key));
-        mSwitch.setChecked(enable);
-    }
-
     private void updateSwitches(SensorConfig config){
         updateSwitch(R.string.key_setting_enable_wifi,config.wenb);
         updateSwitch(R.string.key_setting_enable_ifx,config.ienb);

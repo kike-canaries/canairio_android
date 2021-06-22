@@ -15,5 +15,5 @@ public class SensorConfig {
 
     public boolean wsta;
 
-
+    public boolean denb;
 }
