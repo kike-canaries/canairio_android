@@ -24,7 +24,7 @@
             app:title="Sample Time Interval" />
 
         <EditTextPreference
-            android:inputType="number"
+            android:inputType="numberDecimal"
             app:defaultValue="0"
             app:key="@string/key_setting_temp_offset"
             app:summary="@string/summary_temp_offset"

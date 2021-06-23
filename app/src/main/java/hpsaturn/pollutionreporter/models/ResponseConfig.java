@@ -11,6 +11,8 @@ public class ResponseConfig extends SensorConfig {
 
     public int stype = -1;
 
+    public float toffset = 0;
+
     public String ssid;
 
     public String apiusr;

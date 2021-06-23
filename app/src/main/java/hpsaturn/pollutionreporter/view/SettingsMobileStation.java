@@ -10,8 +10,11 @@ import androidx.preference.SwitchPreference;
 
 import com.hpsaturn.tools.Logger;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.CommandConfig;
+import hpsaturn.pollutionreporter.models.OffsetConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
@@ -32,7 +35,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     @Override
     protected void refreshUI() {
         updateStimeSummary();
-
+        updateTempOffsetSummary();
     }
 
     @Override
@@ -47,21 +50,21 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             if (config.stype < 0) updateSensorTypeSummary(0);
             else updateSensorTypeSummary((config.stype));
         }
-
         if (config.denb != getDebugEnableSwitch().isChecked()) {
+            notify_sync = true;
+        }
+        if ((int)config.toffset != (int)getCurrentTempOffset()){
             notify_sync = true;
         }
 
         if (notify_sync) {
             saveAllPreferences(config);
-            printResponseConfig(config);
             updateStatusSummary(true);
             updateSwitches(config);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
-//            getMain().showSnackMessage(R.string.msg_sync_complete);
+            printResponseConfig(config);
         }
-
     }
 
     @Override
@@ -83,6 +86,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             }
             else if (key.equals(getString(R.string.key_setting_debug_enable))) {
                 performEnableDebugMode();
+            }
+            else if (key.equals(getString(R.string.key_setting_temp_offset))) {
+                saveTempeOffset(getCurrentTempOffset());
             }
         }
         else
@@ -111,12 +117,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     }
 
     private int getCurrentStime() {
-        try {
-            return Integer.parseInt(getSharedPreference(getString(R.string.key_setting_stime)));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return 0;
+        return NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_stime)),0);
     }
 
     private void resetStimeValue(int stime) {
@@ -135,6 +136,33 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
     }
+
+    /***********************************************************************************************
+     * Temperature offset handlers
+     *********************************************************************************************
+     * @return*/
+
+    private float getCurrentTempOffset() {
+        return NumberUtils.toFloat(getSharedPreference(getString(R.string.key_setting_temp_offset)),0);
+    }
+
+    private void saveTempeOffset(float offset) {
+        Logger.v(TAG, "[Config] sending temperature offset : "+offset);
+        OffsetConfig config = new OffsetConfig();
+        config.toffset = offset;
+        updateSummary(R.string.key_setting_temp_offset,""+offset);
+        sendSensorConfig(config);
+    }
+
+    private void resetTempOffsetValue(float offset) {
+        saveSharedPreference(R.string.key_setting_temp_offset, "" + offset);
+        updateSummary(R.string.key_setting_temp_offset,""+offset);
+    }
+
+    private void updateTempOffsetSummary() {
+        updateSummary(R.string.key_setting_temp_offset,""+getCurrentTempOffset());
+    }
+
 
     /***********************************************************************************************
      * Sensor type section
@@ -236,6 +264,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     private void saveAllPreferences(ResponseConfig config) {
         resetStimeValue(config.stime);
+        resetTempOffsetValue(config.toffset);
     }
 
     private void updateSwitches(SensorConfig config){
