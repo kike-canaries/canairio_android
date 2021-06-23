@@ -53,6 +53,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         if (config.denb != getDebugEnableSwitch().isChecked()) {
             notify_sync = true;
         }
+        if (config.i2conly != getI2CForcedSwitch().isChecked()) {
+            notify_sync = true;
+        }
         if ((int)config.toffset != (int)getCurrentTempOffset()){
             notify_sync = true;
         }
@@ -77,6 +80,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             }
             else if (key.equals(getString(R.string.key_setting_dtype))) {
                 sendSensorTypeConfig();
+            }
+            else if (key.equals(getString(R.string.key_setting_force_i2c_sensors))) {
+                performForceI2CSensos();
             }
             else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
                 performRebootDevice();
@@ -139,8 +145,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     /***********************************************************************************************
      * Temperature offset handlers
-     *********************************************************************************************
-     * @return*/
+     *********************************************************************************************/
 
     private float getCurrentTempOffset() {
         return NumberUtils.toFloat(getSharedPreference(getString(R.string.key_setting_temp_offset)),0);
@@ -190,6 +195,29 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         return 0;
     }
 
+    /***********************************************************************************************
+     * Forced i2c sensors only
+     *********************************************************************************************/
+
+    private void performForceI2CSensos() {
+        SwitchPreference i2cSwitch = findPreference(getString(R.string.key_setting_force_i2c_sensors));
+        savei2cOnlyFlag(i2cSwitch.isChecked());
+        snackBar = getMain().getSnackBar(R.string.bt_device_clear, R.string.bt_device_reboot_action, view -> {
+            sendSensorReboot();
+            Handler handler = new Handler();
+            handler.postDelayed(() -> getMain().finish(), 3000);
+        });
+        snackBar.show();
+    }
+
+    private void savei2cOnlyFlag(boolean enable) {
+        Logger.v(TAG, "[Config] forced i2c sensors : "+enable);
+        CommandConfig config = new CommandConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "i2c";
+        config.i2conly = enable;
+        sendSensorConfig(config);
+    }
 
     /***********************************************************************************************
      * Sensor tools
@@ -262,10 +290,15 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     private void updateSwitches(SensorConfig config){
         updateSwitch(R.string.key_setting_debug_enable,config.denb);
+        updateSwitch(R.string.key_setting_force_i2c_sensors,config.i2conly);
     }
 
     private SwitchPreference getDebugEnableSwitch() {
         return findPreference(getString(R.string.key_setting_debug_enable));
+    }
+
+    private SwitchPreference getI2CForcedSwitch() {
+        return findPreference(getString(R.string.key_setting_force_i2c_sensors));
     }
 
 

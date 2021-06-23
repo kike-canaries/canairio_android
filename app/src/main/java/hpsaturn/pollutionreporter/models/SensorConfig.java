@@ -17,4 +17,6 @@ public class SensorConfig {
 
     public boolean denb;
 
+    public boolean i2conly;
+
 }
