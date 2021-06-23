@@ -59,6 +59,12 @@
             app:key="@string/key_send_feedback"
             app:summary="Report issues or suggest new features"
             app:title="Send Feedback" />
+
+        <Preference
+            app:icon="@android:drawable/ic_menu_manage"
+            app:key="@string/key_appversion"
+            app:summary="rev000"
+            app:title="About" />
     </PreferenceCategory>
 
 </PreferenceScreen>

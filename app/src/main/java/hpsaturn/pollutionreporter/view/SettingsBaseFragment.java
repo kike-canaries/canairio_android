@@ -79,6 +79,11 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         pref.setSummary(msg);
     }
 
+    void updatePrefTitle(int key, String msg){
+        Preference pref = findPreference(getString(key));
+        pref.setTitle(msg);
+    }
+
     void updateSummary(int key, int msg){
         Preference pref = findPreference(getString(key));
         pref.setSummary(getString(msg));

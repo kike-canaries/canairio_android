@@ -79,4 +79,11 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory>
+        <Preference
+            app:key="@string/key_setting_null"
+            app:summary=""
+            app:title="" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -69,4 +69,11 @@
             app:key="@string/key_setting_enable_location"
             app:title="Send Lat/Long to device" />
     </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:key="@string/key_setting_null"
+            app:summary=""
+            app:title="" />
+    </PreferenceCategory>
 </PreferenceScreen>

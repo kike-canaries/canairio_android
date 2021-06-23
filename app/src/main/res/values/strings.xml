@@ -68,7 +68,7 @@
     <string name="summary_reboot">Send reboot command to device</string>
     <string name="summary_force_i2c_sensors">Only detect i2c sensors</string>
     <string name="summary_temp_offset">Temperature compensation</string>
-    <string name="summary_debug_enable">Logs on serial output / Battery drain</string>
+    <string name="summary_debug_enable">More logs on serial output</string>
     <string name="summary_clear">Set settings to default</string>
     <string name="title_force_i2c_sensors">Force only I2C sensors</string>
     <string name="title_temp_offset">Temperature offset</string>
@@ -113,5 +113,7 @@
     <string name="msg_gps_desc">CanAirIO app collects location and your air quality device data in a background proccess. With this, the app is able to make the air quality maps and routes. These routes don\'t have any personal information, only the location. This data will only be shared to our cloud with your manual action via "share button". For this reason we need to request these permissions. </string>
     <string name="msg_ble_title">Use your Bluetooth</string>
     <string name="msg_ble_desc">CanAirIO app needs access to Bluetooth device to scan your air quality device, also all apps that need Bluetooth require location permissions. For this reason we need to request this permission.</string>
+    <string name="key_appversion">key_appversion</string>
+    <string name="key_setting_null">" "</string>
 
 </resources>

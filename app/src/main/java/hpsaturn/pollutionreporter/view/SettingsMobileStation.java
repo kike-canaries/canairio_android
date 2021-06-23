@@ -241,13 +241,6 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private void performEnableDebugMode() {
         SwitchPreference debugEnableSwitch = getDebugEnableSwitch();
         enableDebugMode(debugEnableSwitch.isChecked());
-        snackBar = getMain().getSnackBar(R.string.bt_device_clear, R.string.bt_device_reboot_action, view -> {
-            sendSensorReboot();
-            getMain().showSnackMessageSlow(R.string.msg_device_reboot);
-            Handler handler = new Handler();
-            handler.postDelayed(() -> getMain().finish(), 3000);
-        });
-        snackBar.show();
     }
 
     private void enableDebugMode(boolean enable) {
