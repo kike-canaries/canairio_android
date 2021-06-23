@@ -57,13 +57,23 @@
     <string name="key_setting_enable_clear">key_setting_enable_clear</string>
     <string name="key_setting_enable_reboot">key_setting_reboot_enable</string>
     <string name="key_setting_enable_location">key_setting_location</string>
+    <string name="key_setting_force_i2c_sensors">key_setting_force_i2c_sensors</string>
+    <string name="key_setting_temp_offset">key_setting_temp_offset</string>
+    <string name="key_setting_debug_enable">key_setting_debug_enable</string>
     <string name="value_apisrv_default">api.canair.io</string>
     <string name="value_apiuri_default">points/save/</string>
     <string name="msg_ssid_pass_error">Please fill SSID and Password</string>
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>
     <string name="summary_reboot">Send reboot command to device</string>
+    <string name="summary_force_i2c_sensors">Only detect i2c sensors</string>
+    <string name="summary_temp_offset">Temperature compensation</string>
+    <string name="summary_debug_enable">More logs on serial output</string>
     <string name="summary_clear">Set settings to default</string>
+    <string name="title_force_i2c_sensors">Force only I2C sensors</string>
+    <string name="title_temp_offset">Temperature offset</string>
+    <string name="title_debug_enable">Enable debug mode</string>
+
     <string name="bt_device_build">build your own device</string>
     <string name="url_oficial_guide_en">https://canair.io/docs</string>
     <string name="url_oficial_guide_es">https://canair.io/docs</string>
@@ -105,5 +115,8 @@
     <string name="msg_ble_desc">CanAirIO app needs access to Bluetooth device to scan your air quality device, also all apps that need Bluetooth require location permissions. For this reason we need to request this permission.</string>
     <string name="menu_privacy">Privacy Policy</string>
     <string name="url_canairio_privacy">https://canair.io/privacy.html</string>
+    <string name="key_appversion">key_appversion</string>
+    <string name="key_setting_null">" "</string>
+>>>>>>> mobile_advanced_settings
 
 </resources>

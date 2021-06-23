@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.SwitchPreference;
 
@@ -36,12 +37,14 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
     }
 
-    public void rebuildUI(){
-        getPreferenceScreen().removeAll();
-        addPreferencesFromResource(R.xml.settings_fixed_station);
-    }
+//    public void rebuildUI(){
+//        getPreferenceScreen().removeAll();
+//        addPreferencesFromResource(R.xml.settings_fixed_station);
+//    }
 
-    public void refreshUI(){
+
+    @Override
+    protected void refreshUI(){
         Logger.i(TAG,"[Config] refreshUI");
         updateSensorNameSummary();
         updateWifiSummary();
@@ -55,6 +58,9 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         boolean notify_sync = false;
 
+        if(getSensorName().length()==0 && config.dname.length() > 0) {
+            notify_sync = true;
+        }
         if (getSensorName().length() > 0 && !getSensorName().equals(config.dname)){
             notify_sync = true;
         }
@@ -72,7 +78,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             saveAllPreferences(config);
             printResponseConfig(config);
             updateSwitches(config);
-            rebuildUI();
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
@@ -124,7 +129,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     }
 
     private void updateSensorNameSummary() {
-        updateSummary(R.string.key_setting_dname);
+        updateSummary(R.string.key_setting_dname,getSensorName());
     }
 
     /***********************************************************************************************
@@ -288,11 +293,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         String passw = getSharedPreference(getString(key));
         if(passw.length()>0) updateSummary(key,R.string.msg_passw_seted);
         else updateSummary(key,R.string.msg_passw_unseted);
-    }
-
-    private void updateSwitch(int key,boolean enable){
-        SwitchPreference mSwitch = findPreference(getString(key));
-        mSwitch.setChecked(enable);
     }
 
     private void updateSwitches(SensorConfig config){

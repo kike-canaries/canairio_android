@@ -79,9 +79,19 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         pref.setSummary(msg);
     }
 
+    void updatePrefTitle(int key, String msg){
+        Preference pref = findPreference(getString(key));
+        pref.setTitle(msg);
+    }
+
     void updateSummary(int key, int msg){
         Preference pref = findPreference(getString(key));
         pref.setSummary(getString(msg));
+    }
+
+    public void updateSwitch(int key, boolean enable){
+        SwitchPreference mSwitch = findPreference(getString(key));
+        mSwitch.setChecked(enable);
     }
 
     Preference findPreference(int key) {
@@ -117,6 +127,7 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         Logger.i(TAG, "[Config] vflv  : " + config.vflv);
         Logger.i(TAG, "[Config] vtag  : " + config.vtag);
         Logger.i(TAG, "[Config] lskey : " + config.lskey);
+        Logger.i(TAG, "[Config] toffset : " + config.toffset);
     }
 
 
