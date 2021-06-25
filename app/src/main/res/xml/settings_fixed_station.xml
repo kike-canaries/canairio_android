@@ -25,14 +25,12 @@
 
         <EditTextPreference
             android:inputType="text"
-            app:dependency="@string/key_setting_dname"
             app:key="@string/key_setting_ssid"
             app:summary=""
             app:title="WiFi Name" />
 
         <EditTextPreference
             android:inputType="textPassword"
-            app:dependency="@string/key_setting_dname"
             app:key="@string/key_setting_pass"
             app:summary="WiFi password"
             app:title="Password" />

@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.SwitchPreference;
 
@@ -93,8 +92,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             if (key.equals(getString(R.string.key_setting_dname))) {
                 saveSensorName(getSensorName());
             } else if (key.equals(getString(R.string.key_setting_ssid))) {
-                getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
-            } else if (key.equals(getString(R.string.key_setting_pass))) {
                 getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
             } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
                 saveWifiConfig();
