@@ -8,7 +8,7 @@
             app:icon="@android:drawable/ic_lock_power_off"
             app:key="@string/key_device_status"
             app:summary="Disconnected"
-            app:title="@string/msg_ble_status_title" />
+            app:title="@string/title_device_status" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -23,6 +23,13 @@
             app:summary="@string/summary_stime"
             app:title="Sample Time Interval" />
 
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            app:defaultValue="0"
+            app:key="@string/key_setting_temp_offset"
+            app:summary="@string/summary_temp_offset"
+            app:title="@string/title_temp_offset" />
+
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/pref_dtype_entries"
@@ -30,6 +37,12 @@
             android:key="@string/key_setting_dtype"
             android:title="Sensor type"
             app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_force_i2c_sensors"
+            app:summary="@string/summary_force_i2c_sensors"
+            app:title="Force only I2C sensors" />
 
         <EditTextPreference
             android:inputType="textUri"
@@ -58,6 +71,19 @@
             app:summary="@string/summary_clear"
             app:title="Factory Reset" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_debug_enable"
+            app:summary="@string/summary_debug_enable"
+            app:title="@string/title_debug_enable" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:key="@string/key_setting_null"
+            app:summary=""
+            app:title="" />
     </PreferenceCategory>
 
 </PreferenceScreen>

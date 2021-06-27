@@ -10,8 +10,8 @@
             android:entryValues="@array/pref_vars_values"
             android:icon="@android:drawable/ic_menu_gallery"
             android:key="@string/key_setting_vars"
-            android:summary="What variable is shown in each chart"
-            android:title="Variables filter"
+            android:summary="@string/summary_settings_vars"
+            android:title="@string/title_settings_vars"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
@@ -20,26 +20,26 @@
             app:defaultValue="false"
             app:icon="@android:drawable/ic_lock_power_off"
             app:key="@string/key_device_status"
-            app:summary="Disconnected"
-            app:title="@string/msg_ble_status_title" />
+            app:summary="@string/summary_device_status"
+            app:title="@string/title_device_status" />
     </PreferenceCategory>
     <PreferenceCategory
         android:dependency="@string/key_device_status"
-        app:title="CanAirIO Device Settings">
+        app:title="@string/title_device_settings">
 
         <Preference
             android:dependency="@string/key_device_status"
             android:fragment="hpsaturn.pollutionreporter.view.SettingsMobileStation"
-            app:summary="Bluetooth mobile station settings"
             android:icon="@android:drawable/ic_menu_directions"
-            app:title="Mobile Station"></Preference>
+            app:summary="@string/summary_mobile_preferences"
+            app:title="@string/title_mobile_preferences" />
 
         <Preference
             android:dependency="@string/key_device_status"
             android:fragment="hpsaturn.pollutionreporter.view.SettingsFixedStation"
-            app:summary="WiFi fixed station settings"
             android:icon="@android:drawable/ic_menu_mapmode"
-            app:title="Fixed Station"></Preference>
+            app:summary="@string/summary_fixed_preferences"
+            app:title="@string/title_fixed_preferences" />
 
     </PreferenceCategory>
 
@@ -49,16 +49,22 @@
         <Preference
             app:icon="@android:drawable/ic_menu_info_details"
             app:key="@string/key_device_info"
-            app:summary=""
-            app:title="Device info:" />
+            app:summary="@string/msg_loading"
+            app:title="@string/title_device_info" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="">
         <Preference
             app:icon="@android:drawable/ic_menu_send"
             app:key="@string/key_send_feedback"
-            app:summary="Report issues or suggest new features"
-            app:title="Send Feedback" />
+            app:summary="@string/summary_feedback_button"
+            app:title="@string/title_feedback_button" />
+
+        <Preference
+            app:icon="@android:drawable/ic_menu_manage"
+            app:key="@string/key_appversion"
+            app:summary="@string/msg_loading"
+            app:title="@string/title_appversion" />
     </PreferenceCategory>
 
 </PreferenceScreen>

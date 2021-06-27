@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
+import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
 
@@ -33,6 +34,7 @@ public class SettingsFragment extends SettingsBaseFragment {
         super.onViewCreated(view, savedInstanceState);
         infoPreferenceInit();
         sendFeedbackInit();
+        saveAppVersionString();
     }
 
     @Override
@@ -91,6 +93,14 @@ public class SettingsFragment extends SettingsBaseFragment {
         if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
+    }
+
+    private void saveAppVersionString() {
+        String info = "rev"+DeviceUtil.getVersionCode(getContext())+" ("
+                + DeviceUtil.getDeviceName() + ")";
+        updatePrefTitle(R.string.key_appversion,"CanAirIO v"+DeviceUtil.getVersionName(getContext()));
+        updateSummary(R.string.key_appversion,info);
+        saveSharedPreference(R.string.key_appversion,info);
     }
 
     /***********************************************************************************************
