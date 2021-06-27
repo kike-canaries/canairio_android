@@ -65,8 +65,8 @@
     <string name="summary_reboot">Send reboot command to device</string>
     <string name="summary_clear">Set settings to default</string>
     <string name="bt_device_build">build your own device</string>
-    <string name="url_oficial_guide_en">https://github.com/kike-canaries/esp32-hpma115s0/wiki</string>
-    <string name="url_oficial_guide_es">https://github.com/kike-canaries/esp32-hpma115s0/wiki</string>
+    <string name="url_oficial_guide_en">https://canair.io/docs</string>
+    <string name="url_oficial_guide_es">https://canair.io/docs</string>
     <string name="url_github_android_app_issues">https://github.com/kike-canaries/canairio_android/issues</string>
     <string name="menu_guide">Sensor DIY Guide</string>
     <string name="url_canairio_page">https://canair.io</string>
@@ -97,5 +97,13 @@
     <string name="msg_ble_status_title">Bluetooth Status:</string>
     <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
     <string name="msg_chart_sharing">Sharing data to public tab..</string>
+    <string name="bt_dialog_cancel">cancel</string>
+    <string name="bt_dialog_agree">I agree</string>
+    <string name="msg_gps_title">Use your location</string>
+    <string name="msg_gps_desc">CanAirIO app collects location and your air quality device data in a background proccess. With this, the app is able to make the air quality maps and routes. These routes don\'t have any personal information, only the location. This data will only be shared to our cloud with your manual action via "share button". For this reason we need to request these permissions. </string>
+    <string name="msg_ble_title">Use your Bluetooth</string>
+    <string name="msg_ble_desc">CanAirIO app needs access to Bluetooth device to scan your air quality device, also all apps that need Bluetooth require location permissions. For this reason we need to request this permission.</string>
+    <string name="menu_privacy">Privacy Policy</string>
+    <string name="url_canairio_privacy">https://canair.io/privacy.html</string>
 
 </resources>
