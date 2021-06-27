@@ -8,7 +8,7 @@
             app:icon="@android:drawable/ic_lock_power_off"
             app:key="@string/key_device_status"
             app:summary="Disconnected"
-            app:title="@string/msg_ble_status_title" />
+            app:title="@string/title_device_status" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -25,14 +25,12 @@
 
         <EditTextPreference
             android:inputType="text"
-            app:dependency="@string/key_setting_dname"
             app:key="@string/key_setting_ssid"
             app:summary=""
             app:title="WiFi Name" />
 
         <EditTextPreference
             android:inputType="textPassword"
-            app:dependency="@string/key_setting_dname"
             app:key="@string/key_setting_pass"
             app:summary="WiFi password"
             app:title="Password" />
@@ -68,5 +66,12 @@
         <SwitchPreference
             app:key="@string/key_setting_enable_location"
             app:title="Send Lat/Long to device" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:key="@string/key_setting_null"
+            app:summary=""
+            app:title="" />
     </PreferenceCategory>
 </PreferenceScreen>
