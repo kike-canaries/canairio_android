@@ -304,7 +304,7 @@ public class ChartFragment extends Fragment {
         chart.notifyDataSetChanged();
         chart.invalidate();
 
-        if(recordId!=null)updateMap();
+        if(recordId!=null || track !=null ) updateMap();
     }
 
     /**
