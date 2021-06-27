@@ -127,4 +127,10 @@
     <string name="summary_feedback_button">Report issues or suggest new features</string>
     <string name="title_feedback_button">Send Feedback</string>
     <string name="title_appversion">About</string>
+    <string name="key_ifxdb_default">canairio</string>
+    <string name="title_setting_ifxdb">Database Name</string>
+    <string name="key_ifxip_default">influxdb.canair.io</string>
+    <string name="title_setting_ifxip">Hostname</string>
+    <string name="key_ifxpt_default">8086</string>
+    <string name="title_setting_ifxpt">Port</string>
 </resources>
