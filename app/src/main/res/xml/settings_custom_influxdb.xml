@@ -13,25 +13,25 @@
 
         <EditTextPreference
             android:inputType="text"
-            app:defaultValue="canairio"
+            app:defaultValue="@string/key_ifxdb_default"
             app:icon="@android:drawable/ic_menu_upload"
             app:key="@string/key_setting_ifxdb"
-            app:summary=""
-            app:title="Database Name" />
+            app:summary="@string/key_ifxdb_default"
+            app:title="@string/title_setting_ifxdb" />
 
         <EditTextPreference
             android:inputType="textUri"
-            app:defaultValue="influxdb.canair.io"
+            app:defaultValue="@string/key_ifxip_default"
             app:key="@string/key_setting_ifxip"
-            app:summary=""
-            app:title="Hostname" />
+            app:summary="@string/key_ifxip_default"
+            app:title="@string/title_setting_ifxip" />
 
         <EditTextPreference
             android:inputType="number"
-            app:defaultValue="8086"
+            app:defaultValue="@string/key_ifxpt_default"
             app:key="@string/key_setting_ifxpt"
-            app:summary=""
-            app:title="Port" />
+            app:summary="@string/key_ifxpt_default"
+            app:title="@string/title_setting_ifxpt" />
 
     </PreferenceCategory>
 

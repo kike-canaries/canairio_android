@@ -188,8 +188,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         if (getInfluxDbSwitch().isChecked() && isInfluxDbSwitchFieldsValid()) {
             InfluxdbConfig config = new InfluxdbConfig();
-            config.ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
-            config.ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
+            config.ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb),getString(R.string.key_ifxdb_default));;
+            config.ifxip = getSharedPreference(getString(R.string.key_setting_ifxip),getString(R.string.key_ifxip_default));
             config.ifxpt = NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_ifxpt)),8086);
             config.ienb = true;
             sendSensorConfig(config);
@@ -202,8 +202,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private boolean isInfluxDbSwitchFieldsValid(){
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
-        String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb));
-        String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip));
+        String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb),getString(R.string.key_ifxdb_default));
+        String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip),getString(R.string.key_ifxip_default));
         Logger.v(TAG, "[Config] values -> " + ifxdb +  " " + ifxip);
         return !(ifxdb.length() == 0 || ifxip.length() == 0);
     }
