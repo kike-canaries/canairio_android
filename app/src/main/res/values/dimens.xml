@@ -4,4 +4,20 @@
     <dimen name="app_chart_height">360dp</dimen>
     <dimen name="app_picker_card_width">90dp</dimen>
     <dimen name="app_picker_card_height">125dp</dimen>
+    <dimen name="progress_circle_thickness">3dp</dimen>
+
+    <!--  Dashboard-->
+    <dimen name="option_card_size">156dp</dimen>
+
+    <!--  Sizes  -->
+    <dimen name="size_zero">0dp</dimen>
+    <dimen name="size_x_small">4dp</dimen>
+    <dimen name="size_small">8dp</dimen>
+    <dimen name="size_medium">12dp</dimen>
+    <dimen name="size_large">16dp</dimen>
+    <dimen name="size_x_large">20dp</dimen>
+    <dimen name="size_x_x_large">24dp</dimen>
+
+    <!--  List Item  -->
+    <dimen name="list_item_two_line_height">64dp</dimen>
 </resources>

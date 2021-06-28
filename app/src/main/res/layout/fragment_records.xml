@@ -28,13 +28,4 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_separator"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/app_picker_card_height"
-        android:layout_alignParentBottom="true"
-        android:visibility="invisible">
-
-    </RelativeLayout>
-
 </RelativeLayout>

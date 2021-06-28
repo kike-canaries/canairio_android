@@ -81,6 +81,39 @@
     <string name="crashkey_api_usr">crashkey_api_usr</string>
     <string name="menu_feedback">Feedback</string>
     <string name="key_send_feedback">key_send_feedback</string>
+
+    <string name="air_quality_index">Air Quality Index</string>
+    <string name="give_us_feedback">Give Us Feedback</string>
+    <string name="unpair_device">Unpair Device</string>
+    <string name="sensor_diy_guide">Sensor DIY Guide</string>
+    <string name="about">About</string>
+    <string name="location_permissions_not_granted_error">Location permission not granted.</string>
+    <string name="enable_permission_request">Please enable location permissions.</string>
+    <string name="check_location_settings">Please check location settings.</string>
+    <string name="internet_connection_unavailable">Internet connection unavailable.</string>
+    <string name="server_unavailable">Server is currently unavailable.</string>
+    <string name="unexpected_error">Unexpected error occurred.</string>
+    <string name="error">Error</string>
+    <string name="public_reports">Public Reports</string>
+
+    <!--    Scale Names-->
+    <string name="scale_good">Good</string>
+    <string name="scale_moderate">Moderate</string>
+    <string name="scale_unhealthy_for_sensitive_groups">Unhealthy for Sensitive Groups</string>
+    <string name="scale_unhealthy">Unhealthy</string>
+    <string name="scale_very_unhealthy">Very Unhealthy</string>
+    <string name="scale_hazardous">Hazardous</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_settings_description">App settings.</string>
+    <string name="diy_sensor_description">DIY sensor.</string>
+    <string name="about_canairio_description">About CanAirIO.</string>
+    <string name="give_us_feedback_description">Give us feedback.</string>
+    <string name="unpair_device_description">Upair device.</string>
+    <string name="NoAQIFound">None</string>
+    <string name="distance_to_closest_station">Distance to closest station.</string>
+
     <string name="msg_sync_complete">Device sync complete</string>
     <string name="msg_passw_seted">*********</string>
     <string name="msg_passw_unseted" />
@@ -88,4 +121,5 @@
     <string name="msg_reboot_manually">Please manually reboot of CanAirIO device!</string>
     <string name="key_device_status">key_device_status</string>
     <string name="key_device_info">key_device_info</string>
+
 </resources>

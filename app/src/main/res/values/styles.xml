@@ -35,4 +35,55 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
+    <style name="MaterialAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <!--  Colors  -->
+        <item name="colorPrimary">@color/colorPrimaryWeb</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryLightWeb</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/colorAccentWeb</item>
+        <item name="colorSecondaryVariant">@color/colorAccentWeb</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="colorError">@color/colorErrorWeb</item>
+        <item name="colorOnError">@color/white</item>
+
+<!--        <item name="android:background">@color/background</item>-->
+        <item name="colorOnBackground">@color/colorTextWeb</item>
+
+        <item name="colorSurface">@color/background</item>
+        <item name="colorOnSurface">@color/colorTextWeb</item>
+
+        <!--  Typography  -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialAppTheme.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialAppTheme.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialAppTheme.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.MaterialAppTheme.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.MaterialAppTheme.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.MaterialAppTheme.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialAppTheme.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.MaterialAppTheme.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.MaterialAppTheme.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.MaterialAppTheme.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.MaterialAppTheme.Caption</item>
+        <item name="textAppearanceButton">@style/TextAppearance.MaterialAppTheme.Button</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.MaterialAppTheme.Overline</item>
+
+        <!--  Shape  -->
+        <item name="shapeAppearanceSmallComponent">
+            @style/ShapeAppearance.MaterialAppTheme.SmallComponent
+        </item>
+        <item name="shapeAppearanceMediumComponent">
+            @style/ShapeAppearance.MaterialAppTheme.MediumComponent
+        </item>
+        <item name="shapeAppearanceLargeComponent">
+            @style/ShapeAppearance.MaterialAppTheme.LargeComponent
+        </item>
+    </style>
+
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="materialThemeOverlay">@style/MaterialAppTheme</item>
+    </style>
+
 </resources>

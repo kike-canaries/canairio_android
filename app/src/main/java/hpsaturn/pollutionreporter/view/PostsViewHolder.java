@@ -1,8 +1,9 @@
 package hpsaturn.pollutionreporter.view;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
@@ -20,9 +21,9 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
     public PostsViewHolder(View itemView) {
         super(itemView);
 
-        record_name = itemView.findViewById(R.id.tv_record_name);
-        record_date = itemView.findViewById(R.id.tv_record_date);
-        record_location = itemView.findViewById(R.id.tv_record_location);
+        record_name = itemView.findViewById(R.id.stationName);
+        record_date = itemView.findViewById(R.id.reportDate);
+        record_location = itemView.findViewById(R.id.reportNumberOfPoints);
     }
 
     public void bindToPost(SensorTrackInfo sensorTrack){

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.hpsaturn.tools.Logger;
 
@@ -32,6 +33,8 @@ import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 public class PostsFragment extends Fragment {
 
     public static String TAG = PostsFragment.class.getSimpleName();
+
+    private DatabaseReference mDatabaseReference;
 
     private RecyclerView mRecordsList;
     private TextView mEmptyMessage;
@@ -53,6 +56,8 @@ public class PostsFragment extends Fragment {
         mRecordsList = view.findViewById(R.id.rv_records);
         mEmptyMessage.setText(R.string.msg_not_public_recors);
 
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
         mManager = new LinearLayoutManager(getActivity());
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
@@ -66,7 +71,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = getMain().getDatabase().child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(20);
+        Query postsQuery = mDatabaseReference.child(Config.FB_TRACKS_INFO).orderByKey().limitToLast(20);
         Logger.d(TAG,"[FB][POSTS] Query: "+postsQuery.toString());
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<SensorTrackInfo>()
                 .setQuery(postsQuery, SensorTrackInfo.class)
@@ -86,14 +91,14 @@ public class PostsFragment extends Fragment {
                 final DatabaseReference postRef = getRef(position);
                 final String recordKey = postRef.getKey();
                 Logger.d(TAG,"[FB][POSTS] onBindViewHolder: "+recordKey+" name:"+trackInfo.getName());
-                getMain().addTrackToMap(trackInfo);
+//                getMain().addTrackToMap(trackInfo);
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String recordId = trackInfo.getName();
                         Logger.i(TAG,"[FB][POSTS] onClick -> showing record: "+recordId);
                         chart = ChartFragment.newInstance(recordId);
-                        getMain().addFragmentPopup(chart,ChartFragment.TAG);
+//                        getMain().addFragmentPopup(chart,ChartFragment.TAG);
                     }
                 });
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
