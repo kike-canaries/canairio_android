@@ -12,7 +12,8 @@
     <string name="msg_device_disconnected">Device disconnected</string>
     <string name="msg_device_reconnecting">Device disconnected, reconnecting…</string>
     <string name="msg_devices_empty_list">Not devices found!</string>
-    <string name="ble_device_name">ESP32_HPMA115S0</string>
+    <string name="ble_device_name_legacy">ESP32_HPMA115S0</string>
+    <string name="ble_device_name">CanAirIO_ESP32</string>
     <string name="ble_device_address">RSSI: -67 [AB:CD:03:AE:E8:62</string>
     <string name="bt_device_scanning">Scanning…</string>
     <string name="bt_device_scan">Scan</string>
@@ -31,7 +32,7 @@
     <string name="msg_save_config_api">Saving CanAirio API setting…</string>
     <string name="msg_save_config_wfi">Saving WiFi setting…</string>
     <string name="msg_config_saved">Device settings updated!</string>
-    <string name="msg_stime_error">Wrong value, restoring default value…</string>
+    <string name="msg_stime_error">Sync stime value…</string>
     <string name="msg_save_location">Saving location…</string>
     <string name="msg_save_location_failed">Location is no ready…</string>
     <string name="key_setting_dname">key_setting_dname</string>
@@ -61,8 +62,8 @@
     <string name="summary_reboot">Send reboot command to device</string>
     <string name="summary_clear">Set settings to default</string>
     <string name="bt_device_build">build your own device</string>
-    <string name="url_oficial_guide_en">https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(EN)</string>
-    <string name="url_oficial_guide_es">https://github.com/kike-canaries/esp32-hpma115s0/wiki/Official-Guide-(ES)</string>
+    <string name="url_oficial_guide_en">https://github.com/kike-canaries/esp32-hpma115s0/wiki</string>
+    <string name="url_oficial_guide_es">https://github.com/kike-canaries/esp32-hpma115s0/wiki</string>
     <string name="menu_guide">Sensor DIY Guide</string>
     <string name="url_canairio_page">https://canair.io</string>
     <string name="url_canairio_feedback">https://canair.io/#three</string>
@@ -112,4 +113,13 @@
     <string name="unpair_device_description">Upair device.</string>
     <string name="NoAQIFound">None</string>
     <string name="distance_to_closest_station">Distance to closest station.</string>
+
+    <string name="msg_sync_complete">Device sync complete</string>
+    <string name="msg_passw_seted">*********</string>
+    <string name="msg_passw_unseted" />
+    <string name="key_setting_dtype">key_setting_dtype</string>
+    <string name="msg_reboot_manually">Please manually reboot of CanAirIO device!</string>
+    <string name="key_device_status">key_device_status</string>
+    <string name="key_device_info">key_device_info</string>
+
 </resources>

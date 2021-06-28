@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.service;
 
+import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 
@@ -26,9 +27,9 @@ public interface RecordTrackInterface {
 
     void requestSensorDataRead();
 
-    void onSensorConfigRead(SensorConfig config);
+    void onSensorConfigRead(ResponseConfig config);
 
     void onSensorDataRead(SensorData data);
 
-    void onSensorConfigWrite(SensorConfig config);
+    void onSensorConfigWrite(String config);
 }

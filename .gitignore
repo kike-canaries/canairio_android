@@ -112,4 +112,7 @@ api_aqicn.xml
 
 # C++ generated files
 app/.cxx/*
-
+app/.cxx
+mainframer
+remoteAssemble
+.mainframer/
