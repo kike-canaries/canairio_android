@@ -9,8 +9,5 @@ public class GeoConfig extends SensorConfig {
 
     public double lon;
 
-    public double alt;
-
-    public float spd;
-
+    public String geo;
 }
