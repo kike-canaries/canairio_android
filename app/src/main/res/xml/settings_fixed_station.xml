@@ -13,21 +13,15 @@
 
     <PreferenceCategory
         android:dependency="@string/key_device_status"
-        android:summary="Optional for fixed stations (WiFi)"
-        app:title="Fixed Station Settings">
-
-        <EditTextPreference
-            android:inputType="text"
-            app:icon="@android:drawable/ic_menu_edit"
-            app:key="@string/key_setting_dname"
-            app:summary=""
-            app:title="Station Name" />
+        app:icon="@android:drawable/ic_menu_manage"
+        android:summary="@string/category_wifi_summary"
+        app:title="@string/category_wifi_title">
 
         <EditTextPreference
             android:inputType="text"
             app:key="@string/key_setting_ssid"
             app:summary=""
-            app:title="WiFi Name" />
+            app:title="@string/key_ssid_title" />
 
         <EditTextPreference
             android:inputType="textPassword"
@@ -45,28 +39,33 @@
 
     <PreferenceCategory
         app:dependency="@string/key_setting_enable_wifi"
-        app:title="Share CanAirIO station">
-
-        <SwitchPreference
-            app:key="@string/key_setting_enable_ifx"
-            app:summary="Publish to CanAirIO or custom server"
-            app:title="Enable publication" />
-
-        <Preference
-            app:key="@string/key_setting_ifx_advanced"
-            android:fragment="hpsaturn.pollutionreporter.view.SettingsCustomInfluxDB"
-            app:summary="Custom InfluxDB settings"
-            app:title="Advanced Settings" />
-
-    </PreferenceCategory>
-
-
-    <PreferenceCategory app:title="Save current location">
+        app:icon="@android:drawable/ic_menu_edit"
+        android:summary="@string/category_ifx_share_summary"
+        app:title="@string/category_ifx_share_title">
 
         <SwitchPreference
             app:key="@string/key_setting_enable_location"
-            app:title="Send Lat/Long to device" />
+            app:summary="@string/msg_loading"
+            app:title="@string/key_enable_location_title" />
+
+        <EditTextPreference
+            android:inputType="text"
+            app:key="@string/key_setting_dname"
+            app:title="@string/key_dname_title" />
+
+        <Preference
+            android:fragment="hpsaturn.pollutionreporter.view.SettingsCustomInfluxDB"
+            app:key="@string/key_setting_ifx_advanced"
+            app:summary="Custom InfluxDB settings"
+            app:title="Advanced Settings" />
+
+        <SwitchPreference
+            app:key="@string/key_setting_enable_ifx"
+            app:summary="@string/key_enable_ifx_summary_ready"
+            app:title="@string/key_enable_ifx_title" />
+
     </PreferenceCategory>
+
 
     <PreferenceCategory>
         <Preference
