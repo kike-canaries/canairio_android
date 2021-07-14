@@ -7,12 +7,14 @@ import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.preference.SwitchPreference;
 
+import com.fonfon.geohash.GeoHash;
 import com.hpsaturn.tools.Logger;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.text.DecimalFormat;
 
+import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.CommandConfig;
 import hpsaturn.pollutionreporter.models.GeoConfig;
@@ -47,8 +49,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         Logger.i(TAG,"[Config] refreshUI");
         updateSensorNameSummary();
         updateWifiSummary();
-        updateLocationSummary();
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
+        updateLocationSummary();
         validateLocationSwitch();
     }
 
@@ -246,8 +248,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                     GeoConfig config = new GeoConfig();
                     config.lat = lastLocation.getLatitude();
                     config.lon = lastLocation.getLongitude();
-                    config.alt = lastLocation.getAltitude();
-                    config.spd = lastLocation.getSpeed();
+                    config.geo = GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
                     sendSensorConfig(config);
                     Handler handler = new Handler();
                     handler.postDelayed(() -> locationSwitch.setChecked(false), 2000);
@@ -270,7 +271,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
             String lat = "(" + precision.format(lastLocation.getLatitude());
             String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
-            updateSummary(R.string.key_setting_enable_location,accu + lat + lon);
+            String geo = "\nGeohash tag: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
+            updateSummary(R.string.key_setting_enable_location,accu + lat + lon + geo);
         }
     }
 

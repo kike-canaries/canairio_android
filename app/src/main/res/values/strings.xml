@@ -133,4 +133,13 @@
     <string name="title_setting_ifxip">Hostname</string>
     <string name="key_ifxpt_default">8086</string>
     <string name="title_setting_ifxpt">Port</string>
+    <string name="key_enable_location_title">Save current location to device</string>
+    <string name="key_dname_title">Fixed station tag name</string>
+    <string name="key_ssid_title">WiFi name (SSID)</string>
+    <string name="key_enable_ifx_title">Enable publication</string>
+    <string name="key_enable_ifx_summary_ready">Publish to CanAirIO or custom server</string>
+    <string name="category_ifx_share_title">Share CanAirIO fixed station</string>
+    <string name="category_ifx_share_summary">Optional for fixed stations (WiFi mode)</string>
+    <string name="category_wifi_title">WiFi preferences</string>
+    <string name="category_wifi_summary">For remote updates or fixed stations</string>
 </resources>
