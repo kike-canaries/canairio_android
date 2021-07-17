@@ -47,7 +47,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     @Override
     protected void refreshUI(){
         Logger.i(TAG,"[Config] refreshUI");
-        updateSensorNameSummary();
         updateWifiSummary();
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         updateLocationSummary();
@@ -59,12 +58,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         boolean notify_sync = false;
 
-        if(getSensorName().length()==0 && config.dname.length() > 0) {
-            notify_sync = true;
-        }
-        if (getSensorName().length() > 0 && !getSensorName().equals(config.dname)){
-            notify_sync = true;
-        }
         if (config.wenb != getWifiSwitch().isChecked()) {
             notify_sync = true;
         }
@@ -91,9 +84,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         if (!onSensorReading) {
 
-            if (key.equals(getString(R.string.key_setting_dname))) {
-                saveSensorName(getSensorName());
-            } else if (key.equals(getString(R.string.key_setting_ssid))) {
+            if (key.equals(getString(R.string.key_setting_ssid))) {
                 getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
             } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
                 saveWifiConfig();
@@ -107,28 +98,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         else
             Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
-    }
-
-    /***********************************************************************************************
-     * Sensor name section
-     **********************************************************************************************/
-
-    private void saveSensorName(String name) {
-        if(name.length() > 0 ) {
-            saveSharedPreference(R.string.key_setting_dname,name);
-            SensorName config = new SensorName();
-            config.dname = name;
-            sendSensorConfig(config);
-        }
-        updateSensorNameSummary();
-    }
-
-    private String getSensorName() {
-        return getSharedPreference(getString(R.string.key_setting_dname));
-    }
-
-    private void updateSensorNameSummary() {
-        updateSummary(R.string.key_setting_dname,getSensorName());
     }
 
     /***********************************************************************************************
@@ -282,10 +251,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
 
     private void updatePreferencesSummmary(ResponseConfig config) {
-        if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
         if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
         updatePasswSummary(R.string.key_setting_pass);
-
     }
 
     private void updatePasswSummary(int key) {
@@ -304,7 +271,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
      **********************************************************************************************/
 
     private void saveAllPreferences(ResponseConfig config) {
-        saveSharedPreference(R.string.key_setting_dname, config.dname);
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);

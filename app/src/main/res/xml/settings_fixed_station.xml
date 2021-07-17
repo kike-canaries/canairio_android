@@ -48,11 +48,6 @@
             app:summary="@string/msg_loading"
             app:title="@string/key_enable_location_title" />
 
-        <EditTextPreference
-            android:inputType="text"
-            app:key="@string/key_setting_dname"
-            app:title="@string/key_dname_title" />
-
         <Preference
             android:fragment="hpsaturn.pollutionreporter.view.SettingsCustomInfluxDB"
             app:key="@string/key_setting_ifx_advanced"
