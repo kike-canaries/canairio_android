@@ -13,8 +13,8 @@
 
     <PreferenceCategory
         android:dependency="@string/key_device_status"
-        app:icon="@android:drawable/ic_menu_manage"
         android:summary="@string/category_wifi_summary"
+        app:icon="@android:drawable/ic_menu_manage"
         app:title="@string/category_wifi_title">
 
         <EditTextPreference
@@ -38,9 +38,9 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:summary="@string/category_ifx_share_summary"
         app:dependency="@string/key_setting_enable_wifi"
         app:icon="@android:drawable/ic_menu_edit"
-        android:summary="@string/category_ifx_share_summary"
         app:title="@string/category_ifx_share_title">
 
         <SwitchPreference
@@ -58,6 +58,13 @@
             app:key="@string/key_setting_enable_ifx"
             app:summary="@string/key_enable_ifx_summary_ready"
             app:title="@string/key_enable_ifx_title" />
+
+        <Preference
+            app:dependency="@string/key_setting_enable_ifx"
+            app:icon="@android:drawable/ic_menu_mapmode"
+            app:key="@string/key_fixed_stations_map"
+            app:summary="@string/fixed_stations_map_summary"
+            app:title="@string/fixed_stations_map_title" />
 
     </PreferenceCategory>
 

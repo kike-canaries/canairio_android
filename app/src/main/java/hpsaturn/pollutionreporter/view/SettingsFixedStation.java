@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
 import com.fonfon.geohash.GeoHash;
 import com.hpsaturn.tools.Logger;
+import com.hpsaturn.tools.UITools;
 
 import org.apache.commons.lang3.math.NumberUtils;
-
-import java.text.DecimalFormat;
 
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
@@ -53,6 +53,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         updateLocationSummary();
         validateLocationSwitch();
+        launchWorldMapInit();
     }
 
     @Override
@@ -206,6 +207,20 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private SwitchPreference getInfluxDbSwitch() {
         return findPreference(getString(R.string.key_setting_enable_ifx));
+    }
+
+    /***********************************************************************************************
+     * Send feedback section
+     **********************************************************************************************/
+
+    private void launchWorldMapInit() {
+        Preference stationsMap = findPreference(getString(R.string.key_fixed_stations_map));
+
+        assert stationsMap != null;
+        stationsMap.setOnPreferenceClickListener(preference -> {
+            UITools.viewLink(getActivity(),getString(R.string.url_canairio_worldmap));
+            return true;
+        });
     }
 
     /***********************************************************************************************
