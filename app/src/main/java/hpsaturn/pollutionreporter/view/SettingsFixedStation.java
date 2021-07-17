@@ -21,7 +21,6 @@ import hpsaturn.pollutionreporter.models.GeoConfig;
 import hpsaturn.pollutionreporter.models.InfluxdbConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
-import hpsaturn.pollutionreporter.models.SensorName;
 import hpsaturn.pollutionreporter.models.WifiConfig;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -32,6 +31,9 @@ import io.nlopez.smartlocation.SmartLocation;
 public class SettingsFixedStation extends SettingsBaseFragment {
 
     public static final String TAG = SettingsFixedStation.class.getSimpleName();
+
+
+    private String currentGeoHash = "";
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -63,6 +65,13 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         }
         if (config.ienb != getInfluxDbSwitch().isChecked()) {
             notify_sync = true;
+        }
+        if (config.geo.length() == 0 ) {
+            enableSwitch(R.string.key_setting_enable_ifx,false);
+        }
+        else {
+            enableSwitch(R.string.key_setting_enable_ifx, true);
+            currentGeoHash = config.geo;
         }
 
         updateLocationSummary();
@@ -200,7 +209,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     }
 
     /***********************************************************************************************
-     * Misc preferences section
+     * InfluxDb Geohash parameter
      **********************************************************************************************/
 
     private void validateLocationSwitch() {
@@ -236,12 +245,12 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private void updateLocationSummary() {
         if (lastLocation != null) {
-            DecimalFormat precision = new DecimalFormat("0.000");
-            String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
-            String lat = "(" + precision.format(lastLocation.getLatitude());
-            String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
-            String geo = "\nGeohash tag: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
-            updateSummary(R.string.key_setting_enable_location,accu + lat + lon + geo);
+            String summary = "Old Geohash: ";
+            if (currentGeoHash.length() == 0 ) summary = summary+"none.";
+            else summary = summary + currentGeoHash;
+            String geo = "\nNew Geohash: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
+            summary = summary + geo;
+            updateSummary(R.string.key_setting_enable_location,summary);
         }
     }
 

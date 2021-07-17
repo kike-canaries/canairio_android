@@ -89,9 +89,14 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         pref.setSummary(getString(msg));
     }
 
-    public void updateSwitch(int key, boolean enable){
+    public void updateSwitch(int key, boolean checked){
         SwitchPreference mSwitch = findPreference(getString(key));
-        mSwitch.setChecked(enable);
+        mSwitch.setChecked(checked);
+    }
+
+    public void enableSwitch(int key, boolean enabled){
+        SwitchPreference mSwitch = findPreference(getString(key));
+        mSwitch.setEnabled(enabled);
     }
 
     Preference findPreference(int key) {
