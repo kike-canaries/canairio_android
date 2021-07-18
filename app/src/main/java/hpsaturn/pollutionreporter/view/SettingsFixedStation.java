@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
 import com.fonfon.geohash.GeoHash;
 import com.hpsaturn.tools.Logger;
+import com.hpsaturn.tools.UITools;
 
 import org.apache.commons.lang3.math.NumberUtils;
-
-import java.text.DecimalFormat;
 
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
@@ -21,7 +21,6 @@ import hpsaturn.pollutionreporter.models.GeoConfig;
 import hpsaturn.pollutionreporter.models.InfluxdbConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
-import hpsaturn.pollutionreporter.models.SensorName;
 import hpsaturn.pollutionreporter.models.WifiConfig;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -33,25 +32,22 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     public static final String TAG = SettingsFixedStation.class.getSimpleName();
 
+
+    private String currentGeoHash = "";
+
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
     }
 
-//    public void rebuildUI(){
-//        getPreferenceScreen().removeAll();
-//        addPreferencesFromResource(R.xml.settings_fixed_station);
-//    }
-
-
     @Override
     protected void refreshUI(){
         Logger.i(TAG,"[Config] refreshUI");
-        updateSensorNameSummary();
         updateWifiSummary();
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         updateLocationSummary();
         validateLocationSwitch();
+        launchWorldMapInit();
     }
 
     @Override
@@ -59,17 +55,18 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         boolean notify_sync = false;
 
-        if(getSensorName().length()==0 && config.dname.length() > 0) {
-            notify_sync = true;
-        }
-        if (getSensorName().length() > 0 && !getSensorName().equals(config.dname)){
-            notify_sync = true;
-        }
         if (config.wenb != getWifiSwitch().isChecked()) {
             notify_sync = true;
         }
         if (config.ienb != getInfluxDbSwitch().isChecked()) {
             notify_sync = true;
+        }
+        if (config.geo.length() == 0 ) {
+            enableSwitch(R.string.key_setting_enable_ifx,false);
+        }
+        else {
+            enableSwitch(R.string.key_setting_enable_ifx, true);
+            currentGeoHash = config.geo;
         }
 
         updateLocationSummary();
@@ -91,9 +88,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         if (!onSensorReading) {
 
-            if (key.equals(getString(R.string.key_setting_dname))) {
-                saveSensorName(getSensorName());
-            } else if (key.equals(getString(R.string.key_setting_ssid))) {
+            if (key.equals(getString(R.string.key_setting_ssid))) {
                 getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
             } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
                 saveWifiConfig();
@@ -107,28 +102,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         else
             Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
-    }
-
-    /***********************************************************************************************
-     * Sensor name section
-     **********************************************************************************************/
-
-    private void saveSensorName(String name) {
-        if(name.length() > 0 ) {
-            saveSharedPreference(R.string.key_setting_dname,name);
-            SensorName config = new SensorName();
-            config.dname = name;
-            sendSensorConfig(config);
-        }
-        updateSensorNameSummary();
-    }
-
-    private String getSensorName() {
-        return getSharedPreference(getString(R.string.key_setting_dname));
-    }
-
-    private void updateSensorNameSummary() {
-        updateSummary(R.string.key_setting_dname,getSensorName());
     }
 
     /***********************************************************************************************
@@ -231,7 +204,21 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     }
 
     /***********************************************************************************************
-     * Misc preferences section
+     * Send feedback section
+     **********************************************************************************************/
+
+    private void launchWorldMapInit() {
+        Preference stationsMap = findPreference(getString(R.string.key_fixed_stations_map));
+
+        assert stationsMap != null;
+        stationsMap.setOnPreferenceClickListener(preference -> {
+            UITools.viewLink(getActivity(),getString(R.string.url_canairio_worldmap));
+            return true;
+        });
+    }
+
+    /***********************************************************************************************
+     * InfluxDb Geohash parameter
      **********************************************************************************************/
 
     private void validateLocationSwitch() {
@@ -267,12 +254,19 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private void updateLocationSummary() {
         if (lastLocation != null) {
-            DecimalFormat precision = new DecimalFormat("0.000");
-            String accu = "Accu:" + (int) lastLocation.getAccuracy() + "m ";
-            String lat = "(" + precision.format(lastLocation.getLatitude());
-            String lon = "," + precision.format(lastLocation.getLongitude()) + ")";
-            String geo = "\nGeohash tag: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
-            updateSummary(R.string.key_setting_enable_location,accu + lat + lon + geo);
+            SwitchPreference ifxdbSwitch = getInfluxDbSwitch();
+            String summary = "Geohash: ";
+            if (currentGeoHash.length() == 0 ) {
+                summary = summary+"none.";
+                ifxdbSwitch.setSummary(R.string.summary_ifx_nogeohash);
+            }
+            else {
+                summary = summary + currentGeoHash;
+                ifxdbSwitch.setSummary(R.string.key_enable_ifx_summary_ready);
+            }
+            String geo = " (new: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString()+")";
+            summary = summary + geo;
+            updateSummary(R.string.key_setting_enable_location,summary);
         }
     }
 
@@ -282,10 +276,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
 
     private void updatePreferencesSummmary(ResponseConfig config) {
-        if(config.dname !=null)updateSummary(R.string.key_setting_dname,config.dname);
         if(config.ssid !=null)updateSummary(R.string.key_setting_ssid,config.ssid);
         updatePasswSummary(R.string.key_setting_pass);
-
     }
 
     private void updatePasswSummary(int key) {
@@ -304,7 +296,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
      **********************************************************************************************/
 
     private void saveAllPreferences(ResponseConfig config) {
-        saveSharedPreference(R.string.key_setting_dname, config.dname);
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);

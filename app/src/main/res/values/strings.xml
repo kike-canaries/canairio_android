@@ -35,7 +35,6 @@
     <string name="msg_stime_error">Sync stime value…</string>
     <string name="msg_save_location">Saving location…</string>
     <string name="msg_save_location_failed">Location is no ready…</string>
-    <string name="key_setting_dname">key_setting_dname</string>
     <string name="key_setting_apiusr">key_setting_apiusr</string>
     <string name="key_setting_apipss">key_setting_apipss</string>
     <string name="key_setting_apisrv">key_setting_apisrv</string>
@@ -133,7 +132,7 @@
     <string name="title_setting_ifxip">Hostname</string>
     <string name="key_ifxpt_default">8086</string>
     <string name="title_setting_ifxpt">Port</string>
-    <string name="key_enable_location_title">Save current location to device</string>
+    <string name="key_enable_location_title">Tag fixed location to device</string>
     <string name="key_dname_title">Fixed station tag name</string>
     <string name="key_ssid_title">WiFi name (SSID)</string>
     <string name="key_enable_ifx_title">Enable publication</string>
@@ -142,4 +141,9 @@
     <string name="category_ifx_share_summary">Optional for fixed stations (WiFi mode)</string>
     <string name="category_wifi_title">WiFi preferences</string>
     <string name="category_wifi_summary">For remote updates or fixed stations</string>
+    <string name="key_fixed_stations_map">key_fixed_stations_map</string>
+    <string name="fixed_stations_map_title">View your fixed station</string>
+    <string name="fixed_stations_map_summary">Click to launch the CanAirIO Worldmap</string>
+    <string name="url_canairio_worldmap">http://influxdb.canair.io:8000</string>
+    <string name="summary_ifx_nogeohash">Please set first the location</string>
 </resources>
