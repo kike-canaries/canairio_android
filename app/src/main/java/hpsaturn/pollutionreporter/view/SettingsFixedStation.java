@@ -40,12 +40,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
     }
 
-//    public void rebuildUI(){
-//        getPreferenceScreen().removeAll();
-//        addPreferencesFromResource(R.xml.settings_fixed_station);
-//    }
-
-
     @Override
     protected void refreshUI(){
         Logger.i(TAG,"[Config] refreshUI");
@@ -260,10 +254,17 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private void updateLocationSummary() {
         if (lastLocation != null) {
-            String summary = "Old Geohash: ";
-            if (currentGeoHash.length() == 0 ) summary = summary+"none.";
-            else summary = summary + currentGeoHash;
-            String geo = "\nNew Geohash: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
+            SwitchPreference ifxdbSwitch = getInfluxDbSwitch();
+            String summary = "Geohash: ";
+            if (currentGeoHash.length() == 0 ) {
+                summary = summary+"none.";
+                ifxdbSwitch.setSummary(R.string.summary_ifx_nogeohash);
+            }
+            else {
+                summary = summary + currentGeoHash;
+                ifxdbSwitch.setSummary(R.string.key_enable_ifx_summary_ready);
+            }
+            String geo = " (new: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString()+")";
             summary = summary + geo;
             updateSummary(R.string.key_setting_enable_location,summary);
         }
