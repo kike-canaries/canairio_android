@@ -61,13 +61,17 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if (config.ienb != getInfluxDbSwitch().isChecked()) {
             notify_sync = true;
         }
-        if (config.geo.length() == 0 ) {
+        if (config.geo == null ) {
             enableSwitch(R.string.key_setting_enable_ifx,false);
         }
-        else {
+        if (config.geo != null && config.geo.length() == 0 ) {
+            enableSwitch(R.string.key_setting_enable_ifx,false);
+        }
+        else if (config.geo != null) {
             enableSwitch(R.string.key_setting_enable_ifx, true);
             currentGeoHash = config.geo;
         }
+
 
         updateLocationSummary();
         validateLocationSwitch();
