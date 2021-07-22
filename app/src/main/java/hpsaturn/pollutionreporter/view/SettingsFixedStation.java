@@ -11,11 +11,14 @@ import androidx.preference.SwitchPreference;
 import com.fonfon.geohash.GeoHash;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
+import com.iamhabib.easy_preference.EasyPreference;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.CommandConfig;
 import hpsaturn.pollutionreporter.models.GeoConfig;
 import hpsaturn.pollutionreporter.models.InfluxdbConfig;
@@ -267,6 +270,15 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             else {
                 summary = summary + currentGeoHash;
                 ifxdbSwitch.setSummary(R.string.key_enable_ifx_summary_ready);
+                EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
+                String name = currentGeoHash.substring(0,3);
+                name = name + prefBuilder.getString(Keys.DEVICE_FLAVOR,"").substring(0,7);
+                name = name + prefBuilder.getString(Keys.DEVICE_ADDRESS,"").substring(10);
+                name = name.replace("_","");
+                name = name.replace(":","");
+                name = name.toUpperCase();
+                name = getString(R.string.fixed_stations_map_summary)+"\nYour station: "+name;
+                updateSummary(R.string.key_fixed_stations_map,name);
             }
             String geo = " (new: " + GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString()+")";
             summary = summary + geo;
