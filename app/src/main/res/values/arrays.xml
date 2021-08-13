@@ -18,6 +18,7 @@
         <item>SDS011</item>
         <item>Mhz19</item>
         <item>CM1106</item>
+        <item>SenseAirS8</item>
     </string-array>
 
     <string-array name="pref_dtype_values">
@@ -27,6 +28,7 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
+        <item>6</item>
     </string-array>
 
     <string-array name="pref_vars_entries">
