@@ -11,8 +11,11 @@ import androidx.preference.Preference;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
+import com.iamhabib.easy_preference.EasyPreference;
 
+import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 
 /**
@@ -93,6 +96,8 @@ public class SettingsFragment extends SettingsBaseFragment {
         if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
+        EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
+        prefBuilder.addString(Keys.DEVICE_FLAVOR,config.vflv).save();
     }
 
     private void saveAppVersionString() {

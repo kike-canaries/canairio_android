@@ -12,4 +12,5 @@ public class Config {
 
     public static final String FB_TRACKS_INFO = "tracks_info";
     public static final String FB_TRACKS_DATA = "tracks_data";
+    public static final int GEOHASHACCU = 7; // max GeoHash precision
 }
