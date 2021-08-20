@@ -87,6 +87,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
                 performRebootDevice();
             }
+            else if (key.equals(getString(R.string.key_setting_send_co2_calibration))) {
+                performCO2Calibration();
+            }
             else if (key.equals(getString(R.string.key_setting_enable_clear))) {
                 performClearDevice();
             }
@@ -216,6 +219,31 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "i2c";
         config.i2conly = enable;
+        sendSensorConfig(config);
+    }
+
+    /***********************************************************************************************
+     * CO2 calibration command
+     **********************************************************************************************/
+
+    private void performCO2Calibration() {
+        SwitchPreference co2CalibrationSwitch = findPreference(getString(R.string.key_setting_send_co2_calibration));
+        if (!co2CalibrationSwitch.isChecked()) {
+            if(snackBar!=null)snackBar.dismiss();
+        } else {
+            snackBar = getMain().getSnackBar(R.string.bt_device_co2_calibration, R.string.bt_device_co2_calibration_action, view -> {
+                co2CalibrationSwitch.setChecked(false);
+                sendCO2CalibrationCommand();
+                getMain().showSnackMessageSlow(R.string.msg_device_calibrate_msg);
+            });
+            snackBar.show();
+        }
+    }
+
+    private void sendCO2CalibrationCommand() {
+        CommandConfig config = new CommandConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "clb";
         sendSensorConfig(config);
     }
 

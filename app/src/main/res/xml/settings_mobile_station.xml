@@ -44,6 +44,13 @@
             app:summary="@string/summary_force_i2c_sensors"
             app:title="Force only I2C sensors" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_send_co2_calibration"
+            app:summary="@string/summary_send_co2_calibration"
+            app:title="@string/title_setting_send_co2_calibration" />
+
+
         <EditTextPreference
             android:inputType="textUri"
             app:defaultValue="/sdcard/canairio"
