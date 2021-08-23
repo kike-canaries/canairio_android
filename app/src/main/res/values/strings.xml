@@ -152,4 +152,7 @@
     <string name="bt_device_co2_calibration_action">CALIBRATE</string>
     <string name="bt_device_co2_calibration">Send calibration command</string>
     <string name="msg_device_calibrate_msg">Please wait some minutes</string>
+    <string name="key_setting_altitude_offset">key_setting_altitude_offset</string>
+    <string name="summary_altitude_offset">Set Altitude to enable. 0 disable.</string>
+    <string name="title_altitude_offset">CO2 Altitude compensation</string>
 </resources>

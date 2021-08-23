@@ -13,6 +13,8 @@ public class ResponseConfig extends SensorConfig {
 
     public float toffset = 0;
 
+    public float altoffset = 0;
+
     public String ssid;
 
     public String apiusr;

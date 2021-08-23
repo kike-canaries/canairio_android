@@ -50,6 +50,12 @@
             app:summary="@string/summary_send_co2_calibration"
             app:title="@string/title_setting_send_co2_calibration" />
 
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            app:defaultValue="0"
+            app:key="@string/key_setting_altitude_offset"
+            app:summary="@string/summary_altitude_offset"
+            app:title="@string/title_altitude_offset" />
 
         <EditTextPreference
             android:inputType="textUri"
