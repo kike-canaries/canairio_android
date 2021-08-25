@@ -13,8 +13,9 @@ import com.hpsaturn.tools.Logger;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.models.AltitudeOffsetConfig;
 import hpsaturn.pollutionreporter.models.CommandConfig;
-import hpsaturn.pollutionreporter.models.OffsetConfig;
+import hpsaturn.pollutionreporter.models.TempOffsetConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
@@ -36,6 +37,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     protected void refreshUI() {
         updateStimeSummary();
         updateTempOffsetSummary();
+        updateAltitudeOffsetSummary();
     }
 
     @Override
@@ -59,6 +61,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         if ((int)config.toffset != (int)getCurrentTempOffset()){
             notify_sync = true;
         }
+        if ((int)config.altoffset != (int)getCurrentAltitudeOffset()){
+            notify_sync = true;
+        }
 
         if (notify_sync) {
             saveAllPreferences(config);
@@ -68,6 +73,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             Logger.v(TAG, "[Config] notify device sync complete");
             printResponseConfig(config);
         }
+
     }
 
     @Override
@@ -87,6 +93,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else if (key.equals(getString(R.string.key_setting_enable_reboot))) {
                 performRebootDevice();
             }
+            else if (key.equals(getString(R.string.key_setting_send_co2_calibration))) {
+                performCO2Calibration();
+            }
             else if (key.equals(getString(R.string.key_setting_enable_clear))) {
                 performClearDevice();
             }
@@ -94,7 +103,10 @@ public class SettingsMobileStation extends SettingsBaseFragment{
                 performEnableDebugMode();
             }
             else if (key.equals(getString(R.string.key_setting_temp_offset))) {
-                saveTempeOffset(getCurrentTempOffset());
+                saveTempOffset(getCurrentTempOffset());
+            }
+            else if (key.equals(getString(R.string.key_setting_altitude_offset))) {
+                saveAltitudeOffset(getCurrentAltitudeOffset());
             }
         }
         else
@@ -151,9 +163,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         return NumberUtils.toFloat(getSharedPreference(getString(R.string.key_setting_temp_offset)),0);
     }
 
-    private void saveTempeOffset(float offset) {
+    private void saveTempOffset(float offset) {
         Logger.v(TAG, "[Config] sending temperature offset : "+offset);
-        OffsetConfig config = new OffsetConfig();
+        TempOffsetConfig config = new TempOffsetConfig();
         config.toffset = offset;
         updateSummary(R.string.key_setting_temp_offset,""+offset);
         sendSensorConfig(config);
@@ -166,6 +178,35 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     private void updateTempOffsetSummary() {
         updateSummary(R.string.key_setting_temp_offset,""+getCurrentTempOffset());
+    }
+
+    /***********************************************************************************************
+     * Altitude offset handlers
+     *********************************************************************************************/
+
+    private float getCurrentAltitudeOffset() {
+        return NumberUtils.toFloat(getSharedPreference(getString(R.string.key_setting_altitude_offset)),0);
+    }
+
+    private void saveAltitudeOffset(float offset) {
+        Logger.v(TAG, "[Config] sending altitude offset : "+offset);
+        AltitudeOffsetConfig config = new AltitudeOffsetConfig();
+        config.altoffset = offset;
+        updateSummary(R.string.key_setting_altitude_offset,""+offset);
+        sendSensorConfig(config);
+    }
+
+    private void resetAltitudeOffsetValue(float offset) {
+        saveSharedPreference(R.string.key_setting_altitude_offset, "" + offset);
+        updateAltitudeOffsetSummary();
+    }
+
+    private void updateAltitudeOffsetSummary() {
+        float altitude = getCurrentAltitudeOffset();
+        if (altitude == 0)
+            updateSummary(R.string.key_setting_altitude_offset,R.string.summary_altitude_offset);
+        else
+            updateSummary(R.string.key_setting_altitude_offset,""+getCurrentAltitudeOffset());
     }
 
 
@@ -216,6 +257,31 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "i2c";
         config.i2conly = enable;
+        sendSensorConfig(config);
+    }
+
+    /***********************************************************************************************
+     * CO2 calibration command
+     **********************************************************************************************/
+
+    private void performCO2Calibration() {
+        SwitchPreference co2CalibrationSwitch = findPreference(getString(R.string.key_setting_send_co2_calibration));
+        if (!co2CalibrationSwitch.isChecked()) {
+            if(snackBar!=null)snackBar.dismiss();
+        } else {
+            snackBar = getMain().getSnackBar(R.string.bt_device_co2_calibration, R.string.bt_device_co2_calibration_action, view -> {
+                co2CalibrationSwitch.setChecked(false);
+                sendCO2CalibrationCommand();
+                getMain().showSnackMessageSlow(R.string.msg_device_calibrate_msg);
+            });
+            snackBar.show();
+        }
+    }
+
+    private void sendCO2CalibrationCommand() {
+        CommandConfig config = new CommandConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "clb";
         sendSensorConfig(config);
     }
 
@@ -286,6 +352,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private void saveAllPreferences(ResponseConfig config) {
         resetStimeValue(config.stime);
         resetTempOffsetValue(config.toffset);
+        resetAltitudeOffsetValue(config.altoffset);
     }
 
     private void updateSwitches(SensorConfig config){
@@ -300,6 +367,5 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private SwitchPreference getI2CForcedSwitch() {
         return findPreference(getString(R.string.key_setting_force_i2c_sensors));
     }
-
 
 }
