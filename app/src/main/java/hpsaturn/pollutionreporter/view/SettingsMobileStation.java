@@ -79,7 +79,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if (!onSensorReading) {
+        if (!onSensorReading && key != null) {
 
             if (key.equals(getString(R.string.key_setting_stime))) {
                 validateSensorSampleTime();
@@ -322,14 +322,18 @@ public class SettingsMobileStation extends SettingsBaseFragment{
                 CommandConfig config = new CommandConfig();
                 config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
                 config.act = "cls";
-                getMain().showSnackMessageSlow(R.string.msg_device_clear);
                 sendSensorConfig(config);
-                clearSharedPreferences();
+                getMain().showSnackMessageSlow(R.string.msg_device_clear);
                 Handler handler = new Handler();
-                handler.postDelayed(() -> getMain().finish(), 3000);
+                handler.postDelayed(() -> clearDevice(), 3000);
             });
             snackBar.show();
         }
+    }
+
+    private void clearDevice() {
+        clearSharedPreferences();
+        getMain().finish();
     }
 
     private void performEnableDebugMode() {
