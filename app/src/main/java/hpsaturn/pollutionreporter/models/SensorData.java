@@ -20,6 +20,8 @@ public class SensorData {
 
     public float CO2H;
 
+    public int PAX;
+
     public int P10;
 
     public int P1;

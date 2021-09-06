@@ -46,6 +46,9 @@ public class ChartVar {
                 dataSet = getMainLineDataSet(entries, R.color.black, label,1.5F);
                 break;
 
+            case "PAX":
+                dataSet = getGenericLineDataSet(entries, R.color.light_red, label,2.0F);
+                break;
 
             case "P1":
                 dataSet = getGenericLineDataSet(entries, R.color.brown, label,1F);
