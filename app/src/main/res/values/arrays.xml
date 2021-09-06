@@ -39,6 +39,7 @@
         <item>CO2</item>
         <item>CO2T</item>
         <item>CO2H</item>
+        <item>PAX</item>
         <item>Temp</item>
         <item>Humi</item>
         <item>Alt</item>
@@ -53,6 +54,7 @@
         <item>CO2</item>
         <item>CO2T</item>
         <item>CO2H</item>
+        <item>PAX</item>
         <item>tmp</item>
         <item>hum</item>
         <item>alt</item>
