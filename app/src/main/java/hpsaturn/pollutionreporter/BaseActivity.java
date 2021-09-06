@@ -221,6 +221,10 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
         switch (item.getItemId()) {
 
+            case R.id.action_var_filter:
+                actionVarFilter();
+                break;
+
             case R.id.action_unpair:
                 actionUnPair();
                 break;
@@ -247,7 +251,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
     abstract void actionUnPair();
-
+    abstract void actionVarFilter();
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
