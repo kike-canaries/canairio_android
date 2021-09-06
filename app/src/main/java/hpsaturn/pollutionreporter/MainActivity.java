@@ -1,6 +1,8 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -53,6 +55,7 @@ import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 import hpsaturn.pollutionreporter.view.SettingsFixedStation;
 import hpsaturn.pollutionreporter.view.SettingsFragment;
+import hpsaturn.pollutionreporter.view.VariableFileterFragment;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -521,7 +524,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     void actionVarFilter() {
-//        selectedVarsUpdated();
+       showDialogFragment(new VariableFileterFragment(),VariableFileterFragment.TAG);
     }
 
     @Override
