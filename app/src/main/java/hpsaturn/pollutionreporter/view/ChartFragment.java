@@ -283,7 +283,8 @@ public class ChartFragment extends Fragment {
         while (it.hasNext()){
             ChartVar var = it.next();
             var.addValue(time,data);
-            boolean loadMap = recordId != null && (var.type.equals("P25") || var.type.equals("CO2"));
+            boolean loadMap = recordId != null &&
+                    (var.type.equals("P25") || var.type.equals("CO2") || var.type.equals("PAX"));
             if(loadMap)addMapSegment(var,data);
         }
     }
