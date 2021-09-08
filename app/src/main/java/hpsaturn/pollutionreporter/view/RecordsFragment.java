@@ -111,7 +111,7 @@ public class RecordsFragment extends Fragment {
             String recordId = mRecordsAdapter.getItem(position).name;
             Logger.i(TAG, "showing record: "+recordId);
             chart = ChartFragment.newInstance(recordId);
-            getMain().addFragmentPopup(chart,ChartFragment.TAG);
+            getMain().addFragmentPopup(chart,ChartFragment.TAG_INFO);
             showingData=true;
         }
     };
