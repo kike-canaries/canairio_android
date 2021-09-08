@@ -41,9 +41,7 @@ public class VariableFileterFragment extends DialogFragment {
             selected[i] = values.contains(options[i]);
         }
 
-        builder.setMultiChoiceItems(R.array.pref_vars_entries, selected,
-                        (DialogInterface.OnMultiChoiceClickListener) (dialog, item, isChecked)
-                                -> setVaribleFilter(dialog, item, isChecked));
+        builder.setMultiChoiceItems(R.array.pref_vars_entries, selected, this::setVaribleFilter);
 
         return builder.create();
     }
@@ -66,6 +64,7 @@ public class VariableFileterFragment extends DialogFragment {
 
     @Override
     public void onDestroy() {
+        Logger.d(TAG,"onDestroy");
         getMain().selectedVarsUpdated();
         super.onDestroy();
     }
