@@ -241,7 +241,6 @@ public class ChartFragment extends Fragment {
         requireActivity().runOnUiThread(this::loadData);
     }
 
-
     private void calculateReferenceTime(){
         ArrayList<SensorData> data = Storage.getSensorData(getActivity());
         if (data.isEmpty()) {
@@ -253,8 +252,6 @@ public class ChartFragment extends Fragment {
         XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(xAxisFormatter);
     }
-
-
     /**
      *  Add data from previous data (recorded track for example)
       * @param data
@@ -289,10 +286,10 @@ public class ChartFragment extends Fragment {
             boolean loadMap = recordId != null && (var.type.equals("P25") || var.type.equals("CO2"));
             if(loadMap)addMapSegment(var,data);
         }
-
     }
 
     private void refreshDataSets() {
+
         dataSets.clear();
 
         Iterator<ChartVar> it = variables.iterator();

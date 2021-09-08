@@ -47,7 +47,7 @@ public class ChartVar {
                 break;
 
             case "PAX":
-                dataSet = getGenericLineDataSet(entries, R.color.light_red, label,2.0F);
+                dataSet = getMainLineDataSet(entries, R.color.light_red, label,2.0F);
                 break;
 
             case "P1":
@@ -131,6 +131,7 @@ public class ChartVar {
                 else colors.add(ctx.getResources().getColor(R.color.brown));
                 break;
             case "P25":
+            case "PAX":
                 if (data.P25 <= 13) colors.add(ctx.getResources().getColor(R.color.green));
                 else if (data.P25 <= 35) colors.add(ctx.getResources().getColor(R.color.yellow_dark));
                 else if (data.P25 <= 55) colors.add(ctx.getResources().getColor(R.color.orange));
@@ -157,6 +158,7 @@ public class ChartVar {
             case "CO2":
 
             case "P25":
+            case "PAX":
                 dataSet.setCircleColors(colors);
                 break;
 

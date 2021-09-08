@@ -201,6 +201,18 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
+    public Fragment getFragmentInStack(String tag) {
+        try {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) return null;
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment match = fm.findFragmentByTag(tag);
+            if (match != null) return match;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /***********************************************
      * MENU OPTIONS
      ***********************************************/
