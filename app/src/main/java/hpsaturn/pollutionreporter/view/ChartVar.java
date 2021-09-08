@@ -139,11 +139,11 @@ public class ChartVar {
                 else colors.add(ctx.getResources().getColor(R.color.brown));
                 break;
             case "PAX":
-                if (data.PAX <= 13) colors.add(ctx.getResources().getColor(R.color.green));
-                else if (data.PAX <= 35) colors.add(ctx.getResources().getColor(R.color.yellow_dark));
-                else if (data.PAX <= 55) colors.add(ctx.getResources().getColor(R.color.orange));
-                else if (data.PAX <= 150) colors.add(ctx.getResources().getColor(R.color.red));
-                else if (data.PAX <= 250) colors.add(ctx.getResources().getColor(R.color.purple));
+                if (data.PAX <= 20) colors.add(ctx.getResources().getColor(R.color.green));
+                else if (data.PAX <= 50) colors.add(ctx.getResources().getColor(R.color.yellow_dark));
+                else if (data.PAX <= 100) colors.add(ctx.getResources().getColor(R.color.orange));
+                else if (data.PAX <= 400) colors.add(ctx.getResources().getColor(R.color.red));
+                else if (data.PAX <= 800) colors.add(ctx.getResources().getColor(R.color.purple));
                 else colors.add(ctx.getResources().getColor(R.color.brown));
                 break;
         }
