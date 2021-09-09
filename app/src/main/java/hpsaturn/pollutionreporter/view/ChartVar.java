@@ -154,8 +154,7 @@ public class ChartVar {
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
-
-
+        
     }
 
     public void refresh(){
