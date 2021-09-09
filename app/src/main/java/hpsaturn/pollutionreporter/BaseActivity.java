@@ -201,6 +201,18 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
+    public Fragment getFragmentInStack(String tag) {
+        try {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) return null;
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment match = fm.findFragmentByTag(tag);
+            if (match != null) return match;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /***********************************************
      * MENU OPTIONS
      ***********************************************/
@@ -220,6 +232,10 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         int id = item.getItemId();
 
         switch (item.getItemId()) {
+
+            case R.id.action_var_filter:
+                actionVarFilter();
+                break;
 
             case R.id.action_unpair:
                 actionUnPair();
@@ -247,7 +263,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
     abstract void actionUnPair();
-
+    abstract void actionVarFilter();
 
     /**
      * A native method that is implemented by the 'native-lib' native library,

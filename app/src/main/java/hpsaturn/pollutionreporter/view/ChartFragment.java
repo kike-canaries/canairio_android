@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -17,8 +18,12 @@ import androidx.preference.PreferenceManager;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.utils.MPPointD;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -236,7 +241,6 @@ public class ChartFragment extends Fragment {
         requireActivity().runOnUiThread(this::loadData);
     }
 
-
     private void calculateReferenceTime(){
         ArrayList<SensorData> data = Storage.getSensorData(getActivity());
         if (data.isEmpty()) {
@@ -248,8 +252,6 @@ public class ChartFragment extends Fragment {
         XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(xAxisFormatter);
     }
-
-
     /**
      *  Add data from previous data (recorded track for example)
       * @param data
@@ -281,13 +283,14 @@ public class ChartFragment extends Fragment {
         while (it.hasNext()){
             ChartVar var = it.next();
             var.addValue(time,data);
-            boolean loadMap = recordId != null && (var.type.equals("P25") || var.type.equals("CO2"));
+            boolean loadMap = recordId != null &&
+                    (var.type.equals("P25") || var.type.equals("CO2") || var.type.equals("PAX"));
             if(loadMap)addMapSegment(var,data);
         }
-
     }
 
     private void refreshDataSets() {
+
         dataSets.clear();
 
         Iterator<ChartVar> it = variables.iterator();

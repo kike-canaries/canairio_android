@@ -1,7 +1,10 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -52,6 +55,7 @@ import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 import hpsaturn.pollutionreporter.view.SettingsFixedStation;
 import hpsaturn.pollutionreporter.view.SettingsFragment;
+import hpsaturn.pollutionreporter.view.VariableFileterFragment;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -519,6 +523,11 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
+    void actionVarFilter() {
+       showDialogFragment(new VariableFileterFragment(),VariableFileterFragment.TAG);
+    }
+
+    @Override
     protected void onDestroy() {
         stopRecordTrackService();
         recordTrackManager.unregister();
@@ -576,6 +585,8 @@ public class MainActivity extends BaseActivity implements
 
     public void selectedVarsUpdated() {
         if (chartFragment!=null)chartFragment.loadSelectedVariables();
+        ChartFragment infoFragment = (ChartFragment) getFragmentInStack(ChartFragment.TAG_INFO);
+        if (infoFragment!=null)infoFragment.loadSelectedVariables();
     }
 
     public void showTrackInfoFragment(String trackId) {
