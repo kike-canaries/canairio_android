@@ -61,6 +61,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation 'com.jakewharton:butterknife:10.2.0'
+    implementation project(path: ':commons')
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'

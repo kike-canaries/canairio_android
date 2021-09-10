@@ -1,2 +1,3 @@
 include ':app', ':libtoolscommon'
 include ':ios'
+include ':commons'
