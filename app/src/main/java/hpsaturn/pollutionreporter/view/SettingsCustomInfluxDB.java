@@ -10,7 +10,7 @@ import com.hpsaturn.tools.Logger;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.ResponseConfig;
+import com.jetbrains.handson.commons.models.ResponseConfig;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 4/8/21.

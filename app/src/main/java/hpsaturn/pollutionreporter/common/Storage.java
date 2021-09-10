@@ -2,7 +2,6 @@ package hpsaturn.pollutionreporter.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,8 +10,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import hpsaturn.pollutionreporter.models.SensorData;
-import hpsaturn.pollutionreporter.models.SensorTrack;
+import com.jetbrains.handson.commons.models.SensorData;
+import com.jetbrains.handson.commons.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/4/18.

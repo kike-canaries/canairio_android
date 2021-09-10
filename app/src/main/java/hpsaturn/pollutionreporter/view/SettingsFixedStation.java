@@ -19,12 +19,12 @@ import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
-import hpsaturn.pollutionreporter.models.CommandConfig;
-import hpsaturn.pollutionreporter.models.GeoConfig;
-import hpsaturn.pollutionreporter.models.InfluxdbConfig;
-import hpsaturn.pollutionreporter.models.ResponseConfig;
-import hpsaturn.pollutionreporter.models.SensorConfig;
-import hpsaturn.pollutionreporter.models.WifiConfig;
+import com.jetbrains.handson.commons.models.CommandConfig;
+import com.jetbrains.handson.commons.models.GeoConfig;
+import com.jetbrains.handson.commons.models.InfluxdbConfig;
+import com.jetbrains.handson.commons.models.ResponseConfig;
+import com.jetbrains.handson.commons.models.SensorConfig;
+import com.jetbrains.handson.commons.models.WifiConfig;
 import io.nlopez.smartlocation.SmartLocation;
 
 /**

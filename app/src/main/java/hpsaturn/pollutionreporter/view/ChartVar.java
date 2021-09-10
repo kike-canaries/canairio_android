@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.SensorData;
+import com.jetbrains.handson.commons.models.SensorData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 3/20/21.

@@ -1,8 +1,4 @@
-package hpsaturn.pollutionreporter.models;
-
-import android.location.Location;
-
-import org.osmdroid.util.GeoPoint;
+package com.jetbrains.handson.commons.models;
 
 import java.util.ArrayList;
 

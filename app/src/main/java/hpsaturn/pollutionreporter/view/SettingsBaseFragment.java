@@ -19,9 +19,9 @@ import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.ResponseConfig;
-import hpsaturn.pollutionreporter.models.SensorConfig;
-import hpsaturn.pollutionreporter.models.SensorData;
+import com.jetbrains.handson.commons.models.ResponseConfig;
+import com.jetbrains.handson.commons.models.SensorConfig;
+import com.jetbrains.handson.commons.models.SensorData;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 

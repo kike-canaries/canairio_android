@@ -12,10 +12,12 @@
 		58C6F5371DA66CB600309CB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58C6F5351DA66CB600309CB6 /* LaunchScreen.storyboard */; };
 		68F7B70711EA08BCD6FAC87B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 237D46F74C406F8BB5EAA4C6 /* main.cpp */; };
 		B8F69288E337E515C7B352E7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D557BEEC753412BD628F314 /* main.cpp */; };
+		D5D86517FB2CCC6A38073F96 /* moe-main-interfaces.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E73104C6276B508A439A2C /* moe-main-interfaces.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		237D46F74C406F8BB5EAA4C6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		32E73104C6276B508A439A2C /* moe-main-interfaces.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "moe-main-interfaces.m"; path = "../build/moe/main/ui-headers/moe-main-interfaces.m"; sourceTree = "<group>"; };
 		3D557BEEC753412BD628F314 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5863B87B1DA682C800E46B6A /* ios-Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5863B88E1DA682C800E46B6A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -44,6 +46,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5063935C268E682FED0A0963 /* Multi-OS Engine */ = {
+			isa = PBXGroup;
+			name = "Multi-OS Engine";
+			sourceTree = "<group>";
+			children = (
+				32E73104C6276B508A439A2C /* moe-main-interfaces.m */,
+			);
+		};
 		5863B87C1DA682C800E46B6A /* ios-Test */ = {
 			isa = PBXGroup;
 			children = (
@@ -67,6 +77,7 @@
 				58C6F5261DA66CB600309CB6 /* ios */,
 				5863B87C1DA682C800E46B6A /* ios-Test */,
 				58C6F5251DA66CB600309CB6 /* Products */,
+				5063935C268E682FED0A0963 /* Multi-OS Engine */,
 			);
 			sourceTree = "<group>";
 		};
@@ -239,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				68F7B70711EA08BCD6FAC87B /* main.cpp in Sources */,
+				D5D86517FB2CCC6A38073F96 /* moe-main-interfaces.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

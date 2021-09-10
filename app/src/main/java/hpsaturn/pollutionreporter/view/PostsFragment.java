@@ -24,7 +24,7 @@ import java.util.TimerTask;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import com.jetbrains.handson.commons.models.SensorTrackInfo;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.

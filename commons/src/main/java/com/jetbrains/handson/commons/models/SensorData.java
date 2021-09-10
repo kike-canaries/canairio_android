@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter.models;
+package com.jetbrains.handson.commons.models;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/22/18.

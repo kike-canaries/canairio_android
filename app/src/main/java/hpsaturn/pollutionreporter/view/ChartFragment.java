@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -18,12 +17,8 @@ import androidx.preference.PreferenceManager;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.utils.MPPointD;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,9 +46,9 @@ import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
-import hpsaturn.pollutionreporter.models.SensorData;
-import hpsaturn.pollutionreporter.models.SensorTrack;
-import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import com.jetbrains.handson.commons.models.SensorData;
+import com.jetbrains.handson.commons.models.SensorTrack;
+import com.jetbrains.handson.commons.models.SensorTrackInfo;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
