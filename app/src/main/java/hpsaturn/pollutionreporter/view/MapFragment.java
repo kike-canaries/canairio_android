@@ -29,7 +29,7 @@ import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
-import hpsaturn.pollutionreporter.api.AqicnDataResponse;
+import com.jetbrains.handson.commons.api.AqicnDataResponse;
 import com.jetbrains.handson.commons.models.SensorData;
 import com.jetbrains.handson.commons.models.SensorTrackInfo;
 import retrofit2.Call;

@@ -1,4 +1,6 @@
-package hpsaturn.pollutionreporter.api;
+package com.jetbrains.handson.commons.api;
+
+import com.jetbrains.handson.commons.api.AqicnDataResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

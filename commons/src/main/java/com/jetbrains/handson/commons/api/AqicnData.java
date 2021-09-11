@@ -1,4 +1,10 @@
-package hpsaturn.pollutionreporter.api;
+package com.jetbrains.handson.commons.api;
+
+import com.jetbrains.handson.commons.api.AqicnAttributions;
+import com.jetbrains.handson.commons.api.AqicnCity;
+import com.jetbrains.handson.commons.api.AqicnDebug;
+import com.jetbrains.handson.commons.api.AqicnIaqi;
+import com.jetbrains.handson.commons.api.AqicnTime;
 
 import java.util.List;
 

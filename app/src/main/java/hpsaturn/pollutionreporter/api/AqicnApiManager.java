@@ -5,6 +5,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hpsaturn.tools.Logger;
+import com.jetbrains.handson.commons.api.AqicnDataResponse;
+import com.jetbrains.handson.commons.api.AqicnInterface;
 
 import hpsaturn.pollutionreporter.R;
 import retrofit2.Call;

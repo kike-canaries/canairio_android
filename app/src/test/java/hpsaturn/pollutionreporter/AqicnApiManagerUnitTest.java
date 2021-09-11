@@ -8,12 +8,11 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
-import hpsaturn.pollutionreporter.api.AqicnDataResponse;
+import com.jetbrains.handson.commons.api.AqicnDataResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
