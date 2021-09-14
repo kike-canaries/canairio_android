@@ -1,3 +1,1 @@
-include ':app', ':libtoolscommon'
-include ':ios'
-include ':commons'
+include ':app', ':libtoolscommon', ':ios', ':commons'
