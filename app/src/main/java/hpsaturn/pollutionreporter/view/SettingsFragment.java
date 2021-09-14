@@ -16,7 +16,7 @@ import com.iamhabib.easy_preference.EasyPreference;
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
-import hpsaturn.pollutionreporter.models.ResponseConfig;
+import com.jetbrains.handson.commons.models.ResponseConfig;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 3/31/21.

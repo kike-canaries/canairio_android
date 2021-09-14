@@ -13,13 +13,13 @@ import com.hpsaturn.tools.Logger;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.AltitudeOffsetConfig;
-import hpsaturn.pollutionreporter.models.CommandConfig;
-import hpsaturn.pollutionreporter.models.TempOffsetConfig;
-import hpsaturn.pollutionreporter.models.ResponseConfig;
-import hpsaturn.pollutionreporter.models.SampleConfig;
-import hpsaturn.pollutionreporter.models.SensorConfig;
-import hpsaturn.pollutionreporter.models.SensorType;
+import com.jetbrains.handson.commons.models.AltitudeOffsetConfig;
+import com.jetbrains.handson.commons.models.CommandConfig;
+import com.jetbrains.handson.commons.models.TempOffsetConfig;
+import com.jetbrains.handson.commons.models.ResponseConfig;
+import com.jetbrains.handson.commons.models.SampleConfig;
+import com.jetbrains.handson.commons.models.SensorConfig;
+import com.jetbrains.handson.commons.models.SensorType;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 3/31/21.

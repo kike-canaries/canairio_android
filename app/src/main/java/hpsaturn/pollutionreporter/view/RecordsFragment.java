@@ -23,7 +23,7 @@ import java.util.List;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Storage;
-import hpsaturn.pollutionreporter.models.SensorTrack;
+import com.jetbrains.handson.commons.models.SensorTrack;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 10/20/15.

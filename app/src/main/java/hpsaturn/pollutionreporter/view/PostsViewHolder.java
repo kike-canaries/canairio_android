@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import hpsaturn.pollutionreporter.R;
-import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import com.jetbrains.handson.commons.models.SensorTrackInfo;
 
 
 /**

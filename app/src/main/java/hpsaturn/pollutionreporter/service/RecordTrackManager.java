@@ -8,11 +8,8 @@ import android.content.IntentFilter;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 
-import java.lang.reflect.Type;
-
-import hpsaturn.pollutionreporter.models.ResponseConfig;
-import hpsaturn.pollutionreporter.models.SensorConfig;
-import hpsaturn.pollutionreporter.models.SensorData;
+import com.jetbrains.handson.commons.models.ResponseConfig;
+import com.jetbrains.handson.commons.models.SensorData;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/2/18.

@@ -1,10 +1,7 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -36,14 +33,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import hpsaturn.pollutionreporter.models.ResponseConfig;
+import com.jetbrains.handson.commons.models.ResponseConfig;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
 import hpsaturn.pollutionreporter.common.Keys;
-import hpsaturn.pollutionreporter.models.SensorData;
-import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import com.jetbrains.handson.commons.models.SensorData;
+import com.jetbrains.handson.commons.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.DisclosureFragment;
 import hpsaturn.pollutionreporter.view.PickerFragmentAdapter;

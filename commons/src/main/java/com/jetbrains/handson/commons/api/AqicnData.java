@@ -1,0 +1,31 @@
+package com.jetbrains.handson.commons.api;
+
+import com.jetbrains.handson.commons.api.AqicnAttributions;
+import com.jetbrains.handson.commons.api.AqicnCity;
+import com.jetbrains.handson.commons.api.AqicnDebug;
+import com.jetbrains.handson.commons.api.AqicnIaqi;
+import com.jetbrains.handson.commons.api.AqicnTime;
+
+import java.util.List;
+
+/**
+ * Created by Antonio Vanegas @hpsaturn on 12/28/19.
+ */
+public class AqicnData {
+
+    public int idx;
+
+    public int aqi;
+
+    public AqicnTime time;
+
+    public AqicnCity city;
+
+    public List<AqicnAttributions> attributions;
+
+    public AqicnIaqi iaqi;
+
+    public String dominentpol;
+
+    public AqicnDebug debug;
+}
