@@ -10,6 +10,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.content.ContextCompat;
@@ -19,6 +22,9 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import android.view.View;
 
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -89,6 +95,7 @@ public class MainActivity extends BaseActivity implements
     private PostsFragment postsFragment;
     private SettingsFragment settingsFragment;
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
     private boolean deviceConnected = false;
 
@@ -418,7 +425,20 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void startDataBase(){
+        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        Logger.d(TAG,"[FB] firebase auth anonymously");
+        mAuth.signInAnonymously()
+        .addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                // Sign in success, update UI with the signed-in user's information
+                Logger.i(TAG, "[FB] signInAnonymously:success");
+                FirebaseUser user = mAuth.getCurrentUser();
+            } else {
+                // If sign in fails, display a message to the user.
+                Logger.w(TAG, "[FB] signInAnonymously:failure"+task.getException());
+            }
+        });
     }
 
     private View.OnClickListener onFabClickListener = view -> {
@@ -532,6 +552,14 @@ public class MainActivity extends BaseActivity implements
         stopRecordTrackService();
         recordTrackManager.unregister();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser!=null) Logger.i(TAG,"[FB] current user: "+currentUser.getUid());
+        else Logger.w(TAG,"[FB] user not registered");
+        super.onStart();
     }
 
     private boolean isPaired(){
