@@ -298,8 +298,7 @@ public class RecordTrackService extends Service {
             data.pdist = trackDistance;
         }
         else {
-            Logger.w(TAG, "[TRACK] failed on getLastLocation!i");
-            UITools.showToast(this,"Getting GPS localization failed!" );
+            Logger.w(TAG, "[TRACK] failed on getLastLocation!");
         }
 
         return data;
