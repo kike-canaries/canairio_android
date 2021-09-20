@@ -430,6 +430,7 @@ public class MainActivity extends BaseActivity implements
                         // Sign in success, update UI with the signed-in user's information
                         Logger.i(TAG, "[FB] signInAnonymously:success");
                         FirebaseUser user = mAuth.getCurrentUser();
+                        Logger.i(TAG, "[FB] user: "+user.getUid());
                     } else {
                         // If sign in fails, display a message to the user.
                         Logger.w(TAG, "[FB] signInAnonymously:failure"+task.getException());
@@ -547,7 +548,8 @@ public class MainActivity extends BaseActivity implements
     protected void onDestroy() {
         stopRecordTrackService();
         recordTrackManager.unregister();
-        mAuth.signOut();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null && currentUser.isAnonymous()) currentUser.delete();
         super.onDestroy();
     }
 
