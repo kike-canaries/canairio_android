@@ -547,6 +547,7 @@ public class MainActivity extends BaseActivity implements
     protected void onDestroy() {
         stopRecordTrackService();
         recordTrackManager.unregister();
+        mAuth.signOut();
         super.onDestroy();
     }
 
