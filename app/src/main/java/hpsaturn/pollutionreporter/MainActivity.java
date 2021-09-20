@@ -419,6 +419,7 @@ public class MainActivity extends BaseActivity implements
 
     private void startDataBase(){
         mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
