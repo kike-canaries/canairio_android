@@ -1,28 +1,21 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import android.view.View;
-
-import com.google.firebase.auth.AuthResult;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -42,20 +35,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
-import hpsaturn.pollutionreporter.service.RecordTrackService;
+import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
-import hpsaturn.pollutionreporter.common.Keys;
-import hpsaturn.pollutionreporter.models.SensorData;
-import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.DisclosureFragment;
+import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PickerFragmentAdapter;
 import hpsaturn.pollutionreporter.view.PickerFragmentData;
 import hpsaturn.pollutionreporter.view.PickerFragmentInfo;
-import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
