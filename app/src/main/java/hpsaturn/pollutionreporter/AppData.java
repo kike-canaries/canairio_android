@@ -42,6 +42,6 @@ public class AppData extends MultiDexApplication{
         rxBleClient = RxBleClient.create(this);
         RxBleClient.setLogLevel(RxBleLog.VERBOSE);
         prefBuilder = EasyPreference.with(this,"KEYS_APP_PREFERENCES");
-        AqicnApiManager.getInstance().init(this);
+//        AqicnApiManager.getInstance().init(this);
     }
 }
