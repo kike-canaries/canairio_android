@@ -420,18 +420,21 @@ public class MainActivity extends BaseActivity implements
     private void startDataBase(){
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+    private void signInAnonymously() {
         Logger.d(TAG,"[FB] firebase auth anonymously");
         mAuth.signInAnonymously()
-        .addOnCompleteListener(this, task -> {
-            if (task.isSuccessful()) {
-                // Sign in success, update UI with the signed-in user's information
-                Logger.i(TAG, "[FB] signInAnonymously:success");
-                FirebaseUser user = mAuth.getCurrentUser();
-            } else {
-                // If sign in fails, display a message to the user.
-                Logger.w(TAG, "[FB] signInAnonymously:failure"+task.getException());
-            }
-        });
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Logger.i(TAG, "[FB] signInAnonymously:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Logger.w(TAG, "[FB] signInAnonymously:failure"+task.getException());
+                    }
+                });
     }
 
     private View.OnClickListener onFabClickListener = view -> {
@@ -551,7 +554,7 @@ public class MainActivity extends BaseActivity implements
     protected void onStart() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null) Logger.i(TAG,"[FB] current user: "+currentUser.getUid());
-        else Logger.w(TAG,"[FB] user not registered");
+        else signInAnonymously();
         super.onStart();
     }
 
