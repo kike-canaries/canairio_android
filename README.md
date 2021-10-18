@@ -86,8 +86,7 @@ For record tracks on your device (Sdcard) or publish it to the cloud (share), pl
 
 We are developing a new mobile map, you can see the current tracks that the people share here:
 
-[CanAirIO mobile map](https://mobile.canair.io)
-
+[![CanAirIO mobile map](images/canairio_mobile_map.jpg)](https://mobile.canair.io)
 
 ---
 
