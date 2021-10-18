@@ -82,6 +82,13 @@ For record tracks on your device (Sdcard) or publish it to the cloud (share), pl
 
 **NOTE**: Also all recorded tracks will be saved in the `/sdcard/canairio/` directory on `json` format.
 
+### Recordings Tracks Web Map
+
+We are developing a new mobile map, you can see the current tracks that the people share here:
+
+[CanAirIO mobile map](https://mobile.canair.io)
+
+
 ---
 
 ## Fixed Station Mode
