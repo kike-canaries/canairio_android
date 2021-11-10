@@ -156,4 +156,6 @@
     <string name="summary_altitude_offset">Set Altitude to enable. 0 disable.</string>
     <string name="title_altitude_offset">CO2 Altitude compensation</string>
     <string name="menu_var_filter">Variables…</string>
+    <string name="summary_wifi_ssid">Please select one</string>
+    <string name="msg_please_wait">Please wait…</string>
 </resources>

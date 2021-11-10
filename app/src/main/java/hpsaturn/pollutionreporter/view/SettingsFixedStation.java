@@ -1,19 +1,30 @@
 package hpsaturn.pollutionreporter.view;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.content.SharedPreferences;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
 import com.fonfon.geohash.GeoHash;
+import com.github.pwittchen.reactivewifi.AccessRequester;
+import com.github.pwittchen.reactivewifi.ReactiveWifi;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
 import com.iamhabib.easy_preference.EasyPreference;
 
 import org.apache.commons.lang3.math.NumberUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
@@ -26,6 +37,9 @@ import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.WifiConfig;
 import io.nlopez.smartlocation.SmartLocation;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 2/17/19.
@@ -37,10 +51,12 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
 
     private String currentGeoHash = "";
+    private Disposable wifiSubscription;
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
+        ssidListenerInit();
     }
 
     @Override
@@ -74,7 +90,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             enableSwitch(R.string.key_setting_enable_ifx, true);
             currentGeoHash = config.geo;
         }
-
 
         updateLocationSummary();
         validateLocationSwitch();
@@ -114,6 +129,51 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     /***********************************************************************************************
      * Wifi switch
      **********************************************************************************************/
+
+    private void ssidListenerInit() {
+        Preference sendFeedback = findPreference(getString(R.string.key_setting_ssid));
+
+        assert sendFeedback != null;
+        sendFeedback.setOnPreferenceClickListener(preference -> {
+            updateSummary(R.string.key_setting_ssid,R.string.msg_please_wait);
+            startWifiAccessPointsSubscription();
+            return true;
+        });
+    }
+
+    private void startWifiAccessPointsSubscription() {
+
+        boolean fineLocationPermissionNotGranted =
+                ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) != PERMISSION_GRANTED;
+        boolean coarseLocationPermissionNotGranted =
+                ActivityCompat.checkSelfPermission(getActivity(), ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED;
+
+        if (fineLocationPermissionNotGranted && coarseLocationPermissionNotGranted) {
+            return;
+        }
+
+        if (!AccessRequester.isLocationEnabled(getActivity())) {
+            AccessRequester.requestLocationAccess(getActivity());
+            return;
+        }
+
+        wifiSubscription = ReactiveWifi.observeWifiAccessPoints(getActivity())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::displayAccessPoints);
+    }
+
+    private void displayAccessPoints(List<ScanResult> scanResults) {
+        final List<String> ssids = new ArrayList<>();
+
+        for (ScanResult scanResult : scanResults) {
+            Logger.d(TAG,scanResult.SSID);
+            ssids.add(scanResult.SSID);
+        }
+
+        wifiSubscription.dispose();
+    }
+
 
     private void saveWifiConfig() {
 

@@ -29,7 +29,8 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar.Launcher">
+            android:theme="@style/AppTheme.NoActionBar.Launcher"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
