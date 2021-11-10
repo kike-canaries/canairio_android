@@ -132,7 +132,7 @@
     <string name="title_setting_ifxip">Hostname</string>
     <string name="key_ifxpt_default">8086</string>
     <string name="title_setting_ifxpt">Port</string>
-    <string name="key_enable_location_title">Tag fixed location to device</string>
+    <string name="key_enable_location_title">Tag fixed location Geohash</string>
     <string name="key_dname_title">Fixed station tag name</string>
     <string name="key_ssid_title">WiFi name (SSID)</string>
     <string name="key_enable_ifx_title">Enable publication</string>
@@ -159,4 +159,8 @@
     <string name="summary_wifi_ssid">Please select one</string>
     <string name="msg_please_wait">Please wait…</string>
     <string name="title_access_points_dialog">Access Points</string>
+    <string name="title_save_wifi_settings">Save WiFi settigs</string>
+    <string name="title_disable_wifi">Disable WiFi</string>
+    <string name="msg_status_disconnected">Status: disconnected</string>
+    <string name="msg_status_connected">Status: connected</string>
 </resources>

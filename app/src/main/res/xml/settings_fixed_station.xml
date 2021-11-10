@@ -32,7 +32,7 @@
         <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_enable_wifi"
-            app:summary="@string/summary_wifi"
+            app:summary=""
             app:title="Enable WiFi Connection" />
 
     </PreferenceCategory>

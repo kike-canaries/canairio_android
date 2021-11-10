@@ -1,29 +1,44 @@
 package hpsaturn.pollutionreporter.view;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
+import com.github.pwittchen.reactivewifi.AccessRequester;
+import com.github.pwittchen.reactivewifi.ReactiveWifi;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 3/31/21.
@@ -37,12 +52,14 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     public boolean onSensorReading;
     private RecordTrackManager trackManager;
     private boolean deviceConnected;
+    private Disposable wifiSubscription;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(trackManager==null) trackManager = new RecordTrackManager(getMain(), recordTrackListener);
         readSensorConfig();
+        startWifiAccessPointsSubscription();
     }
 
     public void readSensorConfig(){
@@ -254,6 +271,44 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
 
         }
     };
+
+    /***********************************************************************************************
+     * Background service for scan APs
+     **********************************************************************************************/
+
+    private void startWifiAccessPointsSubscription() {
+
+        boolean fineLocationPermissionNotGranted =
+                ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) != PERMISSION_GRANTED;
+        boolean coarseLocationPermissionNotGranted =
+                ActivityCompat.checkSelfPermission(getActivity(), ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED;
+
+        if (fineLocationPermissionNotGranted && coarseLocationPermissionNotGranted) {
+            return;
+        }
+
+        if (!AccessRequester.isLocationEnabled(getActivity())) {
+            AccessRequester.requestLocationAccess(getActivity());
+            return;
+        }
+
+        wifiSubscription = ReactiveWifi.observeWifiAccessPoints(getActivity())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::displayAccessPoints);
+    }
+
+    private void displayAccessPoints(List<ScanResult> scanResults) {
+        final List<String> ssids = new ArrayList<>();
+
+        for (ScanResult scanResult : scanResults) {
+            Logger.d(TAG,scanResult.SSID);
+            ssids.add(scanResult.SSID);
+        }
+        wifiSubscription.dispose();
+        Storage.setTempAPList(getActivity(),ssids);
+        Logger.i(TAG, "[Config] updated AccessPoints list");
+    }
 
     protected abstract void refreshUI();
 
