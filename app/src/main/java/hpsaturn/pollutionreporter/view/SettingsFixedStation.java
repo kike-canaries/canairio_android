@@ -30,6 +30,7 @@ import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
+import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.CommandConfig;
 import hpsaturn.pollutionreporter.models.GeoConfig;
 import hpsaturn.pollutionreporter.models.InfluxdbConfig;
@@ -171,7 +172,11 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             ssids.add(scanResult.SSID);
         }
 
+        Storage.setTempAPList(getActivity(),ssids);
+        getMain().showAccessPointsDialog();
+
         wifiSubscription.dispose();
+
     }
 
 

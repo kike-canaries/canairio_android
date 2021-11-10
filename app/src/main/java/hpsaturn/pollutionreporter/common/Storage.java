@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrack;
@@ -87,6 +88,24 @@ public class Storage {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Keys.SENSOR_TRACKS, new Gson().toJson(tracks));
         editor.apply();
+    }
+
+    public static void setTempAPList(Context ctx, List<String> ssids) {
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Keys.TEMP_AP_LIST, new Gson().toJson(ssids));
+        editor.apply();
+    }
+
+    public static List<String> getTempAPList(Context ctx) {
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
+        String ringJson = preferences.getString(Keys.TEMP_AP_LIST, "");
+        if (ringJson.equals("")) return new ArrayList<>();
+        else {
+            Type listType = new TypeToken<List<String>>() {
+            }.getType();
+            return new Gson().fromJson(ringJson, listType);
+        }
     }
 
 }

@@ -1,10 +1,7 @@
-package hpsaturn.pollutionreporter;
+package hpsaturn.pollutionreporter;;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -52,10 +49,11 @@ import hpsaturn.pollutionreporter.view.PickerFragmentInfo;
 import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
+import hpsaturn.pollutionreporter.view.ScanAccesPointFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 import hpsaturn.pollutionreporter.view.SettingsFixedStation;
 import hpsaturn.pollutionreporter.view.SettingsFragment;
-import hpsaturn.pollutionreporter.view.VariableFileterFragment;
+import hpsaturn.pollutionreporter.view.VariableFilterFragment;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -524,7 +522,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     void actionVarFilter() {
-       showDialogFragment(new VariableFileterFragment(),VariableFileterFragment.TAG);
+        showDialogFragment(new VariableFilterFragment(), VariableFilterFragment.TAG);
     }
 
     @Override
@@ -592,5 +590,10 @@ public class MainActivity extends BaseActivity implements
     public void showTrackInfoFragment(String trackId) {
         ChartFragment chart = ChartFragment.newInstance(trackId);
         addInfoFragment(chart,ChartFragment.TAG_INFO);
+    }
+
+    public void showAccessPointsDialog() {
+        Logger.d(TAG,"showAccessPointsDialog..");
+        showDialogFragment(new ScanAccesPointFragment(),ScanAccesPointFragment.TAG);
     }
 }

@@ -158,4 +158,5 @@
     <string name="menu_var_filter">Variables…</string>
     <string name="summary_wifi_ssid">Please select one</string>
     <string name="msg_please_wait">Please wait…</string>
+    <string name="title_access_points_dialog">Access Points</string>
 </resources>

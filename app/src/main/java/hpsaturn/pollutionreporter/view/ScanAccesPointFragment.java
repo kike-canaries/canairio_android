@@ -5,16 +5,21 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.widget.ListView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
 import com.hpsaturn.tools.Logger;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.common.Storage;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 5/22/21.
@@ -22,50 +27,39 @@ import hpsaturn.pollutionreporter.R;
 public class ScanAccesPointFragment extends DialogFragment {
 
     public static final String TAG = ScanAccesPointFragment.class.getSimpleName();
+    private static final String KEY_SSID_BUNDLE = "KEY_SSID_BUNDLE";
 
+    String ssids[];
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.title_access_points_dialog));
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-        Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
+        List<String> ssids_list = Storage.getTempAPList(getActivity());
 
-        String[] options = getResources().getStringArray(R.array.pref_vars_values);
+        int count = 0;
+        ssids = new String[ssids_list.size()];
+        Iterator<String> it = ssids_list.iterator();
+        while (it.hasNext()) ssids[count++]=it.next();
 
-        boolean[] selected = new boolean[options.length];
-
-        for (int i = 0 ; i < options.length ; i++) {
-            selected[i] = values.contains(options[i]);
-        }
-
-        builder.setMultiChoiceItems(R.array.pref_vars_entries, selected, this::setVaribleFilter);
+        builder.setSingleChoiceItems(ssids,0,this::setVaribleFilter);
 
         return builder.create();
     }
 
-    private void setVaribleFilter(DialogInterface dialog, int item, boolean isChecked) {
-        Logger.i(TAG, "item: " + item + " isChecked: "+isChecked);
-
+    private void setVaribleFilter(DialogInterface dialogInterface, int i) {
+        Logger.d(TAG,"selected SSID: "+ssids[i]);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
-        Set<String> values = preferences.getStringSet(getString(R.string.key_setting_vars), null);
-
-        String[] options = getResources().getStringArray(R.array.pref_vars_values);
-
-        if(isChecked) values.add(options[item]);
-        else values.remove(options[item]);
-
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putStringSet(getString(R.string.key_setting_vars),values);
+        editor.putString(getString(R.string.key_setting_ssid),ssids[i]);
         editor.apply();
     }
 
     @Override
     public void onDestroy() {
         Logger.d(TAG,"onDestroy");
-        getMain().selectedVarsUpdated();
         super.onDestroy();
     }
 
