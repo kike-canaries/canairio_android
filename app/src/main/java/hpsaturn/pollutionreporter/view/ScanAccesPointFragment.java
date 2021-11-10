@@ -27,7 +27,6 @@ import hpsaturn.pollutionreporter.common.Storage;
 public class ScanAccesPointFragment extends DialogFragment {
 
     public static final String TAG = ScanAccesPointFragment.class.getSimpleName();
-    private static final String KEY_SSID_BUNDLE = "KEY_SSID_BUNDLE";
 
     String ssids[];
 
@@ -44,7 +43,7 @@ public class ScanAccesPointFragment extends DialogFragment {
         Iterator<String> it = ssids_list.iterator();
         while (it.hasNext()) ssids[count++]=it.next();
 
-        builder.setSingleChoiceItems(ssids,0,this::setVaribleFilter);
+        builder.setSingleChoiceItems(ssids,-1,this::setVaribleFilter);
 
         return builder.create();
     }
@@ -55,6 +54,7 @@ public class ScanAccesPointFragment extends DialogFragment {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(getString(R.string.key_setting_ssid),ssids[i]);
         editor.apply();
+        dismiss();
     }
 
     @Override

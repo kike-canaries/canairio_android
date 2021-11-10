@@ -172,10 +172,10 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             ssids.add(scanResult.SSID);
         }
 
+        wifiSubscription.dispose();
         Storage.setTempAPList(getActivity(),ssids);
         getMain().showAccessPointsDialog();
-
-        wifiSubscription.dispose();
+        getWifiSwitch().setChecked(false);
 
     }
 
