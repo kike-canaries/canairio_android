@@ -34,6 +34,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
+import hpsaturn.pollutionreporter.models.WifiConfig;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
@@ -595,5 +596,11 @@ public class MainActivity extends BaseActivity implements
     public void showAccessPointsDialog() {
         Logger.d(TAG,"showAccessPointsDialog..");
         showDialogFragment(new ScanAccesPointFragment(),ScanAccesPointFragment.TAG);
+    }
+
+    public void updatePreferencesSSID(String ssid) {
+        WifiConfig config = new WifiConfig();
+        config.ssid = ssid;
+        if (settingsFragment != null) settingsFragment.sendSensorConfig(config);
     }
 }

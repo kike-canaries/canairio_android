@@ -84,6 +84,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         updateLocationSummary();
         validateLocationSwitch();
+        updateWifiSummary();
         updateWifiSummary(config.wsta);
         printResponseConfig(config);
 
@@ -124,7 +125,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private void ssidListenerInit() {
         Preference sendFeedback = findPreference(getString(R.string.key_setting_ssid));
-
         assert sendFeedback != null;
         sendFeedback.setOnPreferenceClickListener(preference -> {
             getMain().showAccessPointsDialog();
@@ -372,4 +372,5 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         }
         super.onDestroy();
     }
+
 }

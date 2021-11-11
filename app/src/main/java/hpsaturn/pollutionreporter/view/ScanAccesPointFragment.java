@@ -54,6 +54,7 @@ public class ScanAccesPointFragment extends DialogFragment {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(getString(R.string.key_setting_ssid),ssids[i]);
         editor.apply();
+        getMain().updatePreferencesSSID(ssids[i]);
         dismiss();
     }
 

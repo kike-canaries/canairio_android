@@ -59,7 +59,6 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         super.onViewCreated(view, savedInstanceState);
         if(trackManager==null) trackManager = new RecordTrackManager(getMain(), recordTrackListener);
         readSensorConfig();
-        startWifiAccessPointsSubscription();
     }
 
     public void readSensorConfig(){
@@ -276,7 +275,7 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
      * Background service for scan APs
      **********************************************************************************************/
 
-    private void startWifiAccessPointsSubscription() {
+    public void startWifiAccessPointsSubscription() {
 
         boolean fineLocationPermissionNotGranted =
                 ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) != PERMISSION_GRANTED;
@@ -295,19 +294,20 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         wifiSubscription = ReactiveWifi.observeWifiAccessPoints(getActivity())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::displayAccessPoints);
+                .subscribe(this::saveAccessPoints);
     }
 
-    private void displayAccessPoints(List<ScanResult> scanResults) {
+    private void saveAccessPoints(List<ScanResult> scanResults) {
         final List<String> ssids = new ArrayList<>();
 
         for (ScanResult scanResult : scanResults) {
-            Logger.d(TAG,scanResult.SSID);
             ssids.add(scanResult.SSID);
         }
-        wifiSubscription.dispose();
-        Storage.setTempAPList(getActivity(),ssids);
-        Logger.i(TAG, "[Config] updated AccessPoints list");
+        if (!ssids.isEmpty() && wifiSubscription !=null) {
+            Storage.setTempAPList(getActivity(), ssids);
+            wifiSubscription.dispose();
+            wifiSubscription = null;
+        }
     }
 
     protected abstract void refreshUI();
@@ -326,11 +326,13 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         super.onResume();
         refreshUI();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        startWifiAccessPointsSubscription();
     }
 
     @Override
     public void onPause() {
         getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        if (wifiSubscription != null ) wifiSubscription.dispose();
         super.onPause();
     }
 }
