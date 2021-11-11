@@ -19,9 +19,9 @@ import hpsaturn.pollutionreporter.R;
 /**
  * Created by Antonio Vanegas @hpsaturn on 5/22/21.
  */
-public class VariableFileterFragment extends DialogFragment {
+public class VariableFilterFragment extends DialogFragment {
 
-    public static final String TAG = VariableFileterFragment.class.getSimpleName();
+    public static final String TAG = VariableFilterFragment.class.getSimpleName();
 
 
     @Override

@@ -1,5 +1,5 @@
 
-[![Actions Status](https://github.com/kike-canaries/canairio_android/workflows/Android%20CI/badge.svg)](https://github.com/kike-canaries/android-hpma115s0/actions) ![ViewCount](https://views.whatilearened.today/views/github/kike-canaries/canairio_android.svg) [![Liberapay Status](http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay)](https://liberapay.com/CanAirIO)  
+[![Actions Status](https://github.com/kike-canaries/canairio_android/workflows/Android%20CI/badge.svg)](https://github.com/kike-canaries/android-hpma115s0/actions) ![ViewCount](https://views.whatilearened.today/views/github/kike-canaries/canairio_android.svg) [![Liberapay Status](http://img.shields.io/liberapay/receives/CanAirIO.svg?logo=liberapay)](https://liberapay.com/CanAirIO) [![Telegram Group](https://img.shields.io/endpoint?color=neon&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fcanairio)](https://t.me/canairio) 
 
 [![CanAirIO Building Guides](images/main.jpg)](https://canair.io/docs/)
 
@@ -81,6 +81,12 @@ For record tracks on your device (Sdcard) or publish it to the cloud (share), pl
 <a href="https://github.com/kike-canaries/esp32-hpma115s0/blob/master/images/app_track_record.jpg" target="_blank"><img src="https://raw.githubusercontent.com/kike-canaries/esp32-hpma115s0/master/images/app_track_record.jpg" width="512" align="center" ></a>
 
 **NOTE**: Also all recorded tracks will be saved in the `/sdcard/canairio/` directory on `json` format.
+
+### Recordings Tracks Web Map
+
+We are developing a new mobile map, you can see the current tracks that the people share here:
+
+[![CanAirIO mobile map](images/canairio_mobile_map.jpg)](https://mobile.canair.io)
 
 ---
 

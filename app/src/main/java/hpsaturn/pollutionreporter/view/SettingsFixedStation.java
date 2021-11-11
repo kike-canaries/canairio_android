@@ -15,6 +15,8 @@ import com.iamhabib.easy_preference.EasyPreference;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.TimerTask;
+
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
@@ -35,12 +37,16 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     public static final String TAG = SettingsFixedStation.class.getSimpleName();
 
-
     private String currentGeoHash = "";
+
+    private Handler mHandler = new Handler();
+    private UpdateTimeTask mUpdateTimeTask = new UpdateTimeTask();
+
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
+        ssidListenerInit();
     }
 
     @Override
@@ -56,6 +62,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     @Override
     protected void onConfigRead(ResponseConfig config) {
 
+        Logger.v(TAG, "[Config] reading config");
         boolean notify_sync = false;
 
         if (config.wenb != getWifiSwitch().isChecked()) {
@@ -75,13 +82,14 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             currentGeoHash = config.geo;
         }
 
-
         updateLocationSummary();
         validateLocationSwitch();
+        updateWifiSummary();
+        updateWifiSummary(config.wsta);
+        printResponseConfig(config);
 
         if (notify_sync) {
             saveAllPreferences(config);
-            printResponseConfig(config);
             updateSwitches(config);
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
@@ -96,7 +104,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if (!onSensorReading) {
 
             if (key.equals(getString(R.string.key_setting_ssid))) {
-                getWifiSwitch().setEnabled(isWifiSwitchFieldsValid());
+                getWifiSwitch().setEnabled(isWifiSSIDValid());
             } else if (key.equals(getString(R.string.key_setting_enable_wifi))) {
                 saveWifiConfig();
             } else if (key.equals(getString(R.string.key_setting_enable_ifx))) {
@@ -107,7 +115,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         }
         else
-            Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
+            Logger.i(TAG,"[Config] skip onSharedPreferenceChanged because is in reading mode!");
 
     }
 
@@ -115,31 +123,41 @@ public class SettingsFixedStation extends SettingsBaseFragment {
      * Wifi switch
      **********************************************************************************************/
 
+    private void ssidListenerInit() {
+        Preference sendFeedback = findPreference(getString(R.string.key_setting_ssid));
+        assert sendFeedback != null;
+        sendFeedback.setOnPreferenceClickListener(preference -> {
+            getMain().showAccessPointsDialog();
+            getWifiSwitch().setChecked(false);
+            return true;
+        });
+    }
+
     private void saveWifiConfig() {
 
-        if (getWifiSwitch().isChecked() && isWifiSwitchFieldsValid()) {
+        if (getWifiSwitch().isChecked() && isWifiSSIDValid()) {
             WifiConfig config = new WifiConfig();
             config.ssid = getSharedPreference(getString(R.string.key_setting_ssid));
             config.pass = getSharedPreference(getString(R.string.key_setting_pass));
             config.wenb = true;
             updateWifiSummary();
             sendSensorConfig(config);
+            mUpdateTimeTask.run(); // config read for update status
         }
         else
             setWifiSwitch(false);
     }
 
-    private boolean isWifiSwitchFieldsValid() {
+    private boolean isWifiSSIDValid() {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_enable_wifi));
         String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
         Logger.v(TAG, "[Config] values -> " + ssid );
-        updateWifiSummary();
         return ssid.length() != 0;
     }
 
     private void setWifiSwitch(boolean checked) {
         SwitchPreference wifiSwitch = getWifiSwitch();
-        wifiSwitch.setEnabled(isWifiSwitchFieldsValid());
+        wifiSwitch.setEnabled(isWifiSSIDValid());
         wifiSwitch.setChecked(checked);
         updateWifiSummary();
         enableWifiOnDevice(checked);
@@ -148,6 +166,19 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     private void updateWifiSummary(){
         updateSummary(R.string.key_setting_ssid);
         updatePasswSummary(R.string.key_setting_pass);
+        if(getWifiSwitch().isChecked())
+            updatePrefTitle(R.string.key_setting_enable_wifi,getString(R.string.title_disable_wifi));
+        else {
+            updatePrefTitle(R.string.key_setting_enable_wifi, getString(R.string.title_save_wifi_settings));
+            updateSummary(R.string.key_setting_enable_wifi,R.string.msg_status_disconnected);
+        }
+    }
+
+    private void updateWifiSummary(boolean status){
+        if (status)
+            updateSummary(R.string.key_setting_enable_wifi,R.string.msg_status_connected);
+        else
+            updateSummary(R.string.key_setting_enable_wifi,R.string.msg_status_disconnected);
     }
 
     private SwitchPreference getWifiSwitch() {
@@ -262,7 +293,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     private void updateLocationSummary() {
         if (lastLocation != null) {
             SwitchPreference ifxdbSwitch = getInfluxDbSwitch();
-            String summary = "Geohash: ";
+            String summary = "";
             if (currentGeoHash.length() == 0 ) {
                 summary = summary+"none.";
                 ifxdbSwitch.setSummary(R.string.summary_ifx_nogeohash);
@@ -315,6 +346,31 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
+    }
+
+    class UpdateTimeTask extends TimerTask {
+        private int counter = 0;
+        public void run() {
+            int retries = 12;
+            Logger.i(TAG,"[Config] wifi switch task: read sensor config "+counter+"/"+retries);
+            readSensorConfig();
+            if(counter++> retries) {
+                counter = 0;
+                this.cancel();
+            }
+            else mHandler.postDelayed(this,5000);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        Logger.i(TAG,"[Config] onDestroy");
+        try {
+            mHandler.removeCallbacks(mUpdateTimeTask);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
     }
 
 }
