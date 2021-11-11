@@ -1,4 +1,4 @@
-package hpsaturn.pollutionreporter;;
+package hpsaturn.pollutionreporter;
 
 import android.Manifest;
 import android.content.Intent;
@@ -16,8 +16,6 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -40,10 +38,10 @@ import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.models.WifiConfig;
-import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
+import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.DisclosureFragment;
 import hpsaturn.pollutionreporter.view.MapFragment;
@@ -57,6 +55,8 @@ import hpsaturn.pollutionreporter.view.ScanFragment;
 import hpsaturn.pollutionreporter.view.SettingsFixedStation;
 import hpsaturn.pollutionreporter.view.SettingsFragment;
 import hpsaturn.pollutionreporter.view.VariableFilterFragment;
+
+;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -90,7 +90,6 @@ public class MainActivity extends BaseActivity implements
     private PostsFragment postsFragment;
     private SettingsFragment settingsFragment;
     private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
 
     private boolean deviceConnected = false;
 
@@ -420,24 +419,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void startDataBase(){
-        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-    }
-
-    private void signInAnonymously() {
-        Logger.d(TAG,"[FB] firebase auth anonymously");
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Logger.i(TAG, "[FB] signInAnonymously:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Logger.i(TAG, "[FB] user: "+user.getUid());
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Logger.w(TAG, "[FB] signInAnonymously:failure"+task.getException());
-                    }
-                });
     }
 
     private View.OnClickListener onFabClickListener = view -> {
@@ -550,17 +532,7 @@ public class MainActivity extends BaseActivity implements
     protected void onDestroy() {
         stopRecordTrackService();
         recordTrackManager.unregister();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null && currentUser.isAnonymous()) currentUser.delete();
         super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser!=null) Logger.i(TAG,"[FB] current user: "+currentUser.getUid());
-        else signInAnonymously();
-        super.onStart();
     }
 
     private boolean isPaired(){

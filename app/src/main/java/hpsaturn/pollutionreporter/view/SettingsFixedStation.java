@@ -86,10 +86,10 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         validateLocationSwitch();
         updateWifiSummary();
         updateWifiSummary(config.wsta);
-        printResponseConfig(config);
 
         if (notify_sync) {
             saveAllPreferences(config);
+            printResponseConfig(config);
             updateSwitches(config);
             updateStatusSummary(true);
             updatePreferencesSummmary(config);

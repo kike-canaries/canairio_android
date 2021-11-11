@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
-
 
 android {
     compileSdkVersion project.mCompileSdkVersion.toInteger()
@@ -63,7 +61,6 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation 'com.jakewharton:butterknife:10.2.0'
-    implementation 'com.google.firebase:firebase-database:20.0.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
@@ -89,9 +86,9 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:28.4.1')
 
+    implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-auth'
     implementation 'com.firebaseui:firebase-ui-database:8.0.0'
 
     implementation 'com.github.vic797:prowebview:2.2.1'
