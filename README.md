@@ -91,32 +91,30 @@ We are developing a new mobile map, you can see the current tracks that the peop
 ---
 
 ## Fixed Station Mode
+<a href="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" target="_blank"><img src="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" height="600" align="center" ></a>
 
-<img width="640" src="images/influxdb_grafana.jpg">
+<a href="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" height="500" align="right" ></a>
 
-Also, you can connect your CanAirIO device to the WiFi and leave this like a fixed station. In this mode you only need the Android app only for initial settings, after that the device could be publish data without the phone. For this you need configure it in `settings` section:
+Also, you can connect your CanAirIO device to the WiFi and leave this like a fixed station. In this mode you only need the Android app only for setup the initial settings, after that the device could be publish data without the phone using the WiFi. For this please download the [CanAirIO app](https://bit.ly/3HjDJqP) and setup the WiFi:
 
-### Settings
+### WiFi Setup
 
-<img align="right" width="400" src="images/canairio_app_settings.png">
-
-
-- **Station Name**: for example: `PM25_Berlin_Pankow`
-- **Wifi Name and Password**:
-  - Your Wifi network credentials.
+  - Open the app and enter on settings section
+  - Choose the **Wifi Name** and set the **Password** (if it has) 
   - Save the credentials with the switch.
-- **InfluxDB Cloud**: add the next values,
-  - Database name: `canairio`  
-  - Hostname: `influxdb.canair.io`
-  - Save the settings with the switch.
+  - Wait for `connected` status in the summary switch
 
-The data will be configured and showed in [CanAirIO Grafana Server](https://bit.ly/3bLpz0H).
+<a href="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" height="400" align="left" ></a>
 
-### Settings Tools
+### Tag geohash location and publish your fixed station
 
-- Reboot device: Only for restart your CanAirIO device
-- Factory Reset: For set all settings to default on your CanAirIO device
+After WiFi is ready, please follow the next steps:
 
+  - save Geohash location (turn on the switch for save, it will go to off after some seconds)
+  - enable the publication switch
+  - wait for some minutes, the device should be show data icon some times
+  - your station should be in our [Global Map](canair.io/stations) with the special ID showed in the last item of settings  
+ 
 # Supporting the project
 
 If you want to contribute to the code or documentation, consider posting a bug report, feature request or a pull request.
