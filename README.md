@@ -82,18 +82,18 @@ For record tracks on your device (Sdcard) or publish it to the cloud (share), pl
 
 **NOTE**: Also all recorded tracks will be saved in the `/sdcard/canairio/` directory on `json` format.
 
-### Recordings Tracks Web Map
+### CanAirIO Mobile Map
 
-We are developing a new mobile map, you can see the current tracks that the people share here:
+We are developing a new mobile map, you can see the current tracks that the people share here:  
 
-[![CanAirIO mobile map](images/canairio_mobile_map.jpg)](https://mobile.canair.io)
+<a href="https://mobile.canair.io" target="_blank"><img src="images/canairio_mobile_map.jpg" height="300" align="center" ></a>
 
 ---
 
 ## Fixed Station Mode
-<a href="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" target="_blank"><img src="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" height="600" align="center" ></a>
+<a href="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" target="_blank"><img src="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" height="300" align="center" ></a>
 
-<a href="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" height="500" align="right" ></a>
+<a href="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" height="340" align="right" ></a>
 
 Also, you can connect your CanAirIO device to the WiFi and leave this like a fixed station. In this mode you only need the Android app only for setup the initial settings, after that the device could be publish data without the phone using the WiFi. For this please download the [CanAirIO app](https://bit.ly/3HjDJqP) and setup the WiFi:
 
@@ -102,13 +102,13 @@ Also, you can connect your CanAirIO device to the WiFi and leave this like a fix
   - Open the app and enter on settings section
   - Choose the **Wifi Name** and set the **Password** (if it has) 
   - Save the credentials with the switch.
-  - Wait for `connected` status in the summary switch
+  - Wait for `connected` status in the summary switch  
 
-<a href="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" height="400" align="left" ></a>
+<a href="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" height="250" align="center" ></a>
 
-### Tag geohash location and publish your fixed station
+### Publication
 
-After WiFi is ready, please follow the next steps:
+After WiFi is ready, please follow the next steps for publish your fixed station:
 
   - save Geohash location (turn on the switch for save, it will go to off after some seconds)
   - enable the publication switch
