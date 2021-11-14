@@ -1,24 +1,21 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import android.view.View;
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -36,26 +33,30 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
-import hpsaturn.pollutionreporter.service.RecordTrackService;
+import hpsaturn.pollutionreporter.models.SensorData;
+import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import hpsaturn.pollutionreporter.models.WifiConfig;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
-import hpsaturn.pollutionreporter.common.Keys;
-import hpsaturn.pollutionreporter.models.SensorData;
-import hpsaturn.pollutionreporter.models.SensorTrackInfo;
+import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.DisclosureFragment;
+import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PickerFragmentAdapter;
 import hpsaturn.pollutionreporter.view.PickerFragmentData;
 import hpsaturn.pollutionreporter.view.PickerFragmentInfo;
-import hpsaturn.pollutionreporter.view.MapFragment;
 import hpsaturn.pollutionreporter.view.PostsFragment;
 import hpsaturn.pollutionreporter.view.RecordsFragment;
+import hpsaturn.pollutionreporter.view.ScanAccesPointFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 import hpsaturn.pollutionreporter.view.SettingsFixedStation;
 import hpsaturn.pollutionreporter.view.SettingsFragment;
-import hpsaturn.pollutionreporter.view.VariableFileterFragment;
+import hpsaturn.pollutionreporter.view.VariableFilterFragment;
+
+;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/11/18.
@@ -524,7 +525,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     void actionVarFilter() {
-       showDialogFragment(new VariableFileterFragment(),VariableFileterFragment.TAG);
+        showDialogFragment(new VariableFilterFragment(), VariableFilterFragment.TAG);
     }
 
     @Override
@@ -592,5 +593,16 @@ public class MainActivity extends BaseActivity implements
     public void showTrackInfoFragment(String trackId) {
         ChartFragment chart = ChartFragment.newInstance(trackId);
         addInfoFragment(chart,ChartFragment.TAG_INFO);
+    }
+
+    public void showAccessPointsDialog() {
+        Logger.d(TAG,"showAccessPointsDialog..");
+        showDialogFragment(new ScanAccesPointFragment(),ScanAccesPointFragment.TAG);
+    }
+
+    public void updatePreferencesSSID(String ssid) {
+        WifiConfig config = new WifiConfig();
+        config.ssid = ssid;
+        if (settingsFragment != null) settingsFragment.sendSensorConfig(config);
     }
 }

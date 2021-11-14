@@ -17,10 +17,10 @@
         app:icon="@android:drawable/ic_menu_manage"
         app:title="@string/category_wifi_title">
 
-        <EditTextPreference
-            android:inputType="text"
+        <Preference
             app:key="@string/key_setting_ssid"
-            app:summary=""
+            app:icon="@android:drawable/ic_menu_send"
+            app:summary="@string/summary_wifi_ssid"
             app:title="@string/key_ssid_title" />
 
         <EditTextPreference
@@ -32,7 +32,7 @@
         <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_enable_wifi"
-            app:summary="@string/summary_wifi"
+            app:summary=""
             app:title="Enable WiFi Connection" />
 
     </PreferenceCategory>
