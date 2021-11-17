@@ -42,7 +42,7 @@ After that copy this file into the project:
 cd canairio_android && cp ~/google-services.json app/
 ```
 
-### Aqicn API key
+### AQICN API key (optional)
 
 Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or create a fake file like with:
 
@@ -57,10 +57,6 @@ Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or crea
 ```bash
 ./gradlew assembleDebug
 ```
-
-# CanAirIO Device firmare
-
-Please see the firmware [documentation](https://github.com/kike-canaries/canairio_firmware#canairio-firmware) for using and configure your device.
 
 # Usage
 
