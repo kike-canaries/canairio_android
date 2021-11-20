@@ -15,7 +15,13 @@ import hpsaturn.pollutionreporter.models.ResponseConfig;
 /**
  * Created by Antonio Vanegas @hpsaturn on 4/8/21.
  */
-public class SettingsCustomInfluxDB extends SettingsBaseFragment {
+public class SettingsAdvancedCloud extends SettingsBaseFragment {
+
+    @Override
+    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.settings_custom_influxdb, rootKey);
+    }
+
     @Override
     protected void refreshUI() {
         updateInfluxSummary();
@@ -62,11 +68,6 @@ public class SettingsCustomInfluxDB extends SettingsBaseFragment {
             Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
     }
 
-    @Override
-    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.settings_custom_influxdb, rootKey);
-
-    }
 
     private void saveAllPreferences(ResponseConfig config) {
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
@@ -75,11 +76,11 @@ public class SettingsCustomInfluxDB extends SettingsBaseFragment {
     }
 
     private String getInfluxDbDname() {
-        return getSharedPreference(getString(R.string.key_setting_ifxdb));
+        return getSharedPreference(R.string.key_setting_ifxdb);
     }
 
     private String getInfluxDbIP() {
-        return getSharedPreference(getString(R.string.key_setting_ifxip));
+        return getSharedPreference(R.string.key_setting_ifxip);
     }
 
     private int getInfluxDbPort() {

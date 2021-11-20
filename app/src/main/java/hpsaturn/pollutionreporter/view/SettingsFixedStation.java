@@ -55,8 +55,10 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         updateWifiSummary();
         lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
         updateLocationSummary();
+        updateAnaireSummary();
         validateLocationSwitch();
         launchWorldMapInit();
+        launchAnaireInit();
     }
 
     @Override
@@ -77,12 +79,16 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if (config.geo != null && config.geo.length() == 0 ) {
             enableSwitch(R.string.key_setting_enable_ifx,false);
         }
+        if (config.anaireid != null && !config.anaireid.equals(getSharedPreference(R.string.key_anaire_id))){
+            notify_sync = true;
+        }
         else if (config.geo != null) {
             enableSwitch(R.string.key_setting_enable_ifx, true);
             currentGeoHash = config.geo;
         }
 
         updateLocationSummary();
+        updateAnaireSummary();
         validateLocationSwitch();
         updateWifiSummary();
         updateWifiSummary(config.wsta);
@@ -94,7 +100,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
-//            getMain().showSnackMessage(R.string.msg_sync_complete);
         }
     }
 
@@ -201,8 +206,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         if (getInfluxDbSwitch().isChecked() && isInfluxDbSwitchFieldsValid()) {
             InfluxdbConfig config = new InfluxdbConfig();
-            config.ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb),getString(R.string.key_ifxdb_default));;
-            config.ifxip = getSharedPreference(getString(R.string.key_setting_ifxip),getString(R.string.key_ifxip_default));
+            config.ifxdb = getSharedPreference(R.string.key_setting_ifxdb,getString(R.string.key_ifxdb_default));;
+            config.ifxip = getSharedPreference(R.string.key_setting_ifxip,getString(R.string.key_ifxip_default));
             config.ifxpt = NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_ifxpt)),8086);
             config.ienb = true;
             sendSensorConfig(config);
@@ -215,8 +220,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private boolean isInfluxDbSwitchFieldsValid(){
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_ifxdb));
-        String ifxdb = getSharedPreference(getString(R.string.key_setting_ifxdb),getString(R.string.key_ifxdb_default));
-        String ifxip = getSharedPreference(getString(R.string.key_setting_ifxip),getString(R.string.key_ifxip_default));
+        String ifxdb = getSharedPreference(R.string.key_setting_ifxdb,getString(R.string.key_ifxdb_default));
+        String ifxip = getSharedPreference(R.string.key_setting_ifxip,getString(R.string.key_ifxip_default));
         Logger.v(TAG, "[Config] values -> " + ifxdb +  " " + ifxip);
         return !(ifxdb.length() == 0 || ifxip.length() == 0);
     }
@@ -253,6 +258,26 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             UITools.viewLink(getActivity(),getString(R.string.url_canairio_worldmap));
             return true;
         });
+    }
+
+    private void launchAnaireInit() {
+        Preference anaireLaunch = findPreference(getString(R.string.key_anaire_id));
+
+        assert anaireLaunch != null;
+        anaireLaunch.setOnPreferenceClickListener(preference -> {
+            String anaireId = getSharedPreference(R.string.key_anaire_id);
+            String url = getString(R.string.url_anaire_realtime)+anaireId+"/";
+            Logger.v(TAG, "[Config] Anaire time serie: " + url);
+
+            UITools.viewLink(getActivity(),url);
+            return true;
+        });
+    }
+
+    private void updateAnaireSummary(){
+        String anaireId = getSharedPreference(R.string.key_anaire_id);
+        String summary = getString(R.string.summary_anaire_timeseries)+"\nYour station: "+anaireId;
+        updateSummary(R.string.key_anaire_id,summary);
     }
 
     /***********************************************************************************************
@@ -346,6 +371,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         saveSharedPreference(R.string.key_setting_ssid, config.ssid);
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
+        saveSharedPreference(R.string.key_anaire_id, config.anaireid);
     }
 
     class UpdateTimeTask extends TimerTask {

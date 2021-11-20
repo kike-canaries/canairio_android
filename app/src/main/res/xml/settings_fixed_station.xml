@@ -18,8 +18,8 @@
         app:title="@string/category_wifi_title">
 
         <Preference
-            app:key="@string/key_setting_ssid"
             app:icon="@android:drawable/ic_menu_send"
+            app:key="@string/key_setting_ssid"
             app:summary="@string/summary_wifi_ssid"
             app:title="@string/key_ssid_title" />
 
@@ -49,15 +49,23 @@
             app:title="@string/key_enable_location_title" />
 
         <Preference
-            android:fragment="hpsaturn.pollutionreporter.view.SettingsCustomInfluxDB"
+            android:fragment="hpsaturn.pollutionreporter.view.SettingsAdvancedCloud"
             app:key="@string/key_setting_ifx_advanced"
-            app:summary="Custom InfluxDB settings"
+            app:summary="@string/summary_ifx_advanced"
             app:title="Advanced Settings" />
 
         <SwitchPreference
             app:key="@string/key_setting_enable_ifx"
             app:summary="@string/key_enable_ifx_summary_ready"
             app:title="@string/key_enable_ifx_title" />
+
+        <Preference
+            app:dependency="@string/key_setting_enable_wifi"
+            app:icon="@android:drawable/ic_menu_recent_history"
+            app:key="@string/key_anaire_id"
+            app:summary="@string/summary_anaire_timeseries"
+            app:title="@string/title_anaire_timeseries" />
+
 
         <Preference
             app:dependency="@string/key_setting_enable_ifx"
