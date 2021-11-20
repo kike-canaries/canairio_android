@@ -42,7 +42,7 @@ After that copy this file into the project:
 cd canairio_android && cp ~/google-services.json app/
 ```
 
-### Aqicn API key
+### AQICN API key (optional)
 
 Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or create a fake file like with:
 
@@ -57,10 +57,6 @@ Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or crea
 ```bash
 ./gradlew assembleDebug
 ```
-
-# CanAirIO Device firmare
-
-Please see the firmware [documentation](https://github.com/kike-canaries/canairio_firmware#canairio-firmware) for using and configure your device.
 
 # Usage
 
@@ -82,41 +78,40 @@ For record tracks on your device (Sdcard) or publish it to the cloud (share), pl
 
 **NOTE**: Also all recorded tracks will be saved in the `/sdcard/canairio/` directory on `json` format.
 
-### Recordings Tracks Web Map
+### CanAirIO Mobile Map
 
-We are developing a new mobile map, you can see the current tracks that the people share here:
+We are developing a new mobile map, you can see the current tracks that the people share here:  
 
-[![CanAirIO mobile map](images/canairio_mobile_map.jpg)](https://mobile.canair.io)
+<a href="https://mobile.canair.io" target="_blank"><img src="images/canairio_mobile_map.jpg" height="300" align="center" ></a>
 
 ---
 
 ## Fixed Station Mode
 
-<img width="640" src="images/influxdb_grafana.jpg">
+<a href="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" target="_blank"><img src="https://user-images.githubusercontent.com/423856/127383369-e57628a8-2a0b-44de-a29a-b8343a62f731.jpg" height="300" align="center" ></a>
 
-Also, you can connect your CanAirIO device to the WiFi and leave this like a fixed station. In this mode you only need the Android app only for initial settings, after that the device could be publish data without the phone. For this you need configure it in `settings` section:
+<a href="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141691438-214808d5-d367-4a75-ad49-a1e7978b4269.gif" height="340" align="right" ></a>
 
-### Settings
+Also, you can connect your CanAirIO device to the WiFi and leave this like a fixed station. In this mode you only need the Android app only for setup the initial settings, after that the device could be publish data without the phone using the WiFi. For this please download the [CanAirIO app](https://bit.ly/3HjDJqP) and setup the WiFi:
 
-<img align="right" width="400" src="images/canairio_app_settings.png">
+### WiFi Setup
 
-
-- **Station Name**: for example: `PM25_Berlin_Pankow`
-- **Wifi Name and Password**:
-  - Your Wifi network credentials.
+  - Open the app and enter on settings section
+  - Choose the **Wifi Name** and set the **Password** (if it has) 
   - Save the credentials with the switch.
-- **InfluxDB Cloud**: add the next values,
-  - Database name: `canairio`  
-  - Hostname: `influxdb.canair.io`
-  - Save the settings with the switch.
+  - Wait for `connected` status in the summary switch  
 
-The data will be configured and showed in [CanAirIO Grafana Server](https://bit.ly/3bLpz0H).
+<a href="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" target="_blank"><img src="https://user-images.githubusercontent.com/423856/141445500-ab6d7c6e-4a19-43fc-967e-c33ae60a073d.gif" height="250" align="center" ></a>
 
-### Settings Tools
+### Publication
 
-- Reboot device: Only for restart your CanAirIO device
-- Factory Reset: For set all settings to default on your CanAirIO device
+After WiFi is ready, please follow the next steps for publish your fixed station:
 
+  - save Geohash location (turn on the switch for save, it will go to off after some seconds)
+  - enable the publication switch
+  - wait for some minutes, the device should be show data icon some times
+  - your station should be in our [Global Map](canair.io/stations) with the special ID showed in the last item of settings  
+ 
 # Supporting the project
 
 If you want to contribute to the code or documentation, consider posting a bug report, feature request or a pull request.

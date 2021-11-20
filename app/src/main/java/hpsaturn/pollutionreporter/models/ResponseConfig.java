@@ -43,4 +43,5 @@ public class ResponseConfig extends SensorConfig {
 
     public int vrev = 0;
 
+    public String anaireid;
 }
