@@ -121,9 +121,15 @@ After WiFi is ready, please follow the next steps for publish your fixed station
   - wait for some minutes, the device should be show data icon some times
   - your station should be in our [Global Map](canair.io/stations) with the special ID showed in the last item of settings 
 
-# CanAirIO fast setup Guide
+### CanAirIO fixed station (fast setup guide)
 
 [![CanAirIO CO2 easy Setup](images/anaire_youtube_preview.jpg)](https://youtu.be/29wfMPZXvps) 
+
+# CanAirIO Documentation
+
+We have a [documentation portal](https://canair.io/docs/app_usage.html#overview) with full information about the device and the app usage.
+
+[![CanAirIO docs](images/canairio_docs_preview.jpg)](https://canair.io/docs/app_usage.html#overview)
  
 # Supporting the project
 
