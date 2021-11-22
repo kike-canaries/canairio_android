@@ -13,7 +13,8 @@ This code is for [CanAir.io](https://canair.io) Android app that using a [DIY de
 
 <a href="https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter" target="_blank"><img src="https://raw.githubusercontent.com/kike-canaries/android-hpma115s0/master/assets/googleplay/gplayicon.png" align="right" width="128" ></a>
 
-You can install it from the [release section](https://github.com/kike-canaries/esp32-hpma115s0/releases) downloading the last signed apk or installing from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter)
+You can install it from the [release section](https://github.com/kike-canaries/esp32-hpma115s0/releases) downloading the last signed apk or installing from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter)  
+
 
 # Building
 
@@ -57,6 +58,14 @@ Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or crea
 ```bash
 ./gradlew assembleDebug
 ```
+
+# CanAirIO Device
+
+For test and use the CanAirIO app, is recommended have a CanAirIO device, you can have one with any ESP32 board without any sensor or any wire solder if you want, because CanAirIO has out of the box PAX Counter detector feature, for counts the people around you. For that you only need load our firmware via a easy web tool:
+
+[![video_2021-11-13_23-36-10](https://user-images.githubusercontent.com/423856/141661066-0fafcaa9-98b4-419b-b1e7-4371f3cb99b8.gif)](https://canair.io/installer.html)
+
+
 
 # Usage
 
@@ -110,7 +119,11 @@ After WiFi is ready, please follow the next steps for publish your fixed station
   - save Geohash location (turn on the switch for save, it will go to off after some seconds)
   - enable the publication switch
   - wait for some minutes, the device should be show data icon some times
-  - your station should be in our [Global Map](canair.io/stations) with the special ID showed in the last item of settings  
+  - your station should be in our [Global Map](canair.io/stations) with the special ID showed in the last item of settings 
+
+# CanAirIO fast setup Guide
+
+[![CanAirIO CO2 easy Setup](images/anaire_youtube_preview.jpg)](https://youtu.be/29wfMPZXvps) 
  
 # Supporting the project
 
