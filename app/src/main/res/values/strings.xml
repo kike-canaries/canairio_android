@@ -142,8 +142,8 @@
     <string name="category_wifi_title">WiFi preferences</string>
     <string name="category_wifi_summary">For remote updates or fixed stations</string>
     <string name="key_fixed_stations_map">key_fixed_stations_map</string>
-    <string name="fixed_stations_map_title">View your fixed station</string>
-    <string name="fixed_stations_map_summary">Click to launch the CanAirIO Worldmap</string>
+    <string name="fixed_stations_map_title">CanAirIO Worldmap</string>
+    <string name="fixed_stations_map_summary">Click to launch (take some minutes)</string>
     <string name="url_canairio_worldmap">http://influxdb.canair.io:8000</string>
     <string name="summary_ifx_nogeohash">Please set first the location</string>
     <string name="key_setting_send_co2_calibration">key_setting_send_co2_calibration</string>
@@ -163,4 +163,21 @@
     <string name="title_disable_wifi">Disable WiFi</string>
     <string name="msg_status_disconnected">Status: disconnected</string>
     <string name="msg_status_connected">Status: connected</string>
+    <string name="summary_ifx_advanced">Custom cloud settings</string>
+    <string name="title_hass">Home Assitant Discovery</string>
+    <string name="key_setting_hassip">key_setting_hassip</string>
+    <string name="title_setting_hassip">MQTT Broker Ip</string>
+    <string name="key_setting_hassusr">key_setting_hassusr</string>
+    <string name="summary_setting_hassusr" />
+    <string name="title_setting_hassusr">Username</string>
+    <string name="key_setting_hasspsw">key_setting_hasspsw</string>
+    <string name="summary_setting_hasspsw" />
+    <string name="title_setting_hasspsw">Password</string>
+    <string name="key_setting_hasspt_default">1883</string>
+    <string name="key_setting_hasspt">key_setting_hasspt</string>
+    <string name="title_setting_hasspt">Port</string>
+    <string name="key_anaire_id">key_anaire_id</string>
+    <string name="summary_anaire_timeseries">Show your device on Anaire Cloud</string>
+    <string name="title_anaire_timeseries">CanAirIO in Anaire</string>
+    <string name="url_anaire_realtime">https://portal.anaire.org/admin/</string>
 </resources>

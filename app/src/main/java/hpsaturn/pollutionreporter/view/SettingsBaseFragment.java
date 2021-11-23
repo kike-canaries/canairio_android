@@ -179,6 +179,11 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         editor.apply();
     }
 
+    String getSharedPreference(int key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        return preferences.getString(getString(key), "");
+    }
+
     String getSharedPreference(String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         return preferences.getString(key, "");
@@ -187,6 +192,11 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     String getSharedPreference(String key, String defvalue) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
         return preferences.getString(key, defvalue);
+    }
+
+    String getSharedPreference(int key, String defvalue) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getMain());
+        return preferences.getString(getString(key), defvalue);
     }
 
     void clearSharedPreferences(){
