@@ -22,14 +22,13 @@ showHelp () {
   echo ""
   echo "Usage alternatives:"
   echo ""
-  echo "./deploy_release clean"
-  echo "./deploy_release build"
-  echo "./deploy_release publish"
+  echo "./deploy clean"
+  echo "./deploy build"
+  echo "./deploy publish"
   echo ""
 }
 
 clean () {
-  rm $RELDIR/
   ./gradlew clean
 }
 
@@ -98,10 +97,6 @@ else
 
     publish)
       publish_release
-      ;;
-
-    otatrigger)
-      publish_release_ota
       ;;
 
     *)
