@@ -10,6 +10,10 @@ import com.hpsaturn.tools.Logger;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import hpsaturn.pollutionreporter.R;
+import hpsaturn.pollutionreporter.models.HassIPConfig;
+import hpsaturn.pollutionreporter.models.HassPasswConfig;
+import hpsaturn.pollutionreporter.models.HassPortConfig;
+import hpsaturn.pollutionreporter.models.HassUserConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 
 /**
@@ -24,11 +28,13 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
 
     @Override
     protected void refreshUI() {
-        updateInfluxSummary();
+        updateAllSummary();
     }
 
     @Override
     protected void onConfigRead(ResponseConfig config) {
+
+        Logger.v(TAG, "[Config] reading config");
         boolean notify_sync = false;
 
         if (!config.ifxdb.equals(getInfluxDbDname())){
@@ -43,10 +49,26 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
             notify_sync = true;
         }
 
+        if (!config.hassip.equals(getHassIp())){
+            notify_sync = true;
+        }
+
+        if (!config.hassusr.equals(getHassUser())){
+            notify_sync = true;
+        }
+
+        if (!config.hasspsw.equals(getHassPassw())){
+            notify_sync = true;
+        }
+
+        if (config.hasspt != getHassPort()){
+            notify_sync = true;
+        }
+
         if (notify_sync) {
             saveAllPreferences(config);
             printResponseConfig(config);
-            updateInfluxSummary();
+            updateAllSummary();
             Logger.v(TAG, "[Config] notify device sync complete");
         }
     }
@@ -55,17 +77,50 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (!onSensorReading) {
 
-            if (key.equals(getString(R.string.key_setting_ifxip))) {
-                updateInfluxIPSummary();
-            } else if (key.equals(getString(R.string.key_setting_ifxdb))) {
-                updateInfluxDbSummmary();
-            } else if (key.equals(getString(R.string.key_setting_ifxpt))) {
-                updateInfluxPortSummary();
+            if (key.equals(getString(R.string.key_setting_hassip))) {
+                saveDeviceHassIp(getHassIp());
             }
-
+            else if (key.equals(getString(R.string.key_setting_hassusr))) {
+                saveDeviceHassUser(getHassUser());
+            }
+            else if (key.equals(getString(R.string.key_setting_hasspsw))) {
+                saveDeviceHassPassw(getHassPassw());
+            }
+            else if (key.equals(getString(R.string.key_setting_hasspt))) {
+                saveDeviceHassPort(getHassPort());
+            }
+            updateAllSummary();
         }
         else
             Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
+    }
+
+    private void saveDeviceHassIp(String ip) {
+        Logger.v(TAG, "[Config] sending Hass IP : "+ip);
+        HassIPConfig config = new HassIPConfig();
+        config.hassip = ip;
+        sendSensorConfig(config);
+    }
+
+    private void saveDeviceHassUser(String user) {
+        Logger.v(TAG, "[Config] sending Hass user : "+user);
+        HassUserConfig config = new HassUserConfig();
+        config.hassusr = user;
+        sendSensorConfig(config);
+    }
+
+    private void saveDeviceHassPassw(String passw) {
+        Logger.v(TAG, "[Config] sending Hass passw");
+        HassPasswConfig config = new HassPasswConfig();
+        config.hasspsw = passw;
+        sendSensorConfig(config);
+    }
+
+    private void saveDeviceHassPort(int port) {
+        Logger.v(TAG, "[Config] sending Hass port : "+port);
+        HassPortConfig config = new HassPortConfig();
+        config.hasspt = port;
+        sendSensorConfig(config);
     }
 
 
@@ -73,6 +128,10 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
         saveSharedPreference(R.string.key_setting_ifxdb, config.ifxdb);
         saveSharedPreference(R.string.key_setting_ifxip, config.ifxip);
         saveSharedPreference(R.string.key_setting_ifxpt, ""+config.ifxpt);
+        saveSharedPreference(R.string.key_setting_hassip, ""+config.hassip);
+        saveSharedPreference(R.string.key_setting_hassusr, ""+config.hassusr);
+        saveSharedPreference(R.string.key_setting_hasspsw, ""+config.hasspsw);
+        saveSharedPreference(R.string.key_setting_hasspt, ""+config.hasspt);
     }
 
     private String getInfluxDbDname() {
@@ -87,10 +146,31 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
         return NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_ifxpt)),8086);
     }
 
-    private void updateInfluxSummary(){
+    private String getHassIp() {
+        return getSharedPreference(R.string.key_setting_hassip);
+    }
+
+    private String getHassUser() {
+        return getSharedPreference(R.string.key_setting_hassusr);
+    }
+
+    private String getHassPassw() {
+        return getSharedPreference(R.string.key_setting_hasspt);
+    }
+
+    private int getHassPort() {
+        return NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_hasspt)),1883);
+    }
+
+
+
+    private void updateAllSummary(){
         updateInfluxDbSummmary();
         updateInfluxIPSummary();
         updateInfluxPortSummary();
+        updateHassIpSummmary();
+        updateHassUserSummary();
+        updateHassPortSummary();
     }
 
     private void updateInfluxDbSummmary() {
@@ -103,5 +183,17 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
 
     private void updateInfluxPortSummary() {
         updateSummary(R.string.key_setting_ifxpt);
+    }
+
+    private void updateHassIpSummmary() {
+        updateSummary(R.string.key_setting_hassip);
+    }
+
+    private void updateHassUserSummary() {
+        updateSummary(R.string.key_setting_hassusr);
+    }
+
+    private void updateHassPortSummary() {
+        updateSummary(R.string.key_setting_hasspt);
     }
 }
