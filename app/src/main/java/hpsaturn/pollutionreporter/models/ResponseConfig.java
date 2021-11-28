@@ -44,4 +44,12 @@ public class ResponseConfig extends SensorConfig {
     public int vrev = 0;
 
     public String anaireid;
+
+    public String hassip;
+
+    public String hassusr;
+
+    public String hasspsw;
+
+    public int hasspt;
 }
