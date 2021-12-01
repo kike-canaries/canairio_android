@@ -11,6 +11,7 @@ public class SensorTrackInfo {
     private String deviceId;
     private double lastLat;
     private double lastLon;
+    private String geohash;
     private SensorData lastSensorData;
     private int size;
     private float kms;
@@ -27,6 +28,7 @@ public class SensorTrackInfo {
        this.deviceId = track.deviceId;
        this.lastLat = track.lastLat;
        this.lastLon = track.lastLon;
+       this.geohash = track.geohash;
        this.lastSensorData = track.lastSensorData;
     }
 
