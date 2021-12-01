@@ -235,7 +235,7 @@ public class ChartFragment extends Fragment {
         for (String type : values) {
             ChartVar var = new ChartVar(getContext(), type, maplabels.get(type));
             variables.add(var);
-            Logger.i(TAG, "[CHART]"+type);
+            Logger.i(TAG, "[CHART] "+type);
         }
 
         requireActivity().runOnUiThread(this::loadData);

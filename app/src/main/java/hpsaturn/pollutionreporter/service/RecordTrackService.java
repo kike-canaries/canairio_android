@@ -13,6 +13,7 @@ import android.os.IBinder;
 
 import androidx.core.app.NotificationCompat;
 
+import com.fonfon.geohash.GeoHash;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.FileTools;
 import com.hpsaturn.tools.Logger;
@@ -349,6 +350,7 @@ public class RecordTrackService extends Service {
         Logger.i(TAG, "[TRACK] saving record track..");
         SensorTrack lastTrack = getLastTrack();
         Storage.saveTrack(this, lastTrack);
+        Logger.i(TAG,"[TRACK] track: "+new Gson().toJson(lastTrack));
         saveTrackOnSD(lastTrack);
         Storage.setSensorData(this, new ArrayList<>()); // clear sensor data
         recordTrackManager.tracksUpdated();
@@ -379,6 +381,8 @@ public class RecordTrackService extends Service {
             track.lastSensorData = lastSensorData;
             track.lastLat = lastSensorData.lat;
             track.lastLon = lastSensorData.lon;
+            Location lastLocation = SmartLocation.with(this).location().getLastLocation();
+            track.geohash = GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
         }
         printTrack(track);
         return track;
@@ -392,6 +396,9 @@ public class RecordTrackService extends Service {
         Logger.i(TAG, "[TRACK] hrs: "+track.hours);
         Logger.i(TAG, "[TRACK] min: "+track.mins);
         Logger.i(TAG, "[TRACK] seg: "+track.secs);
+        Logger.i(TAG, "[TRACK] lat: "+track.lastLat);
+        Logger.i(TAG, "[TRACK] lon: "+track.lastLon);
+        Logger.i(TAG, "[TRACK] geo: "+track.geohash);
     }
 
 
