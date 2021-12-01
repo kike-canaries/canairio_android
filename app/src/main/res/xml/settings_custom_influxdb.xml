@@ -12,21 +12,14 @@
     <PreferenceCategory app:title="@string/title_hass">
 
         <EditTextPreference
-            android:inputType="text"
-            app:defaultValue=""
-            app:icon="@android:drawable/ic_menu_upload"
-            app:key="@string/key_setting_hassip"
-            app:title="@string/title_setting_hassip"
-            app:summary="" />
-
-        <EditTextPreference
             android:inputType="number"
             app:defaultValue="@string/key_setting_hasspt_default"
             app:key="@string/key_setting_hasspt"
             app:summary="@string/key_setting_hasspt_default"
             app:title="@string/title_setting_hasspt" />
 
-        <Preference
+        <EditTextPreference
+            android:inputType="textUri"
             app:key="@string/key_setting_hassusr"
             app:summary="@string/summary_setting_hassusr"
             app:title="@string/title_setting_hassusr" />
@@ -36,6 +29,15 @@
             app:key="@string/key_setting_hasspsw"
             app:summary="@string/summary_setting_hasspsw"
             app:title="@string/title_setting_hasspsw" />
+
+        <EditTextPreference
+            android:inputType="text"
+            app:defaultValue=""
+            app:icon="@android:drawable/ic_menu_upload"
+            app:key="@string/key_setting_hassip"
+            app:summary=""
+            app:title="@string/title_setting_hassip" />
+
 
     </PreferenceCategory>
 
