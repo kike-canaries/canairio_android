@@ -155,7 +155,7 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
     }
 
     private String getHassPassw() {
-        return getSharedPreference(R.string.key_setting_hasspt);
+        return getSharedPreference(R.string.key_setting_hasspsw);
     }
 
     private int getHassPort() {
