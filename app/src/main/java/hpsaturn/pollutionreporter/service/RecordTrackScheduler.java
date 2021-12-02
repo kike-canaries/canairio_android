@@ -31,7 +31,7 @@ public class RecordTrackScheduler extends BroadcastReceiver {
         Logger.d(TAG, "startScheduleService");
         AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, RecordTrackReceiver.class);
-        PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_IMMUTABLE);
         Calendar cal = Calendar.getInstance();
         // Start x seconds after boot completed
         cal.add(Calendar.SECOND, Config.TIME_AFTER_START);
@@ -45,7 +45,7 @@ public class RecordTrackScheduler extends BroadcastReceiver {
         Logger.d(TAG, "stopSheduleService:");
         AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, RecordTrackReceiver.class);
-        PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_IMMUTABLE);
         assert service != null;
         service.cancel(pending);
     }
