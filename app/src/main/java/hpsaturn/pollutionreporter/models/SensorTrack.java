@@ -18,6 +18,7 @@ public class SensorTrack {
     public float kms;
     public double lastLat;
     public double lastLon;
+    public String geohash;
     public SensorData lastSensorData;
     public ArrayList<SensorData> data;
     public String deviceId;
