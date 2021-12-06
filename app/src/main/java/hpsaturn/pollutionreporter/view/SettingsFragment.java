@@ -45,15 +45,16 @@ public class SettingsFragment extends SettingsBaseFragment {
     }
 
     @Override
-    protected void refreshUI() {
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         infoPreferenceInit();
         sendFeedbackInit();
         saveAppVersionString();
+    }
+
+    @Override
+    protected void refreshUI() {
+
     }
 
     @Override
