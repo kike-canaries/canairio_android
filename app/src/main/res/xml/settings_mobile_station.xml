@@ -35,7 +35,7 @@
             android:entries="@array/pref_dtype_entries"
             android:entryValues="@array/pref_dtype_values"
             android:key="@string/key_setting_dtype"
-            android:title="Sensor type"
+            android:title="@string/title_setting_dtype"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference

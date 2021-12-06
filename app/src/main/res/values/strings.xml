@@ -160,7 +160,7 @@
     <string name="msg_please_wait">Please wait…</string>
     <string name="title_access_points_dialog">Access Points</string>
     <string name="title_save_wifi_settings">Save WiFi settigs</string>
-    <string name="title_disable_wifi">Disable WiFi</string>
+    <string name="title_disable_wifi">Press to disable WiFi</string>
     <string name="msg_status_disconnected">Status: disconnected</string>
     <string name="msg_status_connected">Status: connected</string>
     <string name="summary_ifx_advanced">Custom cloud settings</string>
@@ -180,4 +180,5 @@
     <string name="summary_anaire_timeseries">Show your device on Anaire Cloud</string>
     <string name="title_anaire_timeseries">CanAirIO in Anaire</string>
     <string name="url_anaire_realtime">https://portal.anaire.org/admin/</string>
+    <string name="title_setting_dtype">UART Device Type</string>
 </resources>
