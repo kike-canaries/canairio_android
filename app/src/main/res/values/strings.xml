@@ -180,4 +180,5 @@
     <string name="summary_anaire_timeseries">Show your device on Anaire Cloud</string>
     <string name="title_anaire_timeseries">CanAirIO in Anaire</string>
     <string name="url_anaire_realtime">https://portal.anaire.org/admin/</string>
+    <string name="title_setting_dtype">UART Device Type</string>
 </resources>
