@@ -79,12 +79,12 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if (config.geo != null && config.geo.length() == 0 ) {
             enableSwitch(R.string.key_setting_enable_ifx,false);
         }
-        if (config.anaireid != null && !config.anaireid.equals(getSharedPreference(R.string.key_anaire_id))){
-            notify_sync = true;
-        }
         else if (config.geo != null) {
             enableSwitch(R.string.key_setting_enable_ifx, true);
             currentGeoHash = config.geo;
+        }
+        if (config.anaireid != null && !config.anaireid.equals(getSharedPreference(R.string.key_anaire_id))){
+            notify_sync = true;
         }
 
         refreshUI();
@@ -95,8 +95,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if (notify_sync) {
             Logger.v(TAG, "[Config] rebuild UI");
             saveAllPreferences(config);
-            getPreferenceScreen().removeAll();
-            addPreferencesFromResource(R.xml.settings_fixed_station);
             updateSwitches(config);
             refreshUI();
             updateStatusSummary(true);

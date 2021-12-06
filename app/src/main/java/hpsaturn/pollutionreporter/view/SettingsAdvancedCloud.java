@@ -28,8 +28,6 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
 
     @Override
     protected void refreshUI() {
-        getPreferenceScreen().removeAll();
-        addPreferencesFromResource(R.xml.settings_custom_influxdb);
         updateAllSummary();
     }
 
