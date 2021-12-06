@@ -28,6 +28,8 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
 
     @Override
     protected void refreshUI() {
+        getPreferenceScreen().removeAll();
+        addPreferencesFromResource(R.xml.settings_custom_influxdb);
         updateAllSummary();
     }
 
@@ -38,9 +40,8 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
 
         saveAllPreferences(config);
         printResponseConfig(config);
-        getPreferenceScreen().removeAll();
-        addPreferencesFromResource(R.xml.settings_custom_influxdb);
-        updateAllSummary();
+        refreshUI();
+
         Logger.v(TAG, "[Config] notify device sync complete");
     }
 

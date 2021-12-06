@@ -47,6 +47,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
         ssidListenerInit();
+        launchWorldMapInit();
+        launchAnaireInit();
     }
 
     @Override
@@ -57,8 +59,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         updateLocationSummary();
         updateAnaireSummary();
         validateLocationSwitch();
-        launchWorldMapInit();
-        launchAnaireInit();
     }
 
     @Override
@@ -87,16 +87,18 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             currentGeoHash = config.geo;
         }
 
-        updateLocationSummary();
-        updateAnaireSummary();
-        validateLocationSwitch();
+        refreshUI();
         updateWifiSummary();
         updateWifiSummary(config.wsta);
+        printResponseConfig(config);
 
         if (notify_sync) {
+            Logger.v(TAG, "[Config] rebuild UI");
             saveAllPreferences(config);
-            printResponseConfig(config);
+            getPreferenceScreen().removeAll();
+            addPreferencesFromResource(R.xml.settings_fixed_station);
             updateSwitches(config);
+            refreshUI();
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");
