@@ -132,17 +132,12 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         Logger.i(TAG, "[Config] ifxdb:  " + config.ifxdb);
         Logger.i(TAG, "[Config] ifxip:  " + config.ifxip);
         Logger.i(TAG, "[Config] ifxpt:  " + config.ifxpt);
-        Logger.i(TAG, "[Config] apiusr: " + config.apiusr);
-        Logger.i(TAG, "[Config] apisrv: " + config.apisrv);
-        Logger.i(TAG, "[Config] apiuri: " + config.apiuri);
-        Logger.i(TAG, "[Config] apiprt: " + config.apiprt);
         Logger.i(TAG, "[Config] -----------------------------");
         Logger.i(TAG, "[Config] wifien: " + config.wenb);
         Logger.i(TAG, "[Config] ifdben: " + config.ienb);
-        Logger.i(TAG, "[Config] apien : " + config.aenb);
-        Logger.i(TAG, "[Config] -----------------------------");
         Logger.i(TAG, "[Config] wifist: " + config.wsta);
         Logger.i(TAG, "[Config] wmac  : " + config.wmac);
+        Logger.i(TAG, "[Config] -----------------------------");
         Logger.i(TAG, "[Config] vrev  : " + config.vrev);
         Logger.i(TAG, "[Config] vmac  : " + config.vmac);
         Logger.i(TAG, "[Config] vflv  : " + config.vflv);

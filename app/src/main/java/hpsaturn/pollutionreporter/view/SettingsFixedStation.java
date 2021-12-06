@@ -47,6 +47,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
         ssidListenerInit();
+        launchWorldMapInit();
+        launchAnaireInit();
     }
 
     @Override
@@ -57,8 +59,6 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         updateLocationSummary();
         updateAnaireSummary();
         validateLocationSwitch();
-        launchWorldMapInit();
-        launchAnaireInit();
     }
 
     @Override
@@ -79,24 +79,24 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         if (config.geo != null && config.geo.length() == 0 ) {
             enableSwitch(R.string.key_setting_enable_ifx,false);
         }
-        if (config.anaireid != null && !config.anaireid.equals(getSharedPreference(R.string.key_anaire_id))){
-            notify_sync = true;
-        }
         else if (config.geo != null) {
             enableSwitch(R.string.key_setting_enable_ifx, true);
             currentGeoHash = config.geo;
         }
+        if (config.anaireid != null && !config.anaireid.equals(getSharedPreference(R.string.key_anaire_id))){
+            notify_sync = true;
+        }
 
-        updateLocationSummary();
-        updateAnaireSummary();
-        validateLocationSwitch();
+        refreshUI();
         updateWifiSummary();
         updateWifiSummary(config.wsta);
+        printResponseConfig(config);
 
         if (notify_sync) {
+            Logger.v(TAG, "[Config] rebuild UI");
             saveAllPreferences(config);
-            printResponseConfig(config);
             updateSwitches(config);
+            refreshUI();
             updateStatusSummary(true);
             updatePreferencesSummmary(config);
             Logger.v(TAG, "[Config] notify device sync complete");

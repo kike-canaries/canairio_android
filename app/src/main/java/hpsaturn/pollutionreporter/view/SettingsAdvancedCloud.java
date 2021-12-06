@@ -35,42 +35,12 @@ public class SettingsAdvancedCloud extends SettingsBaseFragment {
     protected void onConfigRead(ResponseConfig config) {
 
         Logger.v(TAG, "[Config] reading config");
-        boolean notify_sync = false;
 
-        if (!config.ifxdb.equals(getInfluxDbDname())){
-            notify_sync = true;
-        }
+        saveAllPreferences(config);
+        printResponseConfig(config);
+        refreshUI();
 
-        if (!config.ifxdb.equals(getInfluxDbIP())){
-            notify_sync = true;
-        }
-
-        if (config.ifxpt != getInfluxDbPort()){
-            notify_sync = true;
-        }
-
-        if (!config.hassip.equals(getHassIp())){
-            notify_sync = true;
-        }
-
-        if (!config.hassusr.equals(getHassUser())){
-            notify_sync = true;
-        }
-
-        if (!config.hasspsw.equals(getHassPassw())){
-            notify_sync = true;
-        }
-
-        if (config.hasspt != getHassPort()){
-            notify_sync = true;
-        }
-
-        if (notify_sync) {
-            saveAllPreferences(config);
-            printResponseConfig(config);
-            updateAllSummary();
-            Logger.v(TAG, "[Config] notify device sync complete");
-        }
+        Logger.v(TAG, "[Config] notify device sync complete");
     }
 
     @Override

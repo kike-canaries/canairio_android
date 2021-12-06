@@ -43,36 +43,18 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     @Override
     protected void onConfigRead(ResponseConfig config) {
 
-        boolean notify_sync = false;
 
-        if (!getStimeFormat(config.stime).equals(getStimeFormat(getCurrentStime()))){
-            notify_sync = true;
-        }
         if (config.stype != getSensorType()) {
             if (config.stype < 0) updateSensorTypeSummary(0);
             else updateSensorTypeSummary((config.stype));
         }
-        if (config.denb != getDebugEnableSwitch().isChecked()) {
-            notify_sync = true;
-        }
-        if (config.i2conly != getI2CForcedSwitch().isChecked()) {
-            notify_sync = true;
-        }
-        if ((int)config.toffset != (int)getCurrentTempOffset()){
-            notify_sync = true;
-        }
-        if ((int)config.altoffset != (int)getCurrentAltitudeOffset()){
-            notify_sync = true;
-        }
 
-        if (notify_sync) {
-            saveAllPreferences(config);
-            updateStatusSummary(true);
-            updateSwitches(config);
-            updatePreferencesSummmary(config);
-            Logger.v(TAG, "[Config] notify device sync complete");
-            printResponseConfig(config);
-        }
+        saveAllPreferences(config);
+        updateStatusSummary(true);
+        printResponseConfig(config);
+        updatePreferencesSummmary(config);
+        refreshUI();
+        updateSwitches(config);
 
     }
 
