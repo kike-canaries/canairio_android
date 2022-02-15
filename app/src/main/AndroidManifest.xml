@@ -40,6 +40,7 @@
         <service
             android:name=".service.RecordTrackService"
             android:enabled="true"
+            android:foregroundServiceType="location"
             android:exported="true" />
 
 <!--        <receiver android:name=".service.RecordTrackScheduler"/>-->
