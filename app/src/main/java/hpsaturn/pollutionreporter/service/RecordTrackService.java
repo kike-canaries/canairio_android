@@ -427,30 +427,35 @@ public class RecordTrackService extends Service {
     }
 
     private void notificationSetup() {
-        if (Build.VERSION.SDK_INT >= 26) {
-
-            Intent notificationIntent = new Intent(this, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-            String CHANNEL_ID = "canairio";
-            String CHANNEL_NAME = "CanAirIO service";
-
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    CHANNEL_NAME,
-                    isRecording ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_LOW
-            );
-
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("CanAirIO")
-                    .setContentText("Device is " + (isRecording ? "recording" : "connected"))
-                    .setSmallIcon(R.drawable.ic_stat_name)
-                    .setContentIntent(pendingIntent)
-                    .setPriority(isRecording ? NotificationCompat.PRIORITY_MAX : NotificationCompat.PRIORITY_LOW)
-                    .build();
-            startForeground(15, notification);
+        PendingIntent pendingIntent = null;
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getActivity
+                    (this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
         }
+        else
+        {
+            pendingIntent = PendingIntent.getActivity
+                    (this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        }
+        String CHANNEL_ID = "canairio";
+        String CHANNEL_NAME = "CanAirIO service";
+
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_NAME,
+                isRecording ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_LOW
+        );
+
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("CanAirIO")
+                .setContentText("Device is " + (isRecording ? "recording" : "connected"))
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentIntent(pendingIntent)
+                .setPriority(isRecording ? NotificationCompat.PRIORITY_MAX : NotificationCompat.PRIORITY_LOW)
+                .build();
+        startForeground(15, notification);
     }
 
     @Override
