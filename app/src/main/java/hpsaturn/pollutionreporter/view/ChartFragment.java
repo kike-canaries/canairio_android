@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -18,16 +17,13 @@ import androidx.preference.PreferenceManager;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.utils.MPPointD;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
@@ -400,13 +396,20 @@ public class ChartFragment extends Fragment {
         calculateReferenceTime();
     }
 
-    public void shareAction(){
+    public void shareAction(String metadata, boolean isShare){
         if(recordId!=null && track!=null) {
-            Logger.i(TAG,"publis track..");
-            getMain().showSnackMessage(R.string.msg_chart_sharing);
             track.deviceId = DeviceUtil.getDeviceId(getActivity());
-            getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(track.name).setValue(track);
-            getMain().getDatabase().child(Config.FB_TRACKS_INFO).child(track.name).setValue(new SensorTrackInfo(track));
+            track.metadata = metadata;
+            if(isShare) {
+                Logger.i(TAG,"publish track to firebase..");
+                getMain().showSnackMessage(R.string.msg_chart_sharing);
+                getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(track.name).setValue(track);
+                getMain().getDatabase().child(Config.FB_TRACKS_INFO).child(track.name).setValue(new SensorTrackInfo(track));
+            }
+            else{
+                String trackJson = new Gson().toJson(track);
+                getMain().shareViaIntent(trackJson);
+            }
             getMain().popBackLastFragment();
         }
     }

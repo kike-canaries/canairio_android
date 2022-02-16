@@ -127,8 +127,8 @@ public class RecordsFragment extends Fragment {
         super.onResume();
     }
 
-    public void shareAction() {
-        if(showingData)chart.shareAction();
+    public void shareAction(String metadata, boolean isShare) {
+        if(showingData)chart.shareAction(metadata, isShare);
     }
 
     public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
