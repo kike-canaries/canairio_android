@@ -3,6 +3,7 @@
     package="hpsaturn.pollutionreporter">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -40,6 +41,7 @@
         <service
             android:name=".service.RecordTrackService"
             android:enabled="true"
+            android:foregroundServiceType="location"
             android:exported="true" />
 
 <!--        <receiver android:name=".service.RecordTrackScheduler"/>-->

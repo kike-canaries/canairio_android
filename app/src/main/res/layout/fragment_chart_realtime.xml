@@ -56,6 +56,16 @@
             android:text=""
             android:textColor="@color/black"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_chart_meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_chart_loc"
+            android:lines="1"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

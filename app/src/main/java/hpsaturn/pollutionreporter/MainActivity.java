@@ -20,6 +20,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hpsaturn.tools.Logger;
+import com.hpsaturn.tools.UITools;
 import com.iamhabib.easy_preference.EasyPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -54,6 +55,7 @@ import hpsaturn.pollutionreporter.view.ScanAccesPointFragment;
 import hpsaturn.pollutionreporter.view.ScanFragment;
 import hpsaturn.pollutionreporter.view.SettingsFixedStation;
 import hpsaturn.pollutionreporter.view.SettingsFragment;
+import hpsaturn.pollutionreporter.view.ShareDialogFragment;
 import hpsaturn.pollutionreporter.view.VariableFilterFragment;
 
 ;
@@ -201,8 +203,13 @@ public class MainActivity extends BaseActivity implements
     }
 
     private View.OnClickListener onFabShareClickListener = view -> {
-        if(recordsFragment!=null)recordsFragment.shareAction();
+        ShareDialogFragment dialog = ShareDialogFragment.newInstance();
+        showDialogFragment(dialog,ShareDialogFragment.TAG);
     };
+
+    public void shareAction(String metadata, boolean isShare){
+        if(recordsFragment!=null)recordsFragment.shareAction(metadata,isShare);
+    }
 
     private void stopRecord() {
         showSnackMessage(R.string.msg_record_stop);
@@ -252,7 +259,7 @@ public class MainActivity extends BaseActivity implements
         // TODO: Refactor to dinamic plus fragment to scroll view
         Logger.d(TAG, "onCurrentItemChanged: " + position);
         switch (position) {
-            case 0:
+            case 0: // map fragment
                 fab.hide();
                 hideFragment(postsFragment);
                 hideFragment(recordsFragment);
@@ -261,7 +268,7 @@ public class MainActivity extends BaseActivity implements
                 else hideFragment(scanFragment);
                 showFragment(mapFragment);
                 break;
-            case 1:
+            case 1: // post fragment
                 fab.hide();
                 hideFragment(recordsFragment);
                 hideFragment(mapFragment);
@@ -271,7 +278,7 @@ public class MainActivity extends BaseActivity implements
                 showFragment(postsFragment);
                 postsFragment.refresh();
                 break;
-            case 2:
+            case 2: // scan fragment/chart fragment
                 fabUpdateLayout();
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
@@ -280,11 +287,11 @@ public class MainActivity extends BaseActivity implements
                 if(isPaired()) showFragment(chartFragment);
                 else showFragment(scanFragment);
                 break;
-            case 3:
+            case 3: // records fragment
                 scrollToRecordsFragment();
                 break;
 
-            case 4:
+            case 4:  // settings fragment
                 fab.hide();
                 hideFragment(postsFragment);
                 hideFragment(mapFragment);
@@ -325,7 +332,7 @@ public class MainActivity extends BaseActivity implements
     public void enableShareButton (){
         fab.show();
         fab.setOnClickListener(onFabShareClickListener);
-        fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record));
+        fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_share));
         fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_share));
     }
 
@@ -423,13 +430,17 @@ public class MainActivity extends BaseActivity implements
     }
 
     private View.OnClickListener onFabClickListener = view -> {
-        if(!isGPSGranted()) showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
+        if(!isGPSGranted() || !isBLEGranted()) showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
         else startPermissionsGPSFlow();
     };
 
     public void showDisclosureFragment(int title, int desc, int img) {
         DisclosureFragment dialog = DisclosureFragment.newInstance(title,desc,img);
         showDialogFragment(dialog,DisclosureFragment.TAG);
+    }
+
+    public boolean isStorageGranted(){
+        return prefBuilder.getBoolean(Keys.PERMISSION_STORAGE,false);
     }
 
     public boolean isGPSGranted(){
@@ -443,36 +454,21 @@ public class MainActivity extends BaseActivity implements
     public void startPermissionsBLEFlow() {
         Dexter.withContext(this)
                 .withPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.BLUETOOTH
                 )
                 .withListener(blePermissionListener)
                 .check();
-
     }
 
-    private final MultiplePermissionsListener blePermissionListener =  new MultiplePermissionsListener() {
-        @Override
-        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-            if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "AllPermissionsGranted..");
-                if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
-                if(scanFragment!=null)scanFragment.executeScan();
-            }
-        }
-
-        @Override
-        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-            permissionToken.continuePermissionRequest();
-        }
-    };
-
     public void startPermissionsGPSFlow() {
+        Logger.i(TAG, "starting GPS permission flow");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Dexter.withContext(this)
                     .withPermissions(
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     )
                     .withListener(gpsPermissionListener)
                     .check();
@@ -480,20 +476,58 @@ public class MainActivity extends BaseActivity implements
         else {
             Dexter.withContext(this)
                     .withPermissions(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION
                     )
                     .withListener(gpsPermissionListener)
                     .check();
         }
     }
 
+    public void startPermissionsStorageFlow() {
+        Dexter.withContext(this)
+                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(storagePermissionListener)
+                .check();
+    }
+
+    private final MultiplePermissionsListener blePermissionListener =  new MultiplePermissionsListener() {
+        @Override
+        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                Logger.i(TAG, "BLEPermissionsGranted..");
+                if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+                if(scanFragment!=null)scanFragment.executeScan();
+            }
+        }
+        @Override
+        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+            permissionToken.continuePermissionRequest();
+        }
+    };
+
     private final MultiplePermissionsListener gpsPermissionListener = new MultiplePermissionsListener() {
         @Override
         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
             if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "AllPermissionsGranted..");
+                Logger.i(TAG, "GPS PermissionsGranted..");
                 if(!isGPSGranted())prefBuilder.addBoolean(Keys.PERMISSION_GPS, true).save();
+                startPermissionsStorageFlow();
+            }
+        }
+        @Override
+        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+            Logger.i(TAG, "token to continue permission request");
+            permissionToken.continuePermissionRequest();
+        }
+    };
+
+    private final MultiplePermissionsListener storagePermissionListener = new MultiplePermissionsListener() {
+        @Override
+        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                Logger.i(TAG, "StoragePermissionsGranted..");
+                if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
                 buttonRecordingAction();
             }
         }
@@ -604,5 +638,9 @@ public class MainActivity extends BaseActivity implements
         WifiConfig config = new WifiConfig();
         config.ssid = ssid;
         if (settingsFragment != null) settingsFragment.sendSensorConfig(config);
+    }
+
+    public void shareViaIntent(String trackJson) {
+        UITools.shareText(this,trackJson,getString(R.string.title_share_dialog));
     }
 }
