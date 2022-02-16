@@ -25,7 +25,7 @@ public class SensorTrack {
     public int hours;
     public int mins;
     public int secs;
-    public String metadata;
+    public String metadata = "";
 
     public SensorTrack() { }
 

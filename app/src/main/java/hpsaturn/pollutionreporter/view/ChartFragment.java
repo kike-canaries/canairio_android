@@ -75,6 +75,9 @@ public class ChartFragment extends Fragment {
     @BindView(R.id.tv_chart_loc)
     TextView chart_loc;
 
+    @BindView(R.id.tv_chart_meta)
+    TextView chart_meta;
+
     @BindView(R.id.rl_separator)
     RelativeLayout rl_separator;
 
@@ -346,8 +349,8 @@ public class ChartFragment extends Fragment {
 
     private void setTrackDescription(SensorTrack track, boolean isPublishedData){
         chart_name.setText("ID:"+track.getName());
+        chart_name.setClickable(false);  // we need fix it (heroku issue)
         if(!isPublishedData) {
-            chart_name.setClickable(false);
             chart_name.setTextColor(getResources().getColor(R.color.black));
         }
         chart_date.setText(track.getDate());
@@ -358,6 +361,7 @@ public class ChartFragment extends Fragment {
         }
         else
             chart_loc.setVisibility(View.GONE);
+        chart_meta.setText("Metadata: "+ track.metadata);
 
         rl_separator.setVisibility(View.VISIBLE);
     }
