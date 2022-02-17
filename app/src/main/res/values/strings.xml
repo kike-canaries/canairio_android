@@ -187,4 +187,10 @@
     <string name="canairio_share_dialog">CanAirIO Share Dialog</string>
     <string name="msg_share_dialog_desc">"The current track will be shared to the CanAirIO Mobile Map. Thanks for you contribution! "</string>
     <string name="hint_share_dialog_meta">Additional metadata that you want share with us</string>
+    <string name="title_sealevel">Sea level altitude</string>
+    <string name="key_setting_sealevel">key_setting_sealevel</string>
+    <string name="summary_sealevel">1013.25</string>
+    <string name="title_solarstation_enable">Solar Station Mode</string>
+    <string name="summary_solarstation_enable">Power saving settings</string>
+    <string name="key_setting_solarstation_enable">key_solarstation_enable</string>
 </resources>

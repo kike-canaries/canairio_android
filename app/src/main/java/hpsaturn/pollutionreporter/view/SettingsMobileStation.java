@@ -15,6 +15,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.AltitudeOffsetConfig;
 import hpsaturn.pollutionreporter.models.CommandConfig;
+import hpsaturn.pollutionreporter.models.SeaLevelConfig;
 import hpsaturn.pollutionreporter.models.TempOffsetConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
@@ -37,25 +38,22 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     protected void refreshUI() {
         updateStimeSummary();
         updateTempOffsetSummary();
+        updateSeaLevelSummary();
         updateAltitudeOffsetSummary();
     }
 
     @Override
     protected void onConfigRead(ResponseConfig config) {
-
-
         if (config.stype != getSensorType()) {
             if (config.stype < 0) updateSensorTypeSummary(0);
             else updateSensorTypeSummary((config.stype));
         }
-
         saveAllPreferences(config);
         updateStatusSummary(true);
         printResponseConfig(config);
         updatePreferencesSummmary(config);
         refreshUI();
         updateSwitches(config);
-
     }
 
     @Override
@@ -90,11 +88,15 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else if (key.equals(getString(R.string.key_setting_altitude_offset))) {
                 saveAltitudeOffset(getCurrentAltitudeOffset());
             }
+            else if (key.equals(getString(R.string.key_setting_sealevel))) {
+                saveSeaLevel(getCurrentSeaLevel());
+            }
         }
         else
             Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
     }
+
 
 
     /***********************************************************************************************
@@ -178,8 +180,8 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         sendSensorConfig(config);
     }
 
-    private void resetAltitudeOffsetValue(float offset) {
-        saveSharedPreference(R.string.key_setting_altitude_offset, "" + offset);
+    private void resetSeaLevelValue(float sealevel) {
+        saveSharedPreference(R.string.key_setting_sealevel, "" + sealevel);
         updateAltitudeOffsetSummary();
     }
 
@@ -189,6 +191,33 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             updateSummary(R.string.key_setting_altitude_offset,R.string.summary_altitude_offset);
         else
             updateSummary(R.string.key_setting_altitude_offset,""+getCurrentAltitudeOffset());
+    }
+
+    /***********************************************************************************************
+     * Sealevel Altitude
+     *********************************************************************************************/
+
+    private void resetAltitudeOffsetValue(float offset) {
+        saveSharedPreference(R.string.key_setting_altitude_offset, "" + offset);
+        updateAltitudeOffsetSummary();
+    }
+
+    private void updateSeaLevelSummary() {
+        float sealevel = getCurrentAltitudeOffset();
+        updateSummary(R.string.key_setting_sealevel,""+getCurrentSeaLevel());
+    }
+
+
+    private void saveSeaLevel(float sealevel) {
+        Logger.v(TAG, "[Config] sending sealevel: "+ sealevel);
+        SeaLevelConfig config = new SeaLevelConfig();
+        config.sealevel = sealevel;
+        updateSummary(R.string.key_setting_sealevel,""+sealevel);
+        sendSensorConfig(config);
+    }
+
+    private float getCurrentSeaLevel() {
+        return NumberUtils.toFloat(getSharedPreference(getString(R.string.key_setting_sealevel)), 1013.25F);
     }
 
 
@@ -338,6 +367,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private void saveAllPreferences(ResponseConfig config) {
         resetStimeValue(config.stime);
         resetTempOffsetValue(config.toffset);
+        resetSeaLevelValue(config.sealevel);
         resetAltitudeOffsetValue(config.altoffset);
     }
 

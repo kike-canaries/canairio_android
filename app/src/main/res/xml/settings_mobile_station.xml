@@ -58,12 +58,18 @@
             app:title="@string/title_altitude_offset" />
 
         <EditTextPreference
-            android:inputType="textUri"
-            app:defaultValue="/sdcard/canairio"
-            app:enabled="false"
-            app:key="@string/key_setting_sdpath"
-            app:summary="/sdcard/canairio"
-            app:title="Auto Save Directory" />
+            android:inputType="numberDecimal"
+            app:defaultValue="1013.25"
+            app:key="@string/key_setting_sealevel"
+            app:summary="@string/summary_sealevel"
+            app:title="@string/title_sealevel" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/key_setting_solarstation_enable"
+            app:summary="@string/summary_solarstation_enable"
+            app:title="@string/title_solarstation_enable" />
+
 
     </PreferenceCategory>
 
