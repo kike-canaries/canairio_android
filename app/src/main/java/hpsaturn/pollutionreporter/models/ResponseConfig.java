@@ -15,6 +15,8 @@ public class ResponseConfig extends SensorConfig {
 
     public float altoffset = 0;
 
+    public float sealevel = 1013.25F;
+
     public String ssid;
 
     public String apiusr;
