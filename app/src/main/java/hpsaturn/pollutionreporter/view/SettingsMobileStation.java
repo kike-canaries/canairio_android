@@ -82,6 +82,9 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else if (key.equals(getString(R.string.key_setting_debug_enable))) {
                 performEnableDebugMode();
             }
+            else if (key.equals(getString(R.string.key_setting_solarstation_enable))) {
+                performSaveSolarMode();
+            }
             else if (key.equals(getString(R.string.key_setting_temp_offset))) {
                 saveTempOffset(getCurrentTempOffset());
             }
@@ -268,6 +271,24 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "i2c";
         config.i2conly = enable;
+        sendSensorConfig(config);
+    }
+
+    /***********************************************************************************************
+     * Solar Station Mode
+     *********************************************************************************************/
+
+    private void performSaveSolarMode() {
+        SwitchPreference i2cSwitch = findPreference(getString(R.string.key_setting_solarstation_enable));
+        saveSolarModeFlag(i2cSwitch.isChecked());
+    }
+
+    private void saveSolarModeFlag(boolean enable) {
+        Logger.v(TAG, "[Config] solar station mode: "+enable);
+        CommandConfig config = new CommandConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "sse";
+        config.sse = enable;
         sendSensorConfig(config);
     }
 
