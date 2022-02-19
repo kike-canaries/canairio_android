@@ -60,9 +60,8 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        Logger.i(TAG,"onSharedPreferenceChanged ");
         if (!onSensorReading && key != null) {
-
             if (key.equals(getString(R.string.key_setting_stime))) {
                 validateSensorSampleTime();
             }
@@ -202,7 +201,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     }
 
     private void updateDeepSleepTimeSummary(){
-        updateSummary(R.string.key_setting_deepsleep_time,""+getCurrenteDeepSleepTime());
+        updateDeepSleepTimeSummary(getCurrenteDeepSleepTime());
     }
 
 
