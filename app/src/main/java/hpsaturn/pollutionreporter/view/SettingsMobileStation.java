@@ -15,6 +15,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.AltitudeOffsetConfig;
 import hpsaturn.pollutionreporter.models.CommandConfig;
+import hpsaturn.pollutionreporter.models.DeepSleepConfig;
 import hpsaturn.pollutionreporter.models.SeaLevelConfig;
 import hpsaturn.pollutionreporter.models.TempOffsetConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
@@ -40,6 +41,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         updateTempOffsetSummary();
         updateSeaLevelSummary();
         updateAltitudeOffsetSummary();
+        updateDeepSleepTimeSummary();
     }
 
     @Override
@@ -94,12 +96,14 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else if (key.equals(getString(R.string.key_setting_sealevel))) {
                 saveSeaLevel(getCurrentSeaLevel());
             }
+            else if (key.equals(getString(R.string.key_setting_deepsleep_time))) {
+                saveDeepSleepTime(getCurrenteDeepSleepTime());
+            }
         }
         else
             Logger.i(TAG,"skip onSharedPreferenceChanged because is in reading mode!");
 
     }
-
 
 
     /***********************************************************************************************
@@ -140,6 +144,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
+        updateDeepSleepTimeSummary(config.deepSleep);
     }
 
     /***********************************************************************************************
@@ -166,6 +171,40 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private void updateTempOffsetSummary() {
         updateSummary(R.string.key_setting_temp_offset,""+getCurrentTempOffset());
     }
+
+
+
+    /***********************************************************************************************
+     * DeepSleep handlers
+     *********************************************************************************************/
+
+    private void saveDeepSleepTime(int seconds) {
+        if (seconds<0) return;
+        Logger.v(TAG, "[Config] sending deep sleep time: "+seconds);
+        DeepSleepConfig config = new DeepSleepConfig();
+        config.deepSleep = seconds;
+        updateDeepSleepTimeSummary(seconds);
+        sendSensorConfig(config);
+    }
+
+    private int getCurrenteDeepSleepTime() {
+        return NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_deepsleep_time)),0);
+    }
+
+    private void resetDeepSleepTime(int seconds) {
+        saveSharedPreference(R.string.key_setting_deepsleep_time, "" + seconds);
+        updateDeepSleepTimeSummary(seconds);
+    }
+
+    private void updateDeepSleepTimeSummary(int seconds){
+        if(seconds==0)updateSummary(R.string.key_setting_deepsleep_time,R.string.summary_deepsleep_time);
+        else updateSummary(R.string.key_setting_deepsleep_time,""+seconds);
+    }
+
+    private void updateDeepSleepTimeSummary(){
+        updateSummary(R.string.key_setting_deepsleep_time,""+getCurrenteDeepSleepTime());
+    }
+
 
     /***********************************************************************************************
      * Altitude offset handlers
@@ -206,10 +245,8 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     }
 
     private void updateSeaLevelSummary() {
-        float sealevel = getCurrentAltitudeOffset();
         updateSummary(R.string.key_setting_sealevel,""+getCurrentSeaLevel());
     }
-
 
     private void saveSeaLevel(float sealevel) {
         Logger.v(TAG, "[Config] sending sealevel: "+ sealevel);
@@ -390,6 +427,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         resetTempOffsetValue(config.toffset);
         resetSeaLevelValue(config.sealevel);
         resetAltitudeOffsetValue(config.altoffset);
+        resetDeepSleepTime(config.deepSleep);
     }
 
     private void updateSwitches(SensorConfig config){

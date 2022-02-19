@@ -194,5 +194,6 @@
     <string name="summary_solarstation_enable">Deep sleep into samples</string>
     <string name="key_setting_solarstation_enable">key_solarstation_enable</string>
     <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
-    <string name="summary_deepsleep_time">Sleep Time</string>
+    <string name="summary_deepsleep_time">0 (disabled)</string>
+    <string name="title_setting_deepsleep_time">Sleep time in seconds</string>
 </resources>

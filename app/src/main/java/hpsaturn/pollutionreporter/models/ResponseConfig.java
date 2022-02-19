@@ -54,4 +54,5 @@ public class ResponseConfig extends SensorConfig {
     public String hasspsw;
 
     public int hasspt;
+    public int deepSleep = 0;
 }
