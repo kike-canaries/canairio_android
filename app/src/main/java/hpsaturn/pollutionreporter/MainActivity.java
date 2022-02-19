@@ -452,14 +452,29 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void startPermissionsBLEFlow() {
-        Dexter.withContext(this)
-                .withPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.BLUETOOTH
-                )
-                .withListener(blePermissionListener)
-                .check();
+        Logger.i(TAG, "starting BLE permission flow");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.BLUETOOTH_SCAN
+
+                    )
+                    .withListener(blePermissionListener)
+                    .check();
+        }else {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.BLUETOOTH
+
+                    )
+                    .withListener(blePermissionListener)
+                    .check();
+        }
     }
 
     public void startPermissionsGPSFlow() {
@@ -486,6 +501,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void startPermissionsStorageFlow() {
+        Logger.i(TAG, "starting Storage permission flow");
         Dexter.withContext(this)
                 .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(storagePermissionListener)
@@ -500,6 +516,8 @@ public class MainActivity extends BaseActivity implements
                 if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
                 if(scanFragment!=null)scanFragment.executeScan();
             }
+            else
+                Logger.e(TAG, "BLEPermissions Not Granted");
         }
         @Override
         public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {

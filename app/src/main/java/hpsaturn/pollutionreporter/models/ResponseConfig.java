@@ -15,6 +15,8 @@ public class ResponseConfig extends SensorConfig {
 
     public float altoffset = 0;
 
+    public float sealevel = 1013.25F;
+
     public String ssid;
 
     public String apiusr;
@@ -52,4 +54,6 @@ public class ResponseConfig extends SensorConfig {
     public String hasspsw;
 
     public int hasspt;
+
+    public int deepSleep = 0;
 }
