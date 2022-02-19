@@ -64,11 +64,20 @@
             app:summary="@string/summary_sealevel"
             app:title="@string/title_sealevel" />
 
+        <EditTextPreference
+            android:inputType="number"
+            app:defaultValue="0"
+            app:key="@string/key_setting_deepsleep_time"
+            app:summary="@string/summary_deepsleep_time"
+            app:title="Sleep Time" />
+
+
         <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_solarstation_enable"
             app:summary="@string/summary_solarstation_enable"
             app:title="@string/title_solarstation_enable" />
+
 
 
     </PreferenceCategory>

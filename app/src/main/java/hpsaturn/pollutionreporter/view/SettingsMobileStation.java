@@ -279,8 +279,8 @@ public class SettingsMobileStation extends SettingsBaseFragment{
      *********************************************************************************************/
 
     private void performSaveSolarMode() {
-        SwitchPreference i2cSwitch = findPreference(getString(R.string.key_setting_solarstation_enable));
-        saveSolarModeFlag(i2cSwitch.isChecked());
+        SwitchPreference solarSwitch = findPreference(getString(R.string.key_setting_solarstation_enable));
+        saveSolarModeFlag(solarSwitch.isChecked());
     }
 
     private void saveSolarModeFlag(boolean enable) {
@@ -395,6 +395,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private void updateSwitches(SensorConfig config){
         updateSwitch(R.string.key_setting_debug_enable,config.denb);
         updateSwitch(R.string.key_setting_force_i2c_sensors,config.i2conly);
+        updateSwitch(R.string.key_setting_solarstation_enable,config.sse);
     }
 
     private SwitchPreference getDebugEnableSwitch() {
