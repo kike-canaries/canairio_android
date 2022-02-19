@@ -190,7 +190,10 @@
     <string name="title_sealevel">Sea level altitude</string>
     <string name="key_setting_sealevel">key_setting_sealevel</string>
     <string name="summary_sealevel">1013.25</string>
-    <string name="title_solarstation_enable">Solar Station Mode</string>
-    <string name="summary_solarstation_enable">Power saving settings</string>
+    <string name="title_solarstation_enable">ECO Mode</string>
+    <string name="summary_solarstation_enable">Deep sleep into samples</string>
     <string name="key_setting_solarstation_enable">key_solarstation_enable</string>
+    <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
+    <string name="summary_deepsleep_time">0 (disabled)</string>
+    <string name="title_setting_deepsleep_time">Sleep time in seconds</string>
 </resources>

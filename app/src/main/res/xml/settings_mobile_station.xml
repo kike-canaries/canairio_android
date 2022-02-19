@@ -64,6 +64,20 @@
             app:summary="@string/summary_sealevel"
             app:title="@string/title_sealevel" />
 
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Power Saving Settings">
+
+        <EditTextPreference
+            android:inputType="number"
+            app:defaultValue="0"
+            app:key="@string/key_setting_deepsleep_time"
+            app:summary="@string/summary_deepsleep_time"
+            app:title="@string/title_setting_deepsleep_time" />
+
         <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_solarstation_enable"
@@ -72,6 +86,7 @@
 
 
     </PreferenceCategory>
+
 
     <PreferenceCategory
         android:dependency="@string/key_device_status"

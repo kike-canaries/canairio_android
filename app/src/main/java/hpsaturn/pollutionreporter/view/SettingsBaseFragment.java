@@ -144,6 +144,8 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         Logger.i(TAG, "[Config] vtag  : " + config.vtag);
         Logger.i(TAG, "[Config] lskey : " + config.lskey);
         Logger.i(TAG, "[Config] toffset : " + config.toffset);
+        Logger.i(TAG, "[Config] sse   : " + config.sse);
+        Logger.i(TAG, "[Config] dstime: " + config.deepSleep);
     }
 
 
