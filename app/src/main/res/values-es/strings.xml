@@ -7,7 +7,7 @@
     <string name="menu_donation">Hacer una donación…</string>
     <string name="stop_scan">Parar búsqueda…</string>
     <string name="start_scan">Iniciar búsqueda…</string>
-    <string name="ble_not_supported">¡Bluetooth Low Energy (BLE) no está soportado!</string>
+    <string name="msg_ble_not_supported">¡Bluetooth Low Energy (BLE) no está soportado!</string>
     <string name="label_pm25">PM2.5</string>
     <string name="msg_device_disconnected">Dispositivo desconectado</string>
     <string name="msg_device_reconnecting">Dispositivo desconectado, reconectando…</string>
@@ -23,7 +23,7 @@
     <string name="msg_record">Iniciando grabación…</string>
     <string name="bt_map">Mapa</string>
     <string name="msg_records_empty_list">Actualmente sin registros</string>
-    <string name="msg_not_public_recors">Cargando registros públicos…</string>
+    <string name="msg_not_public_records">Cargando informes públicos…</string>
     <string name="msg_record_stop_alert">Por favor, detén la grabación del recorrido</string>
     <string name="summary_stime">5 segundos</string>
     <string name="summary_wifi">Enviar configuración WiFi</string>
@@ -103,7 +103,7 @@
     <string name="key_setting_vars">key_settings_vars</string>
     <string name="title_device_status">Estado Bluetooth:</string>
     <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
-    <string name="msg_chart_sharing">Compartiendo datos en la pestaña público...</string>
+    <string name="msg_chart_sharing">Compartiendo datos en la pestaña público..</string>
     <string name="bt_dialog_cancel">Cancelar</string>
     <string name="bt_dialog_agree">Estoy de acuerdo</string>
     <string name="msg_gps_title">Utilizar localización</string>
@@ -132,18 +132,18 @@
     <string name="title_setting_ifxip">Nombre del servidor</string>
     <string name="key_ifxpt_default">8086</string>
     <string name="title_setting_ifxpt">Puerto</string>
-    <string name="key_enable_location_title">Etiqueta \"Geohash\" de la estación fija</string>
-    <string name="key_dname_title">Etiqueta de la estación fija</string>
-    <string name="key_ssid_title">Nombre WiFi (SSID)</string>
-    <string name="key_enable_ifx_title">Activar publicación</string>
-    <string name="key_enable_ifx_summary_ready">Publicar en CanAirIO o en un servidor personalizado</string>
+    <string name="title_key_enable_location">Etiqueta \"Geohash\" de la estación fija</string>
+    <string name="title_key_dname">Etiqueta de la estación fija</string>
+    <string name="title_key_ssid">Nombre WiFi (SSID)</string>
+    <string name="title_key_enable_ifx">Activar publicación</string>
+    <string name="summary_key_enable_ifx_ready">Publicar en CanAirIO o en un servidor personalizado</string>
     <string name="category_ifx_share_title">Compartir estación fija CanAirIO</string>
     <string name="category_ifx_share_summary">Opcional para estaciones fijas (modo WiFi)</string>
     <string name="category_wifi_title">Preferencias WiFi</string>
     <string name="category_wifi_summary">Para actualizaciones remotas o estaciones fijas</string>
     <string name="key_fixed_stations_map">key_fixed_stations_map</string>
-    <string name="fixed_stations_map_title">Mapa mundial de CanAirIO</string>
-    <string name="fixed_stations_map_summary">Clic para iniciar (puede tomar algunos minutos)</string>
+    <string name="title_fixed_stations_map">Mapa mundial de CanAirIO</string>
+    <string name="summary_fixed_stations_map">Clic para iniciar (puede tomar algunos minutos)</string>
     <string name="url_canairio_worldmap">http://influxdb.canair.io:8000</string>
     <string name="summary_ifx_nogeohash">Por favor, establece primero la localización</string>
     <string name="key_setting_send_co2_calibration">key_setting_send_co2_calibration</string>
@@ -196,4 +196,10 @@
     <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
     <string name="summary_deepsleep_time">0 (desactivado)</string>
     <string name="title_setting_deepsleep_time">Tiempo de sueño en segundos</string>
+    <string name="title_app_settings">Configuración de la aplicación</string>
+    <string name="title_icon_map">Mapa</string>
+    <string name="title_icon_reports">Informes</string>
+    <string name="title_icon_mydevice">Dispositivo</string>
+    <string name="title_icon_myrecords">Registros</string>
+    <string name="title_icon_settings">Config.</string>
 </resources>

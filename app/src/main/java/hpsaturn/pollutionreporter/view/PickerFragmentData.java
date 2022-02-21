@@ -3,6 +3,9 @@ package hpsaturn.pollutionreporter.view;
 import java.util.Arrays;
 import java.util.List;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import hpsaturn.pollutionreporter.R;
 
 /**
@@ -18,14 +21,14 @@ public class PickerFragmentData {
     private PickerFragmentData() {
     }
 
-    public List<PickerFragmentInfo> getFragmentsInfo() {
-
+    public List<PickerFragmentInfo> getFragmentsInfo(Context ctx) {
+        Resources res = ctx.getResources();
         return Arrays.asList(
-                new PickerFragmentInfo("Reports", R.drawable.ic_picker_map),
-                new PickerFragmentInfo("Public", R.drawable.ic_picker_cloud),
-                new PickerFragmentInfo("MyDevice", R.drawable.ic_picker_chart),
-                new PickerFragmentInfo("MyRecords", R.drawable.ic_picker_records),
-                new PickerFragmentInfo("Settings", R.drawable.ic_picker_settings)
+                new PickerFragmentInfo(res.getString(R.string.title_icon_map), R.drawable.ic_picker_map),
+                new PickerFragmentInfo(res.getString(R.string.title_icon_reports), R.drawable.ic_picker_cloud),
+                new PickerFragmentInfo(res.getString(R.string.title_icon_mydevice), R.drawable.ic_picker_chart),
+                new PickerFragmentInfo(res.getString(R.string.title_icon_myrecords), R.drawable.ic_picker_records),
+                new PickerFragmentInfo(res.getString(R.string.title_icon_settings), R.drawable.ic_picker_settings)
         );
 
     }

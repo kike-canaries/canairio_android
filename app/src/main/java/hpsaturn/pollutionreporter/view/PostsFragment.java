@@ -49,7 +49,7 @@ public class PostsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_records, container, false);
         mEmptyMessage = view.findViewById(R.id.tv_records_empty_list);
         mRecordsList = view.findViewById(R.id.rv_records);
-        mEmptyMessage.setText(R.string.msg_not_public_recors);
+        mEmptyMessage.setText(R.string.msg_not_public_records);
 
         LinearLayoutManager mManager = new LinearLayoutManager(getActivity());
         mManager.setReverseLayout(true);

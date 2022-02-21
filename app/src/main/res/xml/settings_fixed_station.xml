@@ -21,7 +21,7 @@
             app:icon="@android:drawable/ic_menu_send"
             app:key="@string/key_setting_ssid"
             app:summary="@string/summary_wifi_ssid"
-            app:title="@string/key_ssid_title" />
+            app:title="@string/title_key_ssid" />
 
         <EditTextPreference
             android:inputType="textPassword"
@@ -46,7 +46,7 @@
         <SwitchPreference
             app:key="@string/key_setting_enable_location"
             app:summary="@string/msg_loading"
-            app:title="@string/key_enable_location_title" />
+            app:title="@string/title_key_enable_location" />
 
         <Preference
             android:fragment="hpsaturn.pollutionreporter.view.SettingsAdvancedCloud"
@@ -56,8 +56,8 @@
 
         <SwitchPreference
             app:key="@string/key_setting_enable_ifx"
-            app:summary="@string/key_enable_ifx_summary_ready"
-            app:title="@string/key_enable_ifx_title" />
+            app:summary="@string/summary_key_enable_ifx_ready"
+            app:title="@string/title_key_enable_ifx" />
 
         <Preference
             app:dependency="@string/key_setting_enable_wifi"
@@ -71,8 +71,8 @@
             app:dependency="@string/key_setting_enable_ifx"
             app:icon="@android:drawable/ic_menu_mapmode"
             app:key="@string/key_fixed_stations_map"
-            app:summary="@string/fixed_stations_map_summary"
-            app:title="@string/fixed_stations_map_title" />
+            app:summary="@string/summary_fixed_stations_map"
+            app:title="@string/title_fixed_stations_map" />
 
     </PreferenceCategory>
 
