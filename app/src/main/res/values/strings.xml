@@ -7,7 +7,7 @@
     <string name="menu_donation">Make a donation…</string>
     <string name="stop_scan">Stopping Scanning…</string>
     <string name="start_scan">Start Scanning…</string>
-    <string name="ble_not_supported">Bluetooth Low Energy not Supported!</string>
+    <string name="msg_ble_not_supported">Bluetooth Low Energy not Supported!</string>
     <string name="label_pm25">PM2.5</string>
     <string name="msg_device_disconnected">Device disconnected</string>
     <string name="msg_device_reconnecting">Device disconnected, reconnecting…</string>
@@ -23,7 +23,7 @@
     <string name="msg_record">Start recording…</string>
     <string name="bt_map">Map</string>
     <string name="msg_records_empty_list">No records for now</string>
-    <string name="msg_not_public_recors">Loading public reports…</string>
+    <string name="msg_not_public_records">Loading public reports…</string>
     <string name="msg_record_stop_alert">Please stop the current recording track</string>
     <string name="summary_stime">5 seconds</string>
     <string name="summary_wifi">Send WiFi settings</string>
@@ -64,7 +64,7 @@
     <string name="summary_wifi_enable">Disable WiFi Connection</string>
     <string name="summary_wifi_disable">Send WiFi settings</string>
     <string name="summary_reboot">Send reboot command to device</string>
-    <string name="summary_force_i2c_sensors">Only detect i2c sensors</string>
+    <string name="summary_force_i2c_sensors">Only detect I2C sensors</string>
     <string name="summary_temp_offset">Temperature compensation</string>
     <string name="summary_debug_enable">More logs on serial output</string>
     <string name="summary_clear">Set settings to default</string>
@@ -132,18 +132,18 @@
     <string name="title_setting_ifxip">Hostname</string>
     <string name="key_ifxpt_default">8086</string>
     <string name="title_setting_ifxpt">Port</string>
-    <string name="key_enable_location_title">Tag fixed location Geohash</string>
-    <string name="key_dname_title">Fixed station tag name</string>
-    <string name="key_ssid_title">WiFi name (SSID)</string>
-    <string name="key_enable_ifx_title">Enable publication</string>
-    <string name="key_enable_ifx_summary_ready">Publish to CanAirIO or custom server</string>
+    <string name="title_key_enable_location">Tag fixed location Geohash</string>
+    <string name="title_key_dname">Fixed station tag name</string>
+    <string name="title_key_ssid">WiFi name (SSID)</string>
+    <string name="title_key_enable_ifx">Enable publication</string>
+    <string name="summary_key_enable_ifx_ready">Publish to CanAirIO or custom server</string>
     <string name="category_ifx_share_title">Share CanAirIO fixed station</string>
     <string name="category_ifx_share_summary">Optional for fixed stations (WiFi mode)</string>
     <string name="category_wifi_title">WiFi preferences</string>
     <string name="category_wifi_summary">For remote updates or fixed stations</string>
     <string name="key_fixed_stations_map">key_fixed_stations_map</string>
-    <string name="fixed_stations_map_title">CanAirIO Worldmap</string>
-    <string name="fixed_stations_map_summary">Click to launch (take some minutes)</string>
+    <string name="title_fixed_stations_map">CanAirIO Worldmap</string>
+    <string name="summary_fixed_stations_map">Click to launch (take some minutes)</string>
     <string name="url_canairio_worldmap">http://influxdb.canair.io:8000</string>
     <string name="summary_ifx_nogeohash">Please set first the location</string>
     <string name="key_setting_send_co2_calibration">key_setting_send_co2_calibration</string>
@@ -164,9 +164,9 @@
     <string name="msg_status_disconnected">Status: disconnected</string>
     <string name="msg_status_connected">Status: connected</string>
     <string name="summary_ifx_advanced">Custom cloud settings</string>
-    <string name="title_hass">Home Assitant Discovery</string>
+    <string name="title_hass">Home Assistant Discovery</string>
     <string name="key_setting_hassip">key_setting_hassip</string>
-    <string name="title_setting_hassip">MQTT Broker Ip</string>
+    <string name="title_setting_hassip">MQTT Broker IP</string>
     <string name="key_setting_hassusr">key_setting_hassusr</string>
     <string name="summary_setting_hassusr" />
     <string name="title_setting_hassusr">Username</string>
@@ -196,4 +196,10 @@
     <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
     <string name="summary_deepsleep_time">0 (disabled)</string>
     <string name="title_setting_deepsleep_time">Sleep time in seconds</string>
+    <string name="title_app_settings">App settings</string>
+    <string name="title_icon_map">Map</string>
+    <string name="title_icon_reports">Reports</string>
+    <string name="title_icon_mydevice">MyDevice</string>
+    <string name="title_icon_myrecords">MyRecords</string>
+    <string name="title_icon_settings">Settings</string>
 </resources>

@@ -1,6 +1,7 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -238,7 +239,8 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void setupFragmentPicker() {
-        List<PickerFragmentInfo> pickerFragmentInfos = PickerFragmentData.get().getFragmentsInfo();
+        Context ctx = getApplicationContext();
+        List<PickerFragmentInfo> pickerFragmentInfos = PickerFragmentData.get().getFragmentsInfo(ctx);
         fragmentPicker.setVisibility(View.VISIBLE);
         fragmentPicker.setSlideOnFling(true);
         fragmentPicker.setAdapter(new PickerFragmentAdapter(pickerFragmentInfos));
