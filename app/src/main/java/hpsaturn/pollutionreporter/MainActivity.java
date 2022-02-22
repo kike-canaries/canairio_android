@@ -44,6 +44,7 @@ import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
+import hpsaturn.pollutionreporter.view.AboutFragment;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.DisclosureFragment;
 import hpsaturn.pollutionreporter.view.MapFragment;
@@ -441,6 +442,11 @@ public class MainActivity extends BaseActivity implements
         showDialogFragment(dialog,DisclosureFragment.TAG);
     }
 
+    public void showAboutFragment() {
+        AboutFragment about = new AboutFragment();
+        showDialogFragment(about,AboutFragment.TAG);
+    }
+
     public boolean isStorageGranted(){
         return prefBuilder.getBoolean(Keys.PERMISSION_STORAGE,false);
     }
@@ -581,6 +587,11 @@ public class MainActivity extends BaseActivity implements
     @Override
     void actionVarFilter() {
         showDialogFragment(new VariableFilterFragment(), VariableFilterFragment.TAG);
+    }
+
+    @Override
+    void actionShowAbout(){
+        showAboutFragment();
     }
 
     @Override

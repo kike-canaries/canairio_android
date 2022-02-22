@@ -155,12 +155,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     }
 
-    public void showDialog(Fragment fragment, String fragmentTag) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fragment, fragmentTag);
-        ft.show(fragment);
-        ft.commitAllowingStateLoss();
-    }
 
     public void showDialogFragment(DialogFragment dialog, String TAG) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -263,7 +257,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 break;
 
             case R.id.action_about:
-                UITools.viewLink(this,getString(R.string.url_canairio_page));
+                actionShowAbout();
                 break;
 
             case R.id.action_feedback:
@@ -285,6 +279,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     abstract void actionUnPair();
     abstract void actionVarFilter();
+    abstract void actionShowAbout();
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
