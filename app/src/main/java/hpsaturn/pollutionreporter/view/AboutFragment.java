@@ -29,12 +29,9 @@ public class AboutFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.about, container, false);
         TextView aboutText = view.findViewById(R.id.tv_about_version_revision);
 
-        aboutText.setText(
-                String.format(getString(R.string.about_licence_l1),
-                        DeviceUtil.getVersionName(requireActivity()),
-                        DeviceUtil.getVersionCode(requireActivity())+""
-                )
-        );
+        String version =  DeviceUtil.getVersionName(requireActivity());
+        String revision = " r"+DeviceUtil.getVersionCode(requireActivity());
+        aboutText.setText("v"+version+revision);
 
         _sv_about = view.findViewById(R.id.sv_about);
         Animation translatebu= AnimationUtils.loadAnimation(getActivity(), R.anim.about);
