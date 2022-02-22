@@ -202,7 +202,6 @@
     <string name="title_icon_mydevice">MyDevice</string>
     <string name="title_icon_myrecords">MyRecords</string>
     <string name="title_icon_settings">Settings</string>
-    <string formatted="false" name="about_licence_l1" translatable="false">ver%s (rev%s)</string>
     <string name="content_description_welcome" translatable="false">CanAirIO</string>
     <string name="about_licence_l2" translatable="false">(rfc 3261) GNU GPL License V3</string>
     <string name="about_title_colaboration">Contributors:</string>
