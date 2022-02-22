@@ -191,7 +191,7 @@
     <string name="key_setting_sealevel">key_setting_sealevel</string>
     <string name="summary_sealevel">1013.25</string>
     <string name="title_solarstation_enable">Modo ECO</string>
-    <string name="summary_solarstation_enable">Sueño profundo en muestras</string>
+    <string name="summary_solarstation_enable">Sueño profundo entre muestras</string>
     <string name="key_setting_solarstation_enable">key_solarstation_enable</string>
     <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
     <string name="summary_deepsleep_time">0 (desactivado)</string>
