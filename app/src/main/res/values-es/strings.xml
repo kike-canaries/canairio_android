@@ -103,11 +103,11 @@
     <string name="key_setting_vars">key_settings_vars</string>
     <string name="title_device_status">Estado Bluetooth:</string>
     <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
-    <string name="msg_chart_sharing">Compartiendo datos en la pestaña público..</string>
+    <string name="msg_chart_sharing">Compartiendo datos en la pestaña público…</string>
     <string name="bt_dialog_cancel">Cancelar</string>
     <string name="bt_dialog_agree">Estoy de acuerdo</string>
     <string name="msg_gps_title">Utilizar localización</string>
-    <string name="msg_gps_desc">La aplicación CanAirIO colecciona los datos de localización y calidad del aire de tu dispositivo en segundo plano. Con esto, la aplicación puede crear rutas y mapas de calidad del aire. Estas rutas no almacenan ninguna información personal, sólo la localización. Esta información sólo se compartirá en nuestra nube pulsando el botón de \"compartir\". Por este motivo necesitamos estos permisos. </string>
+    <string name="msg_gps_desc">La aplicación CanAirIO colecciona los datos de localización y calidad del aire de tu dispositivo en segundo plano. Con esto, la aplicación puede crear rutas y mapas de calidad del aire. Estas rutas no almacenan ninguna información personal, sólo la localización. Esta información sólo se compartirá en nuestra nube pulsando el botón de \"compartir\". Por este motivo necesitamos estos permisos.</string>
     <string name="msg_ble_title">Utilizar Bluetooth</string>
     <string name="msg_ble_desc">La aplicación CanAirIO necesita activar el Bluetooth del dispositivo para buscar dispositivos de calidad del aire, además, todas las aplicaciones que utilizan Bluetooth requieren de permisos de localización. Por este motivo te pedimos este permiso.</string>
     <string name="menu_privacy">Política de Privacidad</string>

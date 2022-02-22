@@ -185,7 +185,7 @@
     <string name="bt_dialog_export">Only export :(</string>
     <string name="title_share_dialog">Thanks to Share!</string>
     <string name="canairio_share_dialog">CanAirIO Share Dialog</string>
-    <string name="msg_share_dialog_desc">"The current track will be shared to the CanAirIO Mobile Map. Thanks for you contribution! "</string>
+    <string name="msg_share_dialog_desc">"The current track will be shared to the CanAirIO Mobile Map. Thanks for you contribution!"</string>
     <string name="hint_share_dialog_meta">Additional metadata that you want share with us</string>
     <string name="title_sealevel">Sea level altitude</string>
     <string name="key_setting_sealevel">key_setting_sealevel</string>
