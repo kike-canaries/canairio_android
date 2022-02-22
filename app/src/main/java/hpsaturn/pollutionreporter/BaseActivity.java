@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -9,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,19 +27,38 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 public abstract class BaseActivity extends RxAppCompatActivity {
 
     public static String TAG = BaseActivity.class.getSimpleName();
+    
+    private void enableBLE() {
+        Logger.i(TAG,"[BLE] enableBLE: starting...");
 
-    public void checkBluetoohtBle() {
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        //Intent data = result.getData();
+                        Logger.i(TAG,"[BLE] enableBLE: enabled!");
+                    } else {
+                        Logger.i(TAG,"[BLE] enableBLE: not enabled!");
+                    }
+                });
+        
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        someActivityResultLauncher.launch(enableBtIntent);
+    }
+
+    public void checkBLE() {
         // Use this check to determine whether BLE is supported on the device.
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, R.string.msg_ble_not_supported, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, this.getResources().getString(R.string.msg_ble_not_supported), Toast.LENGTH_SHORT).show();
         } else if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 0);
+            this.enableBLE();
         }
-        else Logger.i(TAG,"[BLE] checkBluetoohtBle: ready!");
+        else Logger.i(TAG,"[BLE] checkBLE: ready!");
     }
+
 
     public void showFragment(Fragment fragment){
         if(fragment!=null) {
@@ -193,8 +215,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             if (getSupportFragmentManager().getBackStackEntryCount() == 0) return false;
             FragmentManager fm = getSupportFragmentManager();
             Fragment match = fm.findFragmentByTag(tag);
-            if (match != null) return true;
-            else return false;
+            return match != null;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

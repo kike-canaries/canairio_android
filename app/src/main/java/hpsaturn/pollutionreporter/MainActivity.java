@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements
 
         startDataBase();
         setSupportActionBar(toolbar);
-        checkBluetoohtBle();
+        checkBLE();
         setupUI();
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
 
