@@ -11,7 +11,6 @@ import androidx.preference.SwitchPreference;
 
 import com.fonfon.geohash.GeoHash;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.crashlytics.internal.model.CrashlyticsReport;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
 import com.iamhabib.easy_preference.EasyPreference;
@@ -329,7 +328,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
             else if (geoHash.length() >=2 ) {
                 try {
                     summary = summary + geoHash;
-                    ifxdbSwitch.setSummary(R.string.key_enable_ifx_summary_ready);
+                    ifxdbSwitch.setSummary(R.string.summary_key_enable_ifx_ready);
                     EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
                     String name = geoHash.substring(0,3);
                     String flavor = prefBuilder.getString(Keys.DEVICE_FLAVOR,"");
@@ -339,7 +338,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                     name = name.replace("_","");
                     name = name.replace(":","");
                     name = name.toUpperCase();
-                    name = getString(R.string.fixed_stations_map_summary)+"\nYour station: "+name;
+                    name = getString(R.string.summary_fixed_stations_map)+"\nYour station: "+name;
                     updateSummary(R.string.key_fixed_stations_map,name);
                 } catch (Exception e) {
                     EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());

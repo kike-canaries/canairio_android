@@ -15,6 +15,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.models.AltitudeOffsetConfig;
 import hpsaturn.pollutionreporter.models.CommandConfig;
+import hpsaturn.pollutionreporter.models.DeepSleepConfig;
+import hpsaturn.pollutionreporter.models.SeaLevelConfig;
 import hpsaturn.pollutionreporter.models.TempOffsetConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SampleConfig;
@@ -37,32 +39,29 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     protected void refreshUI() {
         updateStimeSummary();
         updateTempOffsetSummary();
+        updateSeaLevelSummary();
         updateAltitudeOffsetSummary();
+        updateDeepSleepTimeSummary();
     }
 
     @Override
     protected void onConfigRead(ResponseConfig config) {
-
-
         if (config.stype != getSensorType()) {
             if (config.stype < 0) updateSensorTypeSummary(0);
             else updateSensorTypeSummary((config.stype));
         }
-
         saveAllPreferences(config);
         updateStatusSummary(true);
         printResponseConfig(config);
         updatePreferencesSummmary(config);
         refreshUI();
         updateSwitches(config);
-
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        Logger.i(TAG,"onSharedPreferenceChanged ");
         if (!onSensorReading && key != null) {
-
             if (key.equals(getString(R.string.key_setting_stime))) {
                 validateSensorSampleTime();
             }
@@ -84,11 +83,20 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             else if (key.equals(getString(R.string.key_setting_debug_enable))) {
                 performEnableDebugMode();
             }
+            else if (key.equals(getString(R.string.key_setting_solarstation_enable))) {
+                performSaveSolarMode();
+            }
             else if (key.equals(getString(R.string.key_setting_temp_offset))) {
                 saveTempOffset(getCurrentTempOffset());
             }
             else if (key.equals(getString(R.string.key_setting_altitude_offset))) {
                 saveAltitudeOffset(getCurrentAltitudeOffset());
+            }
+            else if (key.equals(getString(R.string.key_setting_sealevel))) {
+                saveSeaLevel(getCurrentSeaLevel());
+            }
+            else if (key.equals(getString(R.string.key_setting_deepsleep_time))) {
+                saveDeepSleepTime(getCurrenteDeepSleepTime());
             }
         }
         else
@@ -135,6 +143,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     private void updatePreferencesSummmary(ResponseConfig config) {
         if(config.stime>0)updateSummary(R.string.key_setting_stime, getStimeFormat(config.stime));
+        updateDeepSleepTimeSummary(config.deepSleep);
     }
 
     /***********************************************************************************************
@@ -162,6 +171,40 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         updateSummary(R.string.key_setting_temp_offset,""+getCurrentTempOffset());
     }
 
+
+
+    /***********************************************************************************************
+     * DeepSleep handlers
+     *********************************************************************************************/
+
+    private void saveDeepSleepTime(int seconds) {
+        if (seconds<0) return;
+        Logger.v(TAG, "[Config] sending deep sleep time: "+seconds);
+        DeepSleepConfig config = new DeepSleepConfig();
+        config.deepSleep = seconds;
+        updateDeepSleepTimeSummary(seconds);
+        sendSensorConfig(config);
+    }
+
+    private int getCurrenteDeepSleepTime() {
+        return NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_deepsleep_time)),0);
+    }
+
+    private void resetDeepSleepTime(int seconds) {
+        saveSharedPreference(R.string.key_setting_deepsleep_time, "" + seconds);
+        updateDeepSleepTimeSummary(seconds);
+    }
+
+    private void updateDeepSleepTimeSummary(int seconds){
+        if(seconds==0)updateSummary(R.string.key_setting_deepsleep_time,R.string.summary_deepsleep_time);
+        else updateSummary(R.string.key_setting_deepsleep_time,""+seconds);
+    }
+
+    private void updateDeepSleepTimeSummary(){
+        updateDeepSleepTimeSummary(getCurrenteDeepSleepTime());
+    }
+
+
     /***********************************************************************************************
      * Altitude offset handlers
      *********************************************************************************************/
@@ -178,8 +221,8 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         sendSensorConfig(config);
     }
 
-    private void resetAltitudeOffsetValue(float offset) {
-        saveSharedPreference(R.string.key_setting_altitude_offset, "" + offset);
+    private void resetSeaLevelValue(float sealevel) {
+        saveSharedPreference(R.string.key_setting_sealevel, "" + sealevel);
         updateAltitudeOffsetSummary();
     }
 
@@ -189,6 +232,31 @@ public class SettingsMobileStation extends SettingsBaseFragment{
             updateSummary(R.string.key_setting_altitude_offset,R.string.summary_altitude_offset);
         else
             updateSummary(R.string.key_setting_altitude_offset,""+getCurrentAltitudeOffset());
+    }
+
+    /***********************************************************************************************
+     * Sealevel Altitude
+     *********************************************************************************************/
+
+    private void resetAltitudeOffsetValue(float offset) {
+        saveSharedPreference(R.string.key_setting_altitude_offset, "" + offset);
+        updateAltitudeOffsetSummary();
+    }
+
+    private void updateSeaLevelSummary() {
+        updateSummary(R.string.key_setting_sealevel,""+getCurrentSeaLevel());
+    }
+
+    private void saveSeaLevel(float sealevel) {
+        Logger.v(TAG, "[Config] sending sealevel: "+ sealevel);
+        SeaLevelConfig config = new SeaLevelConfig();
+        config.sealevel = sealevel;
+        updateSummary(R.string.key_setting_sealevel,""+sealevel);
+        sendSensorConfig(config);
+    }
+
+    private float getCurrentSeaLevel() {
+        return NumberUtils.toFloat(getSharedPreference(getString(R.string.key_setting_sealevel)), 1013.25F);
     }
 
 
@@ -239,6 +307,24 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
         config.act = "i2c";
         config.i2conly = enable;
+        sendSensorConfig(config);
+    }
+
+    /***********************************************************************************************
+     * Solar Station Mode
+     *********************************************************************************************/
+
+    private void performSaveSolarMode() {
+        SwitchPreference solarSwitch = findPreference(getString(R.string.key_setting_solarstation_enable));
+        saveSolarModeFlag(solarSwitch.isChecked());
+    }
+
+    private void saveSolarModeFlag(boolean enable) {
+        Logger.v(TAG, "[Config] solar station mode: "+enable);
+        CommandConfig config = new CommandConfig();
+        config.cmd = getSharedPreference(getString(R.string.key_setting_wmac));
+        config.act = "sse";
+        config.sse = enable;
         sendSensorConfig(config);
     }
 
@@ -338,12 +424,15 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     private void saveAllPreferences(ResponseConfig config) {
         resetStimeValue(config.stime);
         resetTempOffsetValue(config.toffset);
+        resetSeaLevelValue(config.sealevel);
         resetAltitudeOffsetValue(config.altoffset);
+        resetDeepSleepTime(config.deepSleep);
     }
 
     private void updateSwitches(SensorConfig config){
         updateSwitch(R.string.key_setting_debug_enable,config.denb);
         updateSwitch(R.string.key_setting_force_i2c_sensors,config.i2conly);
+        updateSwitch(R.string.key_setting_solarstation_enable,config.sse);
     }
 
     private SwitchPreference getDebugEnableSwitch() {

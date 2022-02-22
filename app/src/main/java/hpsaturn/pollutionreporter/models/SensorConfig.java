@@ -19,4 +19,6 @@ public class SensorConfig {
 
     public boolean i2conly;
 
+    public boolean sse;
+
 }

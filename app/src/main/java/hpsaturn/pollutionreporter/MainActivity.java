@@ -1,6 +1,7 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
 import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
+import hpsaturn.pollutionreporter.view.AboutFragment;
 import hpsaturn.pollutionreporter.view.ChartFragment;
 import hpsaturn.pollutionreporter.view.DisclosureFragment;
 import hpsaturn.pollutionreporter.view.MapFragment;
@@ -238,7 +240,8 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void setupFragmentPicker() {
-        List<PickerFragmentInfo> pickerFragmentInfos = PickerFragmentData.get().getFragmentsInfo();
+        Context ctx = getApplicationContext();
+        List<PickerFragmentInfo> pickerFragmentInfos = PickerFragmentData.get().getFragmentsInfo(ctx);
         fragmentPicker.setVisibility(View.VISIBLE);
         fragmentPicker.setSlideOnFling(true);
         fragmentPicker.setAdapter(new PickerFragmentAdapter(pickerFragmentInfos));
@@ -439,6 +442,11 @@ public class MainActivity extends BaseActivity implements
         showDialogFragment(dialog,DisclosureFragment.TAG);
     }
 
+    public void showAboutFragment() {
+        AboutFragment about = new AboutFragment();
+        showDialogFragment(about,AboutFragment.TAG);
+    }
+
     public boolean isStorageGranted(){
         return prefBuilder.getBoolean(Keys.PERMISSION_STORAGE,false);
     }
@@ -452,14 +460,29 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void startPermissionsBLEFlow() {
-        Dexter.withContext(this)
-                .withPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.BLUETOOTH
-                )
-                .withListener(blePermissionListener)
-                .check();
+        Logger.i(TAG, "starting BLE permission flow");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.BLUETOOTH_SCAN
+
+                    )
+                    .withListener(blePermissionListener)
+                    .check();
+        }else {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.BLUETOOTH
+
+                    )
+                    .withListener(blePermissionListener)
+                    .check();
+        }
     }
 
     public void startPermissionsGPSFlow() {
@@ -486,6 +509,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void startPermissionsStorageFlow() {
+        Logger.i(TAG, "starting Storage permission flow");
         Dexter.withContext(this)
                 .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(storagePermissionListener)
@@ -500,6 +524,8 @@ public class MainActivity extends BaseActivity implements
                 if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
                 if(scanFragment!=null)scanFragment.executeScan();
             }
+            else
+                Logger.e(TAG, "BLEPermissions Not Granted");
         }
         @Override
         public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
@@ -561,6 +587,11 @@ public class MainActivity extends BaseActivity implements
     @Override
     void actionVarFilter() {
         showDialogFragment(new VariableFilterFragment(), VariableFilterFragment.TAG);
+    }
+
+    @Override
+    void actionShowAbout(){
+        showAboutFragment();
     }
 
     @Override
