@@ -25,6 +25,7 @@
     <string name="msg_records_empty_list">No records for now</string>
     <string name="msg_not_public_records">Loading public reports…</string>
     <string name="msg_record_stop_alert">Please stop the current recording track</string>
+    <string name="title_stime">Sample time interval</string>
     <string name="summary_stime">5 seconds</string>
     <string name="summary_wifi">Send WiFi settings</string>
     <string name="msg_save_config">Saving device setting…</string>
@@ -80,6 +81,10 @@
     <string name="url_canairio_feedback">https://canair.io/#three</string>
     <string name="msg_chart_loading">Loading data, please wait…</string>
     <string name="msg_loading">loading…</string>
+    <string name="msg_chart_no_data">No data.</string>
+    <string name="msg_chart_points">Points</string>
+    <string name="msg_chart_track">Track</string>
+    <string name="msg_chart_metadata">Metadata</string>
     <string name="bt_device_clear">Please restart the app after this</string>
     <string name="bt_device_clear_action">CLEAR</string>
     <string name="msg_device_clear">Cleaning CanAirio device…</string>
@@ -101,7 +106,7 @@
     <string name="key_device_status">key_device_status</string>
     <string name="key_device_info">key_device_info</string>
     <string name="key_setting_vars">key_settings_vars</string>
-    <string name="title_device_status">Bluetooth Status:</string>
+    <string name="title_device_status">Bluetooth status:</string>
     <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
     <string name="msg_chart_sharing">Sharing data to public tab..</string>
     <string name="bt_dialog_cancel">Cancel</string>
@@ -119,12 +124,12 @@
     <string name="summary_device_status">Disconnected</string>
     <string name="title_device_settings">CanAirIO Device Settings</string>
     <string name="summary_mobile_preferences">Bluetooth mobile station settings</string>
-    <string name="title_mobile_preferences">Mobile Station</string>
+    <string name="title_mobile_preferences">Mobile station</string>
     <string name="summary_fixed_preferences">WiFi fixed station settings</string>
-    <string name="title_fixed_preferences">Fixed Station</string>
+    <string name="title_fixed_preferences">Fixed station</string>
     <string name="title_device_info">Device info:</string>
     <string name="summary_feedback_button">Report issues or suggest new features</string>
-    <string name="title_feedback_button">Send Feedback</string>
+    <string name="title_feedback_button">Send feedback</string>
     <string name="title_appversion">About</string>
     <string name="key_ifxdb_default">canairio</string>
     <string name="title_setting_ifxdb">Database Name</string>
@@ -137,24 +142,24 @@
     <string name="title_key_ssid">WiFi name (SSID)</string>
     <string name="title_key_enable_ifx">Enable publication</string>
     <string name="summary_key_enable_ifx_ready">Publish to CanAirIO or custom server</string>
-    <string name="category_ifx_share_title">Share CanAirIO fixed station</string>
+    <string name="category_ifx_share_title">Share CanAirIO Fixed Station</string>
     <string name="category_ifx_share_summary">Optional for fixed stations (WiFi mode)</string>
-    <string name="category_wifi_title">WiFi preferences</string>
+    <string name="category_wifi_title">WiFi Preferences</string>
     <string name="category_wifi_summary">For remote updates or fixed stations</string>
     <string name="key_fixed_stations_map">key_fixed_stations_map</string>
     <string name="title_fixed_stations_map">CanAirIO Worldmap</string>
-    <string name="summary_fixed_stations_map">Click to launch (take some minutes)</string>
+    <string name="summary_fixed_stations_map">Click to launch (take some minutes)\nYour station:</string>
     <string name="url_canairio_worldmap">http://influxdb.canair.io:8000</string>
     <string name="summary_ifx_nogeohash">Please set first the location</string>
     <string name="key_setting_send_co2_calibration">key_setting_send_co2_calibration</string>
     <string name="summary_send_co2_calibration">Send CO2 calibration command</string>
-    <string name="title_setting_send_co2_calibration">CO2 Calibration</string>
+    <string name="title_setting_send_co2_calibration">CO2 calibration</string>
     <string name="bt_device_co2_calibration_action">CALIBRATE</string>
     <string name="bt_device_co2_calibration">Send calibration command</string>
     <string name="msg_device_calibrate_msg">Please wait some minutes</string>
     <string name="key_setting_altitude_offset">key_setting_altitude_offset</string>
     <string name="summary_altitude_offset">Set Altitude to enable. 0 disable.</string>
-    <string name="title_altitude_offset">CO2 Altitude compensation</string>
+    <string name="title_altitude_offset">CO2 altitude compensation</string>
     <string name="menu_var_filter">Variables…</string>
     <string name="summary_wifi_ssid">Please select one</string>
     <string name="msg_please_wait">Please wait…</string>
@@ -177,10 +182,10 @@
     <string name="key_setting_hasspt">key_setting_hasspt</string>
     <string name="title_setting_hasspt">Port</string>
     <string name="key_anaire_id">key_anaire_id</string>
-    <string name="summary_anaire_timeseries">Show your device on Anaire Cloud</string>
+    <string name="summary_anaire_timeseries">Show your device on Anaire Cloud\nYour station:</string>
     <string name="title_anaire_timeseries">CanAirIO in Anaire</string>
     <string name="url_anaire_realtime">https://portal.anaire.org/admin/</string>
-    <string name="title_setting_dtype">UART Device Type</string>
+    <string name="title_setting_dtype">UART device type</string>
     <string name="bt_share_dialog">share</string>
     <string name="bt_dialog_export">Only export :(</string>
     <string name="title_share_dialog">Thanks for Sharing!</string>
@@ -190,13 +195,13 @@
     <string name="title_sealevel">Sea level altitude</string>
     <string name="key_setting_sealevel">key_setting_sealevel</string>
     <string name="summary_sealevel">1013.25</string>
-    <string name="title_solarstation_enable">ECO Mode</string>
+    <string name="title_solarstation_enable">ECO mode</string>
     <string name="summary_solarstation_enable">Deep sleep into samples</string>
     <string name="key_setting_solarstation_enable">key_solarstation_enable</string>
     <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
     <string name="summary_deepsleep_time">0 (disabled)</string>
     <string name="title_setting_deepsleep_time">Sleep time in seconds</string>
-    <string name="title_app_settings">App settings</string>
+    <string name="title_app_settings">App Settings</string>
     <string name="title_icon_map">Map</string>
     <string name="title_icon_reports">Reports</string>
     <string name="title_icon_mydevice">MyDevice</string>
@@ -208,4 +213,13 @@
     <string name="about_content_contributors" translatable="false">\@Nelpin @arhuaco @arttesano @brolin @cedancp @danielbernalb @eljuguetero @epatarroyo @fjospinas @gaguevaras @hpsaturn @ikks @juandavideth @juanpa097 @melkati @roberbike @sebastian-code @trecetp</string>
     <string name="about_title_donors">Donors:</string>
     <string name="about_content_donors" translatable="false">\@arhuaco @baerchiathomei @cedancp @davegriffiths @hpsaturn @ikks @josedavid @Karisma @kleper @roberbike</string>
+    <string name="summary_key_device_status_connected">Connected</string>
+    <string name="summary_key_device_status_disconnected">Disconnected</string>
+    <string name="text_unit_seconds">seconds</string>
+    <string name="title_power_saving_settings">Power Saving Settings</string>
+    <string name="title_some_device_tools">Some Device Tools</string>
+    <string name="title_reboot_device">Reboot device</string>
+    <string name="title_factory_reset">Factory reset</string>
+    <string name="title_advanced_settings">Advanced settings</string>
+    <string name="title_password">Password</string>
 </resources>

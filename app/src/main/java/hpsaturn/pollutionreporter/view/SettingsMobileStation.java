@@ -134,7 +134,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     }
 
     String getStimeFormat(int time){
-        return "" + time + " seconds";
+        return "" + time + " " + getString(R.string.text_unit_seconds);
     }
 
     private void updateStimeSummary() {

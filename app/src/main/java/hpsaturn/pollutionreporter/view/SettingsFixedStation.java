@@ -278,7 +278,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private void updateAnaireSummary(){
         String anaireId = getSharedPreference(R.string.key_anaire_id);
-        String summary = getString(R.string.summary_anaire_timeseries)+"\nYour station: "+anaireId;
+        String summary = getString(R.string.summary_anaire_timeseries)+" "+anaireId;
         updateSummary(R.string.key_anaire_id,summary);
     }
 
@@ -338,7 +338,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                     name = name.replace("_","");
                     name = name.replace(":","");
                     name = name.toUpperCase();
-                    name = getString(R.string.summary_fixed_stations_map)+"\nYour station: "+name;
+                    name = getString(R.string.summary_fixed_stations_map)+" "+name;
                     updateSummary(R.string.key_fixed_stations_map,name);
                 } catch (Exception e) {
                     EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
