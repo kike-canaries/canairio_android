@@ -257,7 +257,7 @@ public class ChartFragment extends Fragment {
      */
     private void addData(ArrayList<SensorData> data){
         if(data==null){
-            chart.setNoDataText("No data.");
+            chart.setNoDataText(getString(R.string.msg_chart_no_data));
             loadingData = false;
             return;
         }
@@ -354,14 +354,14 @@ public class ChartFragment extends Fragment {
             chart_name.setTextColor(getResources().getColor(R.color.black));
         }
         chart_date.setText(track.getDate());
-        chart_desc.setText("Points: "+track.size);
+        chart_desc.setText(getString(R.string.msg_chart_points)+": "+track.size);
         if (track.kms != 0 || track.hours !=0 || track.mins !=0) {
             String time = String.format("%02d:%02d:%02d",track.hours,track.mins,track.secs);
-            chart_loc.setText("Track: "+track.kms+" Kms ("+time+")");
+            chart_loc.setText(getString(R.string.msg_chart_track)+": "+track.kms+" Kms ("+time+")");
         }
         else
             chart_loc.setVisibility(View.GONE);
-        chart_meta.setText("Metadata: "+ track.metadata);
+        chart_meta.setText(getString(R.string.msg_chart_metadata)+": "+ track.metadata);
 
         rl_separator.setVisibility(View.VISIBLE);
     }

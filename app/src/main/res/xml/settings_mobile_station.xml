@@ -13,7 +13,7 @@
 
     <PreferenceCategory
         android:dependency="@string/key_device_status"
-        app:title="CanAirIO Device Settings">
+        app:title="@string/title_device_settings">
 
         <EditTextPreference
             android:inputType="number"
@@ -21,7 +21,7 @@
             app:icon="@android:drawable/ic_menu_save"
             app:key="@string/key_setting_stime"
             app:summary="@string/summary_stime"
-            app:title="Sample Time Interval" />
+            app:title="@string/title_stime" />
 
         <EditTextPreference
             android:inputType="numberDecimal"
@@ -42,7 +42,7 @@
             app:defaultValue="false"
             app:key="@string/key_setting_force_i2c_sensors"
             app:summary="@string/summary_force_i2c_sensors"
-            app:title="Force only I2C sensors" />
+            app:title="@string/title_force_i2c_sensors" />
 
         <SwitchPreference
             app:defaultValue="false"
@@ -69,7 +69,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:title="Power Saving Settings">
+        app:title="@string/title_power_saving_settings">
 
         <EditTextPreference
             android:inputType="number"
@@ -90,20 +90,20 @@
 
     <PreferenceCategory
         android:dependency="@string/key_device_status"
-        app:title="Some Device Tools">
+        app:title="@string/title_some_device_tools">
 
 
         <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_enable_reboot"
             app:summary="@string/summary_reboot"
-            app:title="Reboot Device" />
+            app:title="@string/title_reboot_device" />
 
         <SwitchPreference
             app:defaultValue="false"
             app:key="@string/key_setting_enable_clear"
             app:summary="@string/summary_clear"
-            app:title="Factory Reset" />
+            app:title="@string/title_factory_reset" />
 
         <SwitchPreference
             app:defaultValue="false"

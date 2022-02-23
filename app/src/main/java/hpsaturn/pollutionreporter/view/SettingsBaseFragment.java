@@ -82,7 +82,9 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
     }
 
     void updateStatusSummary(boolean status){
-        updateSummary(R.string.key_device_status, status ? "Connected":"Disconnected");
+        updateSummary(R.string.key_device_status,
+                status ? getString(R.string.summary_key_device_status_connected) :
+                         getString(R.string.summary_key_device_status_disconnected));
     }
 
     void updateSummary(int key){

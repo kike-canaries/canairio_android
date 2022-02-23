@@ -27,7 +27,7 @@
             android:inputType="textPassword"
             app:key="@string/key_setting_pass"
             app:summary="WiFi password"
-            app:title="Password" />
+            app:title="@string/title_password" />
 
         <SwitchPreference
             app:defaultValue="false"
@@ -52,7 +52,7 @@
             android:fragment="hpsaturn.pollutionreporter.view.SettingsAdvancedCloud"
             app:key="@string/key_setting_ifx_advanced"
             app:summary="@string/summary_ifx_advanced"
-            app:title="Advanced Settings" />
+            app:title="@string/title_advanced_settings" />
 
         <SwitchPreference
             app:key="@string/key_setting_enable_ifx"
