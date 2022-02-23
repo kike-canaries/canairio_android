@@ -52,7 +52,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, this.getResources().getString(R.string.msg_ble_not_supported), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_ble_not_supported, Toast.LENGTH_SHORT).show();
         } else if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             this.enableBLE();
         }
