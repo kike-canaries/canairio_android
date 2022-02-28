@@ -158,7 +158,7 @@
     <string name="bt_device_co2_calibration">Send calibration command</string>
     <string name="msg_device_calibrate_msg">Please wait some minutes</string>
     <string name="key_setting_altitude_offset">key_setting_altitude_offset</string>
-    <string name="summary_altitude_offset">Set Altitude to enable. 0 disable.</string>
+    <string name="summary_altitude_offset">0 meters (disabled)</string>
     <string name="title_altitude_offset">CO2 altitude compensation</string>
     <string name="menu_var_filter">Variables…</string>
     <string name="summary_wifi_ssid">Please select one</string>
@@ -192,15 +192,15 @@
     <string name="canairio_share_dialog">CanAirIO Share Dialog</string>
     <string name="msg_share_dialog_desc">"The current track will be shared to the CanAirIO Mobile Map. Thanks for you contribution!"</string>
     <string name="hint_share_dialog_meta">Additional metadata that you want share with us</string>
-    <string name="title_sealevel">Sea level altitude</string>
+    <string name="title_sealevel">Pressure at sea level</string>
     <string name="key_setting_sealevel">key_setting_sealevel</string>
     <string name="summary_sealevel">1013.25</string>
     <string name="title_solarstation_enable">ECO mode</string>
     <string name="summary_solarstation_enable">Deep sleep into samples</string>
     <string name="key_setting_solarstation_enable">key_solarstation_enable</string>
     <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
-    <string name="summary_deepsleep_time">0 (disabled)</string>
-    <string name="title_setting_deepsleep_time">Sleep time in seconds</string>
+    <string name="summary_deepsleep_time">0 seconds (disabled)</string>
+    <string name="title_setting_deepsleep_time">Sleep time</string>
     <string name="title_app_settings">App Settings</string>
     <string name="title_icon_map">Map</string>
     <string name="title_icon_reports">Reports</string>
@@ -216,10 +216,12 @@
     <string name="summary_key_device_status_connected">Connected</string>
     <string name="summary_key_device_status_disconnected">Disconnected</string>
     <string name="text_unit_seconds">seconds</string>
+    <string name="text_unit_meters">meters</string>
     <string name="title_power_saving_settings">Power Saving Settings</string>
     <string name="title_some_device_tools">Some Device Tools</string>
     <string name="title_reboot_device">Reboot device</string>
     <string name="title_factory_reset">Factory reset</string>
     <string name="title_advanced_settings">Advanced settings</string>
     <string name="title_password">Password</string>
+    <string name="bt_device_connect">Connect</string>
 </resources>
