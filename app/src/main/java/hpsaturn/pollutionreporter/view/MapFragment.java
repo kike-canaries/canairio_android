@@ -42,7 +42,7 @@ import retrofit2.Response;
 public class MapFragment extends Fragment {
 
     public static final String TAG = MapFragment.class.getSimpleName();
-    private MapView mapView;
+    private static MapView mapView;
 
     public static MapFragment newInstance() {
         return new MapFragment();

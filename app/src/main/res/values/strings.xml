@@ -217,6 +217,7 @@
     <string name="summary_key_device_status_disconnected">Disconnected</string>
     <string name="text_unit_seconds">seconds</string>
     <string name="text_unit_meters">meters</string>
+    <string name="text_unit_points">points</string>
     <string name="title_power_saving_settings">Power Saving Settings</string>
     <string name="title_some_device_tools">Some Device Tools</string>
     <string name="title_reboot_device">Reboot device</string>
@@ -224,4 +225,15 @@
     <string name="title_advanced_settings">Advanced settings</string>
     <string name="title_password">Password</string>
     <string name="bt_device_connect">Connect</string>
+    <string name="msg_ble_scan_bluetooth_not_available">Bluetooth is not available</string>
+    <string name="msg_ble_scan_bluetooth_disabled">Enable bluetooth and try again</string>
+    <string name="msg_ble_scan_location_permission_missing">On Android 6.0 location permission is required.</string>
+    <string name="msg_ble_scan_location_services_disabled">Location services needs to be enabled on Android 6.0</string>
+    <string name="msg_ble_scan_scan_failed_already_started">Scan with the same filters is already started</string>
+    <string name="msg_ble_scan_scan_failed_application_registration_failed">Failed to register application for bluetooth scan</string>
+    <string name="msg_ble_scan_scan_failed_feature_unsupported">Scan with specified parameters is not supported</string>
+    <string name="msg_ble_scan_scan_failed_internal_error">Scan failed due to internal error</string>
+    <string name="msg_ble_scan_scan_failed_out_of_hardware_resources">Scan cannot start due to limited hardware resources</string>
+    <string name="msg_ble_scan_bluetooth_cannot_start">Unable to start bluetooth scanning</string>
+    <string name="msg_ble_scan_undocumented_scan_throttle">Android 7+ does not allow more scans. Try in %1$d seconds</string>
 </resources>
