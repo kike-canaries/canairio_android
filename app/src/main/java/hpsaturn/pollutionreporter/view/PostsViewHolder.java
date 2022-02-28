@@ -1,6 +1,8 @@
 package hpsaturn.pollutionreporter.view;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,11 +27,11 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
         record_location = itemView.findViewById(R.id.tv_record_location);
     }
 
-    public void bindToPost(SensorTrackInfo sensorTrack){
+    public void bindToPost(Context ctx, SensorTrackInfo sensorTrack){
         record_name.setText(sensorTrack.getName());
         record_date.setText(sensorTrack.getDate());
         // TODO: geocode inverse for location
-        record_location.setText(""+sensorTrack.getSize()+" points");
+        record_location.setText(""+sensorTrack.getSize()+" "+ctx.getString(R.string.text_unit_points));
     }
 
 }

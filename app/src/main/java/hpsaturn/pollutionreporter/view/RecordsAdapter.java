@@ -2,13 +2,21 @@ package hpsaturn.pollutionreporter.view;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.hpsaturn.tools.Logger;
+
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import hpsaturn.pollutionreporter.R;
@@ -35,13 +43,19 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordViewHolder> imple
 
     @Override
     public void onBindViewHolder(RecordViewHolder holder, int position) {
-
+        java.text.DateFormat dateFormat = android.text.format.DateFormat.getMediumDateFormat(ctx);
         final SensorTrack sensorTrack = mRecords.get(position);
 
         holder.record_name.setText(sensorTrack.name);
-        holder.record_date.setText(sensorTrack.date);
+        try {
+            Date sensorTrackDate = new SimpleDateFormat("yyyyMMddkkmmss").parse(sensorTrack.getName());
+            holder.record_date.setText(dateFormat.format(sensorTrackDate));
+        } catch (Exception e) {
+            holder.record_date.setText("");
+        }
+        //holder.record_date.setText(sensorTrack.date);
         // TODO: geocode inverse for location
-        holder.record_location.setText(""+sensorTrack.size+" points");
+        holder.record_location.setText(""+sensorTrack.size+" "+ctx.getString(R.string.text_unit_points));
 
     }
 

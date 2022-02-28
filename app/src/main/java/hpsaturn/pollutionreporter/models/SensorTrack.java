@@ -33,8 +33,8 @@ public class SensorTrack {
         return date;
     }
 
-    public void setDate(String email) {
-        this.date = email;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getName() {

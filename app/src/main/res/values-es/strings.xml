@@ -213,6 +213,7 @@
     <string name="summary_key_device_status_disconnected">No conectado</string>
     <string name="text_unit_seconds">segundos</string>
     <string name="text_unit_meters">metros</string>
+    <string name="text_unit_points">puntos</string>
     <string name="title_power_saving_settings">Configuración Ahorro de Energía</string>
     <string name="title_some_device_tools">Utilidades Dispositivo</string>
     <string name="title_reboot_device">Reiniciar dispositivo</string>
@@ -220,4 +221,15 @@
     <string name="title_advanced_settings">Configuración avanzada</string>
     <string name="title_password">Contraseña</string>
     <string name="bt_device_connect">Conectar</string>
+    <string name="msg_ble_scan_bluetooth_not_available">El bluetooth no está disponible</string>
+    <string name="msg_ble_scan_bluetooth_disabled">Activa el bluetooth y vuelve a probar</string>
+    <string name="msg_ble_scan_location_permission_missing">En Android 6.0 se necesita el permiso de localización</string>
+    <string name="msg_ble_scan_location_services_disabled">Los servicios de localización deben estar activos en Android 6.0</string>
+    <string name="msg_ble_scan_scan_failed_already_started">El escaneo con los mismos filtros ya se había iniciado</string>
+    <string name="msg_ble_scan_scan_failed_application_registration_failed">No se ha podido registrar la aplicación para el escaneo bluetooth</string>
+    <string name="msg_ble_scan_scan_failed_feature_unsupported">No se soporta el escaneo con los parámetros especificados</string>
+    <string name="msg_ble_scan_scan_failed_internal_error">Falló el escaneo debido a un error interno</string>
+    <string name="msg_ble_scan_scan_failed_out_of_hardware_resources">El escaneo no puede empezar debido a los recursos de hardware limitados</string>
+    <string name="msg_ble_scan_bluetooth_cannot_start">Imposible iniciar el escaneo bluetooth</string>
+    <string name="msg_ble_scan_undocumented_scan_throttle">Android 7+ no permite más escaneos. Prueba en %1$d segundos</string>
 </resources>
