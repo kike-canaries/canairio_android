@@ -155,20 +155,20 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     }
 
     private void saveTempOffset(float offset) {
-        Logger.v(TAG, "[Config] sending temperature offset : "+offset);
+        Logger.v(TAG, "[Config] sending temperature offset : "+offset+" ºC");
         TempOffsetConfig config = new TempOffsetConfig();
         config.toffset = offset;
-        updateSummary(R.string.key_setting_temp_offset,""+offset);
+        updateSummary(R.string.key_setting_temp_offset,""+offset+" ºC");
         sendSensorConfig(config);
     }
 
     private void resetTempOffsetValue(float offset) {
         saveSharedPreference(R.string.key_setting_temp_offset, "" + offset);
-        updateSummary(R.string.key_setting_temp_offset,""+offset);
+        updateSummary(R.string.key_setting_temp_offset,""+offset+" ºC");
     }
 
     private void updateTempOffsetSummary() {
-        updateSummary(R.string.key_setting_temp_offset,""+getCurrentTempOffset());
+        updateSummary(R.string.key_setting_temp_offset,""+getCurrentTempOffset()+" ºC");
     }
 
 
@@ -197,7 +197,8 @@ public class SettingsMobileStation extends SettingsBaseFragment{
 
     private void updateDeepSleepTimeSummary(int seconds){
         if(seconds==0)updateSummary(R.string.key_setting_deepsleep_time,R.string.summary_deepsleep_time);
-        else updateSummary(R.string.key_setting_deepsleep_time,""+seconds);
+        else updateSummary(R.string.key_setting_deepsleep_time,""+seconds+" "+
+                getString(R.string.text_unit_seconds));
     }
 
     private void updateDeepSleepTimeSummary(){
@@ -214,10 +215,11 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     }
 
     private void saveAltitudeOffset(float offset) {
-        Logger.v(TAG, "[Config] sending altitude offset : "+offset);
+        Logger.v(TAG, "[Config] sending altitude offset : "+offset+" meters");
         AltitudeOffsetConfig config = new AltitudeOffsetConfig();
         config.altoffset = offset;
-        updateSummary(R.string.key_setting_altitude_offset,""+offset);
+        updateSummary(R.string.key_setting_altitude_offset,""+offset+" "+
+                getString(R.string.text_unit_meters));
         sendSensorConfig(config);
     }
 
@@ -231,7 +233,8 @@ public class SettingsMobileStation extends SettingsBaseFragment{
         if (altitude == 0)
             updateSummary(R.string.key_setting_altitude_offset,R.string.summary_altitude_offset);
         else
-            updateSummary(R.string.key_setting_altitude_offset,""+getCurrentAltitudeOffset());
+            updateSummary(R.string.key_setting_altitude_offset,""+getCurrentAltitudeOffset()+
+                    " "+getString(R.string.text_unit_meters));
     }
 
     /***********************************************************************************************
@@ -244,14 +247,14 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     }
 
     private void updateSeaLevelSummary() {
-        updateSummary(R.string.key_setting_sealevel,""+getCurrentSeaLevel());
+        updateSummary(R.string.key_setting_sealevel,""+getCurrentSeaLevel()+" hPa");
     }
 
     private void saveSeaLevel(float sealevel) {
-        Logger.v(TAG, "[Config] sending sealevel: "+ sealevel);
+        Logger.v(TAG, "[Config] sending sealevel: "+ sealevel + " hPa");
         SeaLevelConfig config = new SeaLevelConfig();
         config.sealevel = sealevel;
-        updateSummary(R.string.key_setting_sealevel,""+sealevel);
+        updateSummary(R.string.key_setting_sealevel,""+sealevel+" hPa");
         sendSensorConfig(config);
     }
 

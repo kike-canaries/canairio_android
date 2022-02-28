@@ -71,7 +71,7 @@
             android:background="@color/colorPrimary"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
-            android:text="Connect" />
+            android:text="@string/bt_device_connect" />
 
     </RelativeLayout>
 
