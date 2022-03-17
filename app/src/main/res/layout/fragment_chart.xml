@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:background="@color/colorBackground">
 
     <com.github.mikephil.charting.charts.LineChart
@@ -41,10 +42,10 @@
             android:layout_height="wrap_content"
             android:text=""
             android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
             android:textColor="#ff0000ff"
-            android:clickable="false"
-            android:focusable="true"
             android:textSize="13sp"
+            android:clickable="true"
             />
 
         <TextView
