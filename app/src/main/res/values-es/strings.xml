@@ -107,7 +107,6 @@
     <string name="key_device_info">key_device_info</string>
     <string name="key_setting_vars">key_settings_vars</string>
     <string name="title_device_status">Estado bluetooth:</string>
-    <string name="url_chart_get_data">http://canairio.herokuapp.com/tracks/get/</string>
     <string name="msg_chart_sharing">Compartiendo datos en la pestaña público…</string>
     <string name="bt_dialog_cancel">Cancelar</string>
     <string name="bt_dialog_agree">Estoy de acuerdo</string>

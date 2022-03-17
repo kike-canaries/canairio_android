@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -349,7 +350,7 @@ public class ChartFragment extends Fragment {
 
     private void setTrackDescription(SensorTrack track, boolean isPublishedData){
         chart_name.setText("ID:"+track.getName());
-        chart_name.setClickable(false);  // we need fix it (heroku issue)
+        chart_name.setClickable(true);  // we need fix it (heroku issue)
         if(!isPublishedData) {
             chart_name.setTextColor(getResources().getColor(R.color.black));
         }
@@ -370,9 +371,10 @@ public class ChartFragment extends Fragment {
     private View.OnClickListener onChartIdClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Logger.w(TAG, "[CHART] onChartIdClick");
             if(recordId!=null) UITools.viewLink(
-                    getActivity(),
-                    getString(R.string.url_chart_get_data)+recordId+"?output=json"
+                    requireContext(),
+                    getString(R.string.url_chart_get_data)+recordId
             );
         }
     };
