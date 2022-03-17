@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -257,7 +258,7 @@ public class ChartFragment extends Fragment {
      */
     private void addData(ArrayList<SensorData> data){
         if(data==null){
-            chart.setNoDataText("No data.");
+            chart.setNoDataText(getString(R.string.msg_chart_no_data));
             loadingData = false;
             return;
         }
@@ -349,19 +350,19 @@ public class ChartFragment extends Fragment {
 
     private void setTrackDescription(SensorTrack track, boolean isPublishedData){
         chart_name.setText("ID:"+track.getName());
-        chart_name.setClickable(false);  // we need fix it (heroku issue)
+        chart_name.setClickable(true);  // we need fix it (heroku issue)
         if(!isPublishedData) {
             chart_name.setTextColor(getResources().getColor(R.color.black));
         }
         chart_date.setText(track.getDate());
-        chart_desc.setText("Points: "+track.size);
+        chart_desc.setText(getString(R.string.msg_chart_points)+": "+track.size);
         if (track.kms != 0 || track.hours !=0 || track.mins !=0) {
             String time = String.format("%02d:%02d:%02d",track.hours,track.mins,track.secs);
-            chart_loc.setText("Track: "+track.kms+" Kms ("+time+")");
+            chart_loc.setText(getString(R.string.msg_chart_track)+": "+track.kms+" Kms ("+time+")");
         }
         else
             chart_loc.setVisibility(View.GONE);
-        chart_meta.setText("Metadata: "+ track.metadata);
+        chart_meta.setText(getString(R.string.msg_chart_metadata)+": "+ track.metadata);
 
         rl_separator.setVisibility(View.VISIBLE);
     }
@@ -370,9 +371,10 @@ public class ChartFragment extends Fragment {
     private View.OnClickListener onChartIdClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Logger.w(TAG, "[CHART] onChartIdClick");
             if(recordId!=null) UITools.viewLink(
-                    getActivity(),
-                    getString(R.string.url_chart_get_data)+recordId+"?output=json"
+                    requireContext(),
+                    getString(R.string.url_chart_get_data)+recordId
             );
         }
     };

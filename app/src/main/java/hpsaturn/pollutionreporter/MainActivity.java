@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements
 
         startDataBase();
         setSupportActionBar(toolbar);
-        checkBluetoohtBle();
+        checkBLE();
         setupUI();
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
 
@@ -433,7 +433,8 @@ public class MainActivity extends BaseActivity implements
     }
 
     private View.OnClickListener onFabClickListener = view -> {
-        if(!isGPSGranted() || !isBLEGranted()) showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
+        if(!isGPSGranted() || !isBLEGranted())
+            showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
         else startPermissionsGPSFlow();
     };
 
