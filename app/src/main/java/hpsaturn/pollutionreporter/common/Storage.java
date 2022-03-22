@@ -31,6 +31,9 @@ public class Storage {
     }
 
     public static ArrayList<SensorData> getSensorData(Context ctx) {
+        if (ctx == null)
+            return new ArrayList<>();
+
         SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
         String ringJson = preferences.getString(Keys.SENSOR_DATA, "");
         if (ringJson.equals("")) return new ArrayList<>();

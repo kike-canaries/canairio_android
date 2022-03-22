@@ -1,6 +1,7 @@
 package hpsaturn.pollutionreporter.view;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -38,6 +39,8 @@ public class PostsFragment extends Fragment {
 
     private FirebaseRecyclerAdapter<SensorTrackInfo, PostsViewHolder> mAdapter;
 
+    private Context ctx;
+
     public static PostsFragment newInstance() {
         PostsFragment fragment = new PostsFragment();
         return fragment;
@@ -45,6 +48,7 @@ public class PostsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.ctx=container.getContext();
 
         View view = inflater.inflate(R.layout.fragment_records, container, false);
         mEmptyMessage = view.findViewById(R.id.tv_records_empty_list);
@@ -87,14 +91,14 @@ public class PostsFragment extends Fragment {
                     getMain().showTrackInfoFragment(recordId);
                 });
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(trackInfo);
+                viewHolder.bindToPost(ctx, trackInfo);
             }
         };
 
         mRecordsList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         mAdapter.startListening();
-        mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in fist time
+        mUpdateTimeTask.run(); // TODO: fucking workaround, firebase recycler wasn't update in first time
 
     }
 

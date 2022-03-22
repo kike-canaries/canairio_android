@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,7 @@ public class ScanFragment extends Fragment {
     private RxBleClient rxBleClient;
     private ScanResultsAdapter resultsAdapter;
 
+    private Context ctx;
 
     public static ScanFragment newInstance() {
         ScanFragment fragment = new ScanFragment();
@@ -65,6 +67,7 @@ public class ScanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        this.ctx=container.getContext();
         View view = inflater.inflate(R.layout.fragment_devices, container, false);
         ButterKnife.bind(this,view);
         return view;
@@ -188,35 +191,44 @@ public class ScanFragment extends Fragment {
     }
 
     private void handleBleScanException(BleScanException bleScanException) {
-        final String text;
+        final String text, msg;
 
         switch (bleScanException.getReason()) {
             case BleScanException.BLUETOOTH_NOT_AVAILABLE:
                 text = "Bluetooth is not available";
+                msg = ctx.getString(R.string.msg_ble_scan_bluetooth_not_available);
                 break;
             case BleScanException.BLUETOOTH_DISABLED:
                 text = "Enable bluetooth and try again";
+                msg = ctx.getString(R.string.msg_ble_scan_bluetooth_disabled);
                 break;
             case BleScanException.LOCATION_PERMISSION_MISSING:
                 text = "On Android 6.0 location permission is required. Implement Runtime Permissions";
+                msg = ctx.getString(R.string.msg_ble_scan_location_permission_missing);
                 break;
             case BleScanException.LOCATION_SERVICES_DISABLED:
                 text = "Location services needs to be enabled on Android 6.0";
+                msg = ctx.getString(R.string.msg_ble_scan_location_services_disabled);
                 break;
             case BleScanException.SCAN_FAILED_ALREADY_STARTED:
                 text = "Scan with the same filters is already started";
+                msg = ctx.getString(R.string.msg_ble_scan_scan_failed_already_started);
                 break;
             case BleScanException.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
                 text = "Failed to register application for bluetooth scan";
+                msg = ctx.getString(R.string.msg_ble_scan_scan_failed_application_registration_failed);
                 break;
             case BleScanException.SCAN_FAILED_FEATURE_UNSUPPORTED:
                 text = "Scan with specified parameters is not supported";
+                msg = ctx.getString(R.string.msg_ble_scan_scan_failed_feature_unsupported);
                 break;
             case BleScanException.SCAN_FAILED_INTERNAL_ERROR:
                 text = "Scan failed due to internal error";
+                msg = ctx.getString(R.string.msg_ble_scan_scan_failed_internal_error);
                 break;
             case BleScanException.SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES:
                 text = "Scan cannot start due to limited hardware resources";
+                msg = ctx.getString(R.string.msg_ble_scan_scan_failed_out_of_hardware_resources);
                 break;
             case BleScanException.UNDOCUMENTED_SCAN_THROTTLE:
                 text = String.format(
@@ -224,15 +236,18 @@ public class ScanFragment extends Fragment {
                         "Android 7+ does not allow more scans. Try in %d seconds",
                         secondsTill(bleScanException.getRetryDateSuggestion())
                 );
+                msg = ctx.getString(R.string.msg_ble_scan_undocumented_scan_throttle,
+                        secondsTill(bleScanException.getRetryDateSuggestion()));
                 break;
             case BleScanException.UNKNOWN_ERROR_CODE:
             case BleScanException.BLUETOOTH_CANNOT_START:
             default:
                 text = "Unable to start btnScanning";
+                msg = ctx.getString(R.string.msg_ble_scan_bluetooth_cannot_start);
                 break;
         }
         Logger.w(TAG, "EXCEPTION: " + text + " " + bleScanException.getMessage());
-        UITools.showToast(getActivity(), text);
+        UITools.showToast(getActivity(), msg);
     }
 
     private long secondsTill(Date retryDateSuggestion) {
