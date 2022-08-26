@@ -19,6 +19,7 @@
         <item>Mhz19</item>
         <item>CM1106</item>
         <item>SenseAirS8</item>
+        <item>IKEA Vindriktn</item>
     </string-array>
 
     <string-array name="pref_dtype_values">
@@ -29,6 +30,7 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
+        <item>7</item>
     </string-array>
 
     <string-array name="pref_vars_entries">
