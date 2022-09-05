@@ -70,7 +70,6 @@ dependencies {
     implementation 'com.polidea.rxandroidble2:rxandroidble:1.13.1'
 
     implementation 'com.github.pwittchen:reactivewifi-rx2:0.3.0'
-
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.iamhabib:easy-preference:1.0.1'
@@ -81,7 +80,6 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-location:20.0.0'
     implementation 'com.github.jemshit:DiscreteScrollView:1.5.2'
-//    implementation 'com.yarolegovich:discrete-scrollview:1.4.8'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
     implementation platform('com.google.firebase:firebase-bom:28.4.1')
