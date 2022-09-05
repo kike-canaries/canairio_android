@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion project.mCompileSdkVersion.toInteger()
@@ -72,7 +73,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivewifi-rx2:0.3.0'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.iamhabib:easy-preference:1.0.1'
     implementation 'net.steamcrafted:materialiconlib:1.1.5'
 
