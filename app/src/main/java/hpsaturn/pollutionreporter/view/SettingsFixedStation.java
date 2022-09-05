@@ -46,7 +46,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
 
     @Override
-    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_fixed_station, rootKey);
         ssidListenerInit();
         launchWorldMapInit();

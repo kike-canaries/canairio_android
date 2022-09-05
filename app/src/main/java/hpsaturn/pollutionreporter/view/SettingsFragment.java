@@ -40,7 +40,7 @@ public class SettingsFragment extends SettingsBaseFragment {
 
 
     @Override
-    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_general, rootKey);
     }
 

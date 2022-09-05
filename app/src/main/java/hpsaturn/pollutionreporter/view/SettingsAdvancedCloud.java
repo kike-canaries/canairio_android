@@ -22,7 +22,7 @@ import hpsaturn.pollutionreporter.models.ResponseConfig;
 public class SettingsAdvancedCloud extends SettingsBaseFragment {
 
     @Override
-    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_custom_influxdb, rootKey);
     }
 
