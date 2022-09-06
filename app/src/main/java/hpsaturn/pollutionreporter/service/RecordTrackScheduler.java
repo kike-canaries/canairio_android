@@ -37,8 +37,9 @@ public class RecordTrackScheduler extends BroadcastReceiver {
         cal.add(Calendar.SECOND, Config.TIME_AFTER_START);
         // Fetch every 30 seconds
         // InexactRepeating allows Android to optimize the energy consumption
-//        service.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), repeatTime, pending);
-        service.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), repeatTime, pending);
+        service.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), repeatTime, pending);
+//        service.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), repeatTime, pending); -> possible permission issue
+//        https://stackoverflow.com/questions/69604951/getting-android-app-foregroundservicestartnotallowedexception-in-android-12-sdk
     }
 
     public static void stopSheduleService(Context context) {

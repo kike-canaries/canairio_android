@@ -31,7 +31,7 @@ public class SettingsMobileStation extends SettingsBaseFragment{
     public static final String TAG = SettingsMobileStation.class.getSimpleName();
 
     @Override
-    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_mobile_station, rootKey);
     }
 
