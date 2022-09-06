@@ -24,25 +24,33 @@ For test and use the CanAirIO app, is recommended have a CanAirIO device, you ca
 
 # Usage
 
-For now you need any Android device with Bluetooth 4 or above. You can download the CanAirIO app from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter), keep in mind that it is in continuos development then please any feedback, report errors, or any thing please let us knowed it via our [contact form](http://canair.io/#three) or on our [Telegram chat](https://t.me/canairio)
+For now you need any Android device with Bluetooth 4 or above. You can download the CanAirIO app from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter), keep in mind that it is in continuos development then please any feedback, report errors, or any thing please let us know it via our [contact form](http://canair.io/#three) or on our [Telegram chat](https://t.me/canairio)
 
 You have **two configuration options or modes** of your CanAirIO device from the app:
 
 ## Mobile Station Mode
 
-For record tracks on your device (Sdcard) or publish it to the cloud (share), please follow the next steps:
+This mode allows you to record tracks on your device or publish it to the cloud (share), please follow the next steps:
 
-### Connection to device
 
-<a href="https://github.com/kike-canaries/esp32-hpma115s0/blob/master/images/device_connection.jpg" target="_blank"><img src="https://raw.githubusercontent.com/kike-canaries/esp32-hpma115s0/master/images/device_connection.jpg" width="512" align="center" ></a>
+- [X] Turn on your Bluetooth
+- [X] Allow location and storage permissions
+- [X] Scan your device and paring it (connect)
+- [X] Record a mobile track on your device
+- [X] Share
 
-### Recording track and share
+### Tips
 
-<a href="https://github.com/kike-canaries/esp32-hpma115s0/blob/master/images/app_track_record.jpg" target="_blank"><img src="https://raw.githubusercontent.com/kike-canaries/esp32-hpma115s0/master/images/app_track_record.jpg" width="512" align="center" ></a>
+- If you aren't recording, you able to exit of your app and the Bluetooth will be over, you don't need unpair the device.
+- If you are recording a track, you can put the app in background and using other apps. But not forget stop the recording because it can drain your battery
+- In some Android versions, your need the background permission too. 
 
-**NOTE**: Also all recorded tracks will be saved in the `/sdcard/canairio/` directory on `json` format.
 
-### CanAirIO Mobile Map
+![CanAirIO App](/images/collage_app_mobile_general.jpg)
+(Connection to CanAirIO device, record a air quality track and share)
+
+
+#### Mobile Map
 
 We are developing a new mobile map, you can see the current tracks that the people share here:  
 
@@ -131,6 +139,7 @@ For our supporters, patrons or donors, we will send the files for our coming ver
 - [ ] Flutter migration for have to iOS app
 - [ ] Osmdroid clusters (for static points)
 
+---
 
 # Building from source code
 
@@ -160,7 +169,7 @@ After that copy this file into the project:
 cd canairio_android && cp ~/google-services.json app/
 ```
 
-### AQICN API key (optional)
+### Aqicn API key (optional)
 
 Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or create a fake file like with:
 
