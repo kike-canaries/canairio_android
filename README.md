@@ -16,56 +16,11 @@ This code is for [CanAir.io](https://canair.io) Android app that using a [DIY de
 You can install it from the [release section](https://github.com/kike-canaries/esp32-hpma115s0/releases) downloading the last signed apk or installing from [GooglePlay](https://play.google.com/store/apps/details?id=hpsaturn.pollutionreporter)  
 
 
-# Building
-
-## Dependencies
-
-- Android SDK
-- CMake
-
-## Requirements
-
-Please first clone the project with all submodules:
-
-```bash
-git clone --recursive https://github.com/kike-canaries/canairio_android.git
-```
-
-### Firebase
-
-This application uses a Firebase Database instance to store mobile air quality reports, 
-
-For local development, you will need to create a database in the [Firebase Console](https://console.firebase.google.com/) using `hpsaturn.pollutionreporter` as the application identifier and retrieve a `google-services.json` file. See instructions [here](https://support.google.com/firebase/answer/7015592?hl=en).
-
-After that copy this file into the project:
-
-```bash
-cd canairio_android && cp ~/google-services.json app/
-```
-
-### AQICN API key (optional)
-
-Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or create a fake file like with:
-
-``` xml
-<resources>
-    <string name="api_aqicn_key">7cbbbb864b9c0755b8xxxxyyy</string>
-</resources>
-```
-
-## Compiling
-
-```bash
-./gradlew assembleDebug
-```
-
 # CanAirIO Device
 
 For test and use the CanAirIO app, is recommended have a CanAirIO device, you can have one with any ESP32 board without any sensor or any wire solder if you want, because CanAirIO has out of the box PAX Counter detector feature, for counts the people around you. For that you only need load our firmware via a easy web tool:
 
 [![video_2021-11-13_23-36-10](https://user-images.githubusercontent.com/423856/141661066-0fafcaa9-98b4-419b-b1e7-4371f3cb99b8.gif)](https://canair.io/installer.html)
-
-
 
 # Usage
 
@@ -139,7 +94,7 @@ When creating a pull request, we recommend that you do the following:
 
 - Clone the repository
 - Create a new branch for your fix or feature. For example, git checkout -b fix/my-fix or git checkout -b feat/my-feature.
-- Run to any clang formatter if it is a code, for example using the `vscode` formatter. We are using Google style. More info [here](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
+- [Build and test your apk](#building-from-source-code), and run to any clang formatter if it is a code, for example using the `vscode` formatter. We are using Google style. More info [here](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
 - Document the PR description or code will be great
 - Target your pull request to be merged with `devel` branch
 
@@ -175,6 +130,57 @@ For our supporters, patrons or donors, we will send the files for our coming ver
 - [ ] Add other air quality APIs to map (AQICN ie)
 - [ ] Flutter migration for have to iOS app
 - [ ] Osmdroid clusters (for static points)
+
+
+# Building from source code
+
+## Dependencies
+
+- Android SDK
+- CMake
+- Android Studio (optional)
+
+## Requirements
+
+Please first clone the project with all submodules:
+
+```bash
+git clone --recursive https://github.com/kike-canaries/canairio_android.git
+```
+
+### Firebase
+
+This application uses a Firebase Database instance to store mobile air quality reports, 
+
+For local development, you will need to create a database in the [Firebase Console](https://console.firebase.google.com/) using `hpsaturn.pollutionreporter` as the application identifier and retrieve a `google-services.json` file. See instructions [here](https://support.google.com/firebase/answer/7015592?hl=en).
+
+After that copy this file into the project:
+
+```bash
+cd canairio_android && cp ~/google-services.json app/
+```
+
+### AQICN API key (optional)
+
+Please put your Aqicn API key in `app/src/main/res/values/api_aqicn.xml` or create a fake file like with:
+
+``` xml
+<resources>
+    <string name="api_aqicn_key">7cbbbb864b9c0755b8xxxxyyy</string>
+</resources>
+```
+
+## Compiling
+
+```bash
+./gradlew assembleDebug
+```
+
+## App apk installation 
+
+```bash
+./gradlew installDebug
+```
 
 # Credits
 
