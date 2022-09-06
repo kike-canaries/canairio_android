@@ -6,8 +6,8 @@ import androidx.multidex.MultiDexApplication;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.iamhabib.easy_preference.EasyPreference;
-import com.polidea.rxandroidble2.RxBleClient;
-import com.polidea.rxandroidble2.internal.RxBleLog;
+import com.polidea.rxandroidble3.RxBleClient;
+import com.polidea.rxandroidble3.internal.RxBleLog;
 
 import hpsaturn.pollutionreporter.api.AqicnApiManager;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -41,7 +41,7 @@ public class AppData extends MultiDexApplication{
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         RxJavaPlugins.setErrorHandler(throwable -> {});
         rxBleClient = RxBleClient.create(this);
-        RxBleClient.setLogLevel(RxBleLog.VERBOSE);
+//        RxBleClient.setLogLevel(RxBleLog.VERBOSE);
         prefBuilder = EasyPreference.with(this,"KEYS_APP_PREFERENCES");
 //        AqicnApiManager.getInstance().init(this);
         super.onCreate();

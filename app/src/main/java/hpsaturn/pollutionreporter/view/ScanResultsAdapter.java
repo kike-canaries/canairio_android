@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.polidea.rxandroidble2.RxBleDevice;
-import com.polidea.rxandroidble2.scan.ScanResult;
+
+import com.polidea.rxandroidble3.RxBleDevice;
+import com.polidea.rxandroidble3.scan.ScanResult;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -278,6 +278,11 @@ public abstract class SettingsBaseFragment extends PreferenceFragmentCompat impl
         public void onSensorConfigWrite(String config) {
 
         }
+
+        @Override
+        public void onSensorReconnect() {
+
+        }
     };
 
     /***********************************************************************************************

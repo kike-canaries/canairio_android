@@ -32,4 +32,6 @@ public interface RecordTrackInterface {
     void onSensorDataRead(SensorData data);
 
     void onSensorConfigWrite(String config);
+
+    void onSensorReconnect();
 }

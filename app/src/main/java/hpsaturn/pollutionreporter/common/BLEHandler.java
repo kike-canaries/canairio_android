@@ -4,19 +4,19 @@ import android.content.Context;
 
 import com.hpsaturn.tools.Logger;
 import com.jakewharton.rx.ReplayingShare;
-import com.polidea.rxandroidble2.RxBleClient;
-import com.polidea.rxandroidble2.RxBleConnection;
-import com.polidea.rxandroidble2.RxBleDevice;
+import com.polidea.rxandroidble3.RxBleClient;
+import com.polidea.rxandroidble3.RxBleConnection;
+import com.polidea.rxandroidble3.RxBleDevice;
 
 import org.reactivestreams.Subscription;
 
 import java.util.UUID;
 
 import hpsaturn.pollutionreporter.AppData;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -40,7 +40,6 @@ public class BLEHandler {
     private Subscription connectionSubscription;
     private Observable<RxBleConnection> connectionObservable;
     private Disposable scanDisposable;
-    private RxBleClient rxBleClient;
     private RxBleDevice bleDevice;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -49,6 +48,8 @@ public class BLEHandler {
         this.address = address;
         this.listener = listener;
     }
+
+    
 
     public interface OnBLEConnectionListener {
 
@@ -75,7 +76,7 @@ public class BLEHandler {
 
 
     public void connect() {
-        rxBleClient = AppData.getRxBleClient(ctx);
+        RxBleClient rxBleClient = AppData.getRxBleClient(ctx);
         bleDevice = rxBleClient.getBleDevice(address);
         connectionObservable = prepareConnectionObservable();
 
@@ -87,7 +88,6 @@ public class BLEHandler {
                 final Disposable connectionDisposable = connectionObservable
                         .flatMapSingle(RxBleConnection::discoverServices)
                         .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(charactSensorDataUuid))
-                        .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
                         .subscribe(
                                 characteristic -> {
@@ -105,11 +105,12 @@ public class BLEHandler {
         }
     }
 
-    private Observable<RxBleConnection> prepareConnectionObservable() {
+    public void reconnect() {
+    }
+
+    private @NonNull Observable prepareConnectionObservable() {
         return bleDevice
-                .establishConnection(false)
-                .takeUntil(disconnectTriggerSubject)
-                .compose(ReplayingShare.instance());
+                .establishConnection(false);
     }
 
     public void setupNotification() {
@@ -118,7 +119,6 @@ public class BLEHandler {
                     .flatMap(rxBleConnection -> rxBleConnection.setupNotification(charactSensorDataUuid))
                     .doOnNext(notificationObservable -> { notificationHasBeenSetUp(); })
                     .flatMap(notificationObservable -> notificationObservable)
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onNotificationReceived, this::onNotificationSetupFailure);
             compositeDisposable.add(disposable);
         }
@@ -129,7 +129,6 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactConfigUuid))
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onSensorConfigRead, this::onReadFailure);
             compositeDisposable.add(disposable);
         }
@@ -140,7 +139,6 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactSensorDataUuid))
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onSensorDataRead, this::onReadFailure);
             compositeDisposable.add(disposable);
         }
@@ -152,7 +150,6 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(charactConfigUuid, bytes))
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onWriteSuccess, this::onWriteFailure );
 
             compositeDisposable.add(disposable);
@@ -165,7 +162,6 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(charactStatusUuid, bytes))
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onSetStatusSuccess, this::onSetStatusFailure);
 
             compositeDisposable.add(disposable);

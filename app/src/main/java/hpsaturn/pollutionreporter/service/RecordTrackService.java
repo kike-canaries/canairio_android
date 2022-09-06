@@ -198,6 +198,11 @@ public class RecordTrackService extends Service {
             if (bleHandler != null) bleHandler.writeSensorConfig(config.getBytes());
         }
 
+        @Override
+        public void onSensorReconnect() {
+            bleHandler.reconnect();
+        }
+
     };
 
     private void killSerivices(){

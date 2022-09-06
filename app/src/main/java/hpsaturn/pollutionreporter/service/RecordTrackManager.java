@@ -28,6 +28,7 @@ public class RecordTrackManager {
     private String action_push;
     private String action_status;
     private String action_service_record;
+    private String action_sensor_reconnect;
     private String action_service_record_stop;
     private String action_sensor_read_config;
     private String action_sensor_read_data;
@@ -60,6 +61,7 @@ public class RecordTrackManager {
             action_status  = "ACTION_SERVICE_STATUS";
 
             action_service_record = "ACTION_SERVICE_RECORD";
+            action_sensor_reconnect = "ACTION_SENSOR_RECONNECT";
             action_service_record_stop = "ACTION_SERVICE_RECORD_STOP";
             action_tracks_updated      = "ACTION_TRACKS_UPDATED";
             action_sensor_read_config  = "ACTION_SENSOR_READ_CONFIG";
@@ -75,6 +77,7 @@ public class RecordTrackManager {
             intentFilter.addAction(action_service_record);
             intentFilter.addAction(action_service_record_stop);
             intentFilter.addAction(action_tracks_updated);
+            intentFilter.addAction(action_sensor_reconnect);
             intentFilter.addAction(action_sensor_read_config);
             intentFilter.addAction(action_sensor_read_data);
             intentFilter.addAction(action_sensor_write_config);
@@ -113,6 +116,11 @@ public class RecordTrackManager {
 
     public void serviceRecord() {
         Intent intent = new Intent(action_service_record);
+        ctx.sendBroadcast(intent);
+    }
+
+    public void reconnectDevice() {
+        Intent intent = new Intent(action_sensor_reconnect);
         ctx.sendBroadcast(intent);
     }
 
@@ -190,6 +198,10 @@ public class RecordTrackManager {
             } else if(action.equals(action_service_record)) {
 
                 listener.onServiceRecord();
+
+            } else if(action.equals(action_sensor_reconnect)) {
+
+                listener.onSensorReconnect();
 
             } else if(action.equals(action_service_record_stop)) {
 

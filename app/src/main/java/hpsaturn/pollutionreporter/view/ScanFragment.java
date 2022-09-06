@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
 import com.iamhabib.easy_preference.EasyPreference;
-import com.polidea.rxandroidble2.RxBleClient;
-import com.polidea.rxandroidble2.exceptions.BleScanException;
-import com.polidea.rxandroidble2.scan.ScanFilter;
-import com.polidea.rxandroidble2.scan.ScanResult;
-import com.polidea.rxandroidble2.scan.ScanSettings;
+import com.polidea.rxandroidble3.RxBleClient;
+import com.polidea.rxandroidble3.exceptions.BleScanException;
+import com.polidea.rxandroidble3.scan.ScanFilter;
+import com.polidea.rxandroidble3.scan.ScanResult;
+import com.polidea.rxandroidble3.scan.ScanSettings;
 
 import java.util.Date;
 import java.util.Locale;
@@ -32,8 +32,7 @@ import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 6/30/18.
@@ -53,7 +52,7 @@ public class ScanFragment extends Fragment {
     Button btnBuilding;
 
 
-    private Disposable scanDisposable;
+    private @io.reactivex.rxjava3.annotations.NonNull Disposable scanDisposable;
     private RxBleClient rxBleClient;
     private ScanResultsAdapter resultsAdapter;
 
@@ -115,10 +114,7 @@ public class ScanFragment extends Fragment {
                     new ScanFilter.Builder()
                             .setDeviceName(getString(R.string.ble_device_name))
                             .build()
-            )
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doFinally(this::dispose)
-                    .subscribe(this::onScanAdd, this::onScanFailure);
+            ).subscribe(this::onScanAdd, this::onScanFailure);
         }
         updateUIState();
 

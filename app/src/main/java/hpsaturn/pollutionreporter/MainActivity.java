@@ -134,6 +134,7 @@ public class MainActivity extends BaseActivity implements
             } else if (status.equals(RecordTrackManager.STATUS_BLE_FAILURE)) {
                 showSnackMessage(R.string.msg_device_reconnecting);
                 deviceConnected = false;
+                recordTrackManager.reconnectDevice();
             }
         }
 
@@ -187,6 +188,11 @@ public class MainActivity extends BaseActivity implements
 
         @Override
         public void onSensorConfigWrite(String config) {
+
+        }
+
+        @Override
+        public void onSensorReconnect() {
 
         }
     };
