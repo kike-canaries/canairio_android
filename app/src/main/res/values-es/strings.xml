@@ -231,4 +231,5 @@
     <string name="msg_ble_scan_scan_failed_out_of_hardware_resources">El escaneo no puede empezar debido a los recursos de hardware limitados</string>
     <string name="msg_ble_scan_bluetooth_cannot_start">Imposible iniciar el escaneo bluetooth</string>
     <string name="msg_ble_scan_undocumented_scan_throttle">Android 7+ no permite más escaneos. Prueba en %1$d segundos</string>
+    <string name="msg_ble_enable">Enciende tú Bluetooth</string>
 </resources>
