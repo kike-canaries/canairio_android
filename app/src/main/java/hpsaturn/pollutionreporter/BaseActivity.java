@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -54,7 +55,10 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, R.string.msg_ble_not_supported, Toast.LENGTH_SHORT).show();
         } else if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            this.enableBLE();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Toast.makeText(this, R.string.msg_ble_enable, Toast.LENGTH_LONG).show();
+            else
+                this.enableBLE();
         }
         else Logger.i(TAG,"[BLE] checkBLE: ready!");
     }
