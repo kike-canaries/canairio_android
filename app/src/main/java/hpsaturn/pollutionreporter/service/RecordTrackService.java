@@ -383,7 +383,12 @@ public class RecordTrackService extends Service {
             track.lastLat = lastSensorData.lat;
             track.lastLon = lastSensorData.lon;
             Location lastLocation = SmartLocation.with(this).location().getLastLocation();
-            track.geohash = GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
+            try {
+                track.geohash = GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
+            }
+            catch (Exception e) {
+                Logger.w(TAG, "[TRACK] geohash from location fails!");
+            }
         }
         printTrack(track);
         return track;

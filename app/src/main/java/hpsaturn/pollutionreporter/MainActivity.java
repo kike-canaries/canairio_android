@@ -540,7 +540,9 @@ public class MainActivity extends BaseActivity implements
             if(multiplePermissionsReport.areAllPermissionsGranted()) {
                 Logger.i(TAG, "GPS PermissionsGranted..");
                 if(!isGPSGranted())prefBuilder.addBoolean(Keys.PERMISSION_GPS, true).save();
-                startPermissionsStorageFlow();
+//                startPermissionsStorageFlow();  // TODO: Android 13 it fails. We don't need it
+                if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
+                buttonRecordingAction();
             }
         }
         @Override
@@ -555,8 +557,8 @@ public class MainActivity extends BaseActivity implements
         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
             if(multiplePermissionsReport.areAllPermissionsGranted()) {
                 Logger.i(TAG, "StoragePermissionsGranted..");
-                if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
-                buttonRecordingAction();
+//                if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
+//                buttonRecordingAction();
             }
         }
 
