@@ -1,8 +1,10 @@
 package hpsaturn.pollutionreporter.service;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import androidx.core.content.ContextCompat;
 
@@ -17,9 +19,16 @@ public class RecordTrackReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Logger.d(TAG, "StartServiceReceiver: onReceive");
+        Logger.d(TAG, "[BLE] StartServiceReceiver: onReceive..");
         Intent service = new Intent(context, RecordTrackService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                String permission = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+                int res = context.checkCallingOrSelfPermission(permission);
+                boolean cp_bg_loc = (res == PackageManager.PERMISSION_GRANTED);
+                if (!cp_bg_loc) Logger.w(TAG, "[BLE] StartServiceReceiver: FAILED!");
+                if (!cp_bg_loc) return;
+            }
             ContextCompat.startForegroundService(context, service);
         } else {
             context.startService(service);
