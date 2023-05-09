@@ -94,10 +94,14 @@ public class RecordTrackService extends Service {
     }
 
     private void locationConfig() {
-        SmartLocation.with(this)
-                .location()
-                .config(LocationParams.NAVIGATION)
-                .start(onLocationListener);
+        try {
+            SmartLocation.with(this)
+                    .location()
+                    .config(LocationParams.NAVIGATION)
+                    .start(onLocationListener);
+        } catch (Exception e) {
+            Logger.w(TAG, "[BLE][LOC] locationConfig failed: "+e.getMessage());
+        }
     }
 
     private final OnLocationUpdatedListener onLocationListener = location -> {
