@@ -3,6 +3,7 @@ package hpsaturn.pollutionreporter;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -115,6 +116,8 @@ public class MainActivity extends BaseActivity implements
         recordTrackManager = new RecordTrackManager(this, recordTrackListener);
 
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+
+        checkPreviousPermission();
 
     }
 
@@ -460,8 +463,20 @@ public class MainActivity extends BaseActivity implements
         return prefBuilder.getBoolean(Keys.PERMISSION_BLE,false);
     }
 
+    public void checkPreviousPermission() {
+        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+        int res = checkCallingOrSelfPermission(permission);
+        boolean cp_fine_location = (res == PackageManager.PERMISSION_GRANTED);
+        permission = Manifest.permission.BLUETOOTH;
+        res = checkCallingOrSelfPermission(permission);
+        boolean cp_bluetooth = (res == PackageManager.PERMISSION_GRANTED);
+        if ((isBLEGranted() && isGPSGranted())  && (!cp_fine_location || !cp_bluetooth)) {
+            showDisclosureFragment(R.string.msg_ble_title,R.string.msg_ble_desc,R.drawable.ic_cpu);
+        }
+    }
+
     public void startPermissionsBLEFlow() {
-        Logger.i(TAG, "starting BLE permission flow");
+        Logger.i(TAG, "[PERM] starting BLE permission flow");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Dexter.withContext(this)
                     .withPermissions(
@@ -487,7 +502,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void startPermissionsGPSFlow() {
-        Logger.i(TAG, "starting GPS permission flow");
+        Logger.i(TAG, "[PERM] starting GPS permission flow");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Dexter.withContext(this)
                     .withPermissions(
@@ -510,7 +525,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void startPermissionsStorageFlow() {
-        Logger.i(TAG, "starting Storage permission flow");
+        Logger.i(TAG, "[PERM] starting Storage permission flow");
         Dexter.withContext(this)
                 .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(storagePermissionListener)
@@ -521,12 +536,12 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
             if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "BLEPermissionsGranted..");
+                Logger.i(TAG, "[PERM] BLEPermissionsGranted..");
                 if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
                 if(scanFragment!=null)scanFragment.executeScan();
             }
             else
-                Logger.e(TAG, "BLEPermissions Not Granted");
+                Logger.e(TAG, "[PERM] BLEPermissions Not Granted");
         }
         @Override
         public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
@@ -538,7 +553,7 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
             if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "GPS PermissionsGranted..");
+                Logger.i(TAG, "[PERM] GPS PermissionsGranted..");
                 if(!isGPSGranted())prefBuilder.addBoolean(Keys.PERMISSION_GPS, true).save();
 //                startPermissionsStorageFlow();  // TODO: Android 13 it fails. We don't need it
                 if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
@@ -547,7 +562,7 @@ public class MainActivity extends BaseActivity implements
         }
         @Override
         public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-            Logger.i(TAG, "token to continue permission request");
+            Logger.i(TAG, "[PERM] token to continue permission request");
             permissionToken.continuePermissionRequest();
         }
     };
@@ -556,7 +571,7 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
             if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "StoragePermissionsGranted..");
+                Logger.i(TAG, "[PERM] StoragePermissionsGranted..");
 //                if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
 //                buttonRecordingAction();
             }
