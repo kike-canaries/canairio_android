@@ -16,6 +16,8 @@ public class SensorTrackInfo {
     private int size;
     private float kms;
 
+    private float distance;
+
     public SensorTrackInfo() {
     }
 
@@ -78,5 +80,9 @@ public class SensorTrackInfo {
 
     public float getDistance() {
         return kms;
+    }
+
+    public String getGeohash() {
+        return geohash;
     }
 }
