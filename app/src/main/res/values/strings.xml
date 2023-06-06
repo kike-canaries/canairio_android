@@ -237,4 +237,6 @@
     <string name="msg_ble_scan_bluetooth_cannot_start">Unable to start bluetooth scanning</string>
     <string name="msg_ble_scan_undocumented_scan_throttle">Android 7+ does not allow more scans. Try in %1$d seconds</string>
     <string name="msg_ble_enable">Please enable your Bluetooth</string>
+    <string name="msg_external_storage_manage_failed">Your device doesn\'t support all files access</string>
+    <string name="msg_file_desc">CanAirIO needs manage your storage to will able to save the exported track. Please enable this permission and choose the file directory</string>
 </resources>

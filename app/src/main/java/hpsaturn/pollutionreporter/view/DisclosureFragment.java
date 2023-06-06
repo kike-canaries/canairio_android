@@ -76,9 +76,12 @@ public class DisclosureFragment extends DialogFragment {
 
     private final View.OnClickListener onClickContinueListener = view -> {
         if (resource_desc == R.string.msg_gps_desc) {
-            getMain().startPermissionsGPSFlow();
+            getMain().requestBackgroundPermission();
         } else if (resource_desc == R.string.msg_ble_desc) {
-            getMain().startPermissionsBLEFlow();
+            getMain().requestLocationPermission();
+        }
+        else if (resource_desc == R.string.msg_file_desc) {
+            getMain().requestAllFilesAccessPermission();
         }
         getDialog().dismiss();
     };
