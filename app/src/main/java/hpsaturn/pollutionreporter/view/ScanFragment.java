@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.MainActivity;
+import hpsaturn.pollutionreporter.PermissionUtil;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -91,7 +92,10 @@ public class ScanFragment extends Fragment {
 
     private void actionRequestBLEPermission(){
         if(!getMain().isBLEGranted()) getMain().showDisclosureFragment(R.string.msg_ble_title,R.string.msg_ble_desc,R.drawable.ic_cpu);
-        else getMain().startPermissionsBLEFlow();
+        else {
+            if (!PermissionUtil.hasLocationPermission(getContext())) getMain().requestLocationPermission();
+            else getMain().performBLEScan();
+        }
     }
 
     public void executeScan(){

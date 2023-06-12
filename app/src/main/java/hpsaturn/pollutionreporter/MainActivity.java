@@ -1,17 +1,25 @@
 package hpsaturn.pollutionreporter;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -24,11 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
 import com.iamhabib.easy_preference.EasyPreference;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -436,9 +439,9 @@ public class MainActivity extends BaseActivity implements
     }
 
     private View.OnClickListener onFabClickListener = view -> {
-        if(!isGPSGranted() || !isBLEGranted())
+        if(!PermissionUtil.hasBackgroundPermission(this))
             showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
-        else startPermissionsGPSFlow();
+        else buttonRecordingAction();
     };
 
     public void showDisclosureFragment(int title, int desc, int img) {
@@ -452,11 +455,17 @@ public class MainActivity extends BaseActivity implements
     }
 
     public boolean isStorageGranted(){
-        return prefBuilder.getBoolean(Keys.PERMISSION_STORAGE,false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        }
+        int permissionState = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+//        return prefBuilder.getBoolean(Keys.PERMISSION_STORAGE,false);
     }
 
     public boolean isGPSGranted(){
-        return prefBuilder.getBoolean(Keys.PERMISSION_GPS,false);
+        return prefBuilder.getBoolean(Keys.PERMISSION_BACKGROUND,false);
     }
 
     public boolean isBLEGranted(){
@@ -464,124 +473,98 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void checkPreviousPermission() {
-        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-        int res = checkCallingOrSelfPermission(permission);
-        boolean cp_fine_location = (res == PackageManager.PERMISSION_GRANTED);
-        permission = Manifest.permission.BLUETOOTH;
-        res = checkCallingOrSelfPermission(permission);
-        boolean cp_bluetooth = (res == PackageManager.PERMISSION_GRANTED);
+        boolean cp_fine_location = PermissionUtil.hasLocationPermission(this);
+        boolean cp_bluetooth = PermissionUtil.hasBluetoothPermission(this);
         if ((isBLEGranted() && isGPSGranted())  && (!cp_fine_location || !cp_bluetooth)) {
             showDisclosureFragment(R.string.msg_ble_title,R.string.msg_ble_desc,R.drawable.ic_cpu);
         }
     }
 
-    public void startPermissionsBLEFlow() {
-        Logger.i(TAG, "[PERM] starting BLE permission flow");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Dexter.withContext(this)
-                    .withPermissions(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.BLUETOOTH_CONNECT,
-                            Manifest.permission.BLUETOOTH_SCAN
-
-                    )
-                    .withListener(blePermissionListener)
-                    .check();
-        }else {
-            Dexter.withContext(this)
-                    .withPermissions(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.BLUETOOTH
-
-                    )
-                    .withListener(blePermissionListener)
-                    .check();
-        }
-    }
-
-    public void startPermissionsGPSFlow() {
-        Logger.i(TAG, "[PERM] starting GPS permission flow");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Dexter.withContext(this)
-                    .withPermissions(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                    )
-                    .withListener(gpsPermissionListener)
-                    .check();
-        }
-        else {
-            Dexter.withContext(this)
-                    .withPermissions(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    )
-                    .withListener(gpsPermissionListener)
-                    .check();
-        }
-    }
-
-    public void startPermissionsStorageFlow() {
+    public void requestAllFilesAccessPermission() {
         Logger.i(TAG, "[PERM] starting Storage permission flow");
-        Dexter.withContext(this)
-                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(storagePermissionListener)
-                .check();
+        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        try {
+            ComponentName componentName = intent.resolveActivity(getPackageManager());
+            if (componentName != null) {
+                // Launch "Allow all files access?" dialog.
+                startActivity(intent);
+                return;
+            }
+            Log.w(TAG, "[PERM] Request all files access not supported");
+        } catch (ActivityNotFoundException e) {
+            Log.w(TAG, "[PERM] Request all files access not supported", e);
+        }
+        Toast.makeText(this, R.string.msg_external_storage_manage_failed, Toast.LENGTH_LONG).show();
     }
 
-    private final MultiplePermissionsListener blePermissionListener =  new MultiplePermissionsListener() {
-        @Override
-        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-            if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "[PERM] BLEPermissionsGranted..");
-                if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
-                if(scanFragment!=null)scanFragment.executeScan();
-            }
-            else
-                Logger.e(TAG, "[PERM] BLEPermissions Not Granted");
-        }
-        @Override
-        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-            permissionToken.continuePermissionRequest();
-        }
-    };
+    /**
+     * Permission check and request functions
+     */
+    public void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this,
+                PermissionUtil.getLocationPermissions(),
+                Config.PermissionRequestType.LOCATION.ordinal());
+    }
 
-    private final MultiplePermissionsListener gpsPermissionListener = new MultiplePermissionsListener() {
-        @Override
-        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-            if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "[PERM] GPS PermissionsGranted..");
-                if(!isGPSGranted())prefBuilder.addBoolean(Keys.PERMISSION_GPS, true).save();
-//                startPermissionsStorageFlow();  // TODO: Android 13 it fails. We don't need it
-                if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
+    public void requestBackgroundPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(this,
+                    PermissionUtil.getBackgroundPermissions(),
+                    Config.PermissionRequestType.LOCATION_BACKGROUND.ordinal());
+        }
+    }
+
+    private void requestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requestAllFilesAccessPermission();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    Config.PermissionRequestType.STORAGE.ordinal());
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (Config.PermissionRequestType.values()[requestCode]) {
+            case LOCATION:
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "[PERM] User denied foreground location permission");
+                    break;
+                }
+                Log.i(TAG, "[PERM] User granted foreground location permission");
+                prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+                break;
+            case LOCATION_BACKGROUND:
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "[PERM] User denied background location permission");
+                    break;
+                }
+                Log.i(TAG, "[PERM] User granted background location permission");
+                prefBuilder.addBoolean(Keys.PERMISSION_BACKGROUND, true).save();
                 buttonRecordingAction();
-            }
+                break;
+            case STORAGE:
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, false).save();
+                    Log.i(TAG, "[PERM] User denied WRITE_EXTERNAL_STORAGE permission.");
+                } else {
+                    Log.i(TAG, "[PERM] User granted WRITE_EXTERNAL_STORAGE permission.");
+                    prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-        @Override
-        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-            Logger.i(TAG, "[PERM] token to continue permission request");
-            permissionToken.continuePermissionRequest();
-        }
-    };
+    }
 
-    private final MultiplePermissionsListener storagePermissionListener = new MultiplePermissionsListener() {
-        @Override
-        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-            if(multiplePermissionsReport.areAllPermissionsGranted()) {
-                Logger.i(TAG, "[PERM] StoragePermissionsGranted..");
-//                if(!isStorageGranted())prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
-//                buttonRecordingAction();
-            }
-        }
-
-        @Override
-        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-            permissionToken.continuePermissionRequest();
-        }
-    };
+    public void performBLEScan() {
+        Logger.i(TAG, "[PERM] BLEPermissionsGranted..");
+        if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+        if(scanFragment!=null)scanFragment.executeScan();
+    }
 
     @Override
     void actionUnPair() {
