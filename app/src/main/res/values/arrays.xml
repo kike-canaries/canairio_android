@@ -46,6 +46,8 @@
         <item>Humi</item>
         <item>Alt</item>
         <item>Pre</item>
+        <item>NH3</item>
+        <item>CO</item>
     </string-array>
 
     <string-array name="pref_vars_values">
@@ -61,6 +63,8 @@
         <item>hum</item>
         <item>alt</item>
         <item>pre</item>
+        <item>nh3</item>
+        <item>co</item>
     </string-array>
 
     <string-array name="pref_vars_stores">
