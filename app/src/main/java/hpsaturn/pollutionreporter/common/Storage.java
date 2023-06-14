@@ -24,10 +24,14 @@ public class Storage {
     private final String TAG = Storage.class.getSimpleName();
 
     public static void setSensorData(Context ctx, ArrayList<SensorData> items) {
-        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
-        editor.apply();
+        try {
+            SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(Keys.SENSOR_DATA, new Gson().toJson(items));
+            editor.apply();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static ArrayList<SensorData> getSensorData(Context ctx) {
