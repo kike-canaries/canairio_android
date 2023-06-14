@@ -42,6 +42,10 @@ public class SensorData {
 
     public float hum;
 
+    public float nh3;
+
+    public float co;
+
     public float pdist;
 
     public String dsl;
