@@ -233,4 +233,5 @@
     <string name="msg_ble_scan_undocumented_scan_throttle">Android 7+ no permite más escaneos. Prueba en %1$d segundos</string>
     <string name="msg_ble_enable">Enciende tú Bluetooth</string>
     <string name="msg_external_storage_manage_failed">Your device doesn\'t support all files access</string>
+    <string name="msg_file_desc">CanAirIO necesita manejar su almacenamiento para poder exportar los recorridos móviles. Por favor active este permiso y escoja un directorio</string>
 </resources>

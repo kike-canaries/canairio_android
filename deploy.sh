@@ -40,6 +40,7 @@ build () {
   echo "***********************************************"
   echo ""
   ./gradlew clean
+  ./gradlew build
   ./gradlew assembleRelease
   cp app/build/outputs/apk/release/app-release.apk $OUTPUT
   echo ""
