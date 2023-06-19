@@ -86,7 +86,17 @@ public class ChartVar {
                 dataSet = getGenericLineDataSet(entries, R.color.yellow, label,1F);
                 break;
 
-                default:
+            case "co":
+                dataSet = getGenericLineDataSet(entries, R.color.blue, label,1F);
+                break;
+
+            case "nh3":
+                dataSet = getGenericLineDataSet(entries, R.color.black, label,1F);
+                break;
+
+
+            default:
+                    dataSet = getGenericLineDataSet(entries, R.color.yellow, label,1F);
                     Logger.e(TAG,"Bad variable type compilation");
                     break;
 
