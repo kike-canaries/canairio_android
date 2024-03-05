@@ -578,8 +578,10 @@ public class MainActivity extends BaseActivity implements
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted bluetooth connect permission");
-                requestBluetoothScanPermission();
-
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R)
+                    requestBluetoothScanPermission();
+                else
+                    requestLocationPermission();
             case BLUETOOTH_SCAN:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Log.i(TAG, "[PERM] User denied scan nearby devices");

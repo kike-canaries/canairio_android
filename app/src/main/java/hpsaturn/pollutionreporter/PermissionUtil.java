@@ -36,9 +36,16 @@ public class PermissionUtil {
     }
 
     public static String[] getBluetoothPermission() {
-        return new String[]{
-                Manifest.permission.BLUETOOTH_CONNECT,
-        };
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+            return new String[]{
+                    Manifest.permission.BLUETOOTH_CONNECT,
+            };
+        }
+        else {
+            return new String[]{
+                    Manifest.permission.BLUETOOTH,
+            };
+        }
     }
 
     public static String[] getBluetoothScanPermission() {
