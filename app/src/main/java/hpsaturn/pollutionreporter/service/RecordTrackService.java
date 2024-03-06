@@ -447,7 +447,7 @@ public class RecordTrackService extends Service {
         else
         {
             pendingIntent = PendingIntent.getActivity
-                    (this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+                    (this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String CHANNEL_ID = "canairio";
