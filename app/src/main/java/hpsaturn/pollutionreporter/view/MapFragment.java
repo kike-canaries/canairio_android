@@ -99,7 +99,7 @@ public class MapFragment extends Fragment {
     }
 
     public void addMarker(SensorTrackInfo trackInfo) {
-        if(mapView!=null){
+        if(mapView!=null && !mapView.isShown()){
             try {
                 Marker pointMarker = new Marker(mapView);
                 pointMarker.setOnMarkerClickListener((marker, mapView) -> {
