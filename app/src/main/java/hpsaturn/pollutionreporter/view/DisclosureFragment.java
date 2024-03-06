@@ -77,10 +77,11 @@ public class DisclosureFragment extends DialogFragment {
     private final View.OnClickListener onClickContinueListener = view -> {
         if (resource_desc == R.string.msg_gps_desc) {
             getMain().requestBackgroundPermission();
-        } else if (resource_desc == R.string.msg_ble_desc) {
-            getMain().requestLocationPermission();
         }
-        else if (resource_desc == R.string.msg_file_desc) {
+        if (resource_desc == R.string.msg_ble_desc) {
+            getMain().requestBluetoothPermission();
+        }
+        if (resource_desc == R.string.msg_file_desc) {
             getMain().requestAllFilesAccessPermission();
         }
         getDialog().dismiss();

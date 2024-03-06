@@ -445,6 +445,7 @@ public class MainActivity extends BaseActivity implements
     };
 
     public void showDisclosureFragment(int title, int desc, int img) {
+        Logger.i(TAG,"showDisclosureFragment..");
         DisclosureFragment dialog = DisclosureFragment.newInstance(title,desc,img);
         showDialogFragment(dialog,DisclosureFragment.TAG);
     }
@@ -507,6 +508,24 @@ public class MainActivity extends BaseActivity implements
                 Config.PermissionRequestType.LOCATION.ordinal());
     }
 
+    /**
+     * Permission check and request functions
+     */
+    public void requestBluetoothScanPermission() {
+        ActivityCompat.requestPermissions(this,
+                PermissionUtil.getBluetoothScanPermission(),
+                Config.PermissionRequestType.BLUETOOTH_SCAN.ordinal());
+    }
+
+    /**
+     * Permission check and request functions
+     */
+    public void requestBluetoothPermission() {
+        ActivityCompat.requestPermissions(this,
+                PermissionUtil.getBluetoothPermission(),
+                Config.PermissionRequestType.BLUETOOTH.ordinal());
+    }
+
     public void requestBackgroundPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ActivityCompat.requestPermissions(this,
@@ -526,8 +545,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (Config.PermissionRequestType.values()[requestCode]) {
             case LOCATION:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
@@ -535,7 +553,6 @@ public class MainActivity extends BaseActivity implements
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted foreground location permission");
-                prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
                 break;
             case LOCATION_BACKGROUND:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
@@ -555,13 +572,31 @@ public class MainActivity extends BaseActivity implements
                     prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
                 }
                 break;
+            case BLUETOOTH:
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "[PERM] User denied bluetooth connect");
+                    break;
+                }
+                Log.i(TAG, "[PERM] User granted bluetooth connect permission");
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R)
+                    requestBluetoothScanPermission();
+                else
+                    requestLocationPermission();
+            case BLUETOOTH_SCAN:
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "[PERM] User denied scan nearby devices");
+                    break;
+                }
+                Log.i(TAG, "[PERM] User granted scan nearby devices permission");
+                prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+                requestLocationPermission();
+
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
     public void performBLEScan() {
-        Logger.i(TAG, "[PERM] BLEPermissionsGranted..");
         if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
         if(scanFragment!=null)scanFragment.executeScan();
     }

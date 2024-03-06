@@ -15,6 +15,6 @@ public class Config {
     public static final int GEOHASHACCU = 7; // max GeoHash precision
 
     public enum PermissionRequestType {
-        LOCATION, LOCATION_BACKGROUND, STORAGE
+        LOCATION, LOCATION_BACKGROUND, STORAGE, BLUETOOTH, BLUETOOTH_SCAN
     }
 }

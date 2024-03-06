@@ -5,19 +5,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-    - name: Loading submodules
-      run: git submodule update --init --recursive   
-    - name: Work directory
-      run: pwd
-    - name: Loading secrets
-      env:
-        gservices: ${{ secrets.googleservices }}
-        aqicnkey: ${{ secrets.aqicnapikey }}
-      run: |
-        echo $gservices > ./app/google-services.json
-        echo $aqicnkey > ./app/src/main/res/values/api_aqicn.xml
-    - name: Build the app
-      run: ./gradlew build
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Loading submodules
+        run: git submodule update --init --recursive   
+
+      - name: Loading secrets
+        env:
+          gservices: ${{ secrets.googleservices }}
+          aqicnkey: ${{ secrets.aqicnapikey }}
+        run: |
+          echo $gservices > ./app/google-services.json
+          echo $aqicnkey > ./app/src/main/res/values/api_aqicn.xml
+      - name: Build the app
+        run: ./gradlew build
 

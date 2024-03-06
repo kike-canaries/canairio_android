@@ -91,14 +91,16 @@ public class ScanFragment extends Fragment {
     }
 
     private void actionRequestBLEPermission(){
+        Logger.i(TAG, "[PERM] request BLE permission" );
         if(!getMain().isBLEGranted()) getMain().showDisclosureFragment(R.string.msg_ble_title,R.string.msg_ble_desc,R.drawable.ic_cpu);
         else {
-            if (!PermissionUtil.hasLocationPermission(getContext())) getMain().requestLocationPermission();
+            if (!PermissionUtil.hasLocationPermission(getContext())) getMain().requestBluetoothPermission();
             else getMain().performBLEScan();
         }
     }
 
     public void executeScan(){
+        Logger.i(TAG, "[BLE] perform device scanning.." );
         getActivity().runOnUiThread(this::actionScan);
     }
 
