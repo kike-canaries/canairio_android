@@ -36,8 +36,21 @@ public class PermissionUtil {
     }
 
     public static String[] getBluetoothPermission() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+            return new String[]{
+                    Manifest.permission.BLUETOOTH_CONNECT,
+            };
+        }
+        else {
+            return new String[]{
+                    Manifest.permission.BLUETOOTH,
+            };
+        }
+    }
+
+    public static String[] getBluetoothScanPermission() {
         return new String[]{
-                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_SCAN,
         };
     }
 
@@ -68,6 +81,16 @@ public class PermissionUtil {
         return true;
     }
 
+
+    public static boolean hasBluetoothScanPermission(@NonNull Context context) {
+        for (String perm : PermissionUtil.getBluetoothPermission()) {
+            if (ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static boolean hasBackgroundPermission(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             for (String perm : PermissionUtil.getBackgroundPermissions()) {
@@ -78,4 +101,6 @@ public class PermissionUtil {
         }
         return true;
     }
+
+
 }
