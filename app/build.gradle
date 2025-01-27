@@ -53,9 +53,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':libtoolscommon')
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.multidex:multidex:2.0.1'
 
@@ -71,13 +71,12 @@ dependencies {
     implementation 'com.github.pwittchen:reactivewifi-rx2:0.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'com.google.code.gson:gson:2.10.1'
-//    implementation 'com.iamhabib:easy-preference:1.0.1'
 
     implementation 'com.github.MKergall:osmbonuspack:6.5.2'
     implementation 'io.nlopez.smartlocation:library:3.3.3'
     implementation 'org.osmdroid:osmdroid-android:6.1.5'
 
-    implementation 'com.google.android.gms:play-services-location:20.0.0' // Smartlocation fails with higher version
+    implementation 'com.google.android.gms:play-services-location:21.3.0' // Smartlocation fails with higher version
     implementation 'com.github.jemshit:DiscreteScrollView:1.5.2'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
@@ -97,10 +96,10 @@ dependencies {
 
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test:core:1.5.0'
+    testImplementation 'androidx.test:core:1.6.1'
     testImplementation 'org.mockito:mockito-core:3.3.3'
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
