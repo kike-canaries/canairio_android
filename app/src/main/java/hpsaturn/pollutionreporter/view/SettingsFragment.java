@@ -1,37 +1,21 @@
 package hpsaturn.pollutionreporter.view;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-
 import android.content.SharedPreferences;
-import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.preference.Preference;
 
-import com.github.pwittchen.reactivewifi.AccessRequester;
-import com.github.pwittchen.reactivewifi.ReactiveWifi;
 import com.hpsaturn.tools.DeviceUtil;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
-import com.iamhabib.easy_preference.EasyPreference;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
 import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 3/31/21.
@@ -113,8 +97,8 @@ public class SettingsFragment extends SettingsBaseFragment {
         if(config.vrev<774)info="\n!!YOUR FIRMWARE IS OUTDATED!!\n\n"+info;
         updateSummary(R.string.key_device_info,info);
         saveSharedPreference(R.string.key_device_info,info);
-        EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
-        prefBuilder.addString(Keys.DEVICE_FLAVOR,config.vflv).save();
+//        EasyPreference.Builder Storage = AppData.getPrefBuilder(getContext());
+        Storage.addString(Keys.DEVICE_FLAVOR,config.vflv,requireContext());
     }
 
     private void saveAppVersionString() {

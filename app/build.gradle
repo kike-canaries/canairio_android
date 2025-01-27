@@ -71,7 +71,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivewifi-rx2:0.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.iamhabib:easy-preference:1.0.1'
+//    implementation 'com.iamhabib:easy-preference:1.0.1'
 
     implementation 'com.github.MKergall:osmbonuspack:6.5.2'
     implementation 'io.nlopez.smartlocation:library:3.3.3'

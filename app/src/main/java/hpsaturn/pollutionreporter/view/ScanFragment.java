@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
-import com.iamhabib.easy_preference.EasyPreference;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.exceptions.BleScanException;
 import com.polidea.rxandroidble2.scan.ScanFilter;
@@ -33,6 +32,7 @@ import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.PermissionUtil;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
+import hpsaturn.pollutionreporter.common.Storage;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -162,9 +162,9 @@ public class ScanFragment extends Fragment {
         String macAddress = scanResults.getBleDevice().getMacAddress();
         String deviceName = scanResults.getBleDevice().getName();
         Logger.i(TAG, "onDeviceConnectClick: "+deviceName+ " " + macAddress);
-        EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
-        prefBuilder.addString(Keys.DEVICE_ADDRESS, macAddress).save();
-        prefBuilder.addBoolean(Keys.DEVICE_PAIR, true).save();
+//        EasyPreference.Builder Storage = AppData.getPrefBuilder(getContext());
+        Storage.addString(Keys.DEVICE_ADDRESS, macAddress, requireContext());
+        Storage.addBoolean(Keys.DEVICE_PAIR, true, requireContext());
         getMain().deviceConnect();
         getMain().removeScanFragment();
     }
