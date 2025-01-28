@@ -13,13 +13,11 @@ import com.fonfon.geohash.GeoHash;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
-import com.iamhabib.easy_preference.EasyPreference;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.TimerTask;
 
-import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
@@ -29,6 +27,7 @@ import hpsaturn.pollutionreporter.models.InfluxdbConfig;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.WifiConfig;
+import hpsaturn.pollutionreporter.common.Storage;
 import io.nlopez.smartlocation.SmartLocation;
 
 /**
@@ -329,20 +328,18 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                 try {
                     summary = summary + geoHash;
                     ifxdbSwitch.setSummary(R.string.summary_key_enable_ifx_ready);
-                    EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
                     String name = geoHash.substring(0,3);
-                    String flavor = prefBuilder.getString(Keys.DEVICE_FLAVOR,"");
+                    String flavor = Storage.getString(Keys.DEVICE_FLAVOR,"", requireContext());
                     if (flavor.length()>6) flavor = flavor.substring(0,7);
                     name = name + flavor;
-                    name = name + prefBuilder.getString(Keys.DEVICE_ADDRESS,"").substring(10);
+                    name = name + Storage.getString(Keys.DEVICE_ADDRESS,"", requireContext()).substring(10);
                     name = name.replace("_","");
                     name = name.replace(":","");
                     name = name.toUpperCase();
                     name = getString(R.string.summary_fixed_stations_map)+" "+name;
                     updateSummary(R.string.key_fixed_stations_map,name);
                 } catch (Exception e) {
-                    EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
-                    String flavor = prefBuilder.getString(Keys.DEVICE_FLAVOR,"");
+                    String flavor = Storage.getString(Keys.DEVICE_FLAVOR,"", requireContext());
                     FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
                     crashlytics.setCustomKey(Keys.DEVICE_FLAVOR,flavor);
                     crashlytics.setCustomKey("geohash",geoHash);

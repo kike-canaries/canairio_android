@@ -8,18 +8,14 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Build;
 import android.os.IBinder;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.fonfon.geohash.GeoHash;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.FileTools;
 import com.hpsaturn.tools.Logger;
-import com.hpsaturn.tools.UITools;
-import com.iamhabib.easy_preference.EasyPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,7 +23,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import hpsaturn.pollutionreporter.AppData;
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.R;
@@ -50,7 +45,6 @@ public class RecordTrackService extends Service {
 
     private static final String TAG = RecordTrackService.class.getSimpleName();
     private static final boolean VERBOSE = Config.DEBUG && false;
-    private EasyPreference.Builder prefBuilder;
     private BLEHandler bleHandler;
     private boolean isRecording;
     private RecordTrackManager recordTrackManager;
@@ -64,15 +58,14 @@ public class RecordTrackService extends Service {
     public void onCreate() {
         super.onCreate();
         Logger.i(TAG, "[BLE] Creating Service container..");
-        prefBuilder = AppData.getPrefBuilder(this);
-        isRecording = prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
+        isRecording = Storage.getBoolean(Keys.SENSOR_RECORD, false, this);
         if (isRecording) restoreValues();
         recordTrackManager = new RecordTrackManager(this, managerListener);
         notificationSetup();
     }
 
     private void startConnection() {
-        if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
+        if (Storage.getBoolean(Keys.DEVICE_PAIR, false, this)) {
             if (bleHandler == null) {
                 connect();
             }
@@ -86,7 +79,7 @@ public class RecordTrackService extends Service {
 
     private void connect() {
         Logger.i(TAG, "[BLE] starting BLE connection..");
-        String macAddress = prefBuilder.getString(Keys.DEVICE_ADDRESS, "");
+        String macAddress = Storage.getString(Keys.DEVICE_ADDRESS, "", this);
         Logger.i(TAG, "[BLE] deviceConnect to " + macAddress);
         bleHandler = new BLEHandler(this, macAddress, bleListener);
         bleHandler.connect();

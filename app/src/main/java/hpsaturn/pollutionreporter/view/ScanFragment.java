@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
-import com.iamhabib.easy_preference.EasyPreference;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.exceptions.BleScanException;
 import com.polidea.rxandroidble2.scan.ScanFilter;
@@ -33,6 +32,7 @@ import hpsaturn.pollutionreporter.MainActivity;
 import hpsaturn.pollutionreporter.PermissionUtil;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.Keys;
+import hpsaturn.pollutionreporter.common.Storage;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -94,14 +94,14 @@ public class ScanFragment extends Fragment {
         Logger.i(TAG, "[PERM] request BLE permission" );
         if(!getMain().isBLEGranted()) getMain().showDisclosureFragment(R.string.msg_ble_title,R.string.msg_ble_desc,R.drawable.ic_cpu);
         else {
-            if (!PermissionUtil.hasLocationPermission(getContext())) getMain().requestBluetoothPermission();
+            if (!PermissionUtil.hasLocationPermission(requireContext())) getMain().requestBluetoothPermission();
             else getMain().performBLEScan();
         }
     }
 
     public void executeScan(){
         Logger.i(TAG, "[BLE] perform device scanning.." );
-        getActivity().runOnUiThread(this::actionScan);
+        actionScan();
     }
 
     private void actionScan() {
@@ -162,9 +162,9 @@ public class ScanFragment extends Fragment {
         String macAddress = scanResults.getBleDevice().getMacAddress();
         String deviceName = scanResults.getBleDevice().getName();
         Logger.i(TAG, "onDeviceConnectClick: "+deviceName+ " " + macAddress);
-        EasyPreference.Builder prefBuilder = AppData.getPrefBuilder(getContext());
-        prefBuilder.addString(Keys.DEVICE_ADDRESS, macAddress).save();
-        prefBuilder.addBoolean(Keys.DEVICE_PAIR, true).save();
+//        EasyPreference.Builder Storage = AppData.getPrefBuilder(getContext());
+        Storage.addString(Keys.DEVICE_ADDRESS, macAddress, requireContext());
+        Storage.addBoolean(Keys.DEVICE_PAIR, true, requireContext());
         getMain().deviceConnect();
         getMain().removeScanFragment();
     }

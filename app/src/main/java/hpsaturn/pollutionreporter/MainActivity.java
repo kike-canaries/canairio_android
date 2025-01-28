@@ -31,7 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
-import com.iamhabib.easy_preference.EasyPreference;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -40,6 +39,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hpsaturn.pollutionreporter.common.Keys;
+import hpsaturn.pollutionreporter.common.Storage;
 import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 import hpsaturn.pollutionreporter.models.SensorTrackInfo;
@@ -90,7 +90,6 @@ public class MainActivity extends BaseActivity implements
     DiscreteScrollView fragmentPicker;
 
     private ScanFragment scanFragment;
-    private EasyPreference.Builder prefBuilder;
     private ChartFragment chartFragment;
     private RecordTrackManager recordTrackManager;
     private MapFragment mapFragment;
@@ -110,7 +109,6 @@ public class MainActivity extends BaseActivity implements
         startRecordTrackService();
 
         ButterKnife.bind(this);
-        prefBuilder = AppData.getPrefBuilder(this);
 
         startDataBase();
         setSupportActionBar(toolbar);
@@ -198,7 +196,7 @@ public class MainActivity extends BaseActivity implements
     };
 
     public boolean isRecording(){
-        return prefBuilder.getBoolean(Keys.SENSOR_RECORD, false);
+        return Storage.getBoolean(Keys.SENSOR_RECORD, false, this);
     }
 
     private void buttonRecordingAction () {
@@ -221,14 +219,14 @@ public class MainActivity extends BaseActivity implements
 
     private void stopRecord() {
         showSnackMessage(R.string.msg_record_stop);
-        prefBuilder.addBoolean(Keys.SENSOR_RECORD, false).save();
+        Storage.addBoolean(Keys.SENSOR_RECORD, false, this);
         recordTrackManager.serviceRecordStop();
         fabUpdateLayout();
     }
 
     private void startRecord() {
         showSnackMessage(R.string.msg_record);
-        prefBuilder.addBoolean(Keys.SENSOR_RECORD, true).save();
+        Storage.addBoolean(Keys.SENSOR_RECORD, true, this);
         recordTrackManager.serviceRecord();
         fabUpdateLayout();
     }
@@ -328,7 +326,7 @@ public class MainActivity extends BaseActivity implements
 
     private void fabUpdateLayout() {
         fab.hide();
-        if (prefBuilder.getBoolean(Keys.SENSOR_RECORD, false)) {
+        if (Storage.getBoolean(Keys.SENSOR_RECORD, false, this)) {
             fab.setBackgroundTintList(ContextCompat.getColorStateList(this,R.color.color_state_record_stop));
             fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_stop_white_24dp));
         } else {
@@ -420,7 +418,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void deviceConnect() {
-        if (prefBuilder.getBoolean(Keys.DEVICE_PAIR, false)) {
+        if (Storage.getBoolean(Keys.DEVICE_PAIR, false, this)) {
             startRecordTrackService();
             showSnackMessage(R.string.msg_device_connecting);
         }
@@ -462,15 +460,15 @@ public class MainActivity extends BaseActivity implements
         int permissionState = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
-//        return prefBuilder.getBoolean(Keys.PERMISSION_STORAGE,false);
+//        return Storage.getBoolean(Keys.PERMISSION_STORAGE,false);
     }
 
     public boolean isGPSGranted(){
-        return prefBuilder.getBoolean(Keys.PERMISSION_BACKGROUND,false);
+        return Storage.getBoolean(Keys.PERMISSION_BACKGROUND,false, this);
     }
 
     public boolean isBLEGranted(){
-        return prefBuilder.getBoolean(Keys.PERMISSION_BLE,false);
+        return Storage.getBoolean(Keys.PERMISSION_BLE,false, this);
     }
 
     public void checkPreviousPermission() {
@@ -560,16 +558,16 @@ public class MainActivity extends BaseActivity implements
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted background location permission");
-                prefBuilder.addBoolean(Keys.PERMISSION_BACKGROUND, true).save();
+                Storage.addBoolean(Keys.PERMISSION_BACKGROUND, true, this);
                 buttonRecordingAction();
                 break;
             case STORAGE:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, false).save();
+                    Storage.addBoolean(Keys.PERMISSION_STORAGE, false, this);
                     Log.i(TAG, "[PERM] User denied WRITE_EXTERNAL_STORAGE permission.");
                 } else {
                     Log.i(TAG, "[PERM] User granted WRITE_EXTERNAL_STORAGE permission.");
-                    prefBuilder.addBoolean(Keys.PERMISSION_STORAGE, true).save();
+                    Storage.addBoolean(Keys.PERMISSION_STORAGE, true, this);
                 }
                 break;
             case BLUETOOTH:
@@ -588,7 +586,7 @@ public class MainActivity extends BaseActivity implements
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted scan nearby devices permission");
-                prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+                Storage.addBoolean(Keys.PERMISSION_BLE, true, this);
                 requestLocationPermission();
 
             default:
@@ -597,7 +595,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void performBLEScan() {
-        if(!isBLEGranted())prefBuilder.addBoolean(Keys.PERMISSION_BLE, true).save();
+        if(!isBLEGranted())Storage.addBoolean(Keys.PERMISSION_BLE, true, this);
         if(scanFragment!=null)scanFragment.executeScan();
     }
 
@@ -609,8 +607,8 @@ public class MainActivity extends BaseActivity implements
             Logger.i(TAG, "[BLE] unpaired..");
             stopRecord();
             recordTrackManager.stop();
-            prefBuilder.addString(Keys.DEVICE_ADDRESS,"").save();
-            prefBuilder.addBoolean(Keys.DEVICE_PAIR, false).save();
+            Storage.addString(Keys.DEVICE_ADDRESS,"", this);
+            Storage.addBoolean(Keys.DEVICE_PAIR, false, this);
             fab.hide();
             if (chartFragment != null) chartFragment.clearData();
             removeFragment(chartFragment);
@@ -638,7 +636,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private boolean isPaired(){
-        return prefBuilder.getBoolean(Keys.DEVICE_PAIR, false);
+        return Storage.getBoolean(Keys.DEVICE_PAIR, false, this);
     }
 
     public boolean isDeviceConnected() {
