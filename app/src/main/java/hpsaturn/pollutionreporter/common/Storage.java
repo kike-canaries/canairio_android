@@ -2,7 +2,6 @@ package hpsaturn.pollutionreporter.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -115,4 +114,27 @@ public class Storage {
         }
     }
 
+    public static boolean getBoolean(String key, boolean value, Context ctx) {
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
+        return preferences.getBoolean(key, value);
+    }
+
+    public static void addBoolean(String key, boolean value, Context ctx) {
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public static void addString(String key, String value, Context ctx) {
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String getString(String key, String value, Context ctx) {
+        SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
+        return preferences.getString(key, value);
+    }
 }
