@@ -25,22 +25,21 @@ import io.reactivex.subjects.PublishSubject;
 
 public class BLEHandler {
 
-    private static String TAG = BLEHandler.class.getSimpleName();
+    private static final String TAG = BLEHandler.class.getSimpleName();
 
-    private Context ctx;
-    private OnBLEConnectionListener listener;
-    private String address;
+    private final Context ctx;
+    private final OnBLEConnectionListener listener;
+    private final String address;
 
-    private UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
-    private UUID charactSensorDataUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
-    private UUID charactConfigUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae02");
-    private UUID charactStatusUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae03");
+    private final UUID serviceId = UUID.fromString("c8d1d262-861f-4082-947e-f383a259aaf3");
+    private final UUID charactSensorDataUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae01");
+    private final UUID charactConfigUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae02");
+    private final UUID charactStatusUuid = UUID.fromString("b0f332a8-a5aa-4f3f-bb43-f99e7791ae03");
 
-    private PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
+    private final PublishSubject<Boolean> disconnectTriggerSubject = PublishSubject.create();
     private Subscription connectionSubscription;
     private Observable<RxBleConnection> connectionObservable;
     private Disposable scanDisposable;
-    private RxBleClient rxBleClient;
     private RxBleDevice bleDevice;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -48,6 +47,10 @@ public class BLEHandler {
         this.ctx = ctx;
         this.address = address;
         this.listener = listener;
+        RxBleClient rxBleClient = AppData.getRxBleClient(ctx);
+        bleDevice = rxBleClient.getBleDevice(address);
+        connectionObservable = prepareConnectionObservable();
+
     }
 
     public interface OnBLEConnectionListener {
@@ -75,10 +78,6 @@ public class BLEHandler {
 
 
     public void connect() {
-        rxBleClient = AppData.getRxBleClient(ctx);
-        bleDevice = rxBleClient.getBleDevice(address);
-        connectionObservable = prepareConnectionObservable();
-
 
         if (isConnected()) {
             triggerDisconnect();
@@ -116,7 +115,7 @@ public class BLEHandler {
         if (isConnected()) {
             final Disposable disposable = connectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.setupNotification(charactSensorDataUuid))
-                    .doOnNext(notificationObservable -> { notificationHasBeenSetUp(); })
+                    .doOnNext(notificationObservable -> notificationHasBeenSetUp())
                     .flatMap(notificationObservable -> notificationObservable)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onNotificationReceived, this::onNotificationSetupFailure);
