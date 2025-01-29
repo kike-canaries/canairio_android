@@ -210,7 +210,7 @@
     <string name="content_description_welcome" translatable="false">CanAirIO</string>
     <string name="about_licence_l2" translatable="false">(rfc 3261) GNU GPL License V3</string>
     <string name="about_title_colaboration">Contributors:</string>
-    <string name="about_content_contributors" translatable="false">\Hackbo.org @offraylc Mutabit.com @roberbike @Nelpin @arhuaco @brolin @cedancp @Marvin-YYC @eljuguetero @epatarroyo @fjospinas @gaguevaras @hpsaturn @ikks @juandavideth @juanpa097 @melkati @roberbike @sebastian-code @trecetp</string>
+    <string name="about_content_contributors" translatable="false">\Hackbo.org @offraylc Mutabit.com @jcomas @roberbike @Nelpin @arhuaco @brolin @cedancp @Marvin-YYC @eljuguetero @epatarroyo @fjospinas @gaguevaras @hpsaturn @ikks @juandavideth @juanpa097 @melkati @roberbike @sebastian-code @trecetp</string>
     <string name="about_title_donors">Donors:</string>
     <string name="about_content_donors" translatable="false">\@arhuaco @baerchiathomei @cedancp @davegriffiths @hpsaturn @ikks @josedavid @Karisma @kleper @roberbike</string>
     <string name="summary_key_device_status_connected">Connected</string>
