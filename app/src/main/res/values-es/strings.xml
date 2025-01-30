@@ -190,7 +190,7 @@
     <string name="title_share_dialog">¡Gracias por Compartir!</string>
     <string name="canairio_share_dialog">Diálogo Compartir de CanAirIO</string>
     <string name="msg_share_dialog_desc">"El recorrido actual se compartirá en el Mapa Móvil de CanAirIO. ¡Gracias por tu contribución! "</string>
-    <string name="hint_share_dialog_meta">Metadatos adicionales que quieras compartir con nosotros</string>
+    <string name="hint_share_dialog_meta">Metadatos adicionales que quieras adicionar a este trayecto</string>
     <string name="title_sealevel">Presión al nivel del mar</string>
     <string name="key_setting_sealevel">key_setting_sealevel</string>
     <string name="summary_sealevel">1013.25</string>
