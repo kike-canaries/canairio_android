@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
@@ -119,6 +120,10 @@ public class MainActivity extends BaseActivity implements
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
         checkPreviousPermission();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            requestForegroundPermission();
+        }
 
     }
 
@@ -437,7 +442,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private View.OnClickListener onFabClickListener = view -> {
-        if(!PermissionUtil.hasBackgroundPermission(this))
+        if(!PermissionUtil.hasBackgroundLocationPermission(this))
             showDisclosureFragment(R.string.msg_gps_title,R.string.msg_gps_desc,R.drawable.ic_bicycle);
         else buttonRecordingAction();
     };
@@ -501,6 +506,7 @@ public class MainActivity extends BaseActivity implements
      * Permission check and request functions
      */
     public void requestLocationPermission() {
+        Log.i(TAG, "[PERM] requestLocationPermission..");
         ActivityCompat.requestPermissions(this,
                 PermissionUtil.getLocationPermissions(),
                 Config.PermissionRequestType.LOCATION.ordinal());
@@ -509,7 +515,19 @@ public class MainActivity extends BaseActivity implements
     /**
      * Permission check and request functions
      */
+    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public void requestForegroundPermission() {
+        Log.i(TAG, "[PERM] requestForegroundPermission..");
+        ActivityCompat.requestPermissions(this,
+                PermissionUtil.getForegroundLocationPermissions(),
+                Config.PermissionRequestType.FOREGROUND_LOCATION.ordinal());
+    }
+
+    /**
+     * Permission check and request functions
+     */
     public void requestBluetoothScanPermission() {
+        Log.i(TAG, "[PERM] requestBluetoothScanPermission..");
         ActivityCompat.requestPermissions(this,
                 PermissionUtil.getBluetoothScanPermission(),
                 Config.PermissionRequestType.BLUETOOTH_SCAN.ordinal());
@@ -519,20 +537,23 @@ public class MainActivity extends BaseActivity implements
      * Permission check and request functions
      */
     public void requestBluetoothPermission() {
+        Log.i(TAG, "[PERM] requestBluetoothPermission..");
         ActivityCompat.requestPermissions(this,
                 PermissionUtil.getBluetoothPermission(),
                 Config.PermissionRequestType.BLUETOOTH.ordinal());
     }
 
     public void requestBackgroundPermission() {
+        Log.i(TAG, "[PERM] requestBackgroundPermission..");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ActivityCompat.requestPermissions(this,
-                    PermissionUtil.getBackgroundPermissions(),
+                    PermissionUtil.getBackgroundLocationPermissions(),
                     Config.PermissionRequestType.LOCATION_BACKGROUND.ordinal());
         }
     }
 
     private void requestStoragePermission() {
+        Log.i(TAG, "[PERM] requestStoragePermission..");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requestAllFilesAccessPermission();
         } else {
@@ -547,7 +568,7 @@ public class MainActivity extends BaseActivity implements
         switch (Config.PermissionRequestType.values()[requestCode]) {
             case LOCATION:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "[PERM] User denied foreground location permission");
+                    Log.w(TAG, "[PERM] User denied foreground location permission");
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted foreground location permission");
@@ -555,7 +576,7 @@ public class MainActivity extends BaseActivity implements
                 break;
             case LOCATION_BACKGROUND:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "[PERM] User denied background location permission");
+                    Log.w(TAG, "[PERM] User denied background location permission");
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted background location permission");
@@ -565,7 +586,7 @@ public class MainActivity extends BaseActivity implements
             case STORAGE:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Storage.addBoolean(Keys.PERMISSION_STORAGE, false, this);
-                    Log.i(TAG, "[PERM] User denied WRITE_EXTERNAL_STORAGE permission.");
+                    Log.w(TAG, "[PERM] User denied WRITE_EXTERNAL_STORAGE permission.");
                 } else {
                     Log.i(TAG, "[PERM] User granted WRITE_EXTERNAL_STORAGE permission.");
                     Storage.addBoolean(Keys.PERMISSION_STORAGE, true, this);
@@ -573,7 +594,7 @@ public class MainActivity extends BaseActivity implements
                 break;
             case BLUETOOTH:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "[PERM] User denied bluetooth connect");
+                    Log.w(TAG, "[PERM] User denied bluetooth connect");
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted bluetooth connect permission");
@@ -583,7 +604,7 @@ public class MainActivity extends BaseActivity implements
                     requestLocationPermission();
             case BLUETOOTH_SCAN:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "[PERM] User denied scan nearby devices");
+                    Log.w(TAG, "[PERM] User denied scan nearby devices");
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted scan nearby devices permission");

@@ -1,6 +1,15 @@
 name: Android CI
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**/README.md'
+  pull_request:
+    branches: [ master, devel ]
+  schedule:
+    - cron:  '30 12 * * 4'
 
-on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest

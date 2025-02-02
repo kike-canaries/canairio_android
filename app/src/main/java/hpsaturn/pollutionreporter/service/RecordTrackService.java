@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.IBinder;
 
 import androidx.core.app.NotificationCompat;
@@ -25,6 +26,7 @@ import java.util.Locale;
 
 import hpsaturn.pollutionreporter.Config;
 import hpsaturn.pollutionreporter.MainActivity;
+import hpsaturn.pollutionreporter.PermissionUtil;
 import hpsaturn.pollutionreporter.R;
 import hpsaturn.pollutionreporter.common.BLEHandler;
 import hpsaturn.pollutionreporter.common.Keys;
@@ -67,6 +69,7 @@ public class RecordTrackService extends Service {
     private void startConnection() {
         if (Storage.getBoolean(Keys.DEVICE_PAIR, false, this)) {
             if (bleHandler == null) {
+                Logger.i(TAG, "[BLE] connecting..");
                 connect();
             }
             else if (bleHandler.isConnected()) {
@@ -431,9 +434,17 @@ public class RecordTrackService extends Service {
     }
 
     private void notificationSetup() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            if (!PermissionUtil.hasForegroundLocationPermission(this) || !PermissionUtil.hasBackgroundLocationPermission(this)) {
+                Logger.w(TAG, "[BLE] Setup Notification SKIPPED!");
+                return;
+
+            }
+        }
+        Logger.i(TAG, "[BLE] Setup Notification..");
         PendingIntent pendingIntent = null;
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getActivity
                     (this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
         }
@@ -442,7 +453,7 @@ public class RecordTrackService extends Service {
             pendingIntent = PendingIntent.getActivity
                     (this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String CHANNEL_ID = "canairio";
             String CHANNEL_NAME = "CanAirIO service";
             NotificationChannel channel = new NotificationChannel(
