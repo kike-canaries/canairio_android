@@ -573,6 +573,7 @@ public class MainActivity extends BaseActivity implements
                     break;
                 }
                 Log.i(TAG, "[PERM] User granted foreground location permission");
+                performBLEScan();
                 break;
             case LOCATION_BACKGROUND:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
