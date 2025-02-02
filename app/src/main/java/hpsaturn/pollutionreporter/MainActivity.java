@@ -234,7 +234,6 @@ public class MainActivity extends BaseActivity implements
         Storage.addBoolean(Keys.SENSOR_RECORD, true, this);
         recordTrackManager.serviceRecord();
         fabUpdateLayout();
-        startRecordTrackService();
     }
 
     public void setupAppFragments(){
