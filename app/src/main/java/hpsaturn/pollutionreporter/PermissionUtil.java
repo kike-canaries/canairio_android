@@ -108,11 +108,12 @@ public class PermissionUtil {
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static boolean hasBackgroundLocationPermission(@NonNull Context context) {
-        for (String perm : PermissionUtil.getBackgroundLocationPermissions()) {
-            if (ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED) {
-                return false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            for (String perm : PermissionUtil.getBackgroundLocationPermissions()) {
+                if (ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
             }
         }
         return true;
