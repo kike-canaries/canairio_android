@@ -81,9 +81,7 @@ public class RecordTrackManager {
             intentFilter.addAction(response_sensor_config);
             intentFilter.addAction(response_sensor_data);
 
-            boolean listenToBroadcastsFromOtherApps = false;
             int receiverFlags = ContextCompat.RECEIVER_NOT_EXPORTED;
-
             ContextCompat.registerReceiver(ctx,mReceiver, intentFilter, receiverFlags);
 
 

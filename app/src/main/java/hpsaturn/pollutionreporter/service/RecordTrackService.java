@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
 
+
 import androidx.core.app.NotificationCompat;
 
 import com.fonfon.geohash.GeoHash;
@@ -442,7 +443,7 @@ public class RecordTrackService extends Service {
             }
         }
         Logger.i(TAG, "[BLE] Setup Notification..");
-        PendingIntent pendingIntent = null;
+        PendingIntent pendingIntent;
         Intent notificationIntent = new Intent(this, MainActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getActivity
