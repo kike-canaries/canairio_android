@@ -29,9 +29,16 @@ public class PermissionUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public static String[] getBackgroundPermissions() {
+    public static String[] getBackgroundLocationPermissions() {
         return new String[]{
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+        };
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public static String[] getForegroundLocationPermissions() {
+        return new String[]{
+                Manifest.permission.FOREGROUND_SERVICE_LOCATION,
         };
     }
 
@@ -72,6 +79,16 @@ public class PermissionUtil {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public static boolean hasForegroundLocationPermission(@NonNull Context context) {
+        for (String perm : PermissionUtil.getForegroundLocationPermissions()) {
+            if (ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static boolean hasBluetoothPermission(@NonNull Context context) {
         for (String perm : PermissionUtil.getBluetoothPermission()) {
             if (ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED) {
@@ -91,9 +108,9 @@ public class PermissionUtil {
         return true;
     }
 
-    public static boolean hasBackgroundPermission(@NonNull Context context) {
+    public static boolean hasBackgroundLocationPermission(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            for (String perm : PermissionUtil.getBackgroundPermissions()) {
+            for (String perm : PermissionUtil.getBackgroundLocationPermissions()) {
                 if (ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED) {
                     return false;
                 }

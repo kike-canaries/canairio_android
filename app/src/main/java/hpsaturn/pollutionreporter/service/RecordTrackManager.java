@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+
+import androidx.core.content.ContextCompat;
+
 import com.google.gson.Gson;
 import com.hpsaturn.tools.Logger;
 
-import java.lang.reflect.Type;
-
 import hpsaturn.pollutionreporter.models.ResponseConfig;
-import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.SensorData;
 
 /**
@@ -81,7 +81,9 @@ public class RecordTrackManager {
             intentFilter.addAction(response_sensor_config);
             intentFilter.addAction(response_sensor_data);
 
-            ctx.registerReceiver(mReceiver,intentFilter);
+            int receiverFlags = ContextCompat.RECEIVER_NOT_EXPORTED;
+            ContextCompat.registerReceiver(ctx,mReceiver, intentFilter, receiverFlags);
+
 
         } catch (Exception e) {
             Logger.w(TAG,e.getMessage());
@@ -91,66 +93,78 @@ public class RecordTrackManager {
 
     public void start(){
         Intent intent = new Intent(action_start);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void stop(){
         Intent intent = new Intent(action_stop);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void sensorNotificationData(SensorData data){
         Intent intent = new Intent(action_push);
         intent.putExtra(KEY_SERVICE_DATA,new Gson().toJson(data));
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void status(String status){
         Intent intent = new Intent(action_status);
         intent.putExtra(KEY_SERVICE_STATUS,status);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void serviceRecord() {
         Intent intent = new Intent(action_service_record);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void serviceRecordStop() {
         Intent intent = new Intent(action_service_record_stop);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void tracksUpdated() {
         Intent intent = new Intent(action_tracks_updated);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void readSensorConfig() {
         Intent intent = new Intent(action_sensor_read_config);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void responseSensorConfig(ResponseConfig config){
         Intent intent = new Intent(response_sensor_config);
         intent.putExtra(KEY_SENSOR_CONFIG_RESPONSE,new Gson().toJson(config));
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void responseSensorData(SensorData data) {
         Intent intent = new Intent(response_sensor_data);
         intent.putExtra(KEY_SENSOR_DATA_RESPONSE,new Gson().toJson(data));
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void readSensorData() {
         Intent intent = new Intent(action_sensor_read_data);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 
     public void writeSensorConfig(String config) {
         Intent intent = new Intent(action_sensor_write_config);
         intent.putExtra(KEY_SENSOR_CONFIG_WRITE,config);
+        intent.setPackage(ctx.getPackageName());
         ctx.sendBroadcast(intent);
     }
 

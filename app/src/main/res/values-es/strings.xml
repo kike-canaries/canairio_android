@@ -148,7 +148,7 @@
     <string name="key_fixed_stations_map">key_fixed_stations_map</string>
     <string name="title_fixed_stations_map">Mapa mundial de CanAirIO</string>
     <string name="summary_fixed_stations_map">Clic para iniciar (puede tomar algunos minutos)\nEstación:</string>
-    <string name="url_canairio_worldmap">http://influxdb.canair.io:8000</string>
+    <string name="url_canairio_worldmap">https://grafana.canair.io</string>
     <string name="summary_ifx_nogeohash">Por favor, establece primero la localización</string>
     <string name="key_setting_send_co2_calibration">key_setting_send_co2_calibration</string>
     <string name="summary_send_co2_calibration">Enviar comando de calibración de CO2</string>
