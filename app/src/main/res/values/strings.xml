@@ -220,7 +220,7 @@
     <string name="text_unit_seconds">seconds</string>
     <string name="text_unit_meters">meters</string>
     <string name="text_unit_points">points</string>
-    <string name="title_power_saving_settings">Power Saving Settings</string>
+    <string name="title_power_saving_settings">Experimental Settings</string>
     <string name="title_some_device_tools">Some Device Tools</string>
     <string name="title_reboot_device">Reboot device</string>
     <string name="title_factory_reset">Factory reset</string>
