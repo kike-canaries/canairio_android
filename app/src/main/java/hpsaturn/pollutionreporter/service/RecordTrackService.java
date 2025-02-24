@@ -64,7 +64,6 @@ public class RecordTrackService extends Service {
         isRecording = Storage.getBoolean(Keys.SENSOR_RECORD, false, this);
         if (isRecording) restoreValues();
         recordTrackManager = new RecordTrackManager(this, managerListener);
-        notificationSetup();
     }
 
     private void startConnection() {
@@ -114,7 +113,15 @@ public class RecordTrackService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.d(TAG, "[BLE] onStartCommand");
         recordTrackManager.status(RecordTrackManager.STATUS_SERVICE_OK);
-        startConnection();
+        notificationSetup();
+        RecordTrackScheduler.startScheduleService(this, Config.DEFAULT_INTERVAL);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startConnection();
+            }
+        }).start();
+
         if (isRecording) {
             return START_STICKY;
         } else {
