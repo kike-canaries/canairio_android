@@ -19,11 +19,7 @@ public class RecordTrackReceiver extends BroadcastReceiver {
         try {
             Logger.d(TAG, "[BLE] StartServiceReceiver: onReceive..");
             Intent service = new Intent(context, RecordTrackService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(service);
-            } else {
-                context.startService(service);
-            }
+            context.startService(service);
         } catch (Exception e) {
             Logger.w(TAG, "[BLE] StartServiceReceiver: FAILED!");
             throw new RuntimeException(e);
