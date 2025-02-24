@@ -5,6 +5,8 @@
     <string name="menu_scan">Buscar…</string>
     <string name="menu_unpair">Desvincular…</string>
     <string name="menu_donation">Hacer una donación…</string>
+    <string name="menu_guide">Guía de sensores DIY</string>
+    <string name="menu_support_us">Apóyanos</string>
     <string name="stop_scan">Parar búsqueda…</string>
     <string name="start_scan">Iniciar búsqueda…</string>
     <string name="msg_ble_not_supported">¡Bluetooth Low Energy (BLE) no está soportado!</string>
@@ -76,9 +78,12 @@
     <string name="url_oficial_guide_en">https://canair.io/docs</string>
     <string name="url_oficial_guide_es">https://canair.io/docs</string>
     <string name="url_github_android_app_issues">https://github.com/kike-canaries/canairio_android/issues</string>
-    <string name="menu_guide">Guía de sensores, hazlo tú mismo</string>
-    <string name="url_canairio_page">https://canair.io</string>
-    <string name="url_canairio_feedback">https://canair.io/#three</string>
+    <string name="url_canairio_support_us">https://canair.io/es/contributions.html</string>
+    <string name="url_canairio_page">https://canair.io/es/</string>
+    <string name="url_canairio_feedback">https://canair.io/es/index.html#three</string>
+    <string name="url_canairio_privacy">https://canair.io/es/privacy.html</string>
+    <string name="url_canairio_worldmap">https://grafana.canair.io</string>
+    <string name="url_anaire_realtime">https://portal.anaire.org/admin/</string>
     <string name="msg_chart_loading">Cargando datos, espera por favor…</string>
     <string name="msg_loading">cargando…</string>
     <string name="msg_chart_no_data">No hay datos.</string>
@@ -115,7 +120,6 @@
     <string name="msg_ble_title">Utilizar Bluetooth</string>
     <string name="msg_ble_desc">La aplicación CanAirIO necesita activar el Bluetooth del dispositivo para buscar dispositivos de calidad del aire, además, todas las aplicaciones que utilizan Bluetooth requieren de permisos de localización. Por este motivo te pedimos este permiso.</string>
     <string name="menu_privacy">Política de Privacidad</string>
-    <string name="url_canairio_privacy">https://canair.io/privacy.html</string>
     <string name="key_appversion">key_appversion</string>
     <string name="key_setting_null">" "</string>
     <string name="summary_settings_vars">Variables que se muestran en los gráficos</string>
@@ -148,7 +152,6 @@
     <string name="key_fixed_stations_map">key_fixed_stations_map</string>
     <string name="title_fixed_stations_map">Mapa mundial de CanAirIO</string>
     <string name="summary_fixed_stations_map">Clic para iniciar (puede tomar algunos minutos)\nEstación:</string>
-    <string name="url_canairio_worldmap">https://grafana.canair.io</string>
     <string name="summary_ifx_nogeohash">Por favor, establece primero la localización</string>
     <string name="key_setting_send_co2_calibration">key_setting_send_co2_calibration</string>
     <string name="summary_send_co2_calibration">Enviar comando de calibración de CO2</string>
@@ -183,7 +186,6 @@
     <string name="key_anaire_id">key_anaire_id</string>
     <string name="summary_anaire_timeseries">Mostrar tu dispositivo en la nube Anaire\nEstación:</string>
     <string name="title_anaire_timeseries">CanAirIO en Anaire</string>
-    <string name="url_anaire_realtime">https://portal.anaire.org/admin/</string>
     <string name="title_setting_dtype">Tipo dispositivo UART</string>
     <string name="bt_share_dialog">compartir</string>
     <string name="bt_dialog_export">Sólo exportar :(</string>
@@ -199,7 +201,7 @@
     <string name="key_setting_solarstation_enable">key_solarstation_enable</string>
     <string name="key_setting_deepsleep_time">key_setting_deepsleep_time</string>
     <string name="summary_deepsleep_time">0 segundos (desactivado)</string>
-    <string name="title_setting_deepsleep_time">Tiempo de sueño</string>
+    <string name="title_setting_deepsleep_time">Hibernar</string>
     <string name="title_app_settings">Configuración de la Aplicación</string>
     <string name="title_icon_map">Mapa</string>
     <string name="title_icon_reports">Informes</string>
@@ -213,7 +215,7 @@
     <string name="text_unit_seconds">segundos</string>
     <string name="text_unit_meters">metros</string>
     <string name="text_unit_points">puntos</string>
-    <string name="title_power_saving_settings">Configuración Ahorro de Energía</string>
+    <string name="title_power_saving_settings">Configuración Experimental</string>
     <string name="title_some_device_tools">Utilidades Dispositivo</string>
     <string name="title_reboot_device">Reiniciar dispositivo</string>
     <string name="title_factory_reset">Establecer valores de fábrica</string>

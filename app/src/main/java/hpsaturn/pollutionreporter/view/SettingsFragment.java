@@ -34,6 +34,7 @@ public class SettingsFragment extends SettingsBaseFragment {
         infoPreferenceInit();
         sendFeedbackInit();
         saveAppVersionString();
+        showAboutInit();
     }
 
     @Override
@@ -119,6 +120,20 @@ public class SettingsFragment extends SettingsBaseFragment {
         assert sendFeedback != null;
         sendFeedback.setOnPreferenceClickListener(preference -> {
             UITools.viewLink(getActivity(),getString(R.string.url_github_android_app_issues));
+            return true;
+        });
+    }
+
+    /***********************************************************************************************
+     * showVersion section
+     **********************************************************************************************/
+
+    private void showAboutInit() {
+        Preference appVersion = findPreference(getString(R.string.key_appversion));
+
+        assert appVersion != null;
+        appVersion.setOnPreferenceClickListener(preference -> {
+            getMain().showAboutFragment();
             return true;
         });
     }

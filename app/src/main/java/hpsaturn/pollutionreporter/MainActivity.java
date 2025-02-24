@@ -412,9 +412,12 @@ public class MainActivity extends BaseActivity implements
 
     public void startRecordTrackService() {
         Logger.v(TAG,"starting RecordTrackService..");
-        Intent newIntent = new Intent(this, RecordTrackService.class);
-        startService(newIntent);
-        RecordTrackScheduler.startScheduleService(this, Config.DEFAULT_INTERVAL);
+        Intent service = new Intent(this, RecordTrackService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(service);
+        } else {
+            startService(service);
+        }
     }
 
     public void stopRecordTrackService() {
