@@ -18,12 +18,15 @@
         android:title="@string/menu_guide"
         app:showAsAction="never" />
 
-
     <item
         android:id="@+id/action_feedback"
         android:title="@string/menu_feedback"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_support_us"
+        android:title="@string/menu_support_us"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_privacy"
         android:title="@string/menu_privacy"

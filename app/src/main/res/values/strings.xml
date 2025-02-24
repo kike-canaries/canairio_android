@@ -5,6 +5,8 @@
     <string name="menu_scan">Scan…</string>
     <string name="menu_unpair">Unpair…</string>
     <string name="menu_donation">Make a donation…</string>
+    <string name="menu_guide">Sensor DIY Guide</string>
+    <string name="menu_support_us">Support Us</string>
     <string name="stop_scan">Stopping Scanning…</string>
     <string name="start_scan">Start Scanning…</string>
     <string name="msg_ble_not_supported">Bluetooth Low Energy not Supported!</string>
@@ -76,7 +78,7 @@
     <string name="url_oficial_guide_en">https://canair.io/docs</string>
     <string name="url_oficial_guide_es">https://canair.io/docs</string>
     <string name="url_github_android_app_issues">https://github.com/kike-canaries/canairio_android/issues</string>
-    <string name="menu_guide">Sensor DIY Guide</string>
+    <string name="url_canairio_support_us">https://canair.io/contributions.html</string>
     <string name="url_canairio_page">https://canair.io</string>
     <string name="url_canairio_feedback">https://canair.io/#three</string>
     <string name="msg_chart_loading">Loading data, please wait…</string>
@@ -218,7 +220,7 @@
     <string name="text_unit_seconds">seconds</string>
     <string name="text_unit_meters">meters</string>
     <string name="text_unit_points">points</string>
-    <string name="title_power_saving_settings">Power Saving Settings</string>
+    <string name="title_power_saving_settings">Experimental Settings</string>
     <string name="title_some_device_tools">Some Device Tools</string>
     <string name="title_reboot_device">Reboot device</string>
     <string name="title_factory_reset">Factory reset</string>
