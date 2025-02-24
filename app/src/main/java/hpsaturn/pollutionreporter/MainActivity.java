@@ -47,7 +47,6 @@ import hpsaturn.pollutionreporter.models.SensorTrackInfo;
 import hpsaturn.pollutionreporter.models.WifiConfig;
 import hpsaturn.pollutionreporter.service.RecordTrackInterface;
 import hpsaturn.pollutionreporter.service.RecordTrackManager;
-import hpsaturn.pollutionreporter.service.RecordTrackScheduler;
 import hpsaturn.pollutionreporter.service.RecordTrackService;
 import hpsaturn.pollutionreporter.view.AboutFragment;
 import hpsaturn.pollutionreporter.view.ChartFragment;
@@ -107,7 +106,9 @@ public class MainActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startRecordTrackService();
+        if (Storage.getBoolean(Keys.DEVICE_PAIR, false, this)) {
+            startRecordTrackService();
+        }
 
         ButterKnife.bind(this);
 
@@ -413,11 +414,7 @@ public class MainActivity extends BaseActivity implements
     public void startRecordTrackService() {
         Logger.v(TAG,"starting RecordTrackService..");
         Intent service = new Intent(this, RecordTrackService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(service);
-        } else {
-            startService(service);
-        }
+        startService(service);
     }
 
     public void stopRecordTrackService() {
