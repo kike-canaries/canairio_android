@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -374,7 +373,7 @@ public class ChartFragment extends Fragment {
             Logger.w(TAG, "[CHART] onChartIdClick");
             if(recordId!=null) UITools.viewLink(
                     requireContext(),
-                    getString(R.string.url_chart_get_data)+recordId
+                    getString(R.string.url_chart_get_data_share)+recordId
             );
         }
     };

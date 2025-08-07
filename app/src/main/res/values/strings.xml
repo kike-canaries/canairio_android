@@ -109,6 +109,7 @@
     <string name="key_device_info">key_device_info</string>
     <string name="key_setting_vars">key_settings_vars</string>
     <string name="title_device_status">Bluetooth status:</string>
+    <string name="url_chart_get_data_share" translatable="false">https://mobile.canair.io/?trackId=</string>
     <string name="url_chart_get_data" translatable="false">http://api.canair.io:8080/tracks/</string>
     <string name="msg_chart_sharing">Sharing data to public tab..</string>
     <string name="bt_dialog_cancel">Cancel</string>
