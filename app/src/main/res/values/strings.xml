@@ -6,6 +6,7 @@
     <string name="menu_unpair">Unpair…</string>
     <string name="menu_donation">Make a donation…</string>
     <string name="menu_guide">Sensor DIY Guide</string>
+    <string name="menu_share">Share…</string>
     <string name="menu_support_us">Support Us</string>
     <string name="stop_scan">Stopping Scanning…</string>
     <string name="start_scan">Start Scanning…</string>
@@ -109,6 +110,7 @@
     <string name="key_device_info">key_device_info</string>
     <string name="key_setting_vars">key_settings_vars</string>
     <string name="title_device_status">Bluetooth status:</string>
+    <string name="url_chart_get_data_share" translatable="false">https://mobile.canair.io/?trackId=</string>
     <string name="url_chart_get_data" translatable="false">http://api.canair.io:8080/tracks/</string>
     <string name="msg_chart_sharing">Sharing data to public tab..</string>
     <string name="bt_dialog_cancel">Cancel</string>

@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -183,44 +182,48 @@ public class ChartFragment extends Fragment {
     private void loadData() {
         Logger.i(TAG,"[CHART] loading data..");
         loadingData = true;
-        ArrayList<SensorData> data = new ArrayList<>();
         if(recordId==null) {
             Logger.i(TAG,"[CHART] loading current data in storage..");
+            ArrayList<SensorData> data = new ArrayList<>();
             data = Storage.getSensorData(getActivity());
+            addData(data);
         }
         else {
-            track = Storage.getTrack(getActivity(), recordId);
-            if(track!=null) {
-                Logger.i(TAG,"[CHART] loading track data from storage..");
-                data = track.data;
-                setTrackDescription(track,false);
-                getMain().enableShareButton();
-            }
-            else{
-                Logger.i(TAG,"[CHART] loading track from firebase..");
-                DatabaseReference trackRef = getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(recordId);
-                trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
-                        if(track!=null){
-                            Logger.i(TAG,"[CHART] loading track on chart..");
-                            addData(track.data);
-                            setTrackDescription(track, true);
-                        }
-                        else{
-                            Logger.e(TAG,"[CHART] onDataChange getValue is null");
+            Logger.i(TAG,"[CHART] loading track from firebase..");
+            DatabaseReference trackRef = getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(recordId);
+            trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
+                    if(track!=null){
+                        Logger.i(TAG,"[CHART] loading track on chart..");
+                        addData(track.data);
+                        setTrackDescription(track, true);
+                        // the track is already published, then it could be shared:
+                        getMain().enableMenuShareItem(true);
+                        Logger.i(TAG,"[CHART] recordId:"+recordId+" loaded.");
+                    }
+                    else{
+                        Logger.e(TAG,"[CHART] onDataChange getValue is null");
+                        track = Storage.getTrack(getActivity(), recordId);
+                        if(track!=null) {
+                            Logger.i(TAG,"[CHART] loading track data from storage..");
+                            ArrayList<SensorData> data = new ArrayList<>();
+                            data = track.data;
+                            addData(data);
+                            setTrackDescription(track,false);
+                            getMain().enableShareButton();
                         }
                     }
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Logger.e(TAG,"[CHART] onCancelled, databaseError: "+databaseError.getDetails());
-                    }
-                });
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Logger.e(TAG,"[CHART] onCancelled, databaseError: "+databaseError.getDetails());
+                }
+            });
+
         }
-        addData(data);
     }
 
     public void loadSelectedVariables(){
@@ -374,7 +377,7 @@ public class ChartFragment extends Fragment {
             Logger.w(TAG, "[CHART] onChartIdClick");
             if(recordId!=null) UITools.viewLink(
                     requireContext(),
-                    getString(R.string.url_chart_get_data)+recordId
+                    getString(R.string.url_chart_get_data_share)+recordId
             );
         }
     };
@@ -402,22 +405,36 @@ public class ChartFragment extends Fragment {
         calculateReferenceTime();
     }
 
+    public void shareTrackLink() {
+        Logger.i(TAG,"[CHART] shareTrackLink.. ["+recordId+" "+track+"]");
+        if (recordId!=null && track == null) {
+            getMain().shareViaIntent(getString(R.string.url_chart_get_data_share)+recordId);
+        }
+        else
+            Logger.w(TAG,"[CHART] shareTrackLink fail!");
+
+    }
+
     public void shareAction(String metadata, boolean isShare){
         if(recordId!=null && track!=null) {
             track.deviceId = DeviceUtil.getDeviceId(getActivity());
             track.metadata = metadata;
             if(isShare) {
-                Logger.i(TAG,"publish track to firebase..");
+                Logger.i(TAG,"[CHART] publish track to firebase..");
                 getMain().showSnackMessage(R.string.msg_chart_sharing);
                 getMain().getDatabase().child(Config.FB_TRACKS_DATA).child(track.name).setValue(track);
                 getMain().getDatabase().child(Config.FB_TRACKS_INFO).child(track.name).setValue(new SensorTrackInfo(track));
+                getMain().shareViaIntent(getString(R.string.url_chart_get_data_share)+track.name);
             }
             else{
+                Logger.i(TAG,"[CHART] exported data to json..");
                 String trackJson = new Gson().toJson(track);
                 getMain().shareViaIntent(trackJson);
             }
             getMain().popBackLastFragment();
         }
+        else
+            Logger.w(TAG,"[CHART] not share action! recordId and track are null");
     }
 
     private MainActivity getMain(){

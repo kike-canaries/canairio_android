@@ -90,6 +90,7 @@ public class MapFragment extends Fragment {
                 Iterable<DataSnapshot> data = task.getResult().getChildren();
                 for (DataSnapshot datum : data) {
                     SensorTrackInfo track = datum.getValue(SensorTrackInfo.class);
+                    assert track != null;
                     if (track.getSize() > 0 && track.getSize() <= 5000) addMarker(track);
                 }
                 Logger.v(TAG,"markers count:"+mapView.getOverlays().size());
