@@ -194,7 +194,7 @@ public class ChartFragment extends Fragment {
             trackRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    SensorTrack track = dataSnapshot.getValue(SensorTrack.class);
+                    track = dataSnapshot.getValue(SensorTrack.class);
                     if(track!=null){
                         Logger.i(TAG,"[CHART] loading track on chart..");
                         addData(track.data);
