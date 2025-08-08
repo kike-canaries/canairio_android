@@ -4,6 +4,12 @@
     tools:context="hpsaturn.pollutionreporter.MainActivity">
 
     <item
+        android:id="@+id/action_share"
+        android:title="@string/menu_share"
+        android:enabled="false"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_var_filter"
         android:title="@string/menu_var_filter"
         app:showAsAction="never" />
