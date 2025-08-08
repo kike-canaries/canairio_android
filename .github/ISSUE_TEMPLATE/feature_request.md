@@ -1,11 +1,12 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea or new feature
 title: ''
 labels: enhancement
 assignees: ''
 
 ---
 
-**Summary.**
-A clear and concise description of the new feature.
+**Summary**
+
+
