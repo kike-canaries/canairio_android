@@ -351,6 +351,7 @@ public class MainActivity extends BaseActivity implements
 
     public void disableShareButton (){
         if(recordsFragment!=null)recordsFragment.setIsShowingData(false);
+        enableMenuShareItem(false);
         fab.setOnClickListener(onFabClickListener);
         fab.hide();
     }
@@ -622,7 +623,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    void actionUnPair() {
+    void menuActionUnPair() {
         if(isRecording()){
             showSnackMessage(R.string.msg_record_stop_alert);
         } else {
@@ -641,12 +642,18 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    void actionVarFilter() {
+    void menuActionVarFilter() {
         showDialogFragment(new VariableFilterFragment(), VariableFilterFragment.TAG);
     }
 
     @Override
-    void actionShowAbout(){
+    void menuActionShare() {
+        ChartFragment infoFragment = (ChartFragment) getFragmentInStack(ChartFragment.TAG_INFO);
+        if (infoFragment!=null)infoFragment.shareTrackLink();
+    }
+
+    @Override
+    void menuActionShowAbout(){
         showAboutFragment();
     }
 

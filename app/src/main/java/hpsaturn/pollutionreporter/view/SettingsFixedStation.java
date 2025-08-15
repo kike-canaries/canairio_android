@@ -40,8 +40,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private String currentGeoHash = "";
 
-    private Handler mHandler = new Handler();
-    private UpdateTimeTask mUpdateTimeTask = new UpdateTimeTask();
+    private final Handler mHandler = new Handler();
+    private final UpdateTimeTask mUpdateTimeTask = new UpdateTimeTask();
 
 
     @Override
@@ -66,11 +66,8 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     protected void onConfigRead(ResponseConfig config) {
 
         Logger.v(TAG, "[Config] reading config");
-        boolean notify_sync = false;
+        boolean notify_sync = config.wenb != getWifiSwitch().isChecked();
 
-        if (config.wenb != getWifiSwitch().isChecked()) {
-            notify_sync = true;
-        }
         if (config.ienb != getInfluxDbSwitch().isChecked()) {
             notify_sync = true;
         }
@@ -207,7 +204,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
         if (getInfluxDbSwitch().isChecked() && isInfluxDbSwitchFieldsValid()) {
             InfluxdbConfig config = new InfluxdbConfig();
-            config.ifxdb = getSharedPreference(R.string.key_setting_ifxdb,getString(R.string.key_ifxdb_default));;
+            config.ifxdb = getSharedPreference(R.string.key_setting_ifxdb,getString(R.string.key_ifxdb_default));
             config.ifxip = getSharedPreference(R.string.key_setting_ifxip,getString(R.string.key_ifxip_default));
             config.ifxpt = NumberUtils.toInt(getSharedPreference(getString(R.string.key_setting_ifxpt)),8086);
             config.ienb = true;
@@ -287,12 +284,14 @@ public class SettingsFixedStation extends SettingsBaseFragment {
 
     private void validateLocationSwitch() {
         SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
+        assert locationSwitch != null;
         locationSwitch.setEnabled(lastLocation!=null);
     }
 
     private void saveLocation() {
         SwitchPreference locationSwitch = findPreference(getString(R.string.key_setting_enable_location));
         if(lastLocation != null) {
+            assert locationSwitch != null;
             if(locationSwitch.isChecked()) {
                 snackBar = getMain().getSnackBar(R.string.msg_set_current_location, R.string.bt_location_save_action, view -> {
                     getMain().showSnackMessage(R.string.msg_save_location);
@@ -307,7 +306,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                 snackBar.show();
             }
             else{
-                snackBar.dismiss();
+                if (snackBar!=null) snackBar.dismiss();
             }
         }
         else {
@@ -346,7 +345,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
                     e.printStackTrace();
                 }
             }
-            String geo = " (new: " + GeoHash.fromLocation(location, Config.GEOHASHACCU).toString()+")";
+            String geo = " (new: " + GeoHash.fromLocation(location, Config.GEOHASHACCU) +")";
             summary = summary + geo;
             updateSummary(R.string.key_setting_enable_location,summary);
         }

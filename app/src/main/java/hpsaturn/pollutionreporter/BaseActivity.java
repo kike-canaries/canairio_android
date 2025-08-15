@@ -21,7 +21,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 7/1/18.
@@ -29,7 +28,8 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 public abstract class BaseActivity extends AppCompatActivity {
 
     public static String TAG = BaseActivity.class.getSimpleName();
-    
+    private MenuItem menuShareItem;
+
     private void enableBLE() {
         Logger.i(TAG,"[BLE] enableBLE: starting...");
 
@@ -241,7 +241,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menuShareItem = menu.getItem(0);
         return true;
+    }
+
+    public void enableMenuShareItem(boolean enable){
+        menuShareItem.setEnabled(enable);
     }
 
     @Override
@@ -253,16 +258,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
 
-            case R.id.action_var_filter:
-                actionVarFilter();
+            case R.id.action_share:
+                menuActionShare();
                 break;
 
-            case R.id.action_unpair:
-                actionUnPair();
+            case R.id.action_var_filter:
+                menuActionVarFilter();
                 break;
 
             case R.id.action_about:
-                actionShowAbout();
+                menuActionShowAbout();
+                break;
+
+            case R.id.action_unpair:
+                menuActionUnPair();
                 break;
 
             case R.id.action_support_us:
@@ -286,9 +295,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    abstract void actionUnPair();
-    abstract void actionVarFilter();
-    abstract void actionShowAbout();
+    abstract void menuActionShare();
+    abstract void menuActionUnPair();
+    abstract void menuActionVarFilter();
+    abstract void menuActionShowAbout();
 
     /**
      * A native method that is implemented by the 'native-lib' native library,

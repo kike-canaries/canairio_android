@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hpsaturn.tools.Logger;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,9 +21,14 @@ import hpsaturn.pollutionreporter.models.SensorTrack;
 public class Storage {
 
     private static final String KEYS_TRACKS_PREFERENCES = "keys_tracks_preferences";
-    private final String TAG = Storage.class.getSimpleName();
+    private static final String TAG = Storage.class.getSimpleName();
 
     public static void setSensorData(Context ctx, ArrayList<SensorData> items) {
+        if (ctx == null) {
+            Logger.e(TAG, "Storage setSensorData context is null");
+            return;
+        }
+
         try {
             SharedPreferences preferences = ctx.getSharedPreferences(KEYS_TRACKS_PREFERENCES,0);
             SharedPreferences.Editor editor = preferences.edit();
