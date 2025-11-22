@@ -30,11 +30,7 @@ android {
             enableAndroidTestCoverage true
         }
     }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
+
     compileOptions {
         targetCompatibility JavaVersion.VERSION_17
         sourceCompatibility JavaVersion.VERSION_17
@@ -45,7 +41,6 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    ndkVersion "21.3.6528147"
     namespace 'hpsaturn.pollutionreporter'
 
 }
