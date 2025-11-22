@@ -24,9 +24,10 @@ android {
             zipAlignEnabled true
         }
         debug {
-            testCoverageEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            enableUnitTestCoverage true
+            enableAndroidTestCoverage true
         }
     }
     externalNativeBuild {
@@ -35,8 +36,8 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
     }
 
     testOptions {
@@ -107,4 +108,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-
