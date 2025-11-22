@@ -29,19 +29,16 @@ android {
             signingConfig signingConfigs.release
         }
         debug {
-            testCoverageEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            enableUnitTestCoverage true
+            enableAndroidTestCoverage true
         }
     }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
+
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
     }
 
     testOptions {
@@ -49,7 +46,6 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    ndkVersion "21.3.6528147"
     namespace 'hpsaturn.pollutionreporter'
 
 }
@@ -58,58 +54,57 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':libtoolscommon')
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.core:core:1.15.0'
+    implementation 'androidx.core:core:1.17.0'
 
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.2'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
     implementation 'com.jakewharton.rx2:replaying-share:2.2.0'
-    implementation 'com.polidea.rxandroidble2:rxandroidble:1.19.0'
+    implementation 'com.polidea.rxandroidble2:rxandroidble:1.19.1'
 
     implementation 'com.github.pwittchen:reactivewifi-rx2:0.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.code.gson:gson:2.13.2'
 
     implementation 'com.github.MKergall:osmbonuspack:6.5.2'
     implementation 'io.nlopez.smartlocation:library:3.3.3'
-    implementation 'org.osmdroid:osmdroid-android:6.1.5'
+    implementation 'org.osmdroid:osmdroid-android:6.1.20'
 
-    implementation 'com.google.android.gms:play-services-location:20.0.0' // Smartlocation fails with higher version
+    implementation 'com.google.android.gms:play-services-location:21.3.0' // Smartlocation fails with higher version
     implementation 'com.github.jemshit:DiscreteScrollView:1.5.2'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:5.0.5'
 
-    implementation platform('com.google.firebase:firebase-bom:28.4.1')
+    implementation platform('com.google.firebase:firebase-bom:34.6.0')
 
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.firebaseui:firebase-ui-database:8.0.0'
+    implementation 'com.firebaseui:firebase-ui-database:9.1.1'
 
     implementation 'com.github.vic797:prowebview:2.2.1'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:retrofit:3.0.0'
+    implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
 
     implementation 'com.github.drfonfon:android-geohash:0.22'
 
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test:core:1.6.1'
-    testImplementation 'org.mockito:mockito-core:3.3.3'
-    androidTestImplementation 'androidx.test:runner:1.6.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    testImplementation 'androidx.test:core:1.7.0'
+    testImplementation 'org.mockito:mockito-core:5.20.0'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 
     // Fix Duplicate class
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.22"))
 }
 
 apply plugin: 'com.google.gms.google-services'
-
