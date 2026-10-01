@@ -274,9 +274,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 menuActionUnPair();
                 break;
 
-            case R.id.action_support_us:
-                UITools.viewLink(this,getString(R.string.url_canairio_support_us));
-                break;
+//            case R.id.action_support_us:
+//                UITools.viewLink(this,getString(R.string.url_canairio_support_us));
+//                break;
 
             case R.id.action_feedback:
                 UITools.viewLink(this,getString(R.string.url_canairio_feedback));

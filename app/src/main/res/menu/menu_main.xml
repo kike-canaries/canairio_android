@@ -29,10 +29,10 @@
         android:title="@string/menu_feedback"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_support_us"
-        android:title="@string/menu_support_us"
-        app:showAsAction="never" />
+<!--    <item-->
+<!--        android:id="@+id/action_support_us"-->
+<!--        android:title="@string/menu_support_us"-->
+<!--        app:showAsAction="never" />-->
     <item
         android:id="@+id/action_privacy"
         android:title="@string/menu_privacy"
