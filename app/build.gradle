@@ -76,7 +76,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:34.6.0')
 
     implementation 'com.google.firebase:firebase-database'
-    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.firebaseui:firebase-ui-database:9.1.1'
 
