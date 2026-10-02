@@ -14,9 +14,10 @@ import java.util.UUID;
 
 import hpsaturn.pollutionreporter.AppData;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -26,6 +27,14 @@ import io.reactivex.subjects.PublishSubject;
 public class BLEHandler {
 
     private static final String TAG = BLEHandler.class.getSimpleName();
+
+    /**
+     * ANR fix: BLE callbacks must NOT run on the UI thread. The previous code forced the
+     * whole notification/read chain onto the main thread via observeOn(mainThread()), so the
+     * downstream service did blocking work (synchronous getLastLocation + full track JSON
+     * re-serialization) there, producing 'Input dispatching timed out' (>5s) with API 36.
+     */
+    private static final Scheduler BLE_SCHEDULER = Schedulers.io();
 
     private final Context ctx;
     private final OnBLEConnectionListener listener;
@@ -86,7 +95,7 @@ public class BLEHandler {
                 final Disposable connectionDisposable = connectionObservable
                         .flatMapSingle(RxBleConnection::discoverServices)
                         .flatMapSingle(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(charactSensorDataUuid))
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(BLE_SCHEDULER)
                         .doOnSubscribe(disposable -> Logger.d(TAG, "doOnSubscribe"))
                         .subscribe(
                                 characteristic -> {
@@ -117,7 +126,7 @@ public class BLEHandler {
                     .flatMap(rxBleConnection -> rxBleConnection.setupNotification(charactSensorDataUuid))
                     .doOnNext(notificationObservable -> notificationHasBeenSetUp())
                     .flatMap(notificationObservable -> notificationObservable)
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(BLE_SCHEDULER)
                     .subscribe(this::onNotificationReceived, this::onNotificationSetupFailure);
             compositeDisposable.add(disposable);
         }
@@ -128,7 +137,7 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactConfigUuid))
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(BLE_SCHEDULER)
                     .subscribe(this::onSensorConfigRead, this::onReadFailure);
             compositeDisposable.add(disposable);
         }
@@ -139,7 +148,7 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.readCharacteristic(charactSensorDataUuid))
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(BLE_SCHEDULER)
                     .subscribe(this::onSensorDataRead, this::onReadFailure);
             compositeDisposable.add(disposable);
         }
@@ -151,7 +160,7 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(charactConfigUuid, bytes))
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(BLE_SCHEDULER)
                     .subscribe(this::onWriteSuccess, this::onWriteFailure );
 
             compositeDisposable.add(disposable);
@@ -164,7 +173,7 @@ public class BLEHandler {
             final Disposable disposable = connectionObservable
                     .firstOrError()
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(charactStatusUuid, bytes))
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(BLE_SCHEDULER)
                     .subscribe(this::onSetStatusSuccess, this::onSetStatusFailure);
 
             compositeDisposable.add(disposable);
