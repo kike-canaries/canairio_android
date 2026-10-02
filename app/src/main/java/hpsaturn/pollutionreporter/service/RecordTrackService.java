@@ -1,5 +1,6 @@
 package hpsaturn.pollutionreporter.service;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,11 +8,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
 
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.fonfon.geohash.GeoHash;
@@ -139,6 +142,11 @@ public class RecordTrackService extends Service {
     private void requestLastKnownLocation() {
         if (fusedLocationClient == null) return;
         try {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(location -> {
                         if (location != null) lastKnownLocation = location;
@@ -534,7 +542,7 @@ public class RecordTrackService extends Service {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     CHANNEL_NAME,
-                    isRecording ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_LOW
+                    isRecording ? NotificationManager.IMPORTANCE_LOW : NotificationManager.IMPORTANCE_NONE
             );
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)

@@ -1,11 +1,14 @@
 package hpsaturn.pollutionreporter.view;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
@@ -68,8 +71,11 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     private void requestLastKnownLocation() {
         if (getContext() == null) return;
         try {
-            FusedLocationProviderClient client =
-                    LocationServices.getFusedLocationProviderClient(requireContext());
+            FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(requireContext());
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
             client.getLastLocation().addOnSuccessListener(location -> {
                 if (location == null || getActivity() == null) return;
                 lastLocation = location;
@@ -174,7 +180,7 @@ public class SettingsFixedStation extends SettingsBaseFragment {
         Logger.v(TAG, "[Config] validating->" + getString(R.string.key_setting_enable_wifi));
         String ssid = getSharedPreference(getString(R.string.key_setting_ssid));
         Logger.v(TAG, "[Config] values -> " + ssid );
-        return ssid.length() != 0;
+        return !ssid.isEmpty();
     }
 
     private void setWifiSwitch(boolean checked) {
