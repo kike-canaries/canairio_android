@@ -12,10 +12,6 @@ android {
         versionName project.mVersionName
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-            }
-        }
     }
     buildTypes {
         release {
