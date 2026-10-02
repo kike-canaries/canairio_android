@@ -3,6 +3,8 @@ package hpsaturn.pollutionreporter.view;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +86,14 @@ public class ChartFragment extends Fragment {
     private long referenceTimestamp;
 
     private boolean loadingData = true;  // it's true for block data from real time chart
+
+    // ANR fix: throttle real-time chart refresh. Rebuilding the whole LineChart
+    // (setData + notifyDataSetChanged + invalidate) on EVERY sample was too expensive
+    // for the main thread once API 36 arrived. Now we coalesce updates to one every
+    // CHART_REFRESH_INTERVAL_MS and keep adding points cheaply in the meantime.
+    private static final long CHART_REFRESH_INTERVAL_MS = 500;
+    private final Handler chartHandler = new Handler(Looper.getMainLooper());
+    private boolean chartRefreshPending = false;
 
     private static final String KEY_RECORD_ID = "key_record_id";
     private String recordId;
@@ -322,10 +332,21 @@ public class ChartFragment extends Fragment {
             Long currentTime = System.currentTimeMillis() / 1000;
             long time = currentTime - referenceTimestamp;
             addValue(time,data);
-            refreshDataSets();
+            scheduleChartRefresh();
         }
         else
             Logger.v(TAG,"addData skip, in loading data.");
+    }
+
+    private final Runnable chartRefreshRunnable = () -> {
+        chartRefreshPending = false;
+        if (isAdded()) refreshDataSets();
+    };
+
+    private void scheduleChartRefresh() {
+        if (chartRefreshPending) return;
+        chartRefreshPending = true;
+        chartHandler.postDelayed(chartRefreshRunnable, CHART_REFRESH_INTERVAL_MS);
     }
 
     private void addMapSegment(ChartVar var, SensorData data) {
@@ -385,6 +406,8 @@ public class ChartFragment extends Fragment {
     @Override
     public void onDestroyView() {
         Logger.w(TAG, "[CHART] onDestroyView");
+        chartHandler.removeCallbacks(chartRefreshRunnable);
+        chartRefreshPending = false;
         getMain().disableShareButton();
         super.onDestroyView();
     }

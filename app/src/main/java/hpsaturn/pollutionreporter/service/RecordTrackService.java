@@ -15,6 +15,8 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 
 import com.fonfon.geohash.GeoHash;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.hpsaturn.tools.FileTools;
 import com.hpsaturn.tools.Logger;
@@ -57,10 +59,21 @@ public class RecordTrackService extends Service {
     private SensorData previousPoint;
     private long trackStartTime;
 
+    // ANR fix: the recording track is kept in memory and persisted at intervals instead of
+    // re-reading + re-serializing the whole JSON on every single sample (was O(n^2)).
+    private static final int SAVE_INTERVAL_POINTS = 5;
+    private final ArrayList<SensorData> trackData = new ArrayList<>();
+
+    // ANR fix: asynchronous location lookup with a cached last fix. The old synchronous
+    // SmartLocation.getLastLocation() blocked on a CountDownLatch and deadlocked the UI thread.
+    private FusedLocationProviderClient fusedLocationClient;
+    private volatile Location lastKnownLocation;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Logger.i(TAG, "[BLE] Creating Service container..");
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         isRecording = Storage.getBoolean(Keys.SENSOR_RECORD, false, this);
         if (isRecording) restoreValues();
         recordTrackManager = new RecordTrackManager(this, managerListener);
@@ -95,12 +108,14 @@ public class RecordTrackService extends Service {
                     .location()
                     .config(LocationParams.NAVIGATION)
                     .start(onLocationListener);
+            requestLastKnownLocation();
         } catch (Exception e) {
             Logger.w(TAG, "[BLE][LOC] locationConfig failed: "+e.getMessage());
         }
     }
 
     private final OnLocationUpdatedListener onLocationListener = location -> {
+        if (location != null) lastKnownLocation = location;
         if (VERBOSE) {
             Logger.i(TAG, "[BLE][LOC] onLocationUpdated");
             Logger.i(TAG, "[BLE][LOC] accuracy: " + location.getAccuracy());
@@ -108,6 +123,32 @@ public class RecordTrackService extends Service {
             Logger.i(TAG, "[BLE][LOC] speed: " + location.getSpeed());
         }
     };
+
+    /** Thread-safe copy of the in-memory track (producer and saver run on different threads). */
+    private ArrayList<SensorData> snapshotTrackData() {
+        synchronized (trackData) {
+            return new ArrayList<>(trackData);
+        }
+    }
+
+    /**
+     * ANR fix: asynchronous, non-blocking last-known location request.
+     * Replaces the deprecated/synchronous FusedLocationApi.getLastLocation() used by
+     * SmartLocation, which blocked on a CountDownLatch (main-thread deadlock / ANR).
+     */
+    private void requestLastKnownLocation() {
+        if (fusedLocationClient == null) return;
+        try {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(location -> {
+                        if (location != null) lastKnownLocation = location;
+                    })
+                    .addOnFailureListener(e ->
+                            Logger.w(TAG, "[BLE][LOC] getLastLocation failed: " + e.getMessage()));
+        } catch (Exception e) {
+            Logger.w(TAG, "[BLE][LOC] requestLastKnownLocation failed: " + e.getMessage());
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -165,12 +206,16 @@ public class RecordTrackService extends Service {
         @Override
         public void onServiceRecordStop() {
             if(isRecording){
-                saveTrack();
                 isRecording = false;
-                trackDistance = 0;
-                previousPoint = null;
+                // ANR fix: persisting the track can be expensive (up to MAX_POINTS_SAVING points),
+                // so run it off the main thread. This callback is delivered on the main thread.
+                new Thread(() -> {
+                    saveTrack();
+                    trackDistance = 0;
+                    previousPoint = null;
+                    Logger.v(TAG, "[TRACK] recording stop");
+                }, "canairio-track-save").start();
                 notificationSetup();
-                Logger.v(TAG, "[TRACK] recording stop");
             }
             else
                 Logger.w(TAG, "[TRACK] skipping stop recording because is not recording");
@@ -299,16 +344,21 @@ public class RecordTrackService extends Service {
         String strdata = new String(bytes);
         SensorData data = new Gson().fromJson(strdata, SensorData.class);
         data.timestamp = System.currentTimeMillis() / 1000;
-        Location lastLocation = SmartLocation.with(this).location().getLastLocation();
+        // ANR fix: use the cached location instead of blocking getLastLocation().
+        Location lastLocation = lastKnownLocation;
+        if (lastLocation == null) {
+            requestLastKnownLocation();          // non-blocking, refreshes cache for next sample
+            lastLocation = lastKnownLocation;
+        }
         if (lastLocation != null) {
             data.lat = lastLocation.getLatitude();
             data.lon = lastLocation.getLongitude();
             data.spd = ((int)((lastLocation.getSpeed()*18000)/5))/1000; // m/s to km/h (removed extra)
-            bleHandler.writeTrackStatus(getTrackStatus(data));
+            if (bleHandler != null) bleHandler.writeTrackStatus(getTrackStatus(data));
             data.pdist = trackDistance;
         }
         else {
-            Logger.w(TAG, "[TRACK] failed on getLastLocation!");
+            Logger.w(TAG, "[TRACK] no cached location yet, sample without coords");
         }
 
         return data;
@@ -333,26 +383,34 @@ public class RecordTrackService extends Service {
 
     private void record(SensorData point) {
         previousPoint = point;
-        ArrayList<SensorData> data = Storage.getSensorData(this);
-        Logger.i(TAG, "[TRACK] saving point sensor: " + point.dsl);
-        Logger.i(TAG, "[TRACK] saving point coords: " + point.lat + "," + point.lon);
-        Logger.i(TAG, "[TRACK] saving point P25: " + point.P25);
-        Logger.i(TAG, "[TRACK] saving point CO2: " + point.CO2);
-        data.add(point);
-        Logger.i(TAG, "[TRACK] track data size: " + data.size());
-        Storage.setSensorData(this, data);
-        Logger.i(TAG, "[TRACK] saving track data done.");
-        if (data.size()==MAX_POINTS_SAVING){
+        // ANR fix: append in memory (O(1)); do NOT read+parse the whole stored JSON per sample.
+        int size;
+        synchronized (trackData) {
+            trackData.add(point);
+            size = trackData.size();
+        }
+        Logger.v(TAG, "[TRACK] track data size: " + size);
+        // Persist the full track only every SAVE_INTERVAL_POINTS samples, on the io scheduler.
+        if (size % SAVE_INTERVAL_POINTS == 0) {
+            Storage.setSensorData(this, snapshotTrackData());
+            Logger.v(TAG, "[TRACK] track flushed to storage.");
+        }
+        if (size == MAX_POINTS_SAVING) {
             Logger.v(TAG, "[TRACK] saving partial track..");
             saveTrack();
         }
     }
 
     private void restoreValues() {
-        ArrayList<SensorData> data = Storage.getSensorData(this);
-        if(data.isEmpty()) return;
-        if(trackStartTime==0) trackStartTime = data.get(0).timestamp; // restore after service crash
-        if(trackDistance==0) trackDistance = data.get(data.size()-1).pdist;
+        // ANR fix: load the stored track into memory only once at startup.
+        ArrayList<SensorData> stored = Storage.getSensorData(this);
+        synchronized (trackData) {
+            trackData.clear();
+            trackData.addAll(stored);
+        }
+        if(stored.isEmpty()) return;
+        if(trackStartTime==0) trackStartTime = stored.get(0).timestamp; // restore after service crash
+        if(trackDistance==0) trackDistance = stored.get(stored.size()-1).pdist;
     }
 
     private void saveTrack() {
@@ -362,12 +420,15 @@ public class RecordTrackService extends Service {
         Logger.i(TAG,"[TRACK] track: "+new Gson().toJson(lastTrack));
         saveTrackOnSD(lastTrack);
         Storage.setSensorData(this, new ArrayList<>()); // clear sensor data
+        synchronized (trackData) {                      // clear in-memory track as well
+            trackData.clear();
+        }
         recordTrackManager.tracksUpdated();
         Logger.i(TAG, "[TRACK] record track done.");
     }
 
     private SensorTrack getLastTrack() {
-        ArrayList<SensorData> data = Storage.getSensorData(this);
+        ArrayList<SensorData> data = snapshotTrackData();
         SensorTrack track = new SensorTrack();
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat dfName = new SimpleDateFormat("yyyyMMddkkmmss", Locale.ENGLISH);
@@ -390,7 +451,13 @@ public class RecordTrackService extends Service {
             track.lastSensorData = lastSensorData;
             track.lastLat = lastSensorData.lat;
             track.lastLon = lastSensorData.lon;
-            Location lastLocation = SmartLocation.with(this).location().getLastLocation();
+            Location lastLocation = lastKnownLocation;
+            if (lastLocation == null) {
+                // Fallback: build a location from the last recorded point (non-blocking).
+                lastLocation = new Location("cached");
+                lastLocation.setLatitude(lastSensorData.lat);
+                lastLocation.setLongitude(lastSensorData.lon);
+            }
             try {
                 track.geohash = GeoHash.fromLocation(lastLocation, Config.GEOHASHACCU).toString();
             }

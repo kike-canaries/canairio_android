@@ -10,6 +10,8 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 
 import com.fonfon.geohash.GeoHash;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hpsaturn.tools.Logger;
 import com.hpsaturn.tools.UITools;
@@ -28,7 +30,6 @@ import hpsaturn.pollutionreporter.models.ResponseConfig;
 import hpsaturn.pollutionreporter.models.SensorConfig;
 import hpsaturn.pollutionreporter.models.WifiConfig;
 import hpsaturn.pollutionreporter.common.Storage;
-import io.nlopez.smartlocation.SmartLocation;
 
 /**
  * Created by Antonio Vanegas @hpsaturn on 2/17/19.
@@ -56,10 +57,28 @@ public class SettingsFixedStation extends SettingsBaseFragment {
     protected void refreshUI(){
         Logger.i(TAG,"[Config] refreshUI");
         updateWifiSummary();
-        lastLocation = SmartLocation.with(getActivity()).location().getLastLocation();
-        updateLocationSummary(lastLocation,currentGeoHash);
-        updateAnaireSummary();
+        // ANR fix: asynchronous location lookup. The old SmartLocation.getLastLocation()
+        // blocked the UI thread on a CountDownLatch and could deadlock the main thread.
+        updateLocationSummary(lastLocation, currentGeoHash);
         validateLocationSwitch();
+        requestLastKnownLocation();
+        updateAnaireSummary();
+    }
+
+    private void requestLastKnownLocation() {
+        if (getContext() == null) return;
+        try {
+            FusedLocationProviderClient client =
+                    LocationServices.getFusedLocationProviderClient(requireContext());
+            client.getLastLocation().addOnSuccessListener(location -> {
+                if (location == null || getActivity() == null) return;
+                lastLocation = location;
+                updateLocationSummary(lastLocation, currentGeoHash);
+                validateLocationSwitch();
+            });
+        } catch (Exception e) {
+            Logger.w(TAG, "[LOC] requestLastKnownLocation failed: " + e.getMessage());
+        }
     }
 
     @Override
